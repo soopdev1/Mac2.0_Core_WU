@@ -30,7 +30,7 @@
 
         <link href="assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
-        <link href="assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="assets/soop/bootstrap-5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
         <!-- END GLOBAL MANDATORY STYLES -->
         <!-- BEGIN PAGE LEVEL PLUGINS -->
@@ -51,7 +51,9 @@
         <!-- END THEME LAYOUT STYLES -->
         <link rel="shortcut icon" href="favicon.ico" /> 
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
-        <script type="text/javascript" src="assets/soop/js/jquery-1.10.1.min.js"></script>
+        <script src="assets/soop/jquery-3.6.4.min.js" type="text/javascript"></script>
+        <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
+
         <script type="text/javascript" src="assets/soop/js/jquery.fancybox.js?v=2.1.5"></script>
         <link rel="stylesheet" type="text/css" href="assets/soop/css/jquery.fancybox.css?v=2.1.5" media="screen" />
         <script type="text/javascript" src="assets/soop/js/fancy.js"></script>
@@ -286,9 +288,9 @@
                                     </div>
                                 </div>
                                 <div class="portlet-body">
-                                    
-                                    
-                                    
+
+
+
                                     <div class="scroller" style="height: 250px;" data-always-visible="1" data-rail-visible="0">
                                         <ul class="feeds">
                                             <%if (indice_rischio_Tra.isEmpty()) {%>
@@ -453,8 +455,6 @@
                 </div>
                 <!-- END FOOTER -->
                 <!-- BEGIN CORE PLUGINS -->
-                <script src="assets/global/plugins/jquery.min.js" type="text/javascript"></script>
-                <script src="assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
                 <!-- END CORE PLUGINS -->
@@ -472,8 +472,9 @@
                 <script src="assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
                 <!-- END CORE PLUGINS -->
                 <!-- BEGIN PAGE LEVEL PLUGINS -->
-                <script src="assets/global/plugins/counterup/jquery.waypoints.min.js" type="text/javascript"></script>
-                <script src="assets/global/plugins/counterup/jquery.counterup.min.js" type="text/javascript"></script>
+                
+                <script src="assets/soop/jquery.waypoints.min.js" type="text/javascript"></script>
+                <script src="assets/soop/jquery.counterup.min.js" type="text/javascript"></script>
                 <!-- END PAGE LEVEL PLUGINS -->
                 <!-- BEGIN THEME GLOBAL SCRIPTS -->
 
