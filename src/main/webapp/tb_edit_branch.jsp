@@ -124,10 +124,7 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";
@@ -159,12 +156,12 @@
                         ArrayList<String[]> tipogruppi = Engine.list_group_branch();
                         ArrayList<String[]> gruppi = Engine.list_branch_group();
 
-                        String view = request.getParameter("view");
-                        if (view == null) {
+                        String view = Utility.safeRequest(request, "view");
+                        if (view.equals("")) {
                             view = "0";
                         }
 
-                        String br_code = request.getParameter("br_code");
+                        String br_code = Utility.safeRequest(request, "br_code");
                         Branch br = null;
                         if (br_code != null) {
                             br = Engine.get_branch(br_code);

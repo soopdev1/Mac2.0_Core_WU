@@ -93,6 +93,9 @@
                 if (tipo == null) {
                     tipo = "";
                 }
+                
+                String se1 = Utility.safeRequest(request, "search");
+                
                 //tipo="1";
             %>
             <div class="modal fade" id="largelogin" tabindex="-1" role="dialog" aria-hidden="true">
@@ -207,7 +210,7 @@
 
                     <hr>
                     <div class="row">
-                        <%if (request.getParameter("search") == null) {%>
+                        <%if (se1.equals("")) {%>
                         <form name="f1" method="post" action="tb_unlock.jsp">
                             <input type="hidden" name="search" value="ok1"/>
                             <div class="col-md-12">
@@ -276,7 +279,7 @@
                                                         <div class="form-group">
                                                             <input type="text" class="form-control" id="codice" name="codice" 
                                                                    maxlength="10" onchange="return fieldNOSPecial_1(this.id)" 
-                                                                   value="<%=request.getParameter("codice")%>"/>
+                                                                   value="<%=Utility.safeRequest(request, "codice")%>"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -286,15 +289,15 @@
                                                         <div class="form-group">
                                                             <select class="form-control select2" id="status" name="status">
                                                                 <%
-                                                                    if (request.getParameter("status").equals("...")) {%>
+                                                                    if (Utility.safeRequest(request, "status").equals("...")) {%>
                                                                 <option value="..." selected>...</option>
                                                                 <option value="E">UNUSED</option>
                                                                 <option value="U">USED</option>
-                                                                <%} else if (request.getParameter("status").equals("E")) {%>
+                                                                <%} else if (Utility.safeRequest(request, "status").equals("E")) {%>
                                                                 <option value="...">...</option>
                                                                 <option value="E" selected>UNUSED</option>
                                                                 <option value="U">USED</option>
-                                                                <%} else if (request.getParameter("status").equals("U")) {%>
+                                                                <%} else if (Utility.safeRequest(request, "status").equals("U")) {%>
                                                                 <option value="...">...</option>
                                                                 <option value="E">UNUSED</option>
                                                                 <option value="U" selected>USED</option>
@@ -319,7 +322,7 @@
 
                         <%
 
-                            ArrayList<String[]> li = Engine.query_cs(request.getParameter("codice"), request.getParameter("status"));
+                            ArrayList<String[]> li = Engine.query_cs(Utility.safeRequest(request, "codice"), Utility.safeRequest(request, "status"));
 
                         %>
 

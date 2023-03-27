@@ -9,8 +9,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     String link_value = Engine.verifyUser(request);
-    if(link_value!=null){
-        Utility.redirect(request, response,link_value);
+    if (link_value != null) {
+        Utility.redirect(request, response, link_value);
     }
 %>
 <!DOCTYPE HTML>
@@ -41,14 +41,12 @@
         <link href="assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
-        <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
-        <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
         <!-- BEGIN THEME GLOBAL STYLES -->
         <link href="assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
@@ -65,11 +63,12 @@
 
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
         <!-- FANCYBOX -->
-        
+        <script src="assets/soop/jquery-3.6.4.min.js" type="text/javascript"></script>
+        <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
         <script type="text/javascript" src="assets/soop/js/jquery.fancybox.js?v=2.1.5"></script>
         <link rel="stylesheet" type="text/css" href="assets/soop/css/jquery.fancybox.css?v=2.1.5" media="screen" />
         <script type="text/javascript" src="assets/soop/js/fancy.js"></script>
-        
+
         <script type="text/javascript">
 
             $(document).ready(function () {
@@ -110,7 +109,8 @@
             <!-- BEGIN MENU -->
             <%@ include file="menu/menu_li5.jsp"%>
             <!-- END MENU -->
-            <%                String lan_index = (String) session.getAttribute("language");
+            <%                
+                String lan_index = (String) session.getAttribute("language");
                 lan_index = "IT";
                 Etichette et_index = new Etichette(lan_index);
 
@@ -192,8 +192,14 @@
                         <button type="button" id="saerchmodbtn" class="" data-toggle="modal" data-target="#saerchmod"></button>
                     </div>
                     <%                        
+                        String typeop = Utility.safeRequest(request, "typeop");
+                        String branch = Utility.safeRequest(request, "branch");
+                        String d1 = Utility.safeRequest(request, "d1", true);
+                        String d2 = Utility.safeRequest(request, "d2", true);
+                        
                         String scode = "r1";
-                        if (request.getParameter("search") == null) {
+                        String s1 = Utility.safeRequest(request, "search");
+                        if (s1.equals("")) {
                     %>
                     <form name="f1" method="post" action="et_list.jsp" onsubmit="return search_ing();">
                         <input type="hidden" name="search" value="<%=scode%>"/>
@@ -210,7 +216,7 @@
                                     <div class="portlet-body">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <%if(central){%>
+                                                <%if (central) {%>
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label>Branch</label>
@@ -225,11 +231,11 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <%}else{%>
+                                                <%} else {%>
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label>Branch</label>
-                                                        <input type="text" class="form-control" disabled value="<%=br1.getCod()+" - "+br1.getDe_branch()%>"/>
+                                                        <input type="text" class="form-control" disabled value="<%=br1.getCod() + " - " + br1.getDe_branch()%>"/>
                                                         <input type="hidden" name="branch" id="branch" value="<%=br1.getCod()%>"/>
                                                     </div>
                                                 </div>
@@ -269,7 +275,10 @@
                             </div>
                         </div>
                     </form>
-                    <%} else if (request.getParameter("search").equals("r1")) {%>
+                    <%} else if (s1.equals("r1")) {
+
+                        
+                    %>
 
 
                     <form name="f1" id="f1" method="post" action="et_list.jsp" onsubmit="return search_ing();">
@@ -287,17 +296,18 @@
                                     <div class="portlet-body">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <%if(central){%>
-                                                  <div class="col-md-3">
+                                                <%if (central) {%>
+                                                <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label>Branch ID</label>
                                                         <select class="form-control select2-allow-clear" name="branch" id="branch" >
                                                             <option value="" selected="selected"></option>
-                                                            <%for (int j = 0; j < array_branch.size(); j++) {    
-                                                                String selected = "";
-                                                                if(array_branch.get(j).getCod().equals(request.getParameter("branch"))){
-                                                                    selected = "selected";
-                                                                }
+                                                            <%
+                                                                for (int j = 0; j < array_branch.size(); j++) {
+                                                                    String selected = "";
+                                                                    if (array_branch.get(j).getCod().equals(branch)) {
+                                                                        selected = "selected";
+                                                                    }
                                                             %>
                                                             <option <%=selected%> value="<%=array_branch.get(j).getCod()%>"> 
                                                                 <%=array_branch.get(j).getCod()%> - <%=array_branch.get(j).getDe_branch()%>
@@ -306,11 +316,11 @@
                                                         </select>
                                                     </div>
                                                 </div>  
-                                                <%}else{%>
+                                                <%} else {%>
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label>Branch</label>
-                                                        <input type="text" class="form-control" disabled value="<%=br1.getCod()+" - "+br1.getDe_branch()%>"/>
+                                                        <input type="text" class="form-control" disabled value="<%=br1.getCod() + " - " + br1.getDe_branch()%>"/>
                                                         <input type="hidden" name="branch" id="branch" value="<%=br1.getCod()%>"/>
                                                     </div>
                                                 </div>
@@ -319,10 +329,10 @@
                                                     <div class="form-group">
                                                         <label>Type Operation</label>
                                                         <select class="form-control select2" id="typeop" name="typeop" placeholder="...">
-                                                            <%if(request.getParameter("typeop").equals("CH")){%>
+                                                            <%if (typeop.equals("CH")) {%>
                                                             <option value="CH" selected="selected">Change</option>
                                                             <option value="NC">No Change</option>
-                                                            <%}else{%>
+                                                            <%} else {%>
                                                             <option value="CH">Change</option>
                                                             <option value="NC" selected="selected">No Change</option>
                                                             <%}%>
@@ -332,13 +342,13 @@
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label>Date From</label>
-                                                        <input type="text" class="form-control date-picker" id="d1" name="d1" value="<%=request.getParameter("d1")%>"/>
+                                                        <input type="text" class="form-control date-picker" id="d1" name="d1" value="<%=d1%>"/>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label>Date To</label>
-                                                        <input type="text" class="form-control date-picker" id="d2" name="d2" value="<%=request.getParameter("d2")%>"/>
+                                                        <input type="text" class="form-control date-picker" id="d2" name="d2" value="<%=d2%>"/>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
@@ -385,7 +395,7 @@
                                                         <th class="tabnow" style="width: 100px;">Total</th>
                                                         <th class="tabnow" style="width: 100px;">Date Deleted</th>
                                                         <th class="tabnow" style="width: 100px;">Status</th>
-                                                        
+
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -420,11 +430,9 @@
 <script src="../assets/global/plugins/excanvas.min.js"></script> 
 <![endif]-->
         <!-- BEGIN CORE PLUGINS -->
-        <script src="assets/soop/jquery-3.6.4.min.js" type="text/javascript"></script>
-        <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
@@ -441,13 +449,11 @@
 
         <!-- END THEME GLOBAL SCRIPTS -->
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        
-        <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
         <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
         <!-- END PAGE LEVEL SCRIPTS -->
-        
+
         <!-- BEGIN THEME LAYOUT SCRIPTS -->
         <script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
         <script src="assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
@@ -473,67 +479,70 @@
                                         zeroRecords: "No results found.",
                                         paginate: {previous: "Prev", next: "Next", last: "Last", first: "First"}},
                                     ajax: {
-                                        url: "Query?type=et_list&typeop=<%=request.getParameter("typeop")%>&branch=<%=request.getParameter("branch")%>&d1=<%=request.getParameter("d1")%>&d2=<%=request.getParameter("d2")%>&pdf=<%=pdfstr%>",
-                                                            dataSrc: "aaData",
-                                                            type: "GET"
-                                                        },
-                                                        initComplete: function (settings, json) {
-                                                            $('.popovers').popover();
-                                                        },
-                                                        scrollX: true,
-                                                        columnDefs: [
-                                                            {orderable: !1, targets: [0]},
-                                                            {orderable: 1, targets: [1]},
-                                                            {orderable: 1, targets: [2]},
-                                                            {orderable: 1, targets: [3]},
-                                                            {orderable: 1, targets: [4]},
-                                                            {orderable: 1, targets: [5]},
-                                                            {orderable: 1, targets: [6]},
-                                                            {orderable: 1, targets: [7]},
-                                                            {orderable: 1, targets: [8]},
-                                                            {orderable: 1, targets: [9]}
-                                                        ],
-                                                        buttons: [
-                                                            {text: "<i class='fa fa-file-pdf-o'></i> Excel",
-                                                    className: "btn white btn-outline",
-                                                    action: function (e, dt, node, config) {
+                                        url: "Query?type=et_list",
+                                        dataSrc: "aaData",
+                                        type: "POST",
+                                        data: {
+                                            typeop: '<%=typeop%>',
+                                            branch: '<%=branch%>',
+                                            d1: '<%=d1%>',
+                                            d2: '<%=d2%>',
+                                            pdf: '<%=pdfstr%>'
+                                        }
+                                    },
+                                    initComplete: function (settings, json) {
+                                        $('.popovers').popover();
+                                    },
+                                    scrollX: true,
+                                    columnDefs: [
+                                        {orderable: !1, targets: [0]},
+                                        {orderable: 1, targets: [1]},
+                                        {orderable: 1, targets: [2]},
+                                        {orderable: 1, targets: [3]},
+                                        {orderable: 1, targets: [4]},
+                                        {orderable: 1, targets: [5]},
+                                        {orderable: 1, targets: [6]},
+                                        {orderable: 1, targets: [7]},
+                                        {orderable: 1, targets: [8]},
+                                        {orderable: 1, targets: [9]}
+                                    ],
+                                    buttons: [
+                                        {text: "<i class='fa fa-file-pdf-o'></i> Excel",
+                                            className: "btn white btn-outline",
+                                            action: function (e, dt, node, config) {
+                                                window.open('Fileview?type=et_list&typeop=<%=typeop%>&branch=<%=branch%>&d1="d1%>&d2=<%=d2%>&value=excel', '_blank');
+                                            }
+                                        },
+                                        {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
+                                            className: "btn white btn-outline",
+                                            action: function (e, dt, node, config) {
+                                                window.open('Fileview?type=et_list&typeop=<%=typeop%>&branch=<%=branch%>&d1="d1%>&d2=<%=d2%>&value=pdf', '_blank');
+                                            }
+                                        },
+                                        {extend: "colvis", className: "btn white btn-outline", text: "Columns"},
+                                        {text: "<i class='fa fa fa-refresh'></i>",
+                                            className: "btn white btn-outline",
+                                            action: function (e, dt, node, config) {
+                                                location.reload();
+                                            }
+                                        }]
+                                    ,
+                                    colReorder: {reorderCallback: function () {
+                                            console.info("callback");
+                                        }},
+                                    lengthMenu: [
+                                        [25, 50, 100, -1],
+                                        [25, 50, 100, "All"]
+                                    ],
+                                    pageLength: 25,
+                                    order: [],
+                                    dom: "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><t><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
+                                    processing: true
+                                });
+                            };
+                            jQuery().dataTable && dt2();
 
-                                                        //window.open('Download?type=viewExcel&cod=' + cexcel, '_blank');
-                                                        window.open('Fileview?type=et_list&typeop=<%=request.getParameter("typeop")%>&branch=<%=request.getParameter("branch")%>&d1=<%=request.getParameter("d1")%>&d2=<%=request.getParameter("d2")%>&value=excel', '_blank');
-                                                    }
-                                                },
-                                                {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
-                                                    className: "btn white btn-outline",
-                                                    action: function (e, dt, node, config) {
-
-                                                        //window.open('Download?type=viewPdf&cod=' + cpdf, '_blank');
-                                                        window.open('Fileview?type=et_list&typeop=<%=request.getParameter("typeop")%>&branch=<%=request.getParameter("branch")%>&d1=<%=request.getParameter("d1")%>&d2=<%=request.getParameter("d2")%>&value=pdf', '_blank');
-                                                    }
-                                                },
-                                                            {extend: "colvis", className: "btn white btn-outline", text: "Columns"},
-                                                            {text: "<i class='fa fa fa-refresh'></i>",
-                                                                className: "btn white btn-outline",
-                                                                action: function (e, dt, node, config) {
-                                                                    location.reload();
-                                                                }
-                                                            }]
-                                                        ,
-                                                        colReorder: {reorderCallback: function () {
-                                                                console.info("callback");
-                                                            }},
-                                                        lengthMenu: [
-                                                            [25, 50, 100, -1],
-                                                            [25, 50, 100, "All"]
-                                                        ],
-                                                        pageLength: 25,
-                                                        order: [],
-                                                        dom: "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><t><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
-                                                        processing: true
-                                                    });
-                                                };
-                                                jQuery().dataTable && dt2();
-
-                                            });
+                        });
 
         </script>
 

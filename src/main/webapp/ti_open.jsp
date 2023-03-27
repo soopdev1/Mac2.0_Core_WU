@@ -75,11 +75,11 @@
         <script src="assets/soop/js/bignumber.js" type="text/javascript"></script>
         <script src="assets/soop/js/accounting.min.js" type="text/javascript"></script>
         <%
-            String opencloseid = request.getParameter("opencloseid");
-            if (opencloseid == null || opencloseid.equals("null")) {
+            String opencloseid = Utility.safeRequest(request, "opencloseid");
+            if (opencloseid.equals("") || opencloseid.equals("null")) {
                 opencloseid = "-";
             }
-            String tillselected = request.getParameter("tillselected");
+            String tillselected = Utility.safeRequest(request, "tillselected");
             String filiale = Engine.getFil()[0];
             ArrayList<Till> list_ALL_till_enabled = Engine.list_ALL_till_enabled();
             ArrayList<Till> listTill = Engine.listTill(filiale);

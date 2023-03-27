@@ -154,11 +154,11 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String view = request.getParameter("view");
-                        if (view == null) {
+                        String view = Utility.safeRequest(request, "view");
+                        if (view.equals("")) {
                             view = "0";
                         }
-                        String err_code = request.getParameter("err_code");
+                        String err_code = Utility.safeRequest(request, "err_code");
                         String[] va = Engine.get_causali_variazioni(err_code);
                         if (va != null) {
                             if (view.equals("1")) {%>
@@ -287,10 +287,7 @@
                         <%} else {
                                 }
                             }
-                            String esito = request.getParameter("esito");
-                            if (esito == null) {
-                                esito = "";
-                            }
+                            String esito = Utility.safeRequest(request, "esito");
                             String classal = "alert-info";
                             String classfa = "fa-exclamation-triangle";
                             String msg = "Warning";

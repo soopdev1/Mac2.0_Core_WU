@@ -131,8 +131,8 @@
                         <input type="text" id="test1" name="test1" style="display: none; width: 1px;"/>
                     </div>
                     
-                    <%String code = request.getParameter("code");
-                        if (code != null) {%>
+                    <%String code = Utility.safeRequest(request, "code");
+                        if (!code.equals("")) {%>
                     <form id="deletetrmod" name="deletetrmod" action="Operazioni?type=del_tr_ch" method="post" onsubmit="return check();">
                         <input type="hidden" name="generatenota" value="yes" />
                         
@@ -148,15 +148,11 @@
                             <button type="submit" class="btn btn-outline green"><i class="fa fa-check"></i> Confirm</button>
                         </div>
                     </form>
-                    <%} else {%>
-                        
                     <%}%>
                     
                     
                     <hr>
-                    <%if(request.getParameter("esito")!=null){
-                        if(request.getParameter("esito").equals("KO")){%>
-                    
+                    <%if(Utility.safeRequest(request, "esito").equals("KO")){%>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="alert alert-danger">
@@ -164,7 +160,7 @@
                             </div>
                         </div>
                     </div>
-                    <%}}%>
+                    <%}%>
                 </div>
             </div>
         </div>

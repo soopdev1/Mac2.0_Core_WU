@@ -41,12 +41,12 @@
         <link href="assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
@@ -66,12 +66,12 @@
 
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
         <%
-            String listbranch = request.getParameter("listbranch");
+            String listbranch = Utility.safeRequest(request, "listbranch");
             String fil[] = Engine.getFil();
             String bra[] = {fil[0]};
 
-            String editce = request.getParameter("editce");
-            if (editce == null) {
+            String editce = Utility.safeRequest(request, "editce");
+            if (editce.equals("")) {
                 editce = "0";
             }
 
@@ -79,16 +79,18 @@
                 bra = Utility.parseArrayValues(listbranch, ";");
             }
 
+            String cucode1 = Utility.safeRequest(request, "cur_code");
+
             Branch br = Engine.get_branch(bra[0]);
-            Currency cu = Engine.getCurrency(request.getParameter("cur_code"), bra[0]);
+            Currency cu = Engine.getCurrency(cucode1, bra[0]);
             if (cu == null) {
-                cu = Engine.getCurrency(request.getParameter("cur_code"), "000");
+                cu = Engine.getCurrency(cucode1, "000");
             }
             String decimal = Constant.decimal;
             String thousand = Constant.thousand;
 
-            String view = request.getParameter("view");
-            if (view == null) {
+            String view = Utility.safeRequest(request, "view");
+            if (view.equals("")) {
                 view = "0";
             }
             boolean modrate = false;
@@ -203,16 +205,16 @@
                 inp3.type = 'hidden';
                 inp3.name = 'statsizecut_' + nowind;
                 inp3.value = 'on';
-                
+
                 div.appendChild(la1);
                 div2.appendChild(inp1);
                 div2.appendChild(inp3);
                 div.appendChild(div2);
                 div3.appendChild(but1);
                 div.appendChild(div3);
-                
-                
-                
+
+
+
                 document.getElementById('tab_1_4').appendChild(div);
             }
 
@@ -275,10 +277,8 @@
 
                     <div class="clearfix"></div>
 
-                    <%String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                    <%
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";
@@ -772,17 +772,17 @@
                                                     </div>
                                                     <%
                                                         String ch1 = "";
-                                                        if(list_sizecuts_new.get(i).getFg_stato().equals("1")){
+                                                        if (list_sizecuts_new.get(i).getFg_stato().equals("1")) {
                                                             ch1 = "checked";
                                                         }
                                                     %>
-                                                        <div class="col-md-3">
-                                                            <input type="checkbox" class="make-switch" <%=ch1%> readonly="readonly"
-                                                                       id="statsizecut_<%=i%>" name="statsizecut_<%=i%>" onkeypress="return keysub(this, event);"  
-                                                                       data-size="normal" data-on-color="success" data-off-color="danger"
-                                                                       data-on-text="<span class='tabnow'>Enabled</span>" data-off-text="<span class='tabnow'>Disabled</span>"
-                                                                       />
-                                                        </div>
+                                                    <div class="col-md-3">
+                                                        <input type="checkbox" class="make-switch" <%=ch1%> readonly="readonly"
+                                                               id="statsizecut_<%=i%>" name="statsizecut_<%=i%>" onkeypress="return keysub(this, event);"  
+                                                               data-size="normal" data-on-color="success" data-off-color="danger"
+                                                               data-on-text="<span class='tabnow'>Enabled</span>" data-off-text="<span class='tabnow'>Disabled</span>"
+                                                               />
+                                                    </div>
                                                 </div>
                                                 <%}%>
                                                 <input type="hidden" name="sizecutindex" id="sizecutindex" value="<%=(list_sizecuts_new.size() - 1)%>"/>
@@ -795,12 +795,12 @@
                                                 </div>
                                                 <%}%>
                                             </div>
-                                            
-                                            
-                                            
+
+
+
                                             <div class="tab-pane fade" id="tab_1_5" name="tab_1_5">
                                                 <%
-                                                    ArrayList<Rate_history> li = Engine.list_ratehistory(bra[0], request.getParameter("cur_code"));
+                                                    ArrayList<Rate_history> li = Engine.list_ratehistory(bra[0], cucode1);
                                                     if (li.size() > 0) {
                                                 %>
                                                 <table class="table table-responsive table-bordered table-hover" id="sample_0" width="100%">
@@ -1261,17 +1261,17 @@
                                                     </div>
                                                     <%
                                                         String ch1 = "";
-                                                        if(list_sizecuts_new.get(i).getFg_stato().equals("1")){
+                                                        if (list_sizecuts_new.get(i).getFg_stato().equals("1")) {
                                                             ch1 = "checked";
                                                         }
                                                     %>
-                                                        <div class="col-md-3">
-                                                            <input type="checkbox" class="make-switch" <%=modificafiliale%> <%=ch1%>
-                                                                       id="statsizecut_<%=i%>" name="statsizecut_<%=i%>" onkeypress="return keysub(this, event);"  
-                                                                       data-size="normal" data-on-color="success" data-off-color="danger"
-                                                                       data-on-text="<span class='tabnow'>Enabled</span>" data-off-text="<span class='tabnow'>Disabled</span>"
-                                                                       />
-                                                        </div>
+                                                    <div class="col-md-3">
+                                                        <input type="checkbox" class="make-switch" <%=modificafiliale%> <%=ch1%>
+                                                               id="statsizecut_<%=i%>" name="statsizecut_<%=i%>" onkeypress="return keysub(this, event);"  
+                                                               data-size="normal" data-on-color="success" data-off-color="danger"
+                                                               data-on-text="<span class='tabnow'>Enabled</span>" data-off-text="<span class='tabnow'>Disabled</span>"
+                                                               />
+                                                    </div>
                                                 </div>
                                                 <%}%>
                                                 <input type="hidden" name="sizecutindex" id="sizecutindex" value="<%=(list_sizecuts_new.size() - 1)%>"/>
@@ -1286,7 +1286,7 @@
                                             </div>
                                             <div class="tab-pane fade" id="tab_1_5" name="tab_1_5">
                                                 <%
-                                                    ArrayList<Rate_history> li = Engine.list_ratehistory(bra[0], request.getParameter("cur_code"));
+                                                    ArrayList<Rate_history> li = Engine.list_ratehistory(bra[0], cucode1);
 
                                                     if (li.size() > 0) {
 
@@ -1326,7 +1326,7 @@
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <!--<a onclick="document.getElementById('excel1').submit();" class="btn btn-outline green-jungle"><i class="fa fa-file-excel-o"></i> Export Excel (All Branch)</a>-->
-                                                        <a href="tb_exportexcelhis.jsp?cur_code=<%=request.getParameter("cur_code")%>" class="btn btn-outline green-jungle"><i class="fa fa-file-excel-o"></i> Export Excel (All Branch)</a>
+                                                        <a href="tb_exportexcelhis.jsp?cur_code=<%=cucode1%>" class="btn btn-outline green-jungle"><i class="fa fa-file-excel-o"></i> Export Excel (All Branch)</a>
                                                     </div>
                                                 </div>
                                                 <%}%>
@@ -1374,7 +1374,7 @@
             <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
             <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
             <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-            
+
             <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
             <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
 
@@ -1395,9 +1395,9 @@
 
             <!-- END THEME GLOBAL SCRIPTS -->
             <!-- BEGIN PAGE LEVEL SCRIPTS -->
-            
+
             <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-            
+
             <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
             <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
 
@@ -1445,7 +1445,7 @@
                                                                             {orderable: !1, targets: [3]}
                                                                         ],
                                                                         colReorder: {reorderCallback: function () {
-                                                                                
+
                                                                             }},
                                                                         lengthMenu: [
                                                                             [25, -1],

@@ -37,7 +37,7 @@
         <!-- END GLOBAL MANDATORY STYLES -->
         <!-- BEGIN PAGE LEVEL PLUGINS -->
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <!-- END PAGE LEVEL PLUGINS -->
         <!-- BEGIN THEME GLOBAL STYLES -->
         <link href="assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
@@ -61,10 +61,8 @@
         <%
             String pwd = session.getAttribute("us_pwd").toString();
 
-            String esito = request.getParameter("esito");
-            if (esito == null) {
-                esito = "";
-            }%>
+            String esito = Utility.safeRequest(request, "esito");
+        %>
 
 
         function checkesito() {
@@ -237,7 +235,7 @@
         <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
         <!-- END CORE PLUGINS -->

@@ -118,7 +118,8 @@
                     <!-- END PAGE HEADER-->
                     <!-- SELECT TILL -->
 
-                    <%                        String cod_oc = request.getParameter("cod");
+                    <%                        
+                        String cod_oc = Utility.safeRequest(request, "cod");
                         Openclose co = Engine.query_oc(cod_oc);
                         if (co != null) {
                             ArrayList<Currency> array_all_currency = Engine.list_all_currency();

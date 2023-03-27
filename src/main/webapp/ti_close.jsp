@@ -894,8 +894,8 @@
 
                         //Till safe = Engine.getContainsTill("000", listTill);
                         Till safe = Engine.getSafe(filiale);
-                        String tillselected = request.getParameter("tillselected");
-                        String opencloseid = request.getParameter("opencloseid");
+                        String tillselected = Utility.safeRequest(request, "tillselected");
+                        String opencloseid = Utility.safeRequest(request, "opencloseid");
                         Openclose oc = Engine.query_oc(opencloseid);
                         if (!oc.getUser().equals(username)) {
                             //if (false) {

@@ -95,15 +95,15 @@
             //iscentral = false;
             String esito = (String) session.getAttribute("esito_s");
             if (esito == null) {
-                esito = request.getParameter("esito");
-                if (esito == null || esito.equals("null")) {
+                esito = Utility.safeRequest(request, "esito");
+                if (esito.equals("") || esito.equals("null")) {
                     esito = "none";
                 }
             } else {
                 esito = StringUtils.split(esito, "&")[0];
             }
 
-            String codbl = request.getParameter("codbl");
+            String codbl = Utility.safeRequest(request, "codbl");
 
             session.setAttribute("esito_s", null);
 

@@ -49,7 +49,7 @@
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
@@ -193,19 +193,15 @@
                     <!-- END PAGE HEADER-->
                     <!-- SELECT BUY/SELL -->
 
-                    <%if (request.getParameter("search") == null) {%>
-                    <%} else if (request.getParameter("search").equals("ra1")) {
+                    <%                        String s1 = Utility.safeRequest(request, "search");
+                        if (s1.equals("ra1")) {
+                            String rep = Utility.safeRequest(request, "rep");
+                            if (rep.equals("Open Close - Analytical")) {
+                                String branch = Utility.safeRequest(request, "branch");
 
-                        String rep = request.getParameter("rep");
-                        if (rep == null) {
-                            rep = "";
-                        }
-
-                        if (rep.equals("Open Close - Analytical")) {
-                            String branch = request.getParameter("branch");
-
-                            ArrayList<Till> ti = Engine.listTill(branch);
-                            ArrayList<Openclose> list_openclose_report = Engine.list_openclose_report(request.getParameter("d4"), request.getParameter("d5"), branch);
+                                ArrayList<Till> ti = Engine.listTill(branch);
+                                ArrayList<Openclose> list_openclose_report
+                                        = Engine.list_openclose_report(Utility.safeRequest(request, "d4", true), Utility.safeRequest(request, "d5", true), branch);
                     %>
 
                     <div class="row">
@@ -230,13 +226,13 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Date From</label>
-                                                        <input type="text" class="form-control date-picker" value="<%=request.getParameter("d4")%>" id="d4" name="d4" readonly/>
+                                                        <input type="text" class="form-control date-picker" value="<%=Utility.safeRequest(request, "d4")%>" id="d4" name="d4" readonly/>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Date To</label>
-                                                        <input type="text" class="form-control date-picker" value="<%=request.getParameter("d5")%>" id="d5" name="d5" readonly/>
+                                                        <input type="text" class="form-control date-picker" value="<%=Utility.safeRequest(request, "d5")%>" id="d5" name="d5" readonly/>
                                                     </div>
                                                 </div>
                                                 <div class="clearfix"></div>
@@ -273,16 +269,16 @@
                                 </div>
                             </div>
                             <div class="clearfix">
-                                <a href="<%=request.getParameter("return")%>" class="btn btn-outline red"><i class="fa fa-arrow-left"></i> Back</a>
+                                <a href="<%=Utility.safeRequest(request, "return", true)%>" class="btn btn-outline red"><i class="fa fa-arrow-left"></i> Back</a>
                             </div>
                         </div>
                     </div>
 
                     <%} else if (rep.equals("External Transfer - Banking Sheet")) {
 
-                        String typeop = Engine.formatBankBranch(request.getParameter("typeop"));
+                        String typeop = Engine.formatBankBranch(Utility.safeRequest(request, "typeop"));
 
-                        String bankpos = request.getParameter("bankpos");
+                        String bankpos = Utility.safeRequest(request, "bankpos");
                         if (bankpos.equals("---")) {
                             bankpos = null;
                         }
@@ -296,12 +292,12 @@
                         }
 
                         if (bankpos != null) {
-                            String d1 = Engine.formatBankBranch(bankpos, "BA", array_bank, null,array_credit_card);
+                            String d1 = Engine.formatBankBranch(bankpos, "BA", array_bank, null, array_credit_card);
                             desc = bankpos + " - " + d1;
                         }
 
-                        ArrayList<ET_change> liET_change = Engine.list_ET_change_report(request.getParameter("d3"), request.getParameter("d4"),
-                                bankpos, false, true, null, request.getParameter("branch"), typeop, request.getParameter("chnc"));
+                        ArrayList<ET_change> liET_change = Engine.list_ET_change_report(Utility.safeRequest(request, "d3", true), Utility.safeRequest(request, "d4", true),
+                                bankpos, false, true, null, Utility.safeRequest(request, "branch"), typeop, Utility.safeRequest(request, "chnc"));
 
                     %>
 
@@ -319,7 +315,7 @@
                                 </div>
                                 <div class="portlet-body">
                                     <form action="Report?type=ToBankingSheet" method="post" target="_blank">
-                                        <input type="hidden" name="typeop" value="<%=request.getParameter("typeop")%>"/>
+                                        <input type="hidden" name="typeop" value="<%=Utility.safeRequest(request, "typeop")%>"/>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
@@ -328,13 +324,15 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Date From</label>
-                                                        <input type="text" class="form-control" value="<%=request.getParameter("d3")%>" id="d3" name="d3" readonly/>
+                                                        <input type="text" class="form-control" value="<%=Utility.safeRequest(request, "d3")%>" 
+                                                               id="d3" name="d3" readonly/>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Date To</label>
-                                                        <input type="text" class="form-control" value="<%=request.getParameter("d4")%>" id="d4" name="d4" readonly/>
+                                                        <input type="text" class="form-control" value="<%=Utility.safeRequest(request, "d4")%>" 
+                                                               id="d4" name="d4" readonly/>
                                                     </div>
                                                 </div>
                                                 <div class="clearfix"></div>
@@ -342,8 +340,9 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Type Operation</label>
-                                                        <input type="hidden" class="form-control" value="<%=request.getParameter("chnc")%>" name="chnc" readonly/>
-                                                        <input type="text" class="form-control" value="<%=ET_change.typechangeno(request.getParameter("chnc"))%>" readonly/>
+                                                        <input type="hidden" class="form-control" value="<%=Utility.safeRequest(request, "chnc")%>" name="chnc" readonly/>
+                                                               <input type="text" class="form-control" value="<%=ET_change.typechangeno(Utility.safeRequest(request,
+                                                                "chnc"))%>" readonly/>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -353,8 +352,7 @@
                                                             <%for (int i = 0; i < liET_change.size(); i++) {
                                                                     ET_change oc = liET_change.get(i);
 
-                                                                    String br = Engine.formatBankBranch(oc.getCod_dest(), "BA", array_bank, null,array_credit_card);
-
+                                                                    String br = Engine.formatBankBranch(oc.getCod_dest(), "BA", array_bank, null, array_credit_card);
 
 
                                                             %>
@@ -390,19 +388,19 @@
                                 </div>
                             </div>
                             <div class="clearfix">
-                                <a href="<%=request.getParameter("return")%>" class="btn btn-outline red"><i class="fa fa-arrow-left"></i> Back</a>
+                                <a href="<%=Utility.safeRequest(request, "return")%>" class="btn btn-outline red"><i class="fa fa-arrow-left"></i> Back</a>
                             </div>
                         </div>
                     </div>
 
                     <%} else if (rep.equals("Banking/Branching Sheet")) {
 
-                        String d3 = request.getParameter("d3");
-                        String d4 = request.getParameter("d4");
+                        String d3 = Utility.safeRequest(request, "d3", true);
+                        String d4 = Utility.safeRequest(request, "d4", true);
 
-                        String typeft = request.getParameter("typeft");
-                        String typedest = request.getParameter("typedest");
-                        String branch = request.getParameter("branch");
+                        String typeft = Utility.safeRequest(request, "typeft");
+                        String typedest = Utility.safeRequest(request, "typedest");
+                        String branch = Utility.safeRequest(request, "branch");
 
                         ArrayList<ET_change> liET_change = Engine.list_ET_change_report_central(d3, d4, typeft, typedest, branch);
 
@@ -429,13 +427,13 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Date From</label>
-                                                        <input type="text" class="form-control date-picker" value="<%=request.getParameter("d3")%>" id="d3" name="d3" readonly/>
+                                                        <input type="text" class="form-control date-picker" value="<%=Utility.safeRequest(request, "d3", true)%>" id="d3" name="d3" readonly/>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Date To</label>
-                                                        <input type="text" class="form-control date-picker" value="<%=request.getParameter("d4")%>" id="d4" name="d4" readonly/>
+                                                        <input type="text" class="form-control date-picker" value="<%=Utility.safeRequest(request, "d4", true)%>" id="d4" name="d4" readonly/>
                                                     </div>
                                                 </div>
                                                 <div class="clearfix"></div>
@@ -485,14 +483,14 @@
                                                                                 <%for (int i = 0; i < liET_change.size(); i++) {
                                                                                         ET_change oc = liET_change.get(i);
 
-                                                                                        String filiale = Engine.formatBankBranch(oc.getFiliale(), "BR", null, array_branch,null);
+                                                                                        String filiale = Engine.formatBankBranch(oc.getFiliale(), "BR", null, array_branch, null);
                                                                                         String descr = "";
 
-                                                                                        String d = ET_change.format_tofrom_brba(oc.getFg_tofrom(), 
+                                                                                        String d = ET_change.format_tofrom_brba(oc.getFg_tofrom(),
                                                                                                 oc.getFg_brba(), oc.getCod_dest(), list_bankAccountPOS);
 
                                                                                         if (oc.getFg_brba().equals("BR")) {
-                                                                                            descr = Engine.formatBankBranch(oc.getCod_dest(), "BR", null, array_branch,null);
+                                                                                            descr = Engine.formatBankBranch(oc.getCod_dest(), "BR", null, array_branch, null);
                                                                                         } else {
                                                                                             descr = Engine.formatBankBranch(oc.getCod_dest(), "BA", array_bank, null, array_credit_card);
                                                                                         }%>
@@ -545,16 +543,16 @@
                                 </div>
                             </div>
                             <div class="clearfix">
-                                <a href="<%=request.getParameter("return")%>" class="btn btn-outline red"><i class="fa fa-arrow-left"></i> Back</a>
+                                <a href="<%=Utility.safeRequest(request, "return", true)%>" class="btn btn-outline red"><i class="fa fa-arrow-left"></i> Back</a>
                             </div>
                         </div>
                     </div>
 
 
                     <%} else if (rep.equals("Office Stock Price")) {
-                        String d3 = request.getParameter("d3");
+                        String d3 = Utility.safeRequest(request, "d3", true);
                         String data1 = Utility.formatStringtoStringDate_null(d3, Constant.patternnormdate_filter, Constant.patternsql);
-                        String branch = request.getParameter("branch");
+                        String branch = Utility.safeRequest(request, "branch");
                         if (branch == null || branch.equals("")) {
                             branch = Engine.getFil()[0];
                         }
@@ -584,7 +582,7 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Date</label>
-                                                        <input type="text" class="form-control" value="<%=request.getParameter("d3")%>" id="d3" name="d3" readonly/>
+                                                        <input type="text" class="form-control" value="<%=Utility.safeRequest(request, "d3")%>" id="d3" name="d3" readonly/>
                                                     </div>
                                                 </div>
                                                 <div class="clearfix"></div>
@@ -622,7 +620,7 @@
                                 </div>
                             </div>
                             <div class="clearfix">
-                                <a href="<%=request.getParameter("return")%>" class="btn btn-outline red"><i class="fa fa-arrow-left"></i> Back</a>
+                                <a href="<%=Utility.safeRequest(request, "return", true)%>" class="btn btn-outline red"><i class="fa fa-arrow-left"></i> Back</a>
                             </div>
                         </div>
                     </div>
@@ -633,19 +631,19 @@
 
                     <%} else if (rep.equals("External Transfer - Branching Sheet")) {
 
-                        String br1 = request.getParameter("br1");
+                        String br1 = Utility.safeRequest(request, "br1");
                         if (br1.equals("---")) {
                             br1 = null;
                         }
 
-                        String cdbr = request.getParameter("branch");
-                        if (request.getParameter("branch").equals("---")) {
+                        String cdbr = Utility.safeRequest(request, "branch");
+                        if (cdbr.equals("---")) {
                             cdbr = Engine.getFil()[0];
                         }
 
-                        //Branch br = Engine.get_branch(request.getParameter("branch"));
-                        ArrayList<ET_change> liET_change = Engine.list_ET_change_report(request.getParameter("d3"), request.getParameter("d4"),
-                                br1, true, false, null, cdbr, null, request.getParameter("chnc"));
+                        ArrayList<ET_change> liET_change = Engine.list_ET_change_report(Utility.safeRequest(request, "d3", true),
+                                Utility.safeRequest(request, "d4", true),
+                                br1, true, false, null, cdbr, null, Utility.safeRequest(request, "chnc"));
 
 
                     %>
@@ -671,21 +669,21 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Date From</label>
-                                                        <input type="text" class="form-control" value="<%=request.getParameter("d3")%>" id="d3" name="d3" readonly/>
+                                                        <input type="text" class="form-control" value="<%=Utility.safeRequest(request, "d3")%>" id="d3" name="d3" readonly/>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Date To</label>
-                                                        <input type="text" class="form-control" value="<%=request.getParameter("d4")%>" id="d4" name="d4" readonly/>
+                                                        <input type="text" class="form-control" value="<%=Utility.safeRequest(request, "d4")%>" id="d4" name="d4" readonly/>
                                                     </div>
                                                 </div>
                                                 <div class="clearfix"></div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Type Operation</label>
-                                                        <input type="hidden" class="form-control" value="<%=request.getParameter("chnc")%>" name="chnc" readonly/>
-                                                        <input type="text" class="form-control" value="<%=ET_change.typechangeno(request.getParameter("chnc"))%>" readonly/>
+                                                        <input type="hidden" class="form-control" value="<%=Utility.safeRequest(request, "chnc")%>" name="chnc" readonly/>
+                                                        <input type="text" class="form-control" value="<%=ET_change.typechangeno(Utility.safeRequest(request, "chnc"))%>" readonly/>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -728,7 +726,7 @@
                                 </div>
                             </div>
                             <div class="clearfix">
-                                <a href="<%=request.getParameter("return")%>" class="btn btn-outline red"><i class="fa fa-arrow-left"></i> Back</a>
+                                <a href="<%=Utility.safeRequest(request, "return")%>" class="btn btn-outline red"><i class="fa fa-arrow-left"></i> Back</a>
                             </div>
                         </div>
                     </div>
@@ -766,7 +764,7 @@
                             </div>
                         </div>
                         <div class="col-md-12">
-                            <a href="<%=request.getParameter("return")%>" class="btn btn-outline red"><i class="fa fa-arrow-left"></i> Back</a>
+                            <a href="<%=Utility.safeRequest(request, "return")%>" class="btn btn-outline red"><i class="fa fa-arrow-left"></i> Back</a>
                         </div>
                     </div>
                     <%}
@@ -807,13 +805,13 @@
 
                 <!-- END THEME GLOBAL SCRIPTS -->
                 <!-- BEGIN PAGE LEVEL SCRIPTS -->
-                
+
                 <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-                
+
                 <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
                 <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
                 <!-- END PAGE LEVEL SCRIPTS -->
-                
+
                 <!-- BEGIN THEME LAYOUT SCRIPTS -->
                 <script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
                 <script src="assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>

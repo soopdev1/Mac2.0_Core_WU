@@ -120,10 +120,10 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-
-                        String es_code = request.getParameter("es_code");
                         ArrayList<String[]> contabilita = Engine.contabilita();
-                        if (es_code != null) {
+
+                        String es_code = Utility.safeRequest(request, "es_code");
+                        if (!es_code.equals("")) {
                             String descr = Utility.formatAL(es_code, contabilita, 1);
                             String contcode = Utility.formatAL(es_code, contabilita, 2);
                             
@@ -174,10 +174,7 @@
                     
                     <%}%>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

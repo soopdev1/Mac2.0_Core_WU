@@ -223,12 +223,12 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String view = request.getParameter("view");
-                        if (view == null) {
+                        String view = Utility.safeRequest(request, "view");
+                        if (view.equals("")) {
                             view = "0";
                         }
 
-                        String bl_code = request.getParameter("bl_code");
+                        String bl_code = Utility.safeRequest(request, "bl_code");
                         BlacklistM bl = Engine.get_list_BlMacc(bl_code);
                         if (bl != null) {
 
@@ -1034,10 +1034,7 @@
                 </script>
                     <%}%>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

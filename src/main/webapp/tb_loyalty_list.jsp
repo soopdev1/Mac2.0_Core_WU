@@ -124,7 +124,7 @@
                     <div class="clearfix"></div>
                     <%
                         String ty = "central";
-                        String codcl = request.getParameter("codcl");
+                        String codcl = Utility.safeRequest(request, "codcl");
                         ArrayList<Ch_transaction> li = Engine.query_transaction_ch_CLIENT_central(codcl);
                         ArrayList<NC_transaction> li_nc = Engine.query_NC_transaction_codcl_centr(codcl);
                         Client cc = Engine.query_Client_central(codcl);

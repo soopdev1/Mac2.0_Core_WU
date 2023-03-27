@@ -119,20 +119,21 @@
                 lan_index = "IT";
                 Etichette et_index = new Etichette(lan_index);
                 String fil = Engine.getFil()[0];
-                String cod = request.getParameter("cod");
+                String cod = Utility.safeRequest(request, "cod");
+                String ty1 = Utility.safeRequest(request, "type");
 
-                Ch_transaction tra = Engine.query_transaction_ch(cod, request.getParameter("type"));
+                Ch_transaction tra = Engine.query_transaction_ch(cod, ty1);
 
-                Branch br1 = Engine.get_branch(tra.getFiliale(), request.getParameter("type"));
+                Branch br1 = Engine.get_branch(tra.getFiliale(), ty1);
 
-                Openclose oc = Engine.query_oc(tra.getId_open_till(), request.getParameter("type"));
-                Till t1 = Engine.get_single_Till(oc.getFiliale(), oc.getTill(), request.getParameter("type"));
-                CustomerKind ck = Engine.get_customerKind(tra.getTipocliente(), request.getParameter("type"));
+                Openclose oc = Engine.query_oc(tra.getId_open_till(), ty1);
+                Till t1 = Engine.get_single_Till(oc.getFiliale(), oc.getTill(), ty1);
+                CustomerKind ck = Engine.get_customerKind(tra.getTipocliente(), ty1);
 
-                Codici_sblocco cs1 = Engine.getCod_tr(cod, "01", request.getParameter("type"));
+                Codici_sblocco cs1 = Engine.getCod_tr(cod, "01", ty1);
                 String resp1 = "";
                 if (cs1 != null) {
-                    resp1 = Engine.getRespCod(cs1.getCodice(), request.getParameter("type"));
+                    resp1 = Engine.getRespCod(cs1.getCodice(), ty1);
                 }
 
                 boolean showagency = tra.getAgency().equals("1");
@@ -164,7 +165,7 @@
                     <div class="row">
                         <div class="col-md-11">
                             <h3 class="page-title">Transaction <%=tra.formatType(tra.getTipotr())%> <small><b>VIEW</b> </small>
-                                <%if (request.getParameter("type") == null) {%>
+                                <%if (ty1.equals("")) {%>
                                 <a title="Export PDF" onclick="return document.getElementById('viewpdf').submit();">  
                                     <img src="assets/soop/img/Adobe-PDF-Document-icon.png" alt="Export PDF"/>
                                 </a> 
@@ -485,7 +486,7 @@
 
                         <%
                             if (showagency) {
-                                Agency ag = Engine.get_agency(tra.getAgency_cod(), request.getParameter("type"));
+                                Agency ag = Engine.get_agency(tra.getAgency_cod(), ty1);
                         %>
                         <div class="clearfix"></div>
                         <!-- agen -->
@@ -551,7 +552,7 @@
 
                         <%
                             if (tra.getIntbook_type().equals("1")) {
-                                ArrayList<NC_causal> array_nc_causal = Engine.list_nc_causal_sell(request.getParameter("type"));
+                                ArrayList<NC_causal> array_nc_causal = Engine.list_nc_causal_sell(ty1);
                                 NC_causal nc1 = Engine.getNC_causal(array_nc_causal, tra.getIntbook_1_tf(), null);
                                 NC_causal nc2 = Engine.getNC_causal(array_nc_causal, tra.getIntbook_2_tf(), null);
                                 NC_causal nc3 = Engine.getNC_causal(array_nc_causal, tra.getIntbook_3_tf(), null);
@@ -667,7 +668,7 @@
                                 </div>
                             </div>
                             <div class="clearfix"></div>
-                            <%ArrayList<NC_transaction> linc = Engine.list_nctransactionfromchange(tra.getCod(), request.getParameter("type"));
+                            <%ArrayList<NC_transaction> linc = Engine.list_nctransactionfromchange(tra.getCod(), ty1);
 
                                 for (int c = 0; c < linc.size(); c++) {%>
                             <div class="col-md-3">
@@ -766,10 +767,10 @@
 
                                                     <tbody>
                                                         <%
-                                                            ArrayList<Ch_transaction_value> listvalue = Engine.query_transaction_value(cod, request.getParameter("type"));
+                                                            ArrayList<Ch_transaction_value> listvalue = Engine.query_transaction_value(cod, ty1);
                                                             for (int i = 0; i < listvalue.size(); i++) {
                                                                 Ch_transaction_value val = listvalue.get(i);
-                                                                Figures fi1 = Engine.get_figures(val.getSupporto(), tra.getFiliale(), request.getParameter("type"));
+                                                                Figures fi1 = Engine.get_figures(val.getSupporto(), tra.getFiliale(), ty1);
                                                                 Currency cu1 = Engine.getCurrency(val.getValuta());
 
                                                                 String underminjust = Utility.formatAL(val.getLow_com_ju(), array_undermincommjustify, 1);
@@ -959,8 +960,8 @@
                         <!-- customer information pf -->
                         <%if (!ck.getTipologia_clienti().equals("003")) {
                                 boolean view = true;
-                                Client cl = Engine.query_Client_transaction(tra.getCod(), tra.getCl_cod(), request.getParameter("type"));
-                                String loy = Engine.query_LOY_transaction(tra.getCod(), request.getParameter("type"), fil);
+                                Client cl = Engine.query_Client_transaction(tra.getCod(), tra.getCl_cod(), ty1);
+                                String loy = Engine.query_LOY_transaction(tra.getCod(), ty1, fil);
                                 if (!Constant.is_IT) {
                                     if (cl.getCode().equals("---") && cl.getRepceca() == null) {
                                         view = false;

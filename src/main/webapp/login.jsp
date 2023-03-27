@@ -1,3 +1,4 @@
+<%@page import="rc.so.util.Utility"%>
 <%@page import="rc.so.util.Constant"%>
 <%@page import="rc.so.util.Etichette"%>
 <%@page import="rc.so.util.Engine"%>
@@ -55,9 +56,8 @@
 
             String fil[] = Engine.getFil();
             boolean central = fil[0].equals("000");
-            //ArrayList<Branch> array_branch = Engine.list_branch();
             ArrayList<Branch> array_branch = Engine.list_branch_enabled();
-            String esito = request.getParameter("esito");
+            String esito = Utility.safeRequest(request, "esito");
             if (esito == null) {
                 esito = "";
             }%>

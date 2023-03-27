@@ -8,7 +8,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     String link_value = Engine.verifyUser(request);
-    if(link_value!=null){
+    if (link_value != null) {
         Utility.redirect(request, response, link_value);
     }
 %>
@@ -40,12 +40,12 @@
         <link href="assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
@@ -61,13 +61,13 @@
         <link rel="shortcut icon" href="favicon.ico" /> 
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
         <!-- FANCYBOX -->
-        
+
         <script type="text/javascript" src="assets/soop/js/jquery.fancybox.js?v=2.1.5"></script>
         <link rel="stylesheet" type="text/css" href="assets/soop/css/jquery.fancybox.css?v=2.1.5" media="screen" />
         <script type="text/javascript" src="assets/soop/js/fancy.js"></script>
-        
-       
-        
+
+
+
     </head>
     <!-- END HEAD -->
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white" onload="return online();">
@@ -138,7 +138,7 @@
                             <img src="assets/soop/img/logocl.png" alt="" class="img-responsive" style="text-align: right;"/> 
                         </div>
                     </div>
-                    <%if(central&&tipo.equals("3")){%>
+                    <%if (central && tipo.equals("3")) {%>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
@@ -183,10 +183,10 @@
                                                                     <td><%=array_cc.get(i)[0]%></td>
                                                                     <td><%=array_cc.get(i)[1]%></td>
                                                                     <td><%=Engine.formatStatus_general(array_cc.get(i)[2])%></td>
-                                                                    <td><%if(central&&tipo.equals("3")){%>
+                                                                    <td><%if (central && tipo.equals("3")) {%>
                                                                         <a href="tb_edit_creditcard.jsp?fil=<%=fil%>&view=0&cc_code=<%=array_cc.get(i)[0]%>" 
                                                                            class="btn btn-sm blue btn-outline btn-circle fancyBoxRafreload"><i class="fa fa-wrench"></i> Edit</a>
-                                                                           <%}%>
+                                                                        <%}%>
                                                                     </td>
                                                                 </tr>  
                                                                 <%}
@@ -203,9 +203,9 @@
                         </div>
                     </div>
                     <%
-                        if(central&&tipo.equals("3")){
-                        String search = request.getParameter("search");
-                        if (search == null) {%>
+                        if (central && tipo.equals("3")) {
+                            String search = Utility.safeRequest(request, "search");
+                            if (search.equals("")) {%>
                     <form action="tb_creditcard.jsp" method="post">
                         <input type="hidden" name="search" value="sra1"/>
                         <div class="portlet box blue-hoki">
@@ -264,7 +264,7 @@
                                                     <%
 
                                                         for (int j = 0; j < array_branch.size(); j++) {
-                                                            if (request.getParameter("branch").equals(array_branch.get(j).getCod())) {%>
+                                                            if (Utility.safeRequest(request, "branch").equals(array_branch.get(j).getCod())) {%>
                                                     <option selected value="<%=array_branch.get(j).getCod()%>"><%=array_branch.get(j).getCod()%> - <%=array_branch.get(j).getDe_branch()%></option>
                                                     <%} else {%>
                                                     <option value="<%=array_branch.get(j).getCod()%>"><%=array_branch.get(j).getCod()%> - <%=array_branch.get(j).getDe_branch()%></option>
@@ -284,49 +284,50 @@
                                 </div>
 
                                 <%
-                                    ArrayList<String[]> array_cc_list = Engine.credit_card(request.getParameter("branch"));
+                                    ArrayList<String[]> array_cc_list = Engine.credit_card(Utility.safeRequest(request, "branch"));
                                 %>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        
-                                         <div class="portlet">
-                                                    <div class="portlet-title">
-                                                        
-                                                    </div>
 
-                                                    <div class="portlet-body">
-                                        
-                                        <table class="table table-responsive table-bordered table-hover" id="sample_1" width="100%">
-                                            <thead>
-                                                <tr>
-                                                    <th class="tabnow"style="width: 70px;">Code</th>
-                                                    <th class="tabnow">Description</th>
-                                                    <th class="tabnow">Status</th>
-                                                    <th class="tabnow"style="width: 70px;">Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <%for (int i = 0; i < array_cc_list.size(); i++) {%>
-                                                <tr>
-                                                    <td><%=array_cc_list.get(i)[0]%></td>
-                                                    <td><%=array_cc_list.get(i)[1]%></td>
-                                                    <td><%=Engine.formatStatus_general(array_cc_list.get(i)[2])%></td>
-                                                    <td><a href="tb_edit_creditcard.jsp?fil=<%=request.getParameter("branch")%>&view=1&cc_code=<%=array_cc_list.get(i)[0]%>" 
-                                                           class="btn btn-sm blue-hoki btn-outline btn-circle fancyBoxRafreload"><i class="fa fa-eye"></i> View</a>
-                                                </tr>  
-                                                <%}
-                                                %>
-                                            </tbody>
-                                        </table>
-                                                    </div>
-                                         </div>
+                                        <div class="portlet">
+                                            <div class="portlet-title">
+
+                                            </div>
+
+                                            <div class="portlet-body">
+
+                                                <table class="table table-responsive table-bordered table-hover" id="sample_1" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="tabnow"style="width: 70px;">Code</th>
+                                                            <th class="tabnow">Description</th>
+                                                            <th class="tabnow">Status</th>
+                                                            <th class="tabnow"style="width: 70px;">Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <%for (int i = 0; i < array_cc_list.size(); i++) {%>
+                                                        <tr>
+                                                            <td><%=array_cc_list.get(i)[0]%></td>
+                                                            <td><%=array_cc_list.get(i)[1]%></td>
+                                                            <td><%=Engine.formatStatus_general(array_cc_list.get(i)[2])%></td>
+                                                            <td><a href="tb_edit_creditcard.jsp?fil=<%=Utility.safeRequest(request, "branch")%>&view=1&cc_code=<%=array_cc_list.get(i)[0]%>" 
+                                                                   class="btn btn-sm blue-hoki btn-outline btn-circle fancyBoxRafreload"><i class="fa fa-eye"></i> View</a>
+                                                        </tr>  
+                                                        <%}
+                                                        %>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
                             </div>
                         </div>
                     </form>
-                    <%}}%>
+                    <%}
+                        }%>
 
                     <!-- END CONTENT -->
                     <!-- BEGIN QUICK SIDEBAR -->
@@ -347,7 +348,7 @@
                 <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-                
+
                 <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
 
@@ -369,9 +370,9 @@
 
                 <!-- END THEME GLOBAL SCRIPTS -->
                 <!-- BEGIN PAGE LEVEL SCRIPTS -->
-                
+
                 <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-                
+
                 <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
                 <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
 
@@ -416,22 +417,22 @@
                                                 {orderable: !1, targets: [3]}
                                             ],
                                             buttons: [
-                                                 {text: "<i class='fa fa-file-pdf-o'></i> Excel",
-                                                                        className: "btn white btn-outline",
-                                                                        action: function (e, dt, node, config) {
-                                                                           
-                                                                            //window.open('Download?type=viewExcel&cod=' + cexcel, '_blank');
-                                                                            window.open('Fileview?type=tb_creditcard&filiale=<%=Engine.getFil()[0]%>&value=excel', '_blank');
-                                                                        }
-                                                                    },
-                                                                    {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
-                                                                        className: "btn white btn-outline",
-                                                                        action: function (e, dt, node, config) {
-                                                                         
-                                                                            //window.open('Download?type=viewPdf&cod=' + cpdf, '_blank');
-                                                                            window.open('Fileview?type=tb_creditcard&filiale=<%=Engine.getFil()[0]%>&value=pdf', '_blank');
-                                                                        }
-                                                                    },
+                                                {text: "<i class='fa fa-file-pdf-o'></i> Excel",
+                                                    className: "btn white btn-outline",
+                                                    action: function (e, dt, node, config) {
+
+                                                        //window.open('Download?type=viewExcel&cod=' + cexcel, '_blank');
+                                                        window.open('Fileview?type=tb_creditcard&filiale=<%=Engine.getFil()[0]%>&value=excel', '_blank');
+                                                    }
+                                                },
+                                                {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
+                                                    className: "btn white btn-outline",
+                                                    action: function (e, dt, node, config) {
+
+                                                        //window.open('Download?type=viewPdf&cod=' + cpdf, '_blank');
+                                                        window.open('Fileview?type=tb_creditcard&filiale=<%=Engine.getFil()[0]%>&value=pdf', '_blank');
+                                                    }
+                                                },
                                                 {extend: "colvis", className: "btn white btn-outline", text: "<i class='fa fa-list-alt'></i> Columns"},
                                                 {text: "<i class='fa fa fa-refresh'></i>",
                                                     className: "btn white btn-outline",
@@ -442,7 +443,7 @@
                                             ,
                                             scrollX: true,
                                             colReorder: {reorderCallback: function () {
-                                                    
+
                                                 }},
                                             lengthMenu: [
                                                 [25, 50, 100, -1],
@@ -456,7 +457,7 @@
                                     };
                                     jQuery().dataTable && dt1();
                                 });
-                                
+
                                 jQuery(document).ready(function () {
                                     var dt1 = function () {
                                         var f = $("#sample_1");
@@ -478,25 +479,25 @@
                                                 {orderable: !1, targets: [3]}
                                             ],
                                             buttons: [
-                                                 {text: "<i class='fa fa-file-pdf-o'></i> Excel",
-                                                                        className: "btn blue-hoki btn-outline",
-                                                                        action: function (e, dt, node, config) {
-                                                                           
-                                                                            //window.open('Download?type=viewExcel&cod=' + cexcel, '_blank');
-                                                                            window.open('Fileview?type=tb_creditcard&filiale=<%=request.getParameter("branch")%>&value=excel', '_blank');
-                                                                        }
-                                                                    },
-                                                                    {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
-                                                                        className: "btn blue-hoki btn-outline",
-                                                                        action: function (e, dt, node, config) {
-                                                                         
-                                                                            //window.open('Download?type=viewPdf&cod=' + cpdf, '_blank');
-                                                                            window.open('Fileview?type=tb_creditcard&filiale=<%=request.getParameter("branch")%>&value=pdf', '_blank');
-                                                                        }
-                                                                    },
-                                                {extend: "colvis",   className: "btn blue-hoki btn-outline", text: "<i class='fa fa-list-alt'></i> Columns"},
+                                                {text: "<i class='fa fa-file-pdf-o'></i> Excel",
+                                                    className: "btn blue-hoki btn-outline",
+                                                    action: function (e, dt, node, config) {
+
+                                                        //window.open('Download?type=viewExcel&cod=' + cexcel, '_blank');
+                                                        window.open('Fileview?type=tb_creditcard&filiale=<%=Utility.safeRequest(request, "branch")%>&value=excel', '_blank');
+                                                    }
+                                                },
+                                                {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
+                                                    className: "btn blue-hoki btn-outline",
+                                                    action: function (e, dt, node, config) {
+
+                                                        //window.open('Download?type=viewPdf&cod=' + cpdf, '_blank');
+                                                        window.open('Fileview?type=tb_creditcard&filiale=<%=Utility.safeRequest(request, "branch")%>&value=pdf', '_blank');
+                                                    }
+                                                },
+                                                {extend: "colvis", className: "btn blue-hoki btn-outline", text: "<i class='fa fa-list-alt'></i> Columns"},
                                                 {text: "<i class='fa fa fa-refresh'></i>",
-                                                     className: "btn blue-hoki btn-outline",
+                                                    className: "btn blue-hoki btn-outline",
                                                     action: function (e, dt, node, config) {
                                                         location.reload();
                                                     }
@@ -504,7 +505,7 @@
                                             ,
                                             scrollX: true,
                                             colReorder: {reorderCallback: function () {
-                                                    
+
                                                 }},
                                             lengthMenu: [
                                                 [25, 50, 100, -1],
@@ -519,16 +520,16 @@
                                     jQuery().dataTable && dt1();
                                 });
                 </script>
-                
-                 <script type="text/javascript">
 
-            $(document).ready(function () {
-                window.history.pushState(null, "", window.location.href);
-                window.onpopstate = function () {
-                    window.history.pushState(null, "", window.location.href);
-                };
-            });
-        </script>
+                <script type="text/javascript">
+
+                    $(document).ready(function () {
+                        window.history.pushState(null, "", window.location.href);
+                        window.onpopstate = function () {
+                            window.history.pushState(null, "", window.location.href);
+                        };
+                    });
+                </script>
 
                 </body>
                 </html>

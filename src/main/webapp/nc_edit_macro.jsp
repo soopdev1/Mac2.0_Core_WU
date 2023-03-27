@@ -31,19 +31,19 @@
         <!-- BEGIN PAGE LEVEL PLUGINS -->
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
 
         <link href="assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
 
         <!-- END PAGE LEVEL PLUGINS -->
@@ -60,9 +60,9 @@
         <link rel="shortcut icon" href="favicon.ico" /> 
         <script src="assets/soop/js/moment.js" type="text/javascript"></script>
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
-        
-       
-        
+
+
+
         <%
             String decimal = Constant.decimal;
             String thousand = Constant.thousand;
@@ -109,7 +109,7 @@
                 }
             }
 
-            
+
         </script>
 
     </head>
@@ -152,10 +152,7 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";
@@ -186,12 +183,12 @@
                         </div>
                     </div>
                     <%}%>
-                   
+
                     <%
-                    
-                    String ma_code = request.getParameter("ma_code");%>
-                    
-                    <%if(ma_code==null){%>
+
+                        String ma_code = Utility.safeRequest(request, "ma_code");%>
+
+                    <%if (ma_code.equals("")) {%>
                     <form class="form-horizontal" role="form" name="f1" method="post" action="Edit?type=ins_macro" onsubmit="return checkdescr();">
                         <div class="row">
                             <div class="col-md-12">
@@ -227,18 +224,18 @@
                             </div>
                         </div>
                     </form>        
-                    
-                    
-                    <%}else{   
+
+
+                    <%} else {
 
                         ArrayList<String[]> list = Engine.list_ncmacro();
                         String d1 = Utility.formatAL(ma_code, list, 1);
 
-    %>
-                    
-    
+                    %>
+
+
                     <form class="form-horizontal" role="form" name="f1" method="post" action="Edit?type=edit_macro" onsubmit="return checkdescr();">
-                        
+
                         <div class="row">
                             <div class="col-md-12">
                                 <!-- BEGIN PORTLET-->
@@ -274,9 +271,9 @@
                             </div>
                         </div>
                     </form>
-    
+
                     <%}%>
-                    
+
 
                     <!-- BEGIN CONTENT -->
 
@@ -298,7 +295,7 @@
             <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
             <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
             <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-            
+
             <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
             <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
 
@@ -319,9 +316,9 @@
 
             <!-- END THEME GLOBAL SCRIPTS -->
             <!-- BEGIN PAGE LEVEL SCRIPTS -->
-            
+
             <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-            
+
             <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
             <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
 
@@ -338,16 +335,16 @@
 
             <!-- BEGIN THEME GLOBAL SCRIPTS -->
 
-             <script type="text/javascript">
+            <script type="text/javascript">
 
-            $(document).ready(function () {
-                window.history.pushState(null, "", window.location.href);
-                window.onpopstate = function () {
-                    window.history.pushState(null, "", window.location.href);
-                };
-            });
-        </script>
-            
+                                                       $(document).ready(function () {
+                                                           window.history.pushState(null, "", window.location.href);
+                                                           window.onpopstate = function () {
+                                                               window.history.pushState(null, "", window.location.href);
+                                                           };
+                                                       });
+            </script>
+
 
     </body>
 

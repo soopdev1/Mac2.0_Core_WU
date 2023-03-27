@@ -3,8 +3,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     String link_value = Engine.verifyUser(request);
-    if(link_value!=null){
-        Utility.redirect(request, response,link_value);
+    if (link_value != null) {
+        Utility.redirect(request, response, link_value);
     }
 %>
 <!DOCTYPE HTML>
@@ -34,19 +34,19 @@
 
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
 
         <link href="assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
 
         <!-- END PAGE LEVEL PLUGINS -->
@@ -62,7 +62,7 @@
         <!-- END THEME LAYOUT STYLES -->
         <link rel="shortcut icon" href="favicon.ico" /> 
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
-        
+
         <script type="text/javascript">
             function checkdescr() {
                 var motiv1 = document.getElementById('motiv1').value.trim();
@@ -121,8 +121,8 @@
             <div class="page-content-wrapper">
                 <!-- BEGIN CONTENT BODY -->
                 <div class="page-content">
-                    <%String code = request.getParameter("code");
-                        if (code != null) {%>
+                    <%String code = Utility.safeRequest(request, "code");
+                        if (!code.equals("")) {%>
                     <form id="deletetrmod" name="deletetrmod" action="Operazioni?type=del_itr" method="post" onsubmit="return checkdescr();">
                         <div class="modal-header">
                             <h4 class="modal-title">Delete Transaction</h4>
@@ -139,36 +139,36 @@
                         </div>
                     </form>
                     <%} else {%>
-                        
+
                     <%}%>
-                    <%String esito = request.getParameter("esito");
-                        if (esito != null) {
+                    <%String esito = Utility.safeRequest(request, "esito");
+                        if (!esito.equals("")) {
                             if (esito.equals("ko1")) {%>
-                        <div class="alert alert-danger">
-                            <strong>Error!</strong> The selected openclose are inactive. Check safe.
-                        </div>
-                        <%}else if (esito.equals("ko2")) {%>
-                        <div class="alert alert-danger">
-                            <strong>Error!</strong> During the operation, an error occurred. Please try again.
-                        </div>
-                        <%}else if (esito.equals("ko2A")) {%>
-                        <div class="alert alert-danger">
-                            <strong>Error!</strong> During the operation, an error occurred. Please try again.
-                        </div>
-                        <%}else if (esito.equals("ko3A")) {%>
-                        <div class="alert alert-danger">
-                            <strong>Error!</strong> Quantity of value exceeds the amount in this till. Can't delete this operation.
-                        </div>
-                        <%}else if (esito.equals("kk")||esito.equals("kokk")) {%>
-                        <div class="alert alert-danger">
-                            <strong>Error!</strong> During the operation, an error occurred. Operation selected is already eliminated.
-                        </div>
-                        <%}else if (esito.equals("ko3")) {%>
-                        <div class="alert alert-danger">
-                            <strong>Error!</strong> External Transfer not found.
-                        </div>
-                        <%}
-                        }
+                    <div class="alert alert-danger">
+                        <strong>Error!</strong> The selected openclose are inactive. Check safe.
+                    </div>
+                    <%}else if (esito.equals("ko2")) {%>
+                    <div class="alert alert-danger">
+                        <strong>Error!</strong> During the operation, an error occurred. Please try again.
+                    </div>
+                    <%}else if (esito.equals("ko2A")) {%>
+                    <div class="alert alert-danger">
+                        <strong>Error!</strong> During the operation, an error occurred. Please try again.
+                    </div>
+                    <%}else if (esito.equals("ko3A")) {%>
+                    <div class="alert alert-danger">
+                        <strong>Error!</strong> Quantity of value exceeds the amount in this till. Can't delete this operation.
+                    </div>
+                    <%}else if (esito.equals("kk")||esito.equals("kokk")) {%>
+                    <div class="alert alert-danger">
+                        <strong>Error!</strong> During the operation, an error occurred. Operation selected is already eliminated.
+                    </div>
+                    <%}else if (esito.equals("ko3")) {%>
+                    <div class="alert alert-danger">
+                        <strong>Error!</strong> External Transfer not found.
+                    </div>
+                    <%}
+                    }
                     %>
                 </div>
             </div>
@@ -186,7 +186,7 @@
         <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
 
@@ -207,9 +207,9 @@
 
         <!-- END THEME GLOBAL SCRIPTS -->
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        
+
         <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
         <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
 
@@ -219,16 +219,16 @@
         <script src="assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
         <script src="assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
 
-         <script type="text/javascript">
+        <script type="text/javascript">
 
-            $(document).ready(function () {
-                window.history.pushState(null, "", window.location.href);
-                window.onpopstate = function () {
-                    window.history.pushState(null, "", window.location.href);
-                };
-            });
+                                   $(document).ready(function () {
+                                       window.history.pushState(null, "", window.location.href);
+                                       window.onpopstate = function () {
+                                           window.history.pushState(null, "", window.location.href);
+                                       };
+                                   });
         </script>
-        
+
     </body>
 
 </html>

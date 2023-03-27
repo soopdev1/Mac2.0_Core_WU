@@ -116,8 +116,8 @@
                     <%
                         ArrayList<String[]> list = Engine.list_department();
                         ArrayList<NC_category> nc_l = Engine.list_nc_category_enabled();
-                        String de_code = request.getParameter("de_code");
-                        if (de_code != null) {
+                        String de_code = Utility.safeRequest(request, "de_code");
+                        if (!de_code.equals("")) {
 
                             String descr = Utility.formatAL(de_code, list, 1);
                     %>
@@ -209,10 +209,7 @@
                     </form>
                     <%}%>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

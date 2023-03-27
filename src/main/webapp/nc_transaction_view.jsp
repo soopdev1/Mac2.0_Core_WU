@@ -78,15 +78,16 @@
             String decimal = Constant.decimal;
             String thousand = Constant.thousand;
             String fil = Engine.getFil()[0];
-            String cod = request.getParameter("cod");
-            NC_transaction nc = Engine.get_NC_transaction(cod, request.getParameter("type"));
+            String cod = Utility.safeRequest(request, "cod");
+            String typ1 = Utility.safeRequest(request, "type");
+            NC_transaction nc = Engine.get_NC_transaction(cod, typ1);
             ArrayList<String[]> array_kind_payment = Engine.kind_payment();
             ArrayList<NC_category> array_nc_cat = Engine.list_nc_category_enabled();
             ArrayList<NC_causal> array_nc_caus = Engine.list_nc_causal_enabled();
             ArrayList<String[]> array_country = Engine.country();
             ArrayList<String[]> array_credit_card = Engine.credit_card(nc.getFiliale());
             ArrayList<String[]> array_bankacc = Engine.list_bankAccount();
-            ArrayList<Till> listTill = Engine.list_till_status(null, null, nc.getFiliale(), request.getParameter("type"));
+            ArrayList<Till> listTill = Engine.list_till_status(null, null, nc.getFiliale(), typ1);
 
             String comm = "0";
             if (Utility.fd(nc.getCommissione()) > 0) {
@@ -380,7 +381,7 @@
                     <!-- END PAGE HEADER-->
 
                     <%if (nc != null) {
-                            Openclose oc = Engine.query_oc(nc.getId_open_till(), request.getParameter("type"));
+                            Openclose oc = Engine.query_oc(nc.getId_open_till(), typ1);
                             String idoc = "NO ID";
                             if (oc != null) {
                                 idoc = oc.getId();
@@ -786,7 +787,7 @@
                         </div>
                         <%}
                             }
-                            String loy = Engine.query_LOY_transaction(nc.getCod(), request.getParameter("type"), fil);
+                            String loy = Engine.query_LOY_transaction(nc.getCod(), typ1, fil);
                         %>
                         <%if (loy != null) {%>
                         <hr>

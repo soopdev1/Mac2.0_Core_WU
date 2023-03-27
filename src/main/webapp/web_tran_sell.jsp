@@ -122,7 +122,7 @@
             ArrayList<String[]> array_country_2 = ln.getCountryFlag("2");
             ArrayList<String[]> array_country_3 = ln.getCountryFlag("3");
             ArrayList<String[]> array_identificationCard = ln.getArray_identificationCard();
-            Booking bo = Engine.get_prenot(request.getParameter("cod"));
+            Booking bo = Engine.get_prenot(Utility.safeRequest(request, "cod"));
             ArrayList<String[]> array_credit_card = Engine.credit_card_enabled_WEB(bo);
             ArrayList<Company> array_listCompany = ln.getArray_listCompany();
             ArrayList<String[]> array_kind_pay = Engine.kind_payment_WEB();
@@ -200,7 +200,7 @@
                         ermsg = "<span class='font-red'>Attention! </span>Not executable transaction. This name is present in the international blacklist";
                     } else if (es1 === "koblm") {
                         var ms1 = "";
-                        var cod1 = '<%=request.getParameter("codbl")%>';
+                        var cod1 = '<%=Utility.safeRequest(request, "codbl")%>';
             <%for (int i = 0; i < array_bl.size(); i++) {%>
                         var confr = '<%=array_bl.get(i).getCode()%>';
                         if (cod1 === confr) {

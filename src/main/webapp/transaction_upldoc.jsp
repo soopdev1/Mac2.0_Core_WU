@@ -6,7 +6,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     String link_value = Engine.verifyUser(request);
-    if(link_value!=null){
+    if (link_value != null) {
         Utility.redirect(request, response, link_value);
     }
 %>
@@ -37,19 +37,19 @@
 
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
 
         <link href="assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
 
         <!-- END PAGE LEVEL PLUGINS -->
@@ -65,10 +65,10 @@
         <!-- END THEME LAYOUT STYLES -->
         <link rel="shortcut icon" href="favicon.ico" /> 
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
-        
-        
-        
-        
+
+
+
+
         <script type="text/javascript">
             function checkvalue() {
                 var oFile = document.getElementById("filepdf");
@@ -79,8 +79,8 @@
                     document.getElementById("errorlargetext").innerHTML = ermsg;
                     return false;
                 }
-                
-                
+
+
                 var blnValid = false;
                 var sCurExtension = ".pdf";
                 if (oFile.value.substr(oFile.value.length - sCurExtension.length, sCurExtension.length).toLowerCase() === sCurExtension.toLowerCase()) {
@@ -143,14 +143,14 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String codtr = request.getParameter("codtr");
-                        String coddoc = request.getParameter("coddoc");
-                        
-                        String mod = request.getParameter("mod");
-                        if(mod==null){
-                            mod="false";
+                        String codtr = Utility.safeRequest(request, "codtr");
+                        String coddoc = Utility.safeRequest(request, "coddoc");
+
+                        String mod = Utility.safeRequest(request, "mod");
+                        if (mod.equals("")) {
+                            mod = "false";
                         }
-                        
+
                         String[] val = Engine.get_typedoc_tra(coddoc);
                     %>
 
@@ -255,12 +255,12 @@
 <!-- BEGIN THEME GLOBAL SCRIPTS -->
 <script type="text/javascript">
 
-            $(document).ready(function () {
-                window.history.pushState(null, "", window.location.href);
-                window.onpopstate = function () {
-                    window.history.pushState(null, "", window.location.href);
-                };
-            });
-        </script>
+                                                                   $(document).ready(function () {
+                                                                       window.history.pushState(null, "", window.location.href);
+                                                                       window.onpopstate = function () {
+                                                                           window.history.pushState(null, "", window.location.href);
+                                                                       };
+                                                                   });
+</script>
 </body>
 </html>

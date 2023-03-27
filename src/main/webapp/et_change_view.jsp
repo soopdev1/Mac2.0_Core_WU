@@ -140,7 +140,7 @@
                         String lan_index = (String) session.getAttribute("language");
                         lan_index = "IT";
                         Etichette et_index = new Etichette(lan_index);
-                        String cod = request.getParameter("cod");
+                        String cod = Utility.safeRequest(request, "cod");
                         ET_change et = Engine.get_ET_change(cod);
 
                         if (et != null) {
@@ -317,7 +317,7 @@
 
                     <%
 
-                        String typeop = request.getParameter("typeop");
+                        String typeop = Utility.safeRequest(request, "typeop");
                         if (typeop == null) {
                             typeop = "";
                         }

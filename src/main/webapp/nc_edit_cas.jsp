@@ -39,19 +39,19 @@
 
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
 
         <link href="assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
 
         <!-- END PAGE LEVEL PLUGINS -->
@@ -68,10 +68,10 @@
         <link rel="shortcut icon" href="favicon.ico" /> 
         <script src="assets/soop/js/moment.js" type="text/javascript"></script>
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
-        
-        
-        
-        
+
+
+
+
         <%
             String decimal = Constant.decimal;
             String thousand = Constant.thousand;
@@ -200,10 +200,7 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";
@@ -235,8 +232,8 @@
                     </div>
                     <%}%>
                     <%
-                        String view = request.getParameter("view");
-                        if (view == null) {
+                        String view = Utility.safeRequest(request, "view");
+                        if (view.equals("")) {
                             view = "0";
                         }
                         String dateApply = Utility.getDefaultDateAplly(true, false, 0, 0, 30, null);
@@ -244,7 +241,7 @@
 
                         ArrayList<String[]> array_nc_kind = Engine.nc_kind();
                         ArrayList<String[]> kind_payment = Engine.kind_payment();
-                        NC_causal nc = Engine.getNC_causal(request.getParameter("nc_code"));
+                        NC_causal nc = Engine.getNC_causal(Utility.safeRequest(request, "nc_code"));
                         if (nc != null) {
                             String status = "";
                             if (nc.getAnnullato().equals("0")) {
@@ -560,13 +557,13 @@
 
 
                                     <div class="portlet-body">
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
+
+
+
+
+
+
+
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">Branch</label>
                                             <div class="col-md-6">
@@ -822,7 +819,9 @@
                     </form>
                     <%}
                     } else {
-                        NC_category ncc = Engine.getNC_category(request.getParameter("nc_cat"));
+
+                        NC_category ncc = Engine.getNC_category(Utility.safeRequest(request, "nc_cat"));
+
                         if (ncc != null) {
                             String price = ncc.getIp_prezzo_nc();
                             String tickfee = ncc.getTicket_fee();
@@ -857,7 +856,7 @@
                                         </div>
                                     </div>
                                     <div class="portlet-body">
-                                        
+
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">Branch</label>
                                             <div class="col-md-6">
@@ -1105,7 +1104,7 @@
                     %>
 
                     <%}%>
-                    
+
 
                     <!-- BEGIN CONTENT -->
 
@@ -1127,7 +1126,7 @@
             <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
             <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
             <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-            
+
             <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
             <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
 
@@ -1148,9 +1147,9 @@
 
             <!-- END THEME GLOBAL SCRIPTS -->
             <!-- BEGIN PAGE LEVEL SCRIPTS -->
-            
+
             <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-            
+
             <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
             <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
 
@@ -1169,14 +1168,14 @@
 
             <script type="text/javascript">
 
-            $(document).ready(function () {
-                window.history.pushState(null, "", window.location.href);
-                window.onpopstate = function () {
-                    window.history.pushState(null, "", window.location.href);
-                };
-            });
-        </script>
-            
+                                                                       $(document).ready(function () {
+                                                                           window.history.pushState(null, "", window.location.href);
+                                                                           window.onpopstate = function () {
+                                                                               window.history.pushState(null, "", window.location.href);
+                                                                           };
+                                                                       });
+            </script>
+
 
     </body>
 

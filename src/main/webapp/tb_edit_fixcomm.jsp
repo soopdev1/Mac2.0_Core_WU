@@ -186,19 +186,19 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String fil = request.getParameter("fil");
-                        if(fil==null){
+                        String fil = Utility.safeRequest(request, "fil");
+                        if(fil.equals("")){
                             fil = Engine.getFil()[0];
                         }
                         String dateApply = Utility.getDefaultDateAplly(true, false, 0, 0, 30, null);
                         ArrayList<Branch> array_branch = Engine.list_branch_enabled();
                         ArrayList<String[]> array_kind = Engine.list_all_kind(fil);
-                        String fi_code = request.getParameter("fi_code");
-                        String fi_min = request.getParameter("fi_min");
-                        String fi_max = request.getParameter("fi_max");
+                        String fi_code = Utility.safeRequest(request, "fi_code");
+                        String fi_min = Utility.safeRequest(request, "fi_min");
+                        String fi_max = Utility.safeRequest(request, "fi_max");
 
-                        String view = request.getParameter("view");
-                        if (view == null) {
+                        String view = Utility.safeRequest(request, "view");
+                        if (view.equals("")) {
                             view = "0";
                         }
 
@@ -488,10 +488,7 @@
                         </div>
                     </form>
                     <%}
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

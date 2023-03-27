@@ -8,7 +8,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     String link_value = Engine.verifyUser(request);
-    if(link_value!=null){
+    if (link_value != null) {
         Utility.redirect(request, response, link_value);
     }
 %>
@@ -40,12 +40,12 @@
         <link href="assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
@@ -61,13 +61,13 @@
         <link rel="shortcut icon" href="favicon.ico" /> 
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
         <!-- FANCYBOX -->
-        
+
         <script type="text/javascript" src="assets/soop/js/jquery.fancybox.js?v=2.1.5"></script>
         <link rel="stylesheet" type="text/css" href="assets/soop/css/jquery.fancybox.css?v=2.1.5" media="screen" />
         <script type="text/javascript" src="assets/soop/js/fancy.js"></script>
-        
-        
-        
+
+
+
     </head>
     <!-- END HEAD -->
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white" onload="return online();">
@@ -95,7 +95,7 @@
                     tipo = "";
                 }
                 //tipo="1";
-                
+
             %>
             <div class="modal fade" id="largelogin" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog">
@@ -139,7 +139,7 @@
                             <img src="assets/soop/img/logocl.png" alt="" class="img-responsive" style="text-align: right;"/> 
                         </div>
                     </div>
-                    <%if(central&&tipo.equals("3")){%>
+                    <%if (central && tipo.equals("3")) {%>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
@@ -186,16 +186,16 @@
                                                                     <td><%=Utility.formatAL(array_till.get(i)[2], array_type_till, 1)%></td>
                                                                     <td><%=Engine.formatStatus_general(array_till.get(i)[3])%></td>
                                                                     <td>
-                                                                        <%if(central&&tipo.equals("3")){%>
+                                                                        <%if (central && tipo.equals("3")) {%>
                                                                         <a href="tb_edit_safetill.jsp?view=0&fil=<%=fil%>&sa_code=<%=array_till.get(i)[0]%>" 
                                                                            class="btn btn-sm blue btn-outline btn-circle fancyBoxRafreload">
                                                                             <i class="fa fa-wrench"></i> Edit</a>
-                                                           <%}else{%>
-                                                           <a href="tb_edit_safetill.jsp?view=1&fil=<%=fil%>&sa_code=<%=array_till.get(i)[0]%>" 
-                                                           class="btn btn-sm blue btn-outline btn-circle fancyBoxRaf"><i class="fa fa-eye"></i> View</a>
-                                                           <%}%>
-                                                                        
-                                                                        
+                                                                            <%} else {%>
+                                                                        <a href="tb_edit_safetill.jsp?view=1&fil=<%=fil%>&sa_code=<%=array_till.get(i)[0]%>" 
+                                                                           class="btn btn-sm blue btn-outline btn-circle fancyBoxRaf"><i class="fa fa-eye"></i> View</a>
+                                                                        <%}%>
+
+
                                                                     </td>
                                                                 </tr>  
                                                                 <%}%>
@@ -221,11 +221,11 @@
                     </div>
 
                     <%
-                        
-                        if(central&&tipo.equals("3")){
-                        String search = request.getParameter("search");
 
-                                                                if (search == null) {%>
+                        if (central && tipo.equals("3")) {
+                            String search = Utility.safeRequest(request, "search");
+
+                            if (search.equals("")) {%>
                     <form action="tb_safetill.jsp" method="post">
                         <input type="hidden" name="search" value="sra1"/>
                         <div class="portlet box blue-hoki">
@@ -284,7 +284,7 @@
                                                     <%
 
                                                         for (int j = 0; j < array_branch.size(); j++) {
-                                                                    if (request.getParameter("branch").equals(array_branch.get(j).getCod())) {%>
+                                                            if (Utility.safeRequest(request, "branch").equals(array_branch.get(j).getCod())) {%>
                                                     <option selected value="<%=array_branch.get(j).getCod()%>"><%=array_branch.get(j).getCod()%> - <%=array_branch.get(j).getDe_branch()%></option>
                                                     <%} else {%>
                                                     <option value="<%=array_branch.get(j).getCod()%>"><%=array_branch.get(j).getCod()%> - <%=array_branch.get(j).getDe_branch()%></option>
@@ -305,58 +305,59 @@
 
                                 <%
 
-                                    ArrayList<String[]> array_till_br = Engine.list_till(request.getParameter("branch"));
+                                    ArrayList<String[]> array_till_br = Engine.list_till(Utility.safeRequest(request, "branch"));
                                 %>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        
-                                        
-                                         <div class="portlet">
-                                                    <div class="portlet-title">
-                                                        
-                                                    </div>
 
-                                                    <div class="portlet-body">
-                                        
-                                        
-                                        <table class="table table-responsive table-bordered table-scrollable table-hover" id="sample_1" width="100%">
-                                            <thead>
-                                                <tr>
-                                                    <th class="tabnow"style="width: 70px;">Code</th>
-                                                    <th class="tabnow">Description</th>
-                                                    <th class="tabnow">Type</th>
-                                                    <th class="tabnow">Status</th>
-                                                    <th class="tabnow"style="width: 70px;">Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <%for (int i = 0; i < array_till_br.size(); i++) {%>
-                                                <tr>
-                                                    <td><%=array_till_br.get(i)[0]%></td>
-                                                    <td><%=array_till_br.get(i)[1]%></td>
-                                                    <td><%=Utility.formatAL(array_till_br.get(i)[2], array_type_till, 1)%></td>
-                                                    <td><%=Engine.formatStatus_general(array_till_br.get(i)[3])%></td>
-                                                    <td>
-                                                    
-                                                        <a href="tb_edit_safetill.jsp?view=1&fil=<%=request.getParameter("branch")%>&sa_code=<%=array_till_br.get(i)[0]%>" 
-                                                           class="btn btn-sm blue-hoki btn-outline btn-circle fancyBoxRaf"><i class="fa fa-eye"></i> View</a>
-                                                       
-                                                    </td>
-                                                </tr>  
-                                                <%}%>
-                                            </tbody>
-                                            
-                                        </table>
-                                            
-                                                    </div>
-                                         </div>
+
+                                        <div class="portlet">
+                                            <div class="portlet-title">
+
+                                            </div>
+
+                                            <div class="portlet-body">
+
+
+                                                <table class="table table-responsive table-bordered table-scrollable table-hover" id="sample_1" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="tabnow"style="width: 70px;">Code</th>
+                                                            <th class="tabnow">Description</th>
+                                                            <th class="tabnow">Type</th>
+                                                            <th class="tabnow">Status</th>
+                                                            <th class="tabnow"style="width: 70px;">Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <%for (int i = 0; i < array_till_br.size(); i++) {%>
+                                                        <tr>
+                                                            <td><%=array_till_br.get(i)[0]%></td>
+                                                            <td><%=array_till_br.get(i)[1]%></td>
+                                                            <td><%=Utility.formatAL(array_till_br.get(i)[2], array_type_till, 1)%></td>
+                                                            <td><%=Engine.formatStatus_general(array_till_br.get(i)[3])%></td>
+                                                            <td>
+
+                                                                <a href="tb_edit_safetill.jsp?view=1&fil=<%=Utility.safeRequest(request, "branch")%>&sa_code=<%=array_till_br.get(i)[0]%>" 
+                                                                   class="btn btn-sm blue-hoki btn-outline btn-circle fancyBoxRaf"><i class="fa fa-eye"></i> View</a>
+
+                                                            </td>
+                                                        </tr>  
+                                                        <%}%>
+                                                    </tbody>
+
+                                                </table>
+
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
                             </div>
                         </div>
                     </form>
-                    <%}}%>
+                    <%}
+                        }%>
                     <!-- END CONTENT -->
                     <!-- BEGIN QUICK SIDEBAR -->
                     <!-- END QUICK SIDEBAR -->
@@ -379,7 +380,7 @@
                 <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-                
+
                 <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
 
@@ -401,9 +402,9 @@
 
                 <!-- END THEME GLOBAL SCRIPTS -->
                 <!-- BEGIN PAGE LEVEL SCRIPTS -->
-                
+
                 <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-                
+
                 <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
                 <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
 
@@ -450,21 +451,21 @@
                                             ],
                                             buttons: [
                                                 {text: "<i class='fa fa-file-pdf-o'></i> Excel",
-                                                                        className: "btn white btn-outline",
-                                                                        action: function (e, dt, node, config) {
-                                                                           
-                                                                            //window.open('Download?type=viewExcel&cod=' + cexcel, '_blank');
-                                                                            window.open('Fileview?type=tb_safetill&filiale=<%=Engine.getFil()[0]%>&value=excel', '_blank');
-                                                                        }
-                                                                    },
-                                                                    {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
-                                                                        className: "btn white btn-outline",
-                                                                        action: function (e, dt, node, config) {
-                                                                         
-                                                                            //window.open('Download?type=viewPdf&cod=' + cpdf, '_blank');
-                                                                            window.open('Fileview?type=tb_safetill&filiale=<%=Engine.getFil()[0]%>&value=pdf', '_blank');
-                                                                        }
-                                                                    },
+                                                    className: "btn white btn-outline",
+                                                    action: function (e, dt, node, config) {
+
+                                                        //window.open('Download?type=viewExcel&cod=' + cexcel, '_blank');
+                                                        window.open('Fileview?type=tb_safetill&filiale=<%=Engine.getFil()[0]%>&value=excel', '_blank');
+                                                    }
+                                                },
+                                                {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
+                                                    className: "btn white btn-outline",
+                                                    action: function (e, dt, node, config) {
+
+                                                        //window.open('Download?type=viewPdf&cod=' + cpdf, '_blank');
+                                                        window.open('Fileview?type=tb_safetill&filiale=<%=Engine.getFil()[0]%>&value=pdf', '_blank');
+                                                    }
+                                                },
                                                 {extend: "colvis", className: "btn white btn-outline", text: "<i class='fa fa-list-alt'></i> Columns"},
                                                 {text: "<i class='fa fa fa-refresh'></i>",
                                                     className: "btn white btn-outline",
@@ -475,7 +476,7 @@
                                             ]
                                             ,
                                             colReorder: {reorderCallback: function () {
-                                                    
+
                                                 }},
                                             lengthMenu: [
                                                 [25, 50, 100, -1],
@@ -511,79 +512,79 @@
                                 });
                 </script>
                 <script type="text/javascript">
-                                jQuery(document).ready(function () {
-                                    var dt1 = function () {
-                                        var f = $("#sample_1");
-                                        f.dataTable({
-                                            language: {aria: {},
-                                                sProcessing: "Process...",
-                                                emptyTable: "No results found.",
-                                                info: "Show _START_ to _END_ of _TOTAL_ results",
-                                                infoEmpty: "No results found.",
-                                                infoFiltered: "(filtered to _MAX_ total)",
-                                                lengthMenu: "Show _MENU_",
-                                                search: "Search:",
-                                                zeroRecords: "No results found.",
-                                                paginate: {previous: "Prev", next: "Next", last: "Last", first: "First"}},
-                                            columnDefs: [
-                                                {orderable: 1, targets: [0]},
-                                                {orderable: 1, targets: [1]},
-                                                {orderable: 1, targets: [2]},
-                                                {orderable: 1, targets: [3]},
-                                                {orderable: !1, targets: [4]}
-                                            ],
-                                            buttons: [
-                                               {text: "<i class='fa fa-file-pdf-o'></i> Excel",
-                                                                      className: "btn blue-hoki btn-outline",
-                                                                        action: function (e, dt, node, config) {
-                                                                           
-                                                                            //window.open('Download?type=viewExcel&cod=' + cexcel, '_blank');
-                                                                            window.open('Fileview?type=tb_safetill&filiale=<%=request.getParameter("branch")%>&value=excel', '_blank');
-                                                                        }
-                                                                    },
-                                                                    {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
-                                                                      className: "btn blue-hoki btn-outline",
-                                                                        action: function (e, dt, node, config) {
-                                                                         
-                                                                            //window.open('Download?type=viewPdf&cod=' + cpdf, '_blank');
-                                                                            window.open('Fileview?type=tb_safetill&filiale=<%=request.getParameter("branch")%>&value=pdf', '_blank');
-                                                                        }
-                                                                    },
-                                                {extend: "colvis", className: "btn blue-hoki btn-outline", text: "<i class='fa fa-list-alt'></i> Columns"},
-                                                {text: "<i class='fa fa fa-refresh'></i>",
-                                                   className: "btn blue-hoki btn-outline",
-                                                    action: function (e, dt, node, config) {
-                                                        location.reload();
-                                                    }
-                                                }
-                                            ]
-                                            ,
-                                            colReorder: {reorderCallback: function () {
-                                                    
-                                                }},
-                                            lengthMenu: [
-                                                [25, 50, 100, -1],
-                                                [25, 50, 100, "All"]
-                                            ],
-                                            pageLength: 25,
-                                            order: [],
-                                            dom: "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><t><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>"
-                                        });
-                                        
-                                    };
-                                    jQuery().dataTable && dt1();
-                                });
+                    jQuery(document).ready(function () {
+                        var dt1 = function () {
+                            var f = $("#sample_1");
+                            f.dataTable({
+                                language: {aria: {},
+                                    sProcessing: "Process...",
+                                    emptyTable: "No results found.",
+                                    info: "Show _START_ to _END_ of _TOTAL_ results",
+                                    infoEmpty: "No results found.",
+                                    infoFiltered: "(filtered to _MAX_ total)",
+                                    lengthMenu: "Show _MENU_",
+                                    search: "Search:",
+                                    zeroRecords: "No results found.",
+                                    paginate: {previous: "Prev", next: "Next", last: "Last", first: "First"}},
+                                columnDefs: [
+                                    {orderable: 1, targets: [0]},
+                                    {orderable: 1, targets: [1]},
+                                    {orderable: 1, targets: [2]},
+                                    {orderable: 1, targets: [3]},
+                                    {orderable: !1, targets: [4]}
+                                ],
+                                buttons: [
+                                    {text: "<i class='fa fa-file-pdf-o'></i> Excel",
+                                        className: "btn blue-hoki btn-outline",
+                                        action: function (e, dt, node, config) {
+
+                                            //window.open('Download?type=viewExcel&cod=' + cexcel, '_blank');
+                                            window.open('Fileview?type=tb_safetill&filiale=<%=Utility.safeRequest(request, "branch")%>&value=excel', '_blank');
+                                        }
+                                    },
+                                    {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
+                                        className: "btn blue-hoki btn-outline",
+                                        action: function (e, dt, node, config) {
+
+                                            //window.open('Download?type=viewPdf&cod=' + cpdf, '_blank');
+                                            window.open('Fileview?type=tb_safetill&filiale=<%=Utility.safeRequest(request, "branch")%>&value=pdf', '_blank');
+                                        }
+                                    },
+                                    {extend: "colvis", className: "btn blue-hoki btn-outline", text: "<i class='fa fa-list-alt'></i> Columns"},
+                                    {text: "<i class='fa fa fa-refresh'></i>",
+                                        className: "btn blue-hoki btn-outline",
+                                        action: function (e, dt, node, config) {
+                                            location.reload();
+                                        }
+                                    }
+                                ]
+                                ,
+                                colReorder: {reorderCallback: function () {
+
+                                    }},
+                                lengthMenu: [
+                                    [25, 50, 100, -1],
+                                    [25, 50, 100, "All"]
+                                ],
+                                pageLength: 25,
+                                order: [],
+                                dom: "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><t><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>"
+                            });
+
+                        };
+                        jQuery().dataTable && dt1();
+                    });
                 </script>
-                
+
                 <script type="text/javascript">
 
-            $(document).ready(function () {
-                window.history.pushState(null, "", window.location.href);
-                window.onpopstate = function () {
-                    window.history.pushState(null, "", window.location.href);
-                };
-            });
-        </script>
-                
+                    $(document).ready(function () {
+                        window.history.pushState(null, "", window.location.href);
+                        window.onpopstate = function () {
+                            window.history.pushState(null, "", window.location.href);
+                        };
+                    });
+                </script>
+
                 </body>
                 </html>

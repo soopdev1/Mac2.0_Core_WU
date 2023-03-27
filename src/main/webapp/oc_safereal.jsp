@@ -154,7 +154,9 @@
                     </div>
                     <%
                         String scode = "r1";
-                        if (request.getParameter("search") == null) {
+                        String s1 = Utility.safeRequest(request, "search");
+                        
+                        if (s1.equals("")) {
                     %>
                     <form name="f1" method="post" action="oc_safereal.jsp" onsubmit="return search_ing();">
                         <input type="hidden" name="search" value="<%=scode%>"/>
@@ -209,7 +211,7 @@
                             </div>
                         </div>
                     </form>
-                    <%} else if (request.getParameter("search").equals("r1")) {%>
+                    <%} else if (s1.equals("r1")) {%>
 
 
                     <form name="f1" id="f1" method="post" action="oc_safereal.jsp" onsubmit="return search_ing();">
@@ -235,7 +237,7 @@
                                                             <option value="" selected="selected"></option>
                                                             <%for (int j = 0; j < array_branch.size(); j++) {
                                                                     String selected = "";
-                                                                    if (array_branch.get(j).getCod().equals(request.getParameter("branch"))) {
+                                                                    if (array_branch.get(j).getCod().equals(Utility.safeRequest(request, "branch"))) {
                                                                         selected = "selected";
                                                                     }
                                                             %>
@@ -271,12 +273,12 @@
                     </form>    
                     <%
                         
-                        ArrayList<Till> array_till = Engine.list_till_status(null, null, request.getParameter("branch"));
+                        ArrayList<Till> array_till = Engine.list_till_status(null, null, Utility.safeRequest(request, "branch"));
                         Till safe = Engine.getContainsTill("000", array_till);
                         String opencloseid = safe.getId_opcl();
 
                         ArrayList<Currency> array_all_currency = Engine.list_all_currency();
-                        ArrayList<String[]> array_kind = Engine.list_all_kind(request.getParameter("branch"));
+                        ArrayList<String[]> array_kind = Engine.list_all_kind(Utility.safeRequest(request, "branch"));
                         List<Sizecuts> array_figures_sizecuts = Engine.figures_sizecuts_enabled();
                         ArrayList<NC_category> array_nc = Engine.all_nc_category();
                         

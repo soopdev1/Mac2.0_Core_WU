@@ -9,7 +9,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     String link_value = Engine.verifyUser(request);
-    if(link_value!=null){
+    if (link_value != null) {
         Utility.redirect(request, response, link_value);
     }
 %>
@@ -41,12 +41,12 @@
         <link href="assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
@@ -62,15 +62,15 @@
         <!-- END THEME LAYOUT STYLES -->
         <link rel="shortcut icon" href="favicon.ico" /> 
         <!-- FANCYBOX -->
-        
+
         <script type="text/javascript" src="assets/soop/js/jquery.fancybox.js?v=2.1.5"></script>
         <link rel="stylesheet" type="text/css" href="assets/soop/css/jquery.fancybox.css?v=2.1.5" media="screen" />
         <script type="text/javascript" src="assets/soop/js/fancy.js"></script>
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
-        
-        
-      
-        
+
+
+
+
         <script type="text/javascript">
             function valid(sel, val) {
                 var verified = document.getElementById(sel);
@@ -160,10 +160,12 @@
 
 
                     <%ArrayList<Branch> array_branch = Engine.list_branch_enabled();
-                        String listbranch = "";
+                        String search = Utility.safeRequest(request, "search");
+                          String stat1 = Utility.safeRequest(request, "status");
+                      
                     %>
 
-                    <%if (request.getParameter("search") == null) {%>
+                    <%if (search.equals("")) {%>
                     <form name="f1" method="post" action="nc_viewbranch.jsp" onsubmit="return checkdescr();">
                         <input type="hidden" name="search" value="ar1"/>
                         <div class="row">
@@ -216,9 +218,9 @@
                             </div>
                         </div>
                     </form>
-                    <%} else if (request.getParameter("search").equals("ar1")) {
+                    <%} else if (search.equals("ar1")) {
                         String di = "";
-                        String branch = request.getParameter("branch");
+                        String branch = Utility.safeRequest(request, "branch");
 
 
                     %>
@@ -255,11 +257,11 @@
                                                 <div class="form-group">
                                                     <label>Status</label>
                                                     <select class="form-control select2" name="status" id="status">
-                                                        <%if (request.getParameter("status").equals("0")) {%>
+                                                        <%if (Utility.safeRequest(request, "status").equals("0")) {%>
                                                         <option value="...">...</option>
                                                         <option selected="selected" value="0">Enabled</option>
                                                         <option value="1">Disabled</option>
-                                                        <%} else if (request.getParameter("status").equals("1")) {%>
+                                                        <%} else if (Utility.safeRequest(request, "status").equals("1")) {%>
                                                         <option value="...">...</option>
                                                         <option value="0">Enabled</option>
                                                         <option selected="selected" value="1">Disabled</option>
@@ -286,11 +288,10 @@
                     </form>
 
                     <%
-                        //branch = "000";
-
+                        //branch    = "000";
                         ArrayList<String[]> array_nc_kind = Engine.nc_kind();
-                        ArrayList<NC_category> licateg = Engine.query_nc_category_filial(branch, request.getParameter("status"));
-                        ArrayList<NC_causal> licaus = Engine.query_nc_causal_filial(branch, request.getParameter("status"));
+                        ArrayList<NC_category> licateg = Engine.query_nc_category_filial(branch, stat1);
+                        ArrayList<NC_causal> licaus = Engine.query_nc_causal_filial(branch, stat1);
 
                         ArrayList<String[]> liout = Engine.query_nc(licateg, licaus, array_nc_kind);
 
@@ -387,7 +388,7 @@
         <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
@@ -404,13 +405,13 @@
 
         <!-- END THEME GLOBAL SCRIPTS -->
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        
+
         <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
         <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
         <!-- END PAGE LEVEL SCRIPTS -->
-        
+
         <!-- BEGIN THEME LAYOUT SCRIPTS -->
         <script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
         <script src="assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
@@ -451,14 +452,14 @@
                                             className: "btn white btn-outline",
                                             action: function (e, dt, node, config) {
                                                 //window.open('Download?type=viewExcel&cod=' + cexcel, '_blank');
-                                                window.open('Fileview?type=nc_viewbranch&status=<%=request.getParameter("status")%>&branch=<%=request.getParameter("branch")%>&value=excel', '_blank');
+                                                window.open('Fileview?type=nc_viewbranch&status=<%=stat1%>&branch=<%=Utility.safeRequest(request, "branch")%>&value=excel', '_blank');
                                             }
                                         },
                                         {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
                                             className: "btn white btn-outline",
                                             action: function (e, dt, node, config) {
                                                 //window.open('Download?type=viewPdf&cod=' + cpdf, '_blank');
-                                                window.open('Fileview?type=nc_viewbranch&status=<%=request.getParameter("status")%>&branch=<%=request.getParameter("branch")%>&value=pdf', '_blank');
+                                                window.open('Fileview?type=nc_viewbranch&status=<%=stat1%>&branch=<%=Utility.safeRequest(request, "branch")%>&value=pdf', '_blank');
                                             }
                                         },
                                         {extend: "colvis", className: "btn white btn-outline", text: "<i class='fa fa-list-alt'></i> Columns"},
@@ -470,7 +471,6 @@
                                         }]
                                     ,
                                     colReorder: {reorderCallback: function () {
-                                            
                                         }},
                                     lengthMenu: [
                                         [25, 50, 100, -1],
@@ -481,8 +481,8 @@
                                     dom: "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><t><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>"
                                 });
                                 $("#sample_0 tfoot input").keyup(function () {
-                                    f.fnFilter(this.value, f.oApi._fnVisibleToColumnIndex(
-                                            f.fnSettings(), $("#sample_0 tfoot input").index(this)));
+                                    f.fnFilter(this.value, f.oApi._fnVisibleToColumnIndex(f.fnSettings(),
+                                    $("#sample_0 tfoot input").index(this)));
                                 });
                                 $("#sample_0 tfoot input").each(function (i) {
                                     this.initVal = this.value;
@@ -506,7 +506,7 @@
                         });
         </script>
 
-          <script type="text/javascript">
+        <script type="text/javascript">
 
             $(document).ready(function () {
                 window.history.pushState(null, "", window.location.href);
@@ -515,7 +515,7 @@
                 };
             });
         </script>
-        
+
 
     </body>
 

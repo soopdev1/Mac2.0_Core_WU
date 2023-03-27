@@ -168,7 +168,7 @@
                     <!-- BEGIN PAGE TITLE-->
                     <%
                         String user = (String) request.getSession().getAttribute("us_cod");
-                        String cod = request.getParameter("cod");
+                        String cod = Utility.safeRequest(request, "cod");
                         Ch_transaction it = Engine.query_transaction_ch_temp(cod);
 
                         if (it != null) {
@@ -417,10 +417,7 @@
 
                     <p class='ab'></p>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

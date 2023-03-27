@@ -41,12 +41,12 @@
         <link href="assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
@@ -65,13 +65,13 @@
 
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
         <!-- FANCYBOX -->
-        
+
         <script type="text/javascript" src="assets/soop/js/jquery.fancybox.js?v=2.1.5"></script>
         <link rel="stylesheet" type="text/css" href="assets/soop/css/jquery.fancybox.css?v=2.1.5" media="screen" />
         <script type="text/javascript" src="assets/soop/js/fancy.js"></script>
 
 
-        
+
 
         <script type="text/javascript">
 
@@ -156,9 +156,9 @@
                     <div class="modal fade" id="saerchmod2" tabindex="-1" role="dialog" aria-hidden="true">
                         <button type="button" id="saerchmodbtn" class="" data-toggle="modal" data-target="#saerchmod"></button>
                     </div>
-                    
-                    
-                    <%if(Constant.is_CZ){%>
+
+
+                    <%if (Constant.is_CZ) {%>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="alert alert-danger">
@@ -166,11 +166,12 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <%
-                        }else{
+                    } else {
                         String scode = "r1";
-                        if (request.getParameter("search") == null) {
+                        String s1 = Utility.safeRequest(request, "search");
+                        if (s1.equals("")) {
                     %>
                     <form name="f1" method="post" action="kyc_list.jsp" onsubmit="return search_ing();">
                         <input type="hidden" name="search" value="<%=scode%>"/>
@@ -252,7 +253,7 @@
                             </div>
                         </div>
                     </form>
-                    <%} else if (request.getParameter("search").equals("r1")) {%>
+                    <%} else if (s1.equals("r1")) {%>
                     <form name="f1" id="f1" method="post" action="kyc_list.jsp" onsubmit="return search_ing();">
                         <input type="hidden" name="search" value="<%=scode%>"/>
                         <div class="row">
@@ -276,7 +277,7 @@
                                                             <option value="" selected="selected"></option>
                                                             <%for (int j = 0; j < array_branch.size(); j++) {
                                                                     String selected = "";
-                                                                    if (array_branch.get(j).getCod().equals(request.getParameter("branch"))) {
+                                                                    if (array_branch.get(j).getCod().equals(Utility.safeRequest(request, "branch"))) {
                                                                         selected = "selected";
                                                                     }
                                                             %>
@@ -299,26 +300,26 @@
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label>Client Surname</label>
-                                                        <input type="text" class="form-control" id="cl_cog" name="cl_cog" value="<%=request.getParameter("cl_cog")%>" onkeyup="return fieldNameSurname(this.id);"/>
+                                                        <input type="text" class="form-control" id="cl_cog" name="cl_cog" value="<%=Utility.safeRequest(request, "cl_cog")%>" onkeyup="return fieldNameSurname(this.id);"/>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label>Client Name</label>
-                                                        <input type="text" class="form-control" id="cl_na" name="cl_na" value="<%=request.getParameter("cl_na")%>" onkeyup="return fieldNameSurname(this.id);"/>
+                                                        <input type="text" class="form-control" id="cl_na" name="cl_na" value="<%=Utility.safeRequest(request, "cl_na")%>" onkeyup="return fieldNameSurname(this.id);"/>
                                                     </div>
                                                 </div>
                                                 <div class="clearfix"></div>
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label>Date From</label>
-                                                        <input type="text" class="form-control date-picker" id="d1" name="d1" value="<%=request.getParameter("d1")%>"/>
+                                                        <input type="text" class="form-control date-picker" id="d1" name="d1" value="<%=Utility.safeRequest(request, "d1")%>"/>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label>Date To</label>
-                                                        <input type="text" class="form-control date-picker" id="d2" name="d2" value="<%=request.getParameter("d2")%>"/>
+                                                        <input type="text" class="form-control date-picker" id="d2" name="d2" value="<%=Utility.safeRequest(request, "d2")%>"/>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
@@ -373,7 +374,8 @@
                             </div>
                         </div>
                     </div>
-                    <%}}%>
+                    <%}
+                        }%>
                 </div>
                 <!-- END CONTENT -->
                 <!-- BEGIN QUICK SIDEBAR -->
@@ -399,7 +401,7 @@
         <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
@@ -416,13 +418,13 @@
 
         <!-- END THEME GLOBAL SCRIPTS -->
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        
+
         <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
         <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
         <!-- END PAGE LEVEL SCRIPTS -->
-        
+
         <!-- BEGIN THEME LAYOUT SCRIPTS -->
         <script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
         <script src="assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
@@ -433,81 +435,80 @@
         <script src="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
 
         <script type="text/javascript">
-                                                        jQuery(document).ready(function () {
-                                                            var dt2 = function () {
-                                                                var g = $("#sample_1");
-                                                                g.dataTable({
-                                                                    language: {aria: {},
-                                                                        sProcessing: "Process...",
-                                                                        emptyTable: "No results found.",
-                                                                        info: "Show _START_ to _END_ of _TOTAL_ results",
-                                                                        infoEmpty: "No results found.",
-                                                                        infoFiltered: "(filtered to _MAX_ total)",
-                                                                        lengthMenu: "Show _MENU_",
-                                                                        search: "Search:",
-                                                                        zeroRecords: "No results found.",
-                                                                        paginate: {previous: "Prev", next: "Next", last: "Last", first: "First"}},
-                                                                    ajax: {
-                                                                        url: "Query?type=kyc_list&cl_cog=<%=Utility.convertApici(request.getParameter("cl_cog"))%>&branch=<%=request.getParameter("branch")%>&cl_na=<%=Utility.convertApici(request.getParameter("cl_na"))%>&d1=<%=request.getParameter("d1")%>&d2=<%=request.getParameter("d2")%>",
-                                                                        dataSrc: "aaData",
-                                                                        type: "GET"
-                                                                    },
-                                                                    initComplete: function (settings, json) {
-                                                                        $('.popovers').popover();
-                                                                    },
-                                                                    scrollX: true,
-                                                                    columnDefs: [
-                                                                        {orderable: !1, targets: [0]},
-                                                                        {orderable: 1, targets: [1]},
-                                                                        {orderable: 1, targets: [2]},
-                                                                        {orderable: 1, targets: [3]},
-                                                                        {orderable: 1, targets: [4]},
-                                                                        {orderable: 1, targets: [5]}
-                                                                    ],
-                                                                    buttons: [
-
-                                                                        {text: "<i class='fa fa-file-pdf-o'></i> Excel",
-                                                                            className: "btn white btn-outline",
-                                                                            action: function (e, dt, node, config) {
-                                                                                window.open('Fileview?type=kyc_list&cl_cog=<%=Utility.convertApici(request.getParameter("cl_cog"))%>&branch=<%=request.getParameter("branch")%>&cl_na=<%=Utility.convertApici(request.getParameter("cl_na"))%>&d1=<%=request.getParameter("d1")%>&d2=<%=request.getParameter("d2")%>&value=excel', '_blank');
-                                                                            }
+                                                            jQuery(document).ready(function () {
+                                                                var dt2 = function () {
+                                                                    var g = $("#sample_1");
+                                                                    g.dataTable({
+                                                                        language: {aria: {},
+                                                                            sProcessing: "Process...",
+                                                                            emptyTable: "No results found.",
+                                                                            info: "Show _START_ to _END_ of _TOTAL_ results",
+                                                                            infoEmpty: "No results found.",
+                                                                            infoFiltered: "(filtered to _MAX_ total)",
+                                                                            lengthMenu: "Show _MENU_",
+                                                                            search: "Search:",
+                                                                            zeroRecords: "No results found.",
+                                                                            paginate: {previous: "Prev", next: "Next", last: "Last", first: "First"}},
+                                                                        ajax: {
+                                                                            url: "Query?type=kyc_list",
+                                                                            dataSrc: "aaData",
+                                                                            type: "POST",
+                                                                            data: $('#f1').serializeArray()
                                                                         },
-                                                                        {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
-                                                                            className: "btn white btn-outline",
-                                                                            action: function (e, dt, node, config) {
-                                                                                window.open('Fileview?type=kyc_list&cl_cog=<%=Utility.convertApici(request.getParameter("cl_cog"))%>&branch=<%=request.getParameter("branch")%>&cl_na=<%=Utility.convertApici(request.getParameter("cl_na"))%>&d1=<%=request.getParameter("d1")%>&d2=<%=request.getParameter("d2")%>&value=pdf', '_blank');
-                                                                            }
+                                                                        initComplete: function (settings, json) {
+                                                                            $('.popovers').popover();
                                                                         },
-                                                                        {extend: "colvis", className: "btn white btn-outline", text: "Columns"},
-                                                                        {text: "<i class='fa fa fa-refresh'></i>",
-                                                                            className: "btn white btn-outline",
-                                                                            action: function (e, dt, node, config) {
-                                                                                location.reload();
-                                                                            }
-                                                                        }]
-                                                                    ,
-                                                                    colReorder: {reorderCallback: function () {
-                                                                            console.info("callback");
-                                                                        }},
-                                                                    lengthMenu: [
-                                                                        [25, 50, 100, -1],
-                                                                        [25, 50, 100, "All"]
-                                                                    ],
-                                                                    pageLength: 25,
-                                                                    order: [],
-                                                                    dom: "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><t><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
-                                                                    processing: true
-                                                                });
-                                                            };
-                                                            jQuery().dataTable && dt2();
+                                                                        scrollX: true,
+                                                                        columnDefs: [
+                                                                            {orderable: !1, targets: [0]},
+                                                                            {orderable: 1, targets: [1]},
+                                                                            {orderable: 1, targets: [2]},
+                                                                            {orderable: 1, targets: [3]},
+                                                                            {orderable: 1, targets: [4]},
+                                                                            {orderable: 1, targets: [5]}
+                                                                        ],
+                                                                        buttons: [
 
-                                                        });
+                                                                            {text: "<i class='fa fa-file-pdf-o'></i> Excel",
+                                                                                className: "btn white btn-outline",
+                                                                                action: function (e, dt, node, config) {
+                                                                                }
+                                                                            },
+                                                                            {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
+                                                                                className: "btn white btn-outline",
+                                                                                action: function (e, dt, node, config) {
+                                                                                }
+                                                                            },
+                                                                            {extend: "colvis", className: "btn white btn-outline", text: "Columns"},
+                                                                            {text: "<i class='fa fa fa-refresh'></i>",
+                                                                                className: "btn white btn-outline",
+                                                                                action: function (e, dt, node, config) {
+                                                                                    location.reload();
+                                                                                }
+                                                                            }]
+                                                                        ,
+                                                                        colReorder: {reorderCallback: function () {
+                                                                                console.info("callback");
+                                                                            }},
+                                                                        lengthMenu: [
+                                                                            [25, 50, 100, -1],
+                                                                            [25, 50, 100, "All"]
+                                                                        ],
+                                                                        pageLength: 25,
+                                                                        order: [],
+                                                                        dom: "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><t><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
+                                                                        processing: true
+                                                                    });
+                                                                };
+                                                                jQuery().dataTable && dt2();
+
+                                                            });
 
         </script>
 
 
         <!-- BEGIN THEME GLOBAL SCRIPTS -->
-        
+
         <script type="text/javascript">
 
             $(document).ready(function () {
@@ -517,7 +518,7 @@
                 };
             });
         </script>
-        
+
 
     </body>
 

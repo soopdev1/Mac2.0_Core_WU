@@ -95,10 +95,7 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";
@@ -134,7 +131,7 @@
                     <%
                         ArrayList<Users> result = Engine.user_kyc();
                         ArrayList<String[]> liststatus = Users.listStatususer2();
-                        String us_code = request.getParameter("us_code");
+                        String us_code = Utility.safeRequest(request, "us_code");
                         Users us = Engine.get_user(us_code, result);
                         if (us != null) {%>
                     <form class="form-horizontal" role="form" name="f1" method="post" action="Edit?type=edit_user_kyc">

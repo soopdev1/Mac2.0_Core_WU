@@ -85,7 +85,6 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
-import static java.text.NumberFormat.getCurrencyInstance;
 import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
@@ -169,6 +168,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import static org.json.JSONObject.NULL;
 import static org.jsoup.Jsoup.parseBodyFragment;
+import org.owasp.esapi.ESAPI;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -281,7 +281,7 @@ public class Utility {
         if (pdffile.exists()) {
             try {
                 int pag;
-                try (InputStream is = new FileInputStream(pdffile)) {
+                try ( InputStream is = new FileInputStream(pdffile)) {
                     PdfReader pdfReader = new PdfReader(is);
                     pag = pdfReader.getNumberOfPages();
                     pdfReader.close();
@@ -956,7 +956,7 @@ public class Utility {
     private static byte[] readBytesFromFileCod(File file) {
         try {
             byte[] bytes;
-            try (InputStream is = new FileInputStream(file)) {
+            try ( InputStream is = new FileInputStream(file)) {
                 long length = file.length();
                 if (length > 2147483647L) {
                     throw new IOException("Size out: " + file.getName());
@@ -989,7 +989,7 @@ public class Utility {
             factory.setNamespaceAware(true);
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setErrorHandler(new SimpleErrorHandler());
-            try (InputStream is = new FileInputStream(xml)) {
+            try ( InputStream is = new FileInputStream(xml)) {
                 InputSource iss = new InputSource(is);
                 builder.parse(iss);
             }
@@ -1074,13 +1074,14 @@ public class Utility {
      * @return
      */
     public static String getRequestValue(HttpServletRequest request, String fieldname) {
-        String out = request.getParameter(fieldname);
-        if (out == null) {
-            out = "";
-        } else {
-            out = out.trim();
-        }
-        return out;
+//        String out = request.getParameter(fieldname);
+        return safeRequest(request, fieldname);
+//        if (out == null) {
+//            out = "";
+//        } else {
+//            out = out.trim();
+//        }
+//        return out;
     }
 
     /**
@@ -1599,7 +1600,7 @@ public class Utility {
             ProcessBuilder pb = new ProcessBuilder(commands);
             Process process = pb.start();
             BufferedReader stdError;
-            try (BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            try ( BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
                 // read the output from the command
                 while ((s = stdInput.readLine()) != null) {
@@ -1643,7 +1644,7 @@ public class Utility {
             ProcessBuilder pb = new ProcessBuilder(commands);
             Process process = pb.start();
             BufferedReader stdError;
-            try (BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            try ( BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
                 // read the output from the command
                 while ((s = stdInput.readLine()) != null) {
@@ -2232,7 +2233,7 @@ public class Utility {
      */
     public static boolean zipListFiles(List<File> files, File targetZipFile) {
         try {
-            try (OutputStream out = new FileOutputStream(targetZipFile); ArchiveOutputStream os = new ArchiveStreamFactory().createArchiveOutputStream("zip", out)) {
+            try ( OutputStream out = new FileOutputStream(targetZipFile);  ArchiveOutputStream os = new ArchiveStreamFactory().createArchiveOutputStream("zip", out)) {
                 for (int i = 0; i < files.size(); i++) {
                     File ing = files.get(i);
                     os.putArchiveEntry(new ZipArchiveEntry(ing.getName()));
@@ -2554,7 +2555,7 @@ public class Utility {
             connection.setDoOutput(true);
             connection.setRequestProperty("Accept-Charset", charset);
             connection.setRequestProperty("Content-Type", "application/json;charset=" + charset);
-            try (OutputStream output = connection.getOutputStream()) {
+            try ( OutputStream output = connection.getOutputStream()) {
                 output.write(param.getBytes(charset));
             }
             InputStream response = connection.getInputStream();
@@ -3450,8 +3451,46 @@ public class Utility {
             e.printStackTrace();
         }
         return ec1.getMessage();
-
     }
+
+    public static String safeRequest(HttpServletRequest request, String n1, boolean decodeoutput) {
+        try {
+            String res1 = request.getParameter(n1);
+            if (res1 != null) {
+                String out = decodeoutput ? ESAPI.encoder().decodeForHTML(ESAPI.encoder().encodeForHTML(res1.trim())) : ESAPI.encoder().encodeForHTML(res1.trim());
+                return out;
+            }
+        } catch (Exception e) {
+        }
+        return "";
+    }
+
+    public static String safeRequest(HttpServletRequest request, String n1) {
+        try {
+            String res1 = request.getParameter(n1);
+            if (res1 != null) {
+                return ESAPI.encoder().encodeForHTML(res1.trim());
+            }
+        } catch (Exception e) {
+        }
+        return "";
+    }
+
+    public static String[] safeRequestMultiple(HttpServletRequest request, String n1) {
+        try {
+            String[] values = request.getParameterValues(n1);
+            int length = values.length;
+            String[] escapeValues = new String[length];
+            for (int i = 0; i < length; i++) {
+                escapeValues[i] = ESAPI.encoder().encodeForHTML(values[i]);
+            }
+            return escapeValues;
+        } catch (Exception e) {
+        }
+        String[] blank = {""};
+        return blank;
+    }
+
 }
 
 class JsonValue {

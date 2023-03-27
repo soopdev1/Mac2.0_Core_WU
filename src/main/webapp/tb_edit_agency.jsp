@@ -129,11 +129,11 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String view = request.getParameter("view");
-                        if (view == null) {
+                        String view = Utility.safeRequest(request, "view");
+                        if (view.equals("")) {
                             view = "0";
                         }
-                        String ag_code = request.getParameter("ag_code");
+                        String ag_code = Utility.safeRequest(request, "ag_code");
                         Agency ag = Engine.get_agency(ag_code);
                         if (ag != null) {
                             String status = "";
@@ -401,10 +401,7 @@
                     <%}%>
 
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

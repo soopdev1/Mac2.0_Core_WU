@@ -120,11 +120,8 @@
 
                     <%
                         ArrayList<Currency> array_cu = Engine.list_all_currency();
-                        String search = request.getParameter("search");
-                        if (search == null) {
-                            search = "";
-                        }
-                        if (search == "") {%>
+                        String search = Utility.safeRequest(request, "search");
+                        if (search.equals("")) {%>
                     <form class="form-horizontal" role="form" name="f1" method="post" action="transaction_searchcurr.jsp">
                         <input type="hidden" name="search" value="sra1" />
                         <div class="portlet light bordered">
@@ -158,12 +155,8 @@
                         </div>
                     </form>
                     <%} else if (search.equals("sra1")) {
-
-                        String codcur = request.getParameter("curr");
-                        
-
+                        String codcur = Utility.safeRequest(request, "curr");
                         ArrayList<String[]> res =  Engine.search_curr_till(codcur);
-
                     %>
                     <form class="form-horizontal" role="form" name="f1" method="post" action="transaction_searchcurr.jsp">
                         <input type="hidden" name="search" value="sra1" />

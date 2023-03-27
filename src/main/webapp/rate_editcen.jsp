@@ -7,7 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     String link_value = Engine.verifyUser(request);
-    if(link_value!=null){
+    if (link_value != null) {
         Utility.redirect(request, response, link_value);
     }
 %>
@@ -39,12 +39,12 @@
         <link href="assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
@@ -60,13 +60,13 @@
         <!-- END THEME LAYOUT STYLES -->
         <link rel="shortcut icon" href="favicon.ico" /> 
         <!-- FANCYBOX -->
-        
+
         <script type="text/javascript" src="assets/soop/js/jquery.fancybox.js?v=2.1.5"></script>
         <link rel="stylesheet" type="text/css" href="assets/soop/css/jquery.fancybox.css?v=2.1.5" media="screen" />
         <script type="text/javascript" src="assets/soop/js/fancy.js"></script>
-        
-      
-        
+
+
+
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
         <script type="text/javascript">
             function valid(sel, val) {
@@ -156,12 +156,12 @@
                     <!-- END PAGE HEADER-->
 
 
-                    <%
-                        ArrayList<Branch> array_branch = Engine.list_branch_enabled(); 
+                    <%                        ArrayList<Branch> array_branch = Engine.list_branch_enabled();
                         String listbranch = "";
+                        String s1 = Utility.safeRequest(request, "search");
                     %>
 
-                    <%if (request.getParameter("search") == null) {%>
+                    <%if (s1.equals("")) {%>
                     <form name="f1" method="post" action="rate_editcen.jsp" onsubmit="return checkdescr();">
                         <input type="hidden" name="search" value="ar1"/>
                         <div class="row">
@@ -214,15 +214,15 @@
                             </div>
                         </div>
                     </form>
-                    <%} else if (request.getParameter("search").equals("ar1")) {
+                    <%} else if (s1.equals("ar1")) {
                         String di = "";
                         String ch = "";
-                        String[] a = request.getParameterValues("branch");
+                        String[] a = Utility.safeRequestMultiple(request, "branch");
                         if (a == null) {
                             di = "disabled";
                             ch = "checked";
                             for (int j = 0; j < array_branch.size(); j++) {
-                                listbranch = listbranch + array_branch.get(j).getCod()+";";
+                                listbranch = listbranch + array_branch.get(j).getCod() + ";";
                             }
                         } else {
                             listbranch = Utility.parseArrayValues(a);
@@ -364,7 +364,7 @@
         <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
@@ -381,13 +381,13 @@
 
         <!-- END THEME GLOBAL SCRIPTS -->
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        
+
         <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
         <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
         <!-- END PAGE LEVEL SCRIPTS -->
-        
+
         <!-- BEGIN THEME LAYOUT SCRIPTS -->
         <script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
         <script src="assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
@@ -438,7 +438,7 @@
                                                                             }]
                                                                         ,
                                                                         colReorder: {reorderCallback: function () {
-                                                                                
+
                                                                             }},
                                                                         lengthMenu: [
                                                                             [25, 50, 100, -1],
@@ -473,7 +473,7 @@
                                                                 jQuery().dataTable && dt1();
                                                             });
         </script>
-  <script type="text/javascript">
+        <script type="text/javascript">
 
             $(document).ready(function () {
                 window.history.pushState(null, "", window.location.href);

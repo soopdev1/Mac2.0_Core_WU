@@ -160,9 +160,10 @@
                     <%
                         ArrayList<Branch> array_branch = Engine.list_branch_enabled(); 
                         String listbranch = "";
+                        String s1 = Utility.safeRequest(request, "search");
                     %>
 
-                    <%if (request.getParameter("search") == null) {%>
+                    <%if (s1.equals("")) {%>
                     <form name="f1" method="post" action="spread_editcen.jsp" onsubmit="return checkdescr();">
                         <input type="hidden" name="search" value="ar1"/>
                         <div class="row">
@@ -215,10 +216,10 @@
                             </div>
                         </div>
                     </form>
-                    <%} else if (request.getParameter("search").equals("ar1")) {
+                    <%} else if (s1.equals("ar1")) {
                         String di = "";
                         String ch = "";
-                        String[] a = request.getParameterValues("branch");
+                        String[] a = Utility.safeRequestMultiple(request, "branch");
                         if (a == null) {
                             di = "disabled";
                             ch = "checked";

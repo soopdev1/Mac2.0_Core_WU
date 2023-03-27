@@ -126,8 +126,8 @@
                     <%
                         String decimal = Constant.decimal;
                         String thousand = Constant.thousand;
-                        String va_code = request.getParameter("va_code");
-                        if (va_code != null) {
+                        String va_code = Utility.safeRequest(request, "va_code");
+                        if (!va_code.equals("")) {
                             VATcode va = Engine.get_vat(va_code);
                             String sta = "";
                             if (va.getFg_annullato().equals("0")) {
@@ -242,10 +242,7 @@
                     </form>
                     <%}%>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

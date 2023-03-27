@@ -120,8 +120,8 @@
                     <div class="clearfix"></div>
                     <%
                         ArrayList<String[]> array_bank = Engine.list_bank();
-                        String ba_code = request.getParameter("ba_code");
-                        if (ba_code != null) {
+                        String ba_code = Utility.safeRequest(request, "ba_code");
+                        if (!ba_code.equals("")) {
 
                             String descr = Utility.formatAL(ba_code, array_bank, 1);
                             String aces = Utility.formatAL(ba_code, array_bank, 2);
@@ -255,10 +255,7 @@
                     </form>
                     <%}%>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

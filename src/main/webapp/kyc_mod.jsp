@@ -200,7 +200,7 @@
                 lan_index = "IT";
                 Etichette et_index = new Etichette(lan_index);
 
-                String cod = request.getParameter("cod");
+                String cod = Utility.safeRequest(request, "cod");
 
                 Ch_transaction tra = Engine.query_transaction_ch(cod);
 

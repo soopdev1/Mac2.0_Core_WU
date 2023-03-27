@@ -118,10 +118,8 @@
             <%                String lan_index = (String) session.getAttribute("language");
                 lan_index = "IT";
                 Etichette et_index = new Etichette(lan_index);
-                String cur_code = request.getParameter("cur_code");
-
+                String cur_code = Utility.safeRequest(request, "cur_code");
                 String fi = Engine.getFil()[0];
-
                 Currency cu = Engine.getCurrency(cur_code, fi);
                 boolean iscentral = Engine.isCentral();
                 ArrayList<Branch> array_branch = Engine.list_branch_enabled();

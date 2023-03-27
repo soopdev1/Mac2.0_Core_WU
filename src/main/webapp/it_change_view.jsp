@@ -155,7 +155,7 @@
                     <!-- END PAGE TITLE-->
                     <!-- END PAGE HEADER-->
                     <%
-                        String cod = request.getParameter("cod");
+                        String cod = Utility.safeRequest(request, "cod");
 
                         IT_change it = Engine.get_internal_transfer(cod);
 
@@ -255,10 +255,7 @@
 
                         
                     <%
-                        String typeop = request.getParameter("typeop");
-                        if (typeop == null) {
-                            typeop = "";
-                        }
+                        String typeop = Utility.safeRequest(request, "typeop");
                         if (typeop.equals("CH")) {
                             ArrayList<IT_change> values = Engine.get_internal_transfer_ch_value(cod);
                             ArrayList<IT_change> tagli = Engine.get_internal_transfer_ch_tg(cod);

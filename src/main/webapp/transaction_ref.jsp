@@ -176,8 +176,8 @@
             <div class="page-content-wrapper">
                 <!-- BEGIN CONTENT BODY -->
                 <div class="page-content">
-                    <%String code = request.getParameter("code");
-                        if (code != null) {
+                    <%String code = Utility.safeRequest(request, "code");
+                        if (!code.equals("")) {
                             ArrayList<Branch> array_branch = Engine.list_branch_enabled();
                             String decimal = Constant.decimal;
                             String thousand = Constant.thousand;
@@ -295,10 +295,7 @@
                     <%}%>
 
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

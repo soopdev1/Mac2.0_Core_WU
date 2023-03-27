@@ -172,7 +172,7 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String cod = request.getParameter("cod");
+                        String cod = Utility.safeRequest(request, "cod");
                     %>
 
                     <%if (Constant.signoffline) {%>
@@ -181,7 +181,7 @@
                         <form class="form-horizontal" role="form" name="f1" method="post" action="Print?type=mod_prof_client" onsubmit="return checkvalue();">
                             <%}%>
                             
-                            <input type="hidden"name="solofirma" value="<%=request.getParameter("solofirma")%>" />
+                            <input type="hidden"name="solofirma" value="<%=Utility.safeRequest(request, "solofirma")%>" />
                             
                             <input type="hidden" name="cod" value="<%=cod%>" />
                             <div class="portlet light bordered">

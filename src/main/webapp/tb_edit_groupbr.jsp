@@ -121,14 +121,11 @@
                     <%
                         ArrayList<String[]> list_type = Engine.list_group_branch();
                         ArrayList<String[]> list_group = Engine.list_branch_group();
-                        String gr_code = request.getParameter("gr_code");
-                        if (gr_code != null) {
-
+                        String gr_code = Utility.safeRequest(request, "gr_code");
+                        if (!gr_code.equals("")) {
                             String descr = Utility.formatAL(gr_code, list_group, 1);
                             String type = Utility.formatAL(gr_code, list_group, 2);
                             String typedes = Utility.formatAL(type, list_type, 1);
-
-
                     %>
                     <form class="form-horizontal" role="form" name="f1" method="post" action="Edit?type=edit_groupbr" onsubmit="return checkdescr();">
                         <input type="hidden" name="typegr" value="<%=type%>"/>
@@ -222,10 +219,7 @@
                     </form>
                     <%}%>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

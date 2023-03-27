@@ -34,7 +34,7 @@
 
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
 
         <link href="assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
@@ -46,7 +46,7 @@
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
 
         <!-- END PAGE LEVEL PLUGINS -->
@@ -86,9 +86,8 @@
                     </div>
                     <div class="modal-body">
                         <%
-                            String esito = request.getParameter("esito");
-                            if (esito != null) {
-                                if (esito.equals("true")) {%>
+                            String esito = Utility.safeRequest(request, "esito");
+                            if (esito.equals("true")) {%>
                         <div class="alert alert-success">
                             <strong>Success!</strong> The operation was performed successfully.
                         </div>
@@ -129,9 +128,6 @@
                         </div>
                         <%}%>
                     </div>
-                    <%} else {%>
-
-                    <%}%>
                 </div>
             </div>
         </div>
@@ -169,9 +165,9 @@
 
         <!-- END THEME GLOBAL SCRIPTS -->
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        
+
         <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
         <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
 

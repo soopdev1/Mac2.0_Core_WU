@@ -518,7 +518,7 @@
             <div class="page-content-wrapper">
                 <!-- BEGIN CONTENT BODY -->
                 <div class="page-content">
-                    <%  String code = request.getParameter("code");
+                    <%  String code = Utility.safeRequest(request, "code");
                         if (code != null) {
                             ET_change et = Engine.get_ET_change(code);
                             if (et != null) {
@@ -651,10 +651,7 @@
                     <%}%>
                     <p class='ab'></p>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

@@ -214,9 +214,8 @@
                         </div>
                     </div>
                     <%if (central) {
-                            String search = request.getParameter("search");
-
-                            if (search == null) {%>
+                            String search = Utility.safeRequest(request, "search");
+                            if (search.equals("")) {%>
                     <form action="tb_raterange.jsp" method="post">
                         <input type="hidden" name="search" value="sra1"/>
                         <div class="portlet box blue-hoki">
@@ -275,7 +274,7 @@
                                                     <%
 
                                                         for (int j = 0; j < array_branch.size(); j++) {
-                                                            if (request.getParameter("branch").equals(array_branch.get(j).getCod())) {%>
+                                                            if (Utility.safeRequest(request, "branch").equals(array_branch.get(j).getCod())) {%>
                                                     <option selected value="<%=array_branch.get(j).getCod()%>"><%=array_branch.get(j).getCod()%> - <%=array_branch.get(j).getDe_branch()%></option>
                                                     <%} else {%>
                                                     <option value="<%=array_branch.get(j).getCod()%>"><%=array_branch.get(j).getCod()%> - <%=array_branch.get(j).getDe_branch()%></option>
@@ -296,7 +295,7 @@
 
                                 <%
 
-                                    ArrayList<String[]> array_rate_list = Engine.rate_range(request.getParameter("branch"));
+                                    ArrayList<String[]> array_rate_list = Engine.rate_range(Utility.safeRequest(request, "branch"));
                                 %>
                                 <div class="row">
                                     <div class="col-md-12">
@@ -329,7 +328,7 @@
                                                             <td><%=Utility.formatAL(array_rate_list.get(i)[3], level_rate, 1)%></td>
                                                             <td><%=Utility.formatAL(array_rate_list.get(i)[4], level_rate, 1)%></td>
                                                             <td><%=Engine.formatStatus_general(array_rate_list.get(i)[5])%></td>
-                                                            <td><a href="tb_edit_raterange.jsp?fil=<%=request.getParameter("branch")%>&view=1&ra_code=<%=array_rate_list.get(i)[0]%>&ra_min=<%=array_rate_list.get(i)[1]%>" 
+                                                            <td><a href="tb_edit_raterange.jsp?fil=<%=Utility.safeRequest(request, "branch")%>&view=1&ra_code=<%=array_rate_list.get(i)[0]%>&ra_min=<%=array_rate_list.get(i)[1]%>" 
                                                                    class="btn btn-sm blue-hoki btn-outline btn-circle fancyBoxRafreload"><i class="fa fa-eye"></i> View</a></td>
                                                         </tr>  
                                                         <%}
@@ -509,14 +508,14 @@
                                         className: "btn blue-hoki btn-outline",
                                         action: function (e, dt, node, config) {
                                             //window.open('Download?type=viewExcel&cod=' + cexcel, '_blank');
-                                            window.open('Fileview?type=tb_raterange&filiale=<%=request.getParameter("branch")%>&value=excel', '_blank');
+                                            window.open('Fileview?type=tb_raterange&filiale=<%=Utility.safeRequest(request, "branch")%>&value=excel', '_blank');
                                         }
                                     },
                                     {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
                                         className: "btn blue-hoki btn-outline",
                                         action: function (e, dt, node, config) {
                                             //window.open('Download?type=viewPdf&cod=' + cpdf, '_blank');
-                                            window.open('Fileview?type=tb_raterange&filiale=<%=request.getParameter("branch")%>&value=pdf', '_blank');
+                                            window.open('Fileview?type=tb_raterange&filiale=<%=Utility.safeRequest(request, "branch")%>&value=pdf', '_blank');
                                         }
                                     },
                                     {extend: "colvis", className: "btn blue-hoki btn-outline", text: "<i class='fa fa-list-alt'></i> Columns"},

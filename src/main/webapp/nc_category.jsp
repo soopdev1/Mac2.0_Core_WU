@@ -10,7 +10,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     String link_value = Engine.verifyUser(request);
-    if(link_value!=null){
+    if (link_value != null) {
         Utility.redirect(request, response, link_value);
     }
 %>
@@ -42,12 +42,12 @@
         <link href="assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
@@ -63,13 +63,13 @@
         <link rel="shortcut icon" href="favicon.ico" /> 
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
         <!-- FANCYBOX -->
-        
+
         <script type="text/javascript" src="assets/soop/js/jquery.fancybox.js?v=2.1.5"></script>
         <link rel="stylesheet" type="text/css" href="assets/soop/css/jquery.fancybox.css?v=2.1.5" media="screen" />
         <script type="text/javascript" src="assets/soop/js/fancy.js"></script>
-        
-       
-        
+
+
+
     </head>
     <!-- END HEAD -->
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white" onload="return online();">
@@ -84,7 +84,7 @@
             <!-- BEGIN MENU -->
             <%@ include file="menu/menu_ma22.jsp"%>
             <!-- END MENU -->
-            <%                
+            <%
                 String lan_index = (String) session.getAttribute("language");
                 lan_index = "IT";
                 Etichette et_index = new Etichette(lan_index);
@@ -94,7 +94,7 @@
                 if (tipo == null) {
                     tipo = "";
                 }
-                
+
                 //tipo="1";
             %>
             <div class="modal fade" id="largelogin" tabindex="-1" role="dialog" aria-hidden="true">
@@ -139,7 +139,7 @@
                             <img src="assets/soop/img/logocl.png" alt="" class="img-responsive" style="text-align: right;"/> 
                         </div>
                     </div>
-                    <%if(central&&tipo.equals("3")){%>
+                    <%if (central && tipo.equals("3")) {%>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
@@ -157,7 +157,9 @@
                     <!-- END PAGE TITLE-->
                     <!-- END PAGE HEADER-->
                     <!-- SELECT TILL -->
-                    <%if (request.getParameter("search") == null) {
+                    <%
+
+                        if (Utility.safeRequest(request, "search").equals("")) {
                             String search = Utility.generaId();
                     %>
                     <form action="nc_category.jsp" method="post" name="f1">
@@ -202,10 +204,10 @@
                             </div>
                         </div>
                     </form>
-                    <%} else if (request.getParameter("search").length() != 20 || request.getParameter("kind_1") == null) {
+                    <%} else if (Utility.safeRequest(request, "search").length() != 20 || Utility.safeRequest(request, "kind_1") == null) {
                         Utility.redirect(request, response, "nc_category.jsp");
                     } else {
-                        String search = request.getParameter("search");
+                        String search = Utility.safeRequest(request, "search");
                     %>
 
                     <form action="nc_category.jsp" method="post" name="f1">
@@ -230,7 +232,7 @@
                                                     <select class="form-control select2" name="kind_1" placeholder="...">
                                                         <option value="...">All</option>
                                                         <%for (int i = 0; i < array_nc_kind.size(); i++) {
-                                                                if (request.getParameter("kind_1").equals(array_nc_kind.get(i)[0])) {%>
+                                                                if (Utility.safeRequest(request, "kind_1").equals(array_nc_kind.get(i)[0])) {%>
                                                         <option value="<%=array_nc_kind.get(i)[0]%>" selected="selected"><%=array_nc_kind.get(i)[1]%></option>
                                                         <%} else {%>
                                                         <option value="<%=array_nc_kind.get(i)[0]%>"><%=array_nc_kind.get(i)[1]%></option>
@@ -299,15 +301,8 @@
                         </div>
 
                         <%
-                            String show = request.getParameter("show");
-                            String codnc = request.getParameter("codnc");
-
-                            if (show == null) {
-                                show = "";
-                            }
-                            if (codnc == null) {
-                                codnc = "";
-                            }
+                            String show = Utility.safeRequest(request, "show");
+                            String codnc = Utility.safeRequest(request, "codnc");
 
                             if (show.length() == 20 && !codnc.equals("")) {
 
@@ -322,7 +317,7 @@
                                         <span class="caption-subject">Category: <%=nc1.getGruppo_nc()%> - <%=nc1.getDe_gruppo_nc()%></span>
                                     </div>
                                     <div class="actions">
-                                        <%if(central&&tipo.equals("3") &&nc1.getAnnullato().equals("0")){%>
+                                        <%if (central && tipo.equals("3") && nc1.getAnnullato().equals("0")) {%>
                                         <a href="nc_edit_cas.jsp?nc_cat=<%=nc1.getGruppo_nc()%>" class="btn btn-sm btn-outline white fancyBoxRaf"><i class="fa fa-plus-circle"></i> New Causal</a>
                                         <%}%>
                                     </div>
@@ -387,7 +382,7 @@
                 <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-                
+
                 <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
@@ -406,9 +401,9 @@
 
                 <!-- END THEME GLOBAL SCRIPTS -->
                 <!-- BEGIN PAGE LEVEL SCRIPTS -->
-                
+
                 <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-                
+
                 <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
                 <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
 
@@ -446,36 +441,36 @@
                                             scrollX: true,
                                             scrollY: true,
                                             ajax: {
-                                                url: "Query?type=nc_cat&kind_1=<%=request.getParameter("kind_1")%>&search=<%=request.getParameter("search")%>",
-                                                                    dataSrc: "aaData",
-                                                                    type: "GET"
-                                                                },
-                                                                initComplete: function (settings, json) {
-                                                                    $('.popovers').popover();
-                                                                },
-                                                                columnDefs: [
-                                                                    {orderable: 1, targets: [0]},
-                                                                    {orderable: 1, targets: [1]},
-                                                                    {orderable: 1, targets: [2]},
-                                                                    {orderable: 1, targets: [3]},
-                                                                    {orderable: 1, targets: [4]},
-                                                                    {orderable: !1, targets: [5]}
-                                                                ],
-                                                                buttons: [
-                                              {text: "<i class='fa fa-file-pdf-o'></i> Excel",
-                                                                        className: "btn white btn-outline",
-                                                                        action: function (e, dt, node, config) {                                                                           
-                                                                            //window.open('Download?type=viewExcel&cod=' + cexcel, '_blank');
-                                                                            window.open('Fileview?type=nc_category_cat&kind_1=<%=request.getParameter("kind_1")%>&value=excel', '_blank');
-                                                                        }
-                                                                    },
-                                                                    {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
-                                                                        className: "btn white btn-outline",
-                                                                        action: function (e, dt, node, config) {                                                                         
-                                                                            //window.open('Download?type=viewPdf&cod=' + cpdf, '_blank');
-                                                                            window.open('Fileview?type=nc_category_cat&kind_1=<%=request.getParameter("kind_1")%>&value=pdf', '_blank');
-                                                                        }
-                                                                    },
+                                                url: "Query?type=nc_cat",
+                                                dataSrc: "aaData",
+                                                type: "POST",
+                                                data: {
+                                                    kind_1: '<%=Utility.safeRequest(request, "kind_1")%>',
+                                                    search: '<%=Utility.safeRequest(request, "search")%>'
+                                                }
+                                            },
+                                            initComplete: function (settings, json) {
+                                                $('.popovers').popover();
+                                            },
+                                            columnDefs: [
+                                                {orderable: 1, targets: [0]},
+                                                {orderable: 1, targets: [1]},
+                                                {orderable: 1, targets: [2]},
+                                                {orderable: 1, targets: [3]},
+                                                {orderable: 1, targets: [4]},
+                                                {orderable: !1, targets: [5]}
+                                            ],
+                                            buttons: [
+                                                {text: "<i class='fa fa-file-pdf-o'></i> Excel",
+                                                    className: "btn white btn-outline",
+                                                    action: function (e, dt, node, config) {
+                                                    }
+                                                },
+                                                {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
+                                                    className: "btn white btn-outline",
+                                                    action: function (e, dt, node, config) {
+                                                    }
+                                                },
                                                 {extend: "colvis", className: "btn white btn-outline", text: "<i class='fa fa-list-alt'></i> Columns"},
                                                 {text: "<i class='fa fa fa-refresh'></i>",
                                                     className: "btn white btn-outline",
@@ -484,21 +479,21 @@
                                                     }
                                                 }]
                                             ,
-                                                                colReorder: {reorderCallback: function () {
-                                                                        console.info("callback");
-                                                                    }},
-                                                                lengthMenu: [
-                                                                    [25, 50, 100, -1],
-                                                                    [25, 50, 100, "All"]
-                                                                ],
-                                                                pageLength: 25,
-                                                                order: [],
-                                                                dom: "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><t><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
-                                                                processing: true
-                                                            });
-                                                        };
-                                                        jQuery().dataTable && dt1();
-                                                    });
+                                            colReorder: {reorderCallback: function () {
+                                                    console.info("callback");
+                                                }},
+                                            lengthMenu: [
+                                                [25, 50, 100, -1],
+                                                [25, 50, 100, "All"]
+                                            ],
+                                            pageLength: 25,
+                                            order: [],
+                                            dom: "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><t><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
+                                            processing: true
+                                        });
+                                    };
+                                    jQuery().dataTable && dt1();
+                                });
                 </script>
                 <script type="text/javascript">
                     jQuery(document).ready(function () {
@@ -518,69 +513,69 @@
                                 scrollX: true,
                                 scrollY: true,
                                 ajax: {
-                                    url: "Query?type=nc_caus&codnc=<%=request.getParameter("codnc")%>&search=<%=request.getParameter("search")%>",
-                                                        dataSrc: "aaData",
-                                                        type: "GET"
-                                                    },
-                                                    initComplete: function (settings, json) {
-                                                        $('.popovers').popover();
-                                                    },
-                                                    columnDefs: [
-                                                        {orderable: 1, targets: [0]},
-                                                        {orderable: 1, targets: [1]},
-                                                        {orderable: 1, targets: [2]},
-                                                        {orderable: 1, targets: [3]},
-                                                        {orderable: !1, targets: [4]}
-                                                    ],
-                                                    buttons: [
-                                              {text: "<i class='fa fa-file-pdf-o'></i> Excel",
-                                                                        className: "btn white btn-outline",
-                                                                        action: function (e, dt, node, config) {                                                                           
-                                                                            //window.open('Download?type=viewExcel&cod=' + cexcel, '_blank');
-                                                                            window.open('Fileview?type=nc_category_cas&codnc=<%=request.getParameter("codnc")%>&value=excel', '_blank');
-                                                                        }
-                                                                    },
-                                                                    {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
-                                                                        className: "btn white btn-outline",
-                                                                        action: function (e, dt, node, config) {                                                                         
-                                                                            //window.open('Download?type=viewPdf&cod=' + cpdf, '_blank');
-                                                                            window.open('Fileview?type=nc_category_cas&codnc=<%=request.getParameter("codnc")%>&value=pdf', '_blank');
-                                                                        }
-                                                                    },
-                                                {extend: "colvis", className: "btn white btn-outline", text: "<i class='fa fa-list-alt'></i> Columns"},
-                                                {text: "<i class='fa fa fa-refresh'></i>",
-                                                    className: "btn white btn-outline",
-                                                    action: function (e, dt, node, config) {
-                                                        location.reload();
-                                                    }
-                                                }]
-                                            ,
-                                                    colReorder: {reorderCallback: function () {
-                                                            console.info("callback");
-                                                        }},
-                                                    lengthMenu: [
-                                                        [25, 50, 100, -1],
-                                                        [25, 50, 100, "All"]
-                                                    ],
-                                                    pageLength: 25,
-                                                    order: [],
-                                                    dom: "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><t><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
-                                                    processing: true
-                                                });
-                                            };
-                                            jQuery().dataTable && dt2();
-                                        });
+                                    url: "Query?type=nc_caus",
+                                    dataSrc: "aaData",
+                                    type: "POST",
+                                    data: {
+                                        codnc: '<%=Utility.safeRequest(request, "codnc")%>',
+                                        search: '<%=Utility.safeRequest(request, "search")%>'
+                                    }
+                                },
+                                initComplete: function (settings, json) {
+                                    $('.popovers').popover();
+                                },
+                                columnDefs: [
+                                    {orderable: 1, targets: [0]},
+                                    {orderable: 1, targets: [1]},
+                                    {orderable: 1, targets: [2]},
+                                    {orderable: 1, targets: [3]},
+                                    {orderable: !1, targets: [4]}
+                                ],
+                                buttons: [
+                                    {text: "<i class='fa fa-file-pdf-o'></i> Excel",
+                                        className: "btn white btn-outline",
+                                        action: function (e, dt, node, config) {
+                                        }
+                                    },
+                                    {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
+                                        className: "btn white btn-outline",
+                                        action: function (e, dt, node, config) {
+                                        }
+                                    },
+                                    {extend: "colvis", className: "btn white btn-outline", text: "<i class='fa fa-list-alt'></i> Columns"},
+                                    {text: "<i class='fa fa fa-refresh'></i>",
+                                        className: "btn white btn-outline",
+                                        action: function (e, dt, node, config) {
+                                            location.reload();
+                                        }
+                                    }]
+                                ,
+                                colReorder: {reorderCallback: function () {
+                                        console.info("callback");
+                                    }},
+                                lengthMenu: [
+                                    [25, 50, 100, -1],
+                                    [25, 50, 100, "All"]
+                                ],
+                                pageLength: 25,
+                                order: [],
+                                dom: "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><t><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
+                                processing: true
+                            });
+                        };
+                        jQuery().dataTable && dt2();
+                    });
                 </script>
-                
-                 <script type="text/javascript">
 
-            $(document).ready(function () {
-                window.history.pushState(null, "", window.location.href);
-                window.onpopstate = function () {
-                    window.history.pushState(null, "", window.location.href);
-                };
-            });
-        </script>
-                
+                <script type="text/javascript">
+
+                    $(document).ready(function () {
+                        window.history.pushState(null, "", window.location.href);
+                        window.onpopstate = function () {
+                            window.history.pushState(null, "", window.location.href);
+                        };
+                    });
+                </script>
+
                 </body>
                 </html>

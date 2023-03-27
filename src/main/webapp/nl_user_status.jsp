@@ -67,7 +67,7 @@
     <!-- END HEAD -->
     <%
 
-        String cod = request.getParameter("cod");
+        String cod = Utility.safeRequest(request, "cod");
         Newsletters nc = Engine.get_newsletters(cod);
         ArrayList<Newsletters> nclist = Engine.query_newsletters_user_mod(cod);
         ArrayList<Users> userlist = Engine.list_all_users_enabled();

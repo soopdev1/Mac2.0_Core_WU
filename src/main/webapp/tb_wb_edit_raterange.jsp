@@ -160,13 +160,13 @@
                     <div class="clearfix"></div>
                     <%
 
-                        String view = request.getParameter("view");
-                        if (view == null) {
+                        String view = Utility.safeRequest(request, "view");
+                        if (view.equals("")) {
                             view = "0";
                         }
 
-                        String ra_code = request.getParameter("ra_code");
-                        String fi_min = request.getParameter("ra_min");
+                        String ra_code = Utility.safeRequest(request, "ra_code");
+                        String fi_min = Utility.safeRequest(request, "ra_min");
 
                         ArrayList<String[]> array_kind = Engine.list_all_kind("000");
                         ArrayList<String[]> level_rate = Engine.select_level_rate();
@@ -261,10 +261,7 @@
 
                     <%}%>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

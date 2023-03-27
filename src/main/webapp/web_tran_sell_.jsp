@@ -101,11 +101,7 @@
             }
             session.setAttribute("esito_s", null);
 
-            String anag = request.getParameter("anag");
-            if (anag == null) {
-                anag = "";
-            }
-
+            String anag = Utility.safeRequest(request, "anag");
             String pswx = session.getAttribute("us_pwd").toString();
             String nation = Constant.nation;
             String decimal = Constant.decimal;
@@ -146,7 +142,7 @@
                         ermsg = "<span class='font-red'>Attention! </span>Not executable transaction. This name is present in the international blacklist";
                     } else if (es1 === "koblm") {
                         var ms1 = "";
-                        var cod1 = '<%=request.getParameter("codbl")%>';
+                        var cod1 = '<%=Utility.safeRequest(request, "codbl")%>';
             <%for (int i = 0; i < array_bl.size(); i++) {%>
                         var confr = '<%=array_bl.get(i).getCode()%>';
                         if (cod1 === confr) {
@@ -1446,7 +1442,7 @@
                         <div class="row">
                             <!-- BUY -->
                             <%
-                                String cod = request.getParameter("cod");
+                                String cod = Utility.safeRequest(request, "cod");
                                 Booking bo = Engine.get_prenot(cod);
 
                                 ArrayList<Currency> cu = Engine.list_all_currency();

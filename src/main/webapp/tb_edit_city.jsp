@@ -123,7 +123,7 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String city_code = request.getParameter("cit_code");
+                        String city_code = Utility.safeRequest(request, "cit_code");
                         String[] array_city = Engine.getCity1(city_code);
                         if (array_city != null) {
                             String descr = array_city[0];
@@ -210,10 +210,7 @@
                     </form>
                     <%}%>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

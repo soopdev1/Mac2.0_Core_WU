@@ -1,4 +1,5 @@
 
+<%@page import="rc.so.util.Utility"%>
 <%@page import="rc.so.entity.Branch"%>
 <%@page import="rc.so.util.Engine"%>
 <%@page import="java.util.ArrayList"%>
@@ -150,9 +151,13 @@
                     <!-- END PAGE HEADER-->
 
 
-                    <%ArrayList<Branch> array_branch = Engine.list_branch_enabled();%>
+                    <%ArrayList<Branch> array_branch = Engine.list_branch_enabled();
+                    
+                        String s1 = Utility.safeRequest(request, "search");
+                    
+                    %>
 
-                    <%if (request.getParameter("search") == null) {%>
+                    <%if (s1.equals("")) {%>
                     <form name="f1" method="post" action="rate_historymo.jsp" onsubmit="return checkdescr();">
                         <input type="hidden" name="search" value="ar1"/>
                         <div class="row">
@@ -205,10 +210,10 @@
                             </div>
                         </div>
                     </form>
-                    <%} else if (request.getParameter("search").equals("ar1")) {   
+                    <%} else if (s1.equals("ar1")) {   
                         String di = "";
                         String ch = "";
-                        String[] a = request.getParameterValues("branch");
+                        String[] a = Utility.safeRequestMultiple(request, "branch");
                         if(a==null){
                             di="disabled";
                             ch = "checked";

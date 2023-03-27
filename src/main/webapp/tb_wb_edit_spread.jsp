@@ -60,9 +60,9 @@
 
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
         <%
-
-            Currency cu = Engine.getCurrency(request.getParameter("cur_code"), "000");
-            String[] valori = Engine.get_site_spread(request.getParameter("cur_code"));
+            String cucode1 = Utility.safeRequest(request, "cur_code");
+            Currency cu = Engine.getCurrency(cucode1, "000");
+            String[] valori = Engine.get_site_spread(cucode1);
 
             String decimal = Constant.decimal;
             String thousand = Constant.thousand;
@@ -159,10 +159,8 @@
                     <!-- END PAGE BAR -->
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
-                    <%                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                    <%                        
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";
@@ -227,7 +225,7 @@
 
                     %>
                     <form class="form-horizontal" role="form" name="f1" method="post" action="Edit?type=edit_wb_spread" onsubmit="return checkdescr();">
-                        <input type="hidden" name="cur_code" value="<%=request.getParameter("cur_code")%>" />
+                        <input type="hidden" name="cur_code" value="<%=cucode1%>" />
                         <div class="row">
                             <div class="col-md-12">
                                 <!-- BEGIN PORTLET-->

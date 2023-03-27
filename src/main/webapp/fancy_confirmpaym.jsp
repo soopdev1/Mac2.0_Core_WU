@@ -191,10 +191,7 @@
 
 
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";
@@ -208,7 +205,7 @@
                             classal = "alert-danger";
                             classfa = "fa-exclamation-triangle";
                             msg = "Error";
-                            msg1 = request.getParameter("errmsg");
+                            msg1 = Utility.safeRequest(request, "errmsg");
                         }
                         if (!esito.equals("")) {
                     %>
@@ -221,13 +218,13 @@
                     </div>
                     <%}
 
-                        String paynew = request.getParameter("paynew");
-                        String bra = request.getParameter("bra").trim();
-                        String idbra = request.getParameter("idbra");
-                        String codtaglio = request.getParameter("codtaglio");
-                        String tipolo = request.getParameter("tipolo");
-                        String desc = request.getParameter("desc");
-                        String tipoprodotto = request.getParameter("tipoprodotto");
+                        String paynew = Utility.safeRequest(request, "paynew");
+                        String bra = Utility.safeRequest(request, "bra");
+                        String idbra = Utility.safeRequest(request, "idbra");
+                        String codtaglio = Utility.safeRequest(request, "codtaglio");
+                        String tipolo = Utility.safeRequest(request, "tipolo");
+                        String desc = Utility.safeRequest(request, "desc");
+                        String tipoprodotto = Utility.safeRequest(request, "tipoprodotto");
                         String tip = tipolo;
                         if (tipolo.equals("0")) {
                             tip = "";

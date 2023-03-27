@@ -49,7 +49,7 @@
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
@@ -64,10 +64,10 @@
         <link href="assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
         <!-- END THEME LAYOUT STYLES -->
         <link rel="shortcut icon" href="favicon.ico" /> 
-        <%
+        <%            
             String decimal = Constant.decimal;
             String thousand = Constant.thousand;
-
+            
             ArrayList<Currency> array_all_currency = Engine.list_all_currency();
             ArrayList<String[]> array_kind = Engine.list_all_kind(Engine.getFil()[0]);
             ArrayList<String[]> array_till = Engine.list_till_enabled();
@@ -114,13 +114,13 @@
 
         <!-- END THEME GLOBAL SCRIPTS -->
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        
+
         <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
         <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
         <!-- END PAGE LEVEL SCRIPTS -->
-        
+
         <!-- BEGIN THEME LAYOUT SCRIPTS -->
         <script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
         <script src="assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
@@ -138,12 +138,12 @@
 
 
         <script type="text/javascript">
-
+            
             var separatordecimal = '<%=Constant.decimal%>';
             var separatorthousand = '<%=Constant.thousand%>';
-
+            
             function loadtill() {
-
+                
             <%for (int j = 0; j < array_till_open.size(); j++) {%>
                 var o = $("<option/>", {value: "<%=array_till_open.get(j).getCod()%>", text: "<%=Utility.formatAL(array_till_open.get(j).getCod(), array_till, 1)%>"});
                 $('#tillfrom').append(o);
@@ -151,12 +151,12 @@
                 //$('#tillfrom').val($('#tillfrom option:first-child').val()).trigger('change');
                 $('#tillfrom').val('').trigger('change');
             }
-
+            
             function changetillfrom() {
-
+                
                 var v1 = document.getElementById('tillfrom').value;
-
-
+                
+                
                 $('#tillto').empty().trigger('change');
             <%for (int j = 0; j < array_till_open.size(); j++) {%>
                 if (v1 !== "<%=array_till_open.get(j).getCod()%>") {
@@ -170,7 +170,7 @@
                 $('#tillto').val('').trigger('change');
                 //$('#tillto').val($('#tillto' + ' option:first-child').val()).trigger('change');
             }
-
+            
             function changetill_to() {
                 document.getElementById('idopentillto').value = '';
                 document.getElementById('idopentillto_v').value = '';
@@ -183,15 +183,15 @@
                 }
             <%}%>
             }
-
+            
             function checkdiff_qu(index, size, indextotal, limitindex) {
-
+                
                 formatValueINT_1_change(document.getElementById('quantnow' + index), separatorthousand, separatordecimal);
-
+                
                 var quantnow = document.getElementById('quantnow' + index).value;
                 //quantnow = accounting.formatNumber(quantnow, 0, '', '');
                 //var quantnowcheck = quantnow.replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '');
-
+                
                 var quantnowcheck = quantnow.replace(/\D/g, '');
                 document.getElementById('totnow' + index).innerHTML =
                         accounting.formatNumber((parseFloatRaf(quantnowcheck, separatorthousand, separatordecimal) *
@@ -199,15 +199,15 @@
                 //document.getElementById('quantnow' + index).value = parseFloatRaf(quantnowcheck, separatorthousand, separatordecimal);
                 settotal_checkdiff_qu(indextotal, limitindex);
             }
-
+            
             function settotal_checkdiff_qu(indextotal, size) {
                 var tot = 0;
                 for (var i = 0; i < size; i++) {
                     tot = parseIntRaf(document.getElementById('quantnow' + indextotal + '_' + i).value) + tot;
                 }
                 document.getElementById('totquantcuts' + indextotal).innerHTML = accounting.formatNumber(parseIntRaf(tot), 0, separatorthousand, separatordecimal);
-
-
+                
+                
                 var tot_2 = 0;
                 for (var i = 0; i < size; i++) {
                     tot_2 = parseFloatRaf(replacethousand(document.getElementById('totnow' + indextotal + '_' + i).innerHTML, separatorthousand), separatorthousand, separatordecimal)
@@ -216,7 +216,7 @@
                 document.getElementById('totnewcuts' + indextotal).innerHTML = accounting.formatNumber(tot_2.toString(), 2, separatorthousand, separatordecimal);
                 setValueRow(indextotal);
             }
-
+            
             function change_vf(type, field, index) {
                 if (type === "1") {
                     fieldOnlyNumber(field.id);
@@ -225,13 +225,13 @@
                 }
                 setValueRow(index);
             }
-
+            
             function setValueRow(index) {
                 var qo = replacethousand(getvalueofField(document.getElementById('s_quantold' + index)), separatorthousand);
                 var to = replacethousand(getvalueofField(document.getElementById('s_totold' + index)), separatorthousand);
                 var qn = replacethousand(getvalueofField(document.getElementById('s_quantnow' + index)), separatorthousand);
                 var tn = replacethousand(getvalueofField(document.getElementById('s_totnow' + index)), separatorthousand);
-
+                
                 var safefr = document.getElementsByName('safefr')[0].value;
                 if (qn !== "" && tn !== "") {
                     var er = false;
@@ -249,11 +249,11 @@
                         return false;
                     }
                 }
-
-
-
+                
+                
+                
             }
-
+            
             function setValuefig(index) {
                 var qu1 = document.getElementById('totquantcuts' + index).innerHTML;
                 var to1 = document.getElementById('totnewcuts' + index).innerHTML;
@@ -261,13 +261,13 @@
                 document.getElementById('s_totnow' + index).innerHTML = to1;
                 setValueRow(index);
             }
-
+            
             function cli(usr) {
                 document.getElementById("errorlarge").className = document.getElementById("errorlarge").className + " in";
                 document.getElementById("errorlarge").style.display = "block";
                 document.getElementById("errorlargetext").innerHTML = "Warning! Operation not permitted. The operation of the same type is in progress by the operator " + usr + ".<p class='ab'></p> Please wait for the end of this operation.";
             }
-
+            
             function subform() {
                 document.getElementById('butconf').disabled = true;
                 $("#butconf").html("<i class='fa fa-circle-o-notch fa-spin'></i> Sending...");
@@ -284,7 +284,7 @@
                         $(this).DataTable().search('').draw();
                     }
                 });
-
+                
                 var inputs, index;
                 inputs = document.getElementById('f2').getElementsByTagName('span');
                 for (index = 0; index < inputs.length; ++index) {
@@ -302,15 +302,15 @@
                             if (all[i].name.search("kind") >= 0) {
                                 if (getvalueofField(all[i]) === "02" || getvalueofField(all[i]) === "03") {
                                     var idrow = all[i].name.replace(/\D/g, "").trim();
-
+                                    
                                     var kind = getvalueofField(document.getElementById('trfig_td2_' + idrow));
                                     var curr = getvalueofField(document.getElementById('trfig_td1_' + idrow));
-
+                                    
                                     var qold = parseFloatRaf(replacethousand(getvalueofField((document.getElementsByName('s_quantold' + idrow)[0])), separatorthousand), separatorthousand, separatordecimal);
                                     var qnew = parseFloatRaf(replacethousand(getvalueofField((document.getElementsByName('s_quantnow' + idrow)[0])), separatorthousand), separatorthousand, separatordecimal);
                                     var told = parseFloatRaf(replacethousand(getvalueofField((document.getElementsByName('s_totold' + idrow)[0])), separatorthousand), separatorthousand, separatordecimal);
                                     var tnew = parseFloatRaf(replacethousand(getvalueofField((document.getElementsByName('s_totnow' + idrow)[0])), separatorthousand), separatorthousand, separatordecimal);
-
+                                    
                                     if (qold === qnew) {
                                         if (told !== tnew) {
                                             document.getElementById("errorlarge").className = document.getElementById("errorlarge").className + " in";
@@ -328,24 +328,24 @@
                 }
                 document.getElementById('f2').submit();
             }
-
+            
             function checktill() {
-
+                
                 var tillfrom = document.getElementById("tillfrom").value.trim();
                 var idfrom = document.getElementById("idopentillfrom_v").value.trim();
                 var tillto = document.getElementById("tillto").value.trim();
                 var idto = document.getElementById("idopentillto_v").value.trim();
-
+                
                 if (tillfrom === "" || tillto === "") {
                     document.getElementById("errorlarge").className = document.getElementById("errorlarge").className + " in";
                     document.getElementById("errorlarge").style.display = "block";
                     document.getElementById("errorlargetext").innerHTML = "Warning! Operation not permitted. Fields with <span class='font-red'>*</span> must be completed.";
                     return false;
                 }
-
+                
                 var er1 = true;
                 var msg = "ERROR";
-
+                
                 $.ajax({
                     async: false,
                     type: "POST",
@@ -355,14 +355,14 @@
                         if (data === "OK") {
                             er1 = false;
                             msg = "";
-
+                            
                         } else {
                             er1 = true;
                             msg = data;
                         }
                     }
                 });
-
+                
                 if (er1) {
                     document.getElementById("errorlarge").className = document.getElementById("errorlarge").className + " in";
                     document.getElementById("errorlarge").style.display = "block";
@@ -370,15 +370,15 @@
                     return false;
                 }
                 return true;
-
+                
             }
-
+            
             function loadpage1() {
                 online();
                 loadtill();
                 inputvirgola();
             }
-
+            
             function loadpage2() {
                 $('#largelogin').on('shown.bs.modal', function () {
                     $('#passwordlargelogin').focus();
@@ -387,13 +387,16 @@
                 loadtill();
                 inputvirgola();
             }
-
+            
         </script>
 
     </head>
     <!-- END HEAD -->
 
-    <%if (request.getParameter("search") == null) {%>
+    <%
+        String s1 = Utility.safeRequest(request, "search");
+        
+        if (s1.equals("")) {%>
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white" onload="return loadpage1();">
         <%} else {%>    
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white" onload="return loadpage2();">
@@ -410,12 +413,12 @@
             <!-- BEGIN MENU -->
             <%@ include file="menu/menu_tr2.jsp"%>
             <!-- END MENU -->
-            <%
+            <%                
                 String pswx = session.getAttribute("us_pwd").toString();
                 String lan_index = (String) session.getAttribute("language");
                 lan_index = "IT";
                 Etichette et_index = new Etichette(lan_index);
-
+                
                 String usr = Engine.isBlockedOperation();
                 boolean iscentral = Engine.isCentral();
             %>
@@ -526,7 +529,7 @@
                         </div>
                     </div>
                     <%} else {%>
-                    <%if (request.getParameter("search") == null) {%>
+                    <%if (s1.equals("")) {%>
                     <form name="f1" id="f1" method="post" action="it_change.jsp" onsubmit="return checktill();">
                         <input type="hidden" name="search" value="sra1"/>
 
@@ -576,12 +579,12 @@
                             </div>
                         </div>
                     </form>
-                    <%} else if (request.getParameter("search").equals("sra1")) {
-
-                        String idopentillfrom = request.getParameter("idopentillfrom");
-                        String idopentillto = request.getParameter("idopentillto");
-                        String ti_from = request.getParameter("tillfrom");
-                        String ti_to = request.getParameter("tillto");
+                    <%} else if (s1.equals("sra1")) {
+                        
+                        String idopentillfrom = Utility.safeRequest(request, "idopentillfrom");
+                        String idopentillto = Utility.safeRequest(request, "idopentillto");
+                        String ti_from = Utility.safeRequest(request, "tillfrom");
+                        String ti_to = Utility.safeRequest(request, "tillto");
                         Till fr = Engine.getContainsTill(ti_from, array_till_open);
                         Till to = Engine.getContainsTill(ti_to, array_till_open);
                     %>
@@ -595,7 +598,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>To</label>
-                                <input type="text" class="form-control" readonly="readonly" name="tillto" value="<%=Utility.formatAL(request.getParameter("tillto"), array_till, 1)%>"/>
+                                <input type="text" class="form-control" readonly="readonly" name="tillto" value="<%=Utility.formatAL(ti_to, array_till, 1)%>"/>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -627,8 +630,8 @@
                     </div>
                     <%      if (usr != null) {
                         } else {
-                            String tillfrom = request.getParameter("tillfrom");
-                            String tillto = request.getParameter("tillto");
+                            String tillfrom = Utility.safeRequest(request, "tillfrom");
+                            String tillto = Utility.safeRequest(request, "tillto");
                             boolean safefr = fr.isSafe();
                             boolean safeto = to.isSafe();
                             boolean es = Engine.insertBlockedOperation(session);
@@ -673,12 +676,12 @@
                                                             boolean one = false;
                                                             for (int i = 0; i < array_list_oc_change.size(); i++) {
                                                                 if (idopentillfrom.equals(array_list_oc_change.get(i)[0])) {
-
+                                                                    
                                                                     if (Utility.fd(array_list_oc_change.get(i)[3]) > 0) {
                                                                         one = true;
                                                                         String act_quant = "";
                                                                         String act_total1 = Utility.formatMysqltoDisplay(array_list_oc_change.get(i)[3]);
-
+                                                                        
                                                                         if (!fr.isSafe()) {
                                                                             act_quant = "0";
                                                                         } else {
@@ -766,7 +769,7 @@
                                                                                                             <th>Total</th>
                                                                                                         </tr>
                                                                                                         <%
-
+                                                                                                            
                                                                                                             ArrayList<String[]> list_oc_change_cuts = Engine.list_oc_change_cuts_real(idopentillfrom);
                                                                                                             boolean visual = false;
                                                                                                             if (fr.isSafe()) {
@@ -788,7 +791,7 @@
 
                                                                                                                                 //actualst = actualst + (Integer.parseInt(act_size));
                                                                                                                                 act_total = Utility.formatMysqltoDisplay(list_oc_change_cuts.get(k)[5]);
-
+                                                                                                                                
                                                                                                                                 tot_act = tot_act + Utility.fd(Utility.formatDoubleforMysql(act_total));
                                                                                                                                 break;
                                                                                                                             }
@@ -869,7 +872,7 @@
                                                                                                                 order: [],
                                                                                                                 dom: "<'row' <'col-md-12'>><'row'<'col-md-6 col-sm-12'><'col-md-6 col-sm-12'f>r><t>"
                                                                                                             });
-
+                                                                                                            
                                                                                                         };
                                                                                                         jQuery().dataTable && dt();
                                                                                                     });
@@ -910,7 +913,7 @@
                         <%}%>
                     </form>
                     <%} else {
-
+                            
                         }
                     %>
                     <%}
@@ -922,10 +925,7 @@
 
 
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";
@@ -976,7 +976,7 @@
                             msg = "Success";
                             msg1 = "Operation completed successfully.";
                         }
-
+                        
                         if (!esito.equals("")) {
                     %>
                     <hr>
@@ -1053,7 +1053,7 @@
 
 
                 <script type="text/javascript">
-
+                    
                     $(document).ready(function () {
                         window.history.pushState(null, "", window.location.href);
                         window.onpopstate = function () {

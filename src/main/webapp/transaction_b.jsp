@@ -90,11 +90,10 @@
 
         <%
             boolean iscentral = Engine.isCentral();
-            //iscentral = false;
             String esito = (String) session.getAttribute("esito_b");
             if (esito == null) {
-                esito = request.getParameter("esito");
-                if (esito == null || esito.equals("null")) {
+                esito = Utility.safeRequest(request, "esito");
+                if (esito.equals("") || esito.equals("null")) {
                     esito = "none";
                 }
             } else {
@@ -208,7 +207,7 @@
                     if (es1 === "kobl") {
                         ermsg = "<span class='font-red'>Attention! </span>Not executable transaction. This name is present in the international blacklist";
                     } else if (es1 === "koblm") {
-                        var cod1 = "<%=request.getParameter("codbl")%>";
+                        var cod1 = "<%=Utility.safeRequest(request, "codbl")%>";
                         $.ajax({
                             async: false,
                             type: "POST",

@@ -43,7 +43,7 @@
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
@@ -60,7 +60,7 @@
         <script src="assets/soop/js/moment.js" type="text/javascript"></script>
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
         <!-- FANCYBOX -->
-        
+
         <script type="text/javascript" src="assets/soop/js/jquery.fancybox.js?v=2.1.5"></script>
         <link rel="stylesheet" type="text/css" href="assets/soop/css/jquery.fancybox.css?v=2.1.5" media="screen" />
         <script type="text/javascript" src="assets/soop/js/fancy.js"></script>
@@ -244,12 +244,9 @@
                     </div>
 
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
-                        String pr = request.getParameter("pr");
-                        if (pr == null) {
+                        String esito = Utility.safeRequest(request, "esito");
+                        String pr = Utility.safeRequest(request, "pr");
+                        if (pr.equals("")) {
                             pr = "N";
                         }
                         String classal = "alert-info";
@@ -453,11 +450,11 @@
                                 <%if (!tipo.equals("0")) {%>
                                 <button data-toggle="modal" data-target="#uplexe" class="btn btn-outline dark"><i class="fa fa-file-excel-o"></i> Upload Excel</button>
                                 <span class="alert font-dark"><small><%=Engine.get_last_excel_upl()%></small></span>
-                                <%if (true) {%>
+                                        <%if (true) {%>
                                 <button data-toggle="modal" data-target="#uplexespread" class="btn btn-outline blue-steel">
                                     <i class="fa fa-file-excel-o"></i> Upload Spread (Excel)</button>
-                                <%}%>
-                                <%}%>
+                                    <%}%>
+                                    <%}%>
                             </div>
                         </div>
                     </div>
@@ -554,9 +551,9 @@
 
                 <!-- END THEME GLOBAL SCRIPTS -->
                 <!-- BEGIN PAGE LEVEL SCRIPTS -->
-                
+
                 <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-                
+
                 <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
                 <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
 
@@ -627,7 +624,7 @@
                                                         }]
                                                     ,
                                                     colReorder: {reorderCallback: function () {
-                                                            
+
                                                         }},
                                                     lengthMenu: [
                                                         [25, 50, 100, -1],

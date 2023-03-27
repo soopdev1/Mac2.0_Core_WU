@@ -1,4 +1,5 @@
 
+<%@page import="rc.so.util.Utility"%>
 <%@page import="rc.so.util.Constant"%>
 <%@page import="rc.so.entity.Client"%>
 <%@page import="rc.so.util.Engine"%>
@@ -78,10 +79,7 @@
                 lan_index = "IT";
                 Etichette et_index = new Etichette(lan_index);
 
-                String cod = request.getParameter("code");
-                if (cod == null) {
-                    cod = "";
-                }
+                String cod = Utility.safeRequest(request, "code");
 
                 Ch_transaction tr = Engine.query_transaction_ch(cod);
                 if (tr != null) {

@@ -150,7 +150,7 @@
                     <!-- END PAGE BAR -->
                     <!-- BEGIN PAGE TITLE-->
                     <%
-                        String cod = request.getParameter("cod");
+                        String cod = Utility.safeRequest(request, "cod");
                         Ch_transaction it = Engine.query_transaction_ch(cod);
                         if (it != null) {
                             String ty = "";

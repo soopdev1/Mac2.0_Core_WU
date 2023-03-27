@@ -77,17 +77,11 @@
                 lan_index = "IT";
                 Etichette et_index = new Etichette(lan_index);
 
-                String cod = request.getParameter("cod");
-                if (cod == null) {
-                    cod = "";
-                }
+                String cod = Utility.safeRequest(request, "cod");
 
                 NC_transaction nc = Engine.get_NC_transaction(cod);
 
-                String esito = request.getParameter("esito");
-                if (esito == null) {
-                    esito = "";
-                }
+                String esito = Utility.safeRequest(request, "esito");
                 String classal = "alert-info";
                 String classfa = "fa-exclamation-triangle";
                 String msg = "Warning";

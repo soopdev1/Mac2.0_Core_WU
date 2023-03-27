@@ -172,7 +172,7 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String code = request.getParameter("code");
+                        String code = Utility.safeRequest(request, "code");
                         String[] va = Engine.get_site_agevolazioni_varie(code);
                         ArrayList<Branch> list_br = Engine.list_branch_enabled();
                         ArrayList<Currency> list_currency = Engine.list_all_currency();
@@ -547,10 +547,7 @@
 
                     <%}
 
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

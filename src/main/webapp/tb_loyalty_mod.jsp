@@ -186,7 +186,7 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String codcl = request.getParameter("codcl");
+                        String codcl = Utility.safeRequest(request, "codcl");
                         ArrayList<Ch_transaction> li = Engine.query_transaction_ch_CLIENT_central(codcl);
                         Client cc = Engine.query_Client_central(codcl);
                         String loy = Engine.getCodiceClienteAttivo(codcl);
@@ -282,10 +282,7 @@
                     <%}%>
                     
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

@@ -183,10 +183,7 @@
                     <!-- END PAGE BAR -->
                     <!-- BEGIN PAGE TITLE-->
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";
@@ -214,8 +211,8 @@
                     <%}%>
                     <div class="clearfix"></div>
                     <%
-                        String view = request.getParameter("view");
-                        if (view == null) {
+                        String view = Utility.safeRequest(request, "view");
+                        if (view.equals("")) {
                             view = "0";
                         }
                         String dateApply = Utility.getDefaultDateAplly(true, false, 0, 0, 30, null);
@@ -224,7 +221,7 @@
                         ArrayList<String[]> list_type_customer = Engine.list_type_customer();
                         ArrayList<String[]> list_type_kind = Engine.list_type_kind();
                         ArrayList<String[]> list_category_nations = Engine.category_nations();
-                        String kt_code = request.getParameter("kt_code");
+                        String kt_code = Utility.safeRequest(request, "kt_code");
                         CustomerKind ck = Engine.get_customerKind(kt_code);
                         if (ck != null) {
                             String prch = "";

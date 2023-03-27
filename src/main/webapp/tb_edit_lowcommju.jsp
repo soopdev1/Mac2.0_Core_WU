@@ -118,8 +118,8 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String lo_code = request.getParameter("lo_code");
-                        if (lo_code != null) {
+                        String lo_code = Utility.safeRequest(request, "lo_code");
+                        if (!lo_code.equals("")) {
                             ArrayList<String[]> array_undermincommjustify = Engine.undermincommjustify();
                             String descr = Utility.formatAL(lo_code, array_undermincommjustify, 1);
                             String st = Utility.formatAL(lo_code, array_undermincommjustify, 2);
@@ -212,10 +212,7 @@
                     </form>
                     <%}%>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

@@ -355,10 +355,7 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";
@@ -393,8 +390,8 @@
 
                     <%
 
-                        String view = request.getParameter("view");
-                        if (view == null) {
+                        String view = Utility.safeRequest(request, "view");
+                        if (view.equals("")) {
                             view = "0";
                         }
                         String dateApply = Utility.getDefaultDateAplly(true, false, 0, 0, 30, null);
@@ -402,7 +399,7 @@
                         ArrayList<String[]> array_nc_kind = Engine.nc_kind();
                         ArrayList<String[]> array_nc_department = Engine.nc_department();
 
-                        NC_category nc = Engine.getNC_category(request.getParameter("nc_code"));
+                        NC_category nc = Engine.getNC_category(Utility.safeRequest(request, "nc_code"));
                         if (nc != null) {
 
                             String dep1 = nc.getDepartment();

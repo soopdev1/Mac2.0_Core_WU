@@ -57,13 +57,6 @@
 
 
     <script type="text/javascript">
-        <%
-            String esito = request.getParameter("esito");
-            if (esito == null) {
-                esito = "";
-            }%>
-
-
         function checklogin() {
             var us = document.getElementById('username').value.trim();
             if (us === "") {

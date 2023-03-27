@@ -123,9 +123,9 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String country_code = request.getParameter("co_code");
+                        String country_code = Utility.safeRequest(request, "co_code");
                         ArrayList<String[]> array_category_nations = Engine.category_nations();
-                        if (country_code != null) {
+                        if (!country_code.equals("")) {
                             ArrayList<String[]> array_country = Engine.country();
 
                             String descr = Utility.formatAL(country_code, array_country, 1);
@@ -244,10 +244,7 @@
                     </form>
                     <%}%>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

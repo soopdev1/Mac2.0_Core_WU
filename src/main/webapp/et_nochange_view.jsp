@@ -70,7 +70,7 @@
             ArrayList<NC_category> array_nc = Engine.all_nc_category();
             ArrayList<Branch> array_branch = Engine.list_branch_enabled();
             ArrayList<String[]> array_credit_card = Engine.list_bank_pos_enabled();
-            String cod = request.getParameter("cod");
+            String cod = Utility.safeRequest(request, "cod");
             ET_change et = Engine.get_ET_change(cod);
             String desc_safe = Utility.formatAL(et.getTill_from(), array_till, 1);
             String id_oc = et.getIdopen_from();

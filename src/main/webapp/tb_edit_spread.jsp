@@ -60,17 +60,18 @@
         
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
         <%
-            String listbranch = request.getParameter("listbranch");
+            String listbranch = Utility.safeRequest(request, "listbranch");
             String fil[] = Engine.getFil();
             String bra[] = {fil[0]};
 
-            if (listbranch != null && listbranch.length() < 5) {
+            if (!listbranch.equals("") && listbranch.length() < 5) {
                 bra = Utility.parseArrayValues(listbranch, ";");
             }
+            String cucode1 = Utility.safeRequest(request, "cur_code");
 
-            Currency cu = Engine.getCurrency(request.getParameter("cur_code"), bra[0]);
+            Currency cu = Engine.getCurrency(cucode1, bra[0]);
             if (cu == null) {
-                cu = Engine.getCurrency(request.getParameter("cur_code"), "000");
+                cu = Engine.getCurrency(cucode1, "000");
             }
             String decimal = Constant.decimal;
             String thousand = Constant.thousand;
@@ -183,10 +184,7 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";
@@ -255,7 +253,7 @@
                     %>
                     <form class="form-horizontal" role="form" name="f1" method="post" action="Edit?type=edit_spread" onsubmit="return checkdescr();">
                         <input type="hidden" name="listbranch" value="<%=listbranch%>" />
-                        <input type="hidden" name="cur_code" value="<%=request.getParameter("cur_code")%>" />
+                        <input type="hidden" name="cur_code" value="<%=cucode1%>" />
                         <div class="row">
                             <div class="col-md-12">
                                 <!-- BEGIN PORTLET-->

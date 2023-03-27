@@ -52,7 +52,7 @@
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
@@ -132,13 +132,13 @@
 
         <!-- END THEME GLOBAL SCRIPTS -->
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        
+
         <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
         <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
         <!-- END PAGE LEVEL SCRIPTS -->
-        
+
         <!-- BEGIN THEME LAYOUT SCRIPTS -->
         <script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
         <script src="assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
@@ -795,7 +795,7 @@
 
     </head>
     <!-- END HEAD -->
-    <%if (request.getParameter("search") == null) {%>
+    <%if (Utility.safeRequest(request, "search").equals("")) {%>
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white" onload="return loadpage1();">
         <%} else {%>    
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white" onload="return loadpage2();">
@@ -954,12 +954,9 @@
                     <%
                         boolean mostraaltro = true;
 
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
-                        String pr = request.getParameter("pr");
-                        if (pr == null) {
+                        String esito = Utility.safeRequest(request, "esito");
+                        String pr = Utility.safeRequest(request, "pr");
+                        if (pr.equals("")) {
                             pr = "N";
                         }
                         String classal = "alert-info";
@@ -1021,9 +1018,9 @@
                             <div class="alert <%=classal%>">
                                 <strong><%=msg%> <i class="fa <%=classfa%>"></i></strong> <%=msg1%>
                             </div>
-                            <%  String cod = request.getParameter("cod");
+                            <%  String cod = Utility.safeRequest(request, "cod");
                                 if (esito.equals("OK")) {
-                                    if (cod != null) {
+                                    if (!cod.equals("")) {
                             %>
                             <form action="Download?type=viewET_receipt" method="post" target="_blank" name="f3" id="f3">
                                 <input type="hidden" name="cod" value="<%=cod%>"/>
@@ -1046,7 +1043,9 @@
 
                     <!-- END PAGE TITLE-->
                     <!-- END PAGE HEADER-->
-                    <%if (request.getParameter("search") == null) {%>
+                    <%
+                        String s1 = Utility.safeRequest(request, "search");
+                        if (s1.equals("")) {%>
                     <form name="f1" id="f1" method="post" action="et_change.jsp" onsubmit="return checkform();"> 
                         <input type="hidden" name="srcoff" id="srcoff"/>
                         <input type="hidden" name="search" value="sra1"/>
@@ -1128,23 +1127,19 @@
                             </div>
                         </div>
                     </form>
-                    <%} else if (request.getParameter("search").equals("sra1")) {
+                    <%} else if (s1.equals("sra1")) {
 
-                        String tillfrom = request.getParameter("tillfrom");
-                        String tofrom = request.getParameter("tofrom");
-                        String autman = request.getParameter("autman");
-
-                        String typeop = request.getParameter("typeop");
-                        String idopentillfrom = request.getParameter("idopentillfrom");
-                        String bankbranch = request.getParameter("bankbranch");
-                        String srcing = request.getParameter("srcing");
-
-                        String srcing2 = request.getParameter("srcing2");
-
-                        String srcoff = request.getParameter("srcoff");
-
+                        String tillfrom = Utility.safeRequest(request, "tillfrom");
+                        String tofrom = Utility.safeRequest(request, "tofrom");
+                        String autman = Utility.safeRequest(request, "autman");
+                        String typeop = Utility.safeRequest(request, "typeop");
+                        String idopentillfrom = Utility.safeRequest(request, "idopentillfrom");
+                        String bankbranch = Utility.safeRequest(request, "bankbranch");
+                        String srcing = Utility.safeRequest(request, "srcing");
+                        String srcing2 = Utility.safeRequest(request, "srcing2");
+                        String srcoff = Utility.safeRequest(request, "srcoff");
                         String tf = "";
-                        if (tofrom == null) {
+                        if (tofrom.equals("")) {
                             tf = "";
                             tofrom = "F";
                         } else if (!tofrom.equals("F")) {
@@ -1152,7 +1147,7 @@
                             tofrom = "T";
                         }
                         String am = "";
-                        if (autman == null) {
+                        if (autman.equals("")) {
                             am = "";
                             autman = "M";
                         } else {

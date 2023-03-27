@@ -170,10 +170,10 @@
                     <div class="clearfix"></div>
                     <%
                         ArrayList<String[]> array_kind = Engine.list_all_kind("000");
-                        String fi_min = request.getParameter("fi_min");
+                        String fi_min = Utility.safeRequest(request, "fi_min");
 
-                        String view = request.getParameter("view");
-                        if (view == null) {
+                        String view = Utility.safeRequest(request, "view");
+                        if (view.equals("")) {
                             view = "0";
                         }
 
@@ -401,10 +401,7 @@
                         </div>
                     </form>
                     <%}
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

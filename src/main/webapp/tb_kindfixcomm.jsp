@@ -96,6 +96,7 @@
                 if (tipo == null) {
                     tipo = "";
                 }
+                String bra1 = Utility.safeRequest(request, "branch");
                 //tipo="1";
             %>
             <div class="modal fade" id="largelogin" tabindex="-1" role="dialog" aria-hidden="true">
@@ -215,8 +216,8 @@
                         </div>
                     </div>
                     <%if (central) {
-                            String search = request.getParameter("search");
-                            if (search == null) {%>
+                            String search = Utility.safeRequest(request, "search");
+                            if (search.equals("")) {%>
                     <form action="tb_kindfixcomm.jsp" method="post">
                         <input type="hidden" name="search" value="sra1"/>
                         <div class="portlet box blue-hoki">
@@ -275,7 +276,7 @@
                                                     <%
 
                                                         for (int j = 0; j < array_branch.size(); j++) {
-                                                            if (request.getParameter("branch").equals(array_branch.get(j).getCod())) {%>
+                                                            if (bra1.equals(array_branch.get(j).getCod())) {%>
                                                     <option selected value="<%=array_branch.get(j).getCod()%>"><%=array_branch.get(j).getCod()%> - <%=array_branch.get(j).getDe_branch()%></option>
                                                     <%} else {%>
                                                     <option value="<%=array_branch.get(j).getCod()%>"><%=array_branch.get(j).getCod()%> - <%=array_branch.get(j).getDe_branch()%></option>
@@ -295,7 +296,7 @@
                                 </div>
 
                                 <%
-                                    ArrayList<String[]> array_kindfix_list = Engine.kindcommissionefissa(request.getParameter("branch"));
+                                    ArrayList<String[]> array_kindfix_list = Engine.kindcommissionefissa(bra1);
                                 %>
                                 <div class="row">
                                     <div class="col-md-12">
@@ -325,7 +326,7 @@
                                                             <td><%=array_kindfix_list.get(i)[1]%></td>
                                                             <td><%=array_kindfix_list.get(i)[2]%></td>
                                                             <td><%=Engine.formatStatus_general(array_kindfix_list.get(i)[3])%></td>
-                                                            <td><a href="tb_edit_kindfixcomm.jsp?view=1&fil=<%=request.getParameter("branch")%>&ki_code=<%=array_kindfix_list.get(i)[0]%>" 
+                                                            <td><a href="tb_edit_kindfixcomm.jsp?view=1&fil=<%=bra1%>&ki_code=<%=array_kindfix_list.get(i)[0]%>" 
                                                                    class="btn btn-sm blue-hoki btn-outline btn-circle fancyBoxRafreload"><i class="fa fa-eye"></i> View</a>
                                                             </td>
                                                         </tr>  

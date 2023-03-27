@@ -121,9 +121,9 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String district_code = request.getParameter("di_code");
+                        String district_code = Utility.safeRequest(request, "di_code");
 
-                        if (district_code != null) {
+                        if (!district_code.equals("")) {
                             ArrayList<String[]> array_district = Engine.district();
                             String descr = Utility.formatAL(district_code, array_district, 1);
                             String idpr = Utility.formatAL(district_code, array_district, 2);
@@ -207,10 +207,7 @@
                     <%}%>
                     
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

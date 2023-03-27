@@ -42,12 +42,12 @@
         <link href="assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
@@ -66,7 +66,7 @@
         <script src="assets/soop/js/moment.js" type="text/javascript"></script>
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
         <!-- FANCYBOX -->
-        
+
         <script type="text/javascript" src="assets/soop/js/jquery.fancybox.js?v=2.1.5"></script>
         <link rel="stylesheet" type="text/css" href="assets/soop/css/jquery.fancybox.css?v=2.1.5" media="screen" />
         <script type="text/javascript" src="assets/soop/js/fancy.js"></script>
@@ -81,10 +81,10 @@
                     document.getElementById('saerchmodbtn').click();
                     return false;
                 }
-                
-                
-                
-                
+
+
+
+
                 var select1 = document.getElementById("nc_cat1");
                 var selected1 = "";
                 for (var i = 0; i < select1.length; i++) {
@@ -92,7 +92,7 @@
                         selected1 = selected1 + select1.options[i].value + ";";
                     }
                 }
-                document.getElementById("nc_cat2").value = selected1; 
+                document.getElementById("nc_cat2").value = selected1;
             }
 
 
@@ -145,6 +145,7 @@
                 String cod1 = Engine.getFil()[0];
                 Branch br1 = Engine.get_branch(cod1);
                 ArrayList<NC_category> array_nc_cat = Engine.list_ALL_nc_category();
+                String search = Utility.safeRequest(request, "search");
             %>
 
             <div class="modal fade" id="largelogin" tabindex="-1" role="dialog" aria-hidden="true">
@@ -186,7 +187,7 @@
                 </div>
                 <!-- /.modal-dialog -->
             </div>
-            
+
             <!-- BEGIN CONTENT -->
             <div class="page-content-wrapper">
                 <!-- BEGIN CONTENT BODY -->
@@ -236,7 +237,7 @@
                     <!-- SELECT BUY/SELL -->
                     <%
                         String scode = "r1";
-                        if (request.getParameter("search") == null) {
+                        if (search.equals("")) {
                     %>
                     <form name="f1" method="post" action="transaction_listnc.jsp" onsubmit="return search_ing();">
                         <input type="hidden" name="search" value="<%=scode%>"/>
@@ -294,7 +295,7 @@
                                                     <div class="form-group">
                                                         <label>Category</label>
                                                         <input type="hidden" name="nc_cat1" id="nc_cat2" />
-                                                    <select class="form-control select2" multiple id="nc_cat1" name="nc_cat2" placeholder="...">
+                                                        <select class="form-control select2" multiple id="nc_cat1" name="nc_cat2" placeholder="...">
                                                             <option value="...">All</option>
                                                             <%for (int i = 0; i < array_nc_cat.size(); i++) {%>
                                                             <option value="<%=array_nc_cat.get(i).getGruppo_nc()%>"><%=array_nc_cat.get(i).getGruppo_nc()%> - <%=array_nc_cat.get(i).getDe_gruppo_nc()%></option>
@@ -319,11 +320,12 @@
                         </div>
                 </div>
                 </form>
-                <%} else if (request.getParameter("search").equals("r1")) {
+                <%} else if (search.equals("r1")) {
 
-                    ArrayList<String> lincsel = new ArrayList<String>();
-                    if (request.getParameterValues("nc_cat2") != null) {
-                        lincsel = Utility.formatArrayValues(request.getParameterValues("nc_cat2"));
+                    ArrayList<String> lincsel = new ArrayList<>();
+                    String[] req1 = Utility.safeRequestMultiple(request, "nc_cat2");
+                    if (!req1[0].equals("")) {
+                        lincsel = Utility.formatArrayValues(req1);
                     }
 
                     if (lincsel.isEmpty()) {
@@ -355,7 +357,7 @@
                                                         <option value="" selected="selected"></option>
                                                         <%for (int j = 0; j < array_branch.size(); j++) {
                                                                 String selected = "";
-                                                                if (array_branch.get(j).getCod().equals(request.getParameter("branch"))) {
+                                                                if (array_branch.get(j).getCod().equals(Utility.safeRequest(request, "branch"))) {
                                                                     selected = "selected";
                                                                 }
                                                         %>
@@ -378,13 +380,13 @@
                                             <div class="col-md-2">
                                                 <div class="form-group">
                                                     <label>Date From</label>
-                                                    <input type="text" class="form-control date-picker" id="d1" name="d1" value="<%=request.getParameter("d1")%>"/>
+                                                    <input type="text" class="form-control date-picker" id="d1" name="d1" value="<%=Utility.safeRequest(request, "d1")%>"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="form-group">
                                                     <label>Date To</label>
-                                                    <input type="text" class="form-control date-picker" id="d2" name="d2" value="<%=request.getParameter("d2")%>"/>
+                                                    <input type="text" class="form-control date-picker" id="d2" name="d2" value="<%=Utility.safeRequest(request, "d2")%>"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-5">
@@ -499,7 +501,7 @@
         <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
@@ -515,13 +517,13 @@
         <script src="assets/global/scripts/app.min.js" type="text/javascript"></script>
         <!-- END THEME GLOBAL SCRIPTS -->
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        
+
         <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
         <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
         <!-- END PAGE LEVEL SCRIPTS -->
-        
+
         <!-- BEGIN THEME LAYOUT SCRIPTS -->
         <script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
         <script src="assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
@@ -551,9 +553,10 @@
                                     zeroRecords: "No results found.",
                                     paginate: {previous: "Prev", next: "Next", last: "Last", first: "First"}},
                                 ajax: {
-                                    url: "Query?type=transaction_list_nc&d1=<%=request.getParameter("d1")%>&nc_cat1=<%=request.getParameter("nc_cat1")%>&branch=<%=request.getParameter("branch")%>&d2=<%=request.getParameter("d2")%>&search=<%=request.getParameter("search")%>",
+                                    url: "Query?type=transaction_list_nc&search=<%=search%>",
                                     dataSrc: "aaData",
-                                    type: "GET",
+                                    type: "POST",
+                                    data: $('#f1').serializeArray(),
                                     timeout: 12000000
                                 },
                                 scrollX: true,
@@ -583,17 +586,11 @@
                                     {text: "<i class='fa fa-file-pdf-o'></i> Excel",
                                         className: "btn white btn-outline",
                                         action: function (e, dt, node, config) {
-
-                                            //window.open('Download?type=viewExcel&cod=' + cexcel, '_blank');
-                                            window.open('Fileview?type=transactionnc_list&branch=<%=request.getParameter("branch")%>&nc_cat1=<%=request.getParameter("nc_cat1")%>&d1=<%=request.getParameter("d1")%>&d2=<%=request.getParameter("d2")%>&value=excel', '_blank');
                                         }
                                     },
                                     {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
                                         className: "btn white btn-outline",
                                         action: function (e, dt, node, config) {
-
-                                            //window.open('Download?type=viewPdf&cod=' + cpdf, '_blank');
-                                            window.open('Fileview?type=transactionnc_list&branch=<%=request.getParameter("branch")%>&nc_cat1=<%=request.getParameter("nc_cat1")%>&d1=<%=request.getParameter("d1")%>&d2=<%=request.getParameter("d2")%>&value=pdf', '_blank');
                                         }
                                     },
                                     {extend: "colvis", className: "btn white btn-outline", text: "Columns"},
@@ -605,7 +602,7 @@
                                     }]
                                 ,
                                 colReorder: {reorderCallback: function () {
-                                        
+
                                     }},
                                 lengthMenu: [
                                     [25, 50, 100, -1],

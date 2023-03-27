@@ -96,7 +96,7 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String cod = request.getParameter("cod");
+                        String cod = Utility.safeRequest(request, "cod");
                         Booking bo = Engine.get_prenot(cod);
                         if (bo != null) {
                             String decimal = Constant.decimal;
@@ -178,13 +178,8 @@
                             </div>
                         </div>
                     </form>
-                    <%} else {
-                    }%>
-                    <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                    <%} 
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

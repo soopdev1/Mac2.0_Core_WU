@@ -205,8 +205,10 @@
                         <button type="button" id="saerchmodbtn" class="" data-toggle="modal" data-target="#saerchmod"></button>
                     </div>
                     <%
+                        String search1 = Utility.safeRequest(request, "search");
                         String scode = "r1";
-                        if (request.getParameter("search") == null) {
+                        
+                        if (search1.equals("")) {
                     %>
                     <form name="f1" method="post" action="transaction_list.jsp" onsubmit="return search_ing();">
                         <input type="hidden" name="search" value="<%=scode%>"/>
@@ -295,9 +297,7 @@
                             </div>
                         </div>
                     </form>
-                    <%} else if (request.getParameter("search").equals("r1")) {%>
-
-
+                    <%} else if (search1.equals("r1")) {%>
                     <form name="f1" id="f1" method="post" action="transaction_list.jsp" onsubmit="return search_ing();">
                         <input type="hidden" name="search" value="<%=scode%>"/>
                         <div class="row">
@@ -324,7 +324,7 @@
                                                             <option value="" selected="selected"></option>
                                                             <%for (int j = 0; j < array_branch.size(); j++) {
                                                                     String selected = "";
-                                                                    if (array_branch.get(j).getCod().equals(request.getParameter("branch"))) {
+                                                                    if (array_branch.get(j).getCod().equals(Utility.safeRequest(request, "branch"))) {
                                                                         selected = "selected";
                                                                     }
                                                             %>
@@ -347,31 +347,31 @@
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label>Client Surname</label>
-                                                        <input type="text" class="form-control" id="surname" name="surname" value="<%=request.getParameter("surname")%>"onkeyup="return fieldNameSurname(this.id);"/>
+                                                        <input type="text" class="form-control" id="surname" name="surname" value="<%=Utility.safeRequest(request, "surname")%>"onkeyup="return fieldNameSurname(this.id);"/>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label>Client Name</label>
-                                                        <input type="text" class="form-control" id="name" name="name"  value="<%=request.getParameter("name")%>" onkeyup="return fieldNameSurname(this.id);"/>
+                                                        <input type="text" class="form-control" id="name" name="name"  value="<%=Utility.safeRequest(request, "name")%>" onkeyup="return fieldNameSurname(this.id);"/>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label>Client Tax Code</label>
-                                                        <input type="text" class="form-control" id="taxcode" name="taxcode"  value="<%=request.getParameter("taxcode")%>"onkeyup="return fieldNOSPecial_1(this.id);"/>
+                                                        <input type="text" class="form-control" id="taxcode" name="taxcode"  value="<%=Utility.safeRequest(request, "taxcode")%>"onkeyup="return fieldNOSPecial_1(this.id);"/>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Date From</label>
-                                                        <input type="text" class="form-control date-picker" id="d1" name="d1" value="<%=request.getParameter("d1")%>"/>
+                                                        <input type="text" class="form-control date-picker" id="d1" name="d1" value="<%=Utility.safeRequest(request, "d1")%>"/>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label>Date To</label>
-                                                        <input type="text" class="form-control date-picker" id="d2" name="d2" value="<%=request.getParameter("d2")%>"/>
+                                                        <input type="text" class="form-control date-picker" id="d2" name="d2" value="<%=Utility.safeRequest(request, "d2")%>"/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -519,9 +519,10 @@
                                                                             zeroRecords: "No results found.",
                                                                             paginate: {previous: "Prev", next: "Next", last: "Last", first: "First"}},
                                                                         ajax: {
-                                                                            url: "Query?type=transaction_list&taxcode=<%=request.getParameter("taxcode")%>&surname=<%=Utility.convertApici(request.getParameter("surname"))%>&name=<%=(request.getParameter("name"))%>&branch=<%=request.getParameter("branch")%>&d1=<%=request.getParameter("d1")%>&d2=<%=request.getParameter("d2")%>&pdf=<%=pdfstr%>",
+                                                                            url: "Query?type=transaction_list&pdf=<%=pdfstr%>",
                                                                             dataSrc: "aaData",
-                                                                            type: "GET",
+                                                                            type: "POST",
+                                                                            data: $('#f1').serializeArray(),
                                                                             timeout: 12000000
                                                                         },
                                                                         initComplete: function (settings, json) {
@@ -555,7 +556,6 @@
                                                                                 className: "btn white btn-outline",
                                                                                 action: function (e, dt, node, config) {
                                                                                     //window.open('Download?type=viewExcel&cod=' + cexcel, '_blank');
-                                                                                    window.open('Fileview?type=transaction_list&taxcode=<%=request.getParameter("taxcode")%>&surname=<%=Utility.convertApici(request.getParameter("surname"))%>&name=<%=Utility.convertApici(request.getParameter("name"))%>&branch=<%=request.getParameter("branch")%>&d1=<%=request.getParameter("d1")%>&d2=<%=request.getParameter("d2")%>&value=excel', '_blank');
                                                                                 }
                                                                             },
                                                                             {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
@@ -563,7 +563,6 @@
                                                                                 action: function (e, dt, node, config) {
 
                                                                                     //window.open('Download?type=viewPdf&cod=' + cpdf, '_blank');
-                                                                                    window.open('Fileview?type=transaction_list&taxcode=<%=request.getParameter("taxcode")%>&surname=<%=Utility.convertApici(request.getParameter("surname"))%>&name=<%=Utility.convertApici(request.getParameter("name"))%>&branch=<%=request.getParameter("branch")%>&d1=<%=request.getParameter("d1")%>&d2=<%=request.getParameter("d2")%>&d1=<%=request.getParameter("d1")%>&d2=<%=request.getParameter("d2")%>&value=pdf', '_blank');
                                                                                 }
                                                                             },
 

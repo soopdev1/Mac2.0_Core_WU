@@ -131,7 +131,7 @@
                     <%
                         String decimal = Constant.decimal;
                         String thousand = Constant.thousand;
-                        String gr_code = request.getParameter("gr_code");
+                        String gr_code = Utility.safeRequest(request, "gr_code");
                         ArrayList<Branch> list_br = Engine.list_branch_enabled();
                         Branchbudget bb = Engine.list_Branchbudget(gr_code);
                         if (bb != null) {
@@ -273,10 +273,7 @@
                     </form>
                     <%}%>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

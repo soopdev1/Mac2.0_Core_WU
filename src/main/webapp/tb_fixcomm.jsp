@@ -96,6 +96,7 @@
                 if (tipo == null) {
                     tipo = "";
                 }
+                String bra1 = Utility.safeRequest(request, "branch");
                 //tipo="1";
             %>
             <div class="modal fade" id="largelogin" tabindex="-1" role="dialog" aria-hidden="true">
@@ -219,9 +220,9 @@
 
 
                     <%if (central) {
-                            String search = request.getParameter("search");
+                            String search = Utility.safeRequest(request, "search");
 
-                            if (search == null) {%>
+                            if (search.equals("")) {%>
                     <form action="tb_fixcomm.jsp" method="post">
                         <input type="hidden" name="search" value="sra1"/>
                         <div class="portlet box blue-hoki">
@@ -280,7 +281,7 @@
                                                     <%
 
                                                         for (int j = 0; j < array_branch.size(); j++) {
-                                                            if (request.getParameter("branch").equals(array_branch.get(j).getCod())) {%>
+                                                            if (bra1.equals(array_branch.get(j).getCod())) {%>
                                                     <option selected value="<%=array_branch.get(j).getCod()%>"><%=array_branch.get(j).getCod()%> - <%=array_branch.get(j).getDe_branch()%></option>
                                                     <%} else {%>
                                                     <option value="<%=array_branch.get(j).getCod()%>"><%=array_branch.get(j).getCod()%> - <%=array_branch.get(j).getDe_branch()%></option>
@@ -301,7 +302,7 @@
 
                                 <%
 
-                                    ArrayList<String[]> array_fix_list = Engine.fixed_commission_range(request.getParameter("branch"));
+                                    ArrayList<String[]> array_fix_list = Engine.fixed_commission_range(bra1);
 
                                 %>
                                 <div class="row">
@@ -333,7 +334,7 @@
                                                             <td><%=Utility.formatMysqltoDisplay(array_fix_list.get(i)[3])%></td>
                                                             <td><%=Utility.formatMysqltoDisplay(array_fix_list.get(i)[4])%></td>
                                                             <td><%=Engine.formatStatus_general(array_fix_list.get(i)[5])%></td>
-                                                            <td><a href="tb_edit_fixcomm.jsp?fil=<%=request.getParameter("branch")%>&fi_code=<%=array_fix_list.get(i)[0]%>&view=1&fi_min=<%=array_fix_list.get(i)[1]%>&fi_max=<%=array_fix_list.get(i)[2]%>" 
+                                                            <td><a href="tb_edit_fixcomm.jsp?fil=<%=bra1%>&fi_code=<%=array_fix_list.get(i)[0]%>&view=1&fi_min=<%=array_fix_list.get(i)[1]%>&fi_max=<%=array_fix_list.get(i)[2]%>" 
                                                                    class="btn btn-sm blue-hoki btn-outline btn-circle fancyBoxRafreload"><i class="fa fa-eye"></i> View</a>
                                                             </td>
                                                         </tr>  

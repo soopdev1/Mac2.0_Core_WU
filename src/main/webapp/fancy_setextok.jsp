@@ -1,4 +1,5 @@
 
+<%@page import="rc.so.util.Utility"%>
 <%@page import="rc.so.entity.ET_change"%>
 <%@page import="rc.so.util.Constant"%>
 <%@page import="rc.so.entity.Client"%>
@@ -79,11 +80,7 @@
                 lan_index = "IT";
                 Etichette et_index = new Etichette(lan_index);
 
-                String cod = request.getParameter("cod");
-                if (cod == null) {
-                    cod = "";
-                }
-
+                String cod = Utility.safeRequest(request, "cod");
                 ET_change tr = Engine.get_ET_change(cod);
                 if (tr != null) {
             %>
@@ -120,10 +117,7 @@
                     </form>
                             <hr>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

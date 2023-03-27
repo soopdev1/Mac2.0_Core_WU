@@ -117,8 +117,8 @@
             <div class="page-content-wrapper">
                 <!-- BEGIN CONTENT BODY -->
                 <div class="page-content">
-                    <%String code = request.getParameter("code");
-                        if (code != null) {%>
+                    <%String code = Utility.safeRequest(request, "code");
+                        if (!code.equals("")) {%>
                     <form id="deletetrmod" name="deletetrmod" action="Operazioni?type=del_tr_ch" method="post" onsubmit="return check();">
                         <div class="modal-header">
                             <h4 class="modal-title">Delete Transaction</h4>

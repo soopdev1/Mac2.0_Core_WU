@@ -118,8 +118,8 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String inboo_code = request.getParameter("ib_code");
-                        if (inboo_code != null) {
+                        String inboo_code = Utility.safeRequest(request, "ib_code");
+                        if (!inboo_code.equals("")) {
                             ArrayList<String[]> array_district = Engine.list_internetbooking();
                             String descr = Utility.formatAL(inboo_code, array_district, 1);
                     %>
@@ -199,10 +199,7 @@
                     </form>
                     <%}%>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

@@ -33,7 +33,7 @@
 
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
 
         <link href="assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
@@ -45,7 +45,7 @@
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
 
         <!-- END PAGE LEVEL PLUGINS -->
@@ -138,7 +138,7 @@
                                 <div class="portlet light bordered">
                                     <div class="portlet-body">
                                         <div class="form-body">
-                                            <%String code = request.getParameter("code");
+                                            <%String code = Utility.safeRequest(request, "code");
                                                 Ch_transaction ch = Engine.query_transaction_ch(code);
 
                                                 ArrayList<String[]> array_bankacc = Engine.list_bankAccount();
@@ -392,21 +392,22 @@
                             </div>
                         </div>
                     </form> 
-                    <%if (request.getParameter("esito") != null) {
-                            if (request.getParameter("esito").equals("KO")) {%>
+                    <%
+                        String es = Utility.safeRequest(request, "esito");
+                        if (es.equals("KO")) {%>
                     <div class="col-md-12">
                         <div class="alert alert-danger">
                             <strong>Error. <i class="fa fa-exclamation-triangle"></i></strong> Operation could not be completed. Try again.
                         </div>
                     </div>
-                    <%} else if (request.getParameter("esito").equals("KOT")) {%>
+                    <%} else if (es.equals("KOT")) {%>
                     <div class="col-md-12">
                         <div class="alert alert-danger">
                             <strong>Error. <i class="fa fa-exclamation-triangle"></i></strong> Operation could not be completed. Till are closed or inactive.
                         </div>
                     </div>
                     <%}
-                        }%>
+                    %>
                 </div>
             </div>
         </div>
@@ -445,9 +446,9 @@
 
         <!-- END THEME GLOBAL SCRIPTS -->
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        
+
         <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
         <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
 

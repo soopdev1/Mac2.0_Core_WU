@@ -33,12 +33,12 @@
         <link href="assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
@@ -54,7 +54,7 @@
         <link rel="shortcut icon" href="favicon.ico" /> 
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
         <!-- FANCYBOX -->
-        
+
         <script type="text/javascript" src="assets/soop/js/jquery.fancybox.js?v=2.1.5"></script>
         <link rel="stylesheet" type="text/css" href="assets/soop/css/jquery.fancybox.css?v=2.1.5" media="screen" />
         <script type="text/javascript" src="assets/soop/js/fancy.js"></script>
@@ -91,7 +91,7 @@
                 var surname = document.getElementById('surname').value;
                 var taxcode = document.getElementById('taxcode').value;
                 if (loy === "" && taxcode === "" && name === "" && surname === "") {
-                //if (loy === "" && taxcode === "" && (name === "" || surname === "")) {
+                    //if (loy === "" && taxcode === "" && (name === "" || surname === "")) {
                     document.getElementById('saerchmodbtn').click();
                     return false;
                 }
@@ -122,6 +122,12 @@
                 if (tipo == null) {
                     tipo = "";
                 }
+
+                String search = Utility.safeRequest(request, "search");
+                String loy = Utility.safeRequest(request, "loy");
+                String sur1 = Utility.safeRequest(request, "surname");
+                String nam1 = Utility.safeRequest(request, "name");
+                String tax1 = Utility.safeRequest(request, "taxcode");
 
             %>
             <!-- BEGIN CONTENT -->
@@ -169,9 +175,10 @@
                     <!-- END PAGE TITLE-->
                     <!-- END PAGE HEADER-->
                     <%if (Constant.is_IT) {%>
-                    <%                        
+                    <%
                         String scode = "r1";
-                        if (request.getParameter("search") == null) {
+
+                        if (search.equals("")) {
                     %>
                     <form name="f1" method="post" action="tb_loyalty.jsp" onsubmit="return search_ing();">
                         <input type="hidden" name="search" value="<%=scode%>"/>
@@ -227,7 +234,7 @@
                             </div>
                         </div>
                     </form>
-                    <%} else if (request.getParameter("search").equals("r1")) {%>
+                    <%} else if (search.equals("r1")) {%>
                     <form name="f1" method="post" action="tb_loyalty.jsp" onsubmit="return search_ing();">
                         <input type="hidden" name="search" value="<%=scode%>"/>
                         <div class="row">
@@ -247,7 +254,7 @@
                                                     <div class="form-group">
                                                         <label>Loyalty Code</label>
                                                         <input type="text" class="form-control" id="loy" name="loy" maxlength="8" 
-                                                               value="<%=request.getParameter("loy")%>"
+                                                               value="<%=loy%>"
                                                                onkeyup="return modificaLOY(this, event);"/>
                                                     </div>
                                                 </div>
@@ -255,7 +262,7 @@
                                                     <div class="form-group">
                                                         <label>Client Surname</label>
                                                         <input type="text" class="form-control" id="surname" name="surname" 
-                                                               value="<%=request.getParameter("surname")%>"
+                                                               value="<%=sur1%>"
                                                                maxlength="30" onkeyup="return modificaOAMSurname(this, event);"/>
                                                     </div>
                                                 </div>
@@ -263,7 +270,7 @@
                                                     <div class="form-group">
                                                         <label>Client Name</label>
                                                         <input type="text" class="form-control" id="name" name="name" 
-                                                               value="<%=request.getParameter("name")%>"
+                                                               value="<%=nam1%>"
                                                                maxlength="30" onkeyup="return modificaOAMSurname(this, event);"/>
                                                     </div>
                                                 </div>
@@ -271,7 +278,7 @@
                                                     <div class="form-group">
                                                         <label>Client Tax Code</label>
                                                         <input type="text" class="form-control" id="taxcode" name="taxcode" 
-                                                               value="<%=request.getParameter("taxcode")%>"
+                                                               value="<%=tax1%>"
                                                                onkeyup="return fieldNOSPecial_1(this.id);"/>
                                                     </div>
                                                 </div>
@@ -354,7 +361,7 @@
                 <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-                
+
                 <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
 
@@ -374,9 +381,9 @@
 
                 <!-- END THEME GLOBAL SCRIPTS -->
                 <!-- BEGIN PAGE LEVEL SCRIPTS -->
-                
+
                 <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-                
+
                 <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
                 <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
 
@@ -400,62 +407,63 @@
                 <!-- END THEME LAYOUT SCRIPTS -->
                 <!-- BEGIN THEME GLOBAL SCRIPTS -->
                 <script type="text/javascript">
-                        jQuery(document).ready(function () {
-                            var dt2 = function () {
-                                var g = $("#sample_1");
-                                g.dataTable({
-                                    language: {aria: {},
-                                        sProcessing: "Process...",
-                                        emptyTable: "No results found.",
-                                        info: "Show _START_ to _END_ of _TOTAL_ results",
-                                        infoEmpty: "No results found.",
-                                        infoFiltered: "(filtered to _MAX_ total)",
-                                        lengthMenu: "Show _MENU_",
-                                        search: "Search:",
-                                        zeroRecords: "No results found.",
-                                        paginate: {previous: "Prev", next: "Next", last: "Last", first: "First"}},
-                                    ajax: {
-                                        url: "Query?type=searchloy&loy=<%=request.getParameter("loy")%>&name=<%=request.getParameter("name")%>&surname=<%=request.getParameter("surname")%>&taxcode=<%=request.getParameter("taxcode")%>",
-                                                            dataSrc: "aaData",
-                                                            type: "GET"
-                                                        },
-                                                        initComplete: function (settings, json) {
-                                                            $('.popovers').popover();
-                                                        },
-                                                        columnDefs: [
-                                                            {orderable: 1, targets: [0]},
-                                                            {orderable: 1, targets: [1]},
-                                                            {orderable: 1, targets: [2]},
-                                                            {orderable: 1, targets: [3]},
-                                                            {orderable: !1, targets: [4]}
-                                                        ],
-                                                        buttons: [],
-                                                        colReorder: {reorderCallback: function () {
-                                                                
-                                                            }},
-                                                        lengthMenu: [
-                                                            [25, 50, 100, -1],
-                                                            [25, 50, 100, "All"]
-                                                        ],
-                                                        pageLength: 25,
-                                                        order: [],
-                                                        dom: "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><t><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
-                                                        processing: true
-                                                    });
-                                                };
-                                                jQuery().dataTable && dt2();
+                                                                   jQuery(document).ready(function () {
+                                                                       var dt2 = function () {
+                                                                           var g = $("#sample_1");
+                                                                           g.dataTable({
+                                                                               language: {aria: {},
+                                                                                   sProcessing: "Process...",
+                                                                                   emptyTable: "No results found.",
+                                                                                   info: "Show _START_ to _END_ of _TOTAL_ results",
+                                                                                   infoEmpty: "No results found.",
+                                                                                   infoFiltered: "(filtered to _MAX_ total)",
+                                                                                   lengthMenu: "Show _MENU_",
+                                                                                   search: "Search:",
+                                                                                   zeroRecords: "No results found.",
+                                                                                   paginate: {previous: "Prev", next: "Next", last: "Last", first: "First"}},
+                                                                               ajax: {
+                                                                                   url: "Query?type=searchloy",
+                                                                                   dataSrc: "aaData",
+                                                                                   type: "POST",
+                                                                                   data: $('#f1').serializeArray()
+                                                                               },
+                                                                               initComplete: function (settings, json) {
+                                                                                   $('.popovers').popover();
+                                                                               },
+                                                                               columnDefs: [
+                                                                                   {orderable: 1, targets: [0]},
+                                                                                   {orderable: 1, targets: [1]},
+                                                                                   {orderable: 1, targets: [2]},
+                                                                                   {orderable: 1, targets: [3]},
+                                                                                   {orderable: !1, targets: [4]}
+                                                                               ],
+                                                                               buttons: [],
+                                                                               colReorder: {reorderCallback: function () {
 
-                                            });
+                                                                                   }},
+                                                                               lengthMenu: [
+                                                                                   [25, 50, 100, -1],
+                                                                                   [25, 50, 100, "All"]
+                                                                               ],
+                                                                               pageLength: 25,
+                                                                               order: [],
+                                                                               dom: "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r><t><'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
+                                                                               processing: true
+                                                                           });
+                                                                       };
+                                                                       jQuery().dataTable && dt2();
 
-        </script>
+                                                                   });
+
+                </script>
 
                 <script type="text/javascript">
-                                                                   $(document).ready(function () {
-                                                                       window.history.pushState(null, "", window.location.href);
-                                                                       window.onpopstate = function () {
-                                                                           window.history.pushState(null, "", window.location.href);
-                                                                       };
-                                                                   });
+                    $(document).ready(function () {
+                        window.history.pushState(null, "", window.location.href);
+                        window.onpopstate = function () {
+                            window.history.pushState(null, "", window.location.href);
+                        };
+                    });
                 </script>
                 </body>
                 </html>

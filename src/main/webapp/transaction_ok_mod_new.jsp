@@ -106,7 +106,7 @@
         <!-- BEGIN THEME GLOBAL SCRIPTS -->
 
         <%
-            String cod = request.getParameter("cod");
+            String cod = Utility.safeRequest(request, "cod");
         %>
         <!-- END THEME LAYOUT SCRIPTS -->
         <script src="assets/global/scripts/datatable.js" type="text/javascript"></script>
@@ -262,20 +262,20 @@
                     <%
                         String user = (String) request.getSession().getAttribute("us_cod");
 
-                        String kycpres = request.getParameter("kycpres");
+                        String kycpres = Utility.safeRequest(request, "kycpres");
 
-                        if (kycpres == null) {
+                        if (kycpres.equals("")) {
                             kycpres = "0";
                         }
 
-                        String oldloy = request.getParameter("oldloy");
-                        if (oldloy == null) {
+                        String oldloy = Utility.safeRequest(request, "oldloy");
+                        if (oldloy.equals("")) {
                             oldloy = "0";
                         }
 
-                        String booking = request.getParameter("booking");
+                        String booking = Utility.safeRequest(request, "booking");
                         String channel = "";
-                        if (booking == null) {
+                        if (booking.equals("")) {
                             String[] double_check = Engine.internetbooking_ch(cod);
                             if (double_check != null) {
                                 channel = double_check[0];
@@ -289,8 +289,8 @@
                             }
                         }
 
-                        String modified = request.getParameter("modified");
-                        if (modified == null) {
+                        String modified = Utility.safeRequest(request, "modified");
+                        if (modified.equals("")) {
                             modified = "NO";
                         }
 
@@ -792,10 +792,7 @@
 
                     <p class='ab'></p>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

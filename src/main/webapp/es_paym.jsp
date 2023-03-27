@@ -47,7 +47,7 @@
         <link href="assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
         <!-- END THEME LAYOUT STYLES -->
         <link rel="shortcut icon" href="favicon.ico" /> 
-        
+
         <script type="text/javascript" src="assets/soop/js/jquery.fancybox.js?v=2.1.5"></script>
         <link rel="stylesheet" type="text/css" href="assets/soop/css/jquery.fancybox.css?v=2.1.5" media="screen" />
         <script type="text/javascript" src="assets/soop/js/fancy.js"></script>
@@ -66,7 +66,7 @@
                 document.getElementById('numb').focus();
                 return false;
             }
-
+            
             function submitonEnter(idform) {
                 var keycode;
                 if (window.event)
@@ -77,7 +77,7 @@
                     checknumb(idform);
                 }
             }
-
+            
             function checknumb(formid) {
                 document.getElementById("errornumb").style.display = "none";
                 var numb = document.getElementById('numb').value.trim();
@@ -94,7 +94,7 @@
                 inputvirgola();
                 online();
             }
-
+            
         </script>
 
     </head>
@@ -180,20 +180,18 @@
 
                     <%
                         
-                        
                         boolean abilita = Constant.test && !Engine.isCentral();
                         
                         Branch br = Engine.get_branch(Engine.getFil()[0]);
-                        boolean senzacredenziali = 
-                        br.getPay_token().equals("-") || br.getPay_token().equals("") || 
-                        br.getPay_user().equals("-") || br.getPay_user().equals("") || 
-                        br.getPay_password().equals("-") || br.getPay_password().equals("");
-                        
+                        boolean senzacredenziali
+                                = br.getPay_token().equals("-") || br.getPay_token().equals("")
+                                || br.getPay_user().equals("-") || br.getPay_user().equals("")
+                                || br.getPay_password().equals("-") || br.getPay_password().equals("");
+
                         //boolean abilita = !senzacredenziali && !Engine.isCentral();
-                        
                         if (abilita) {
-                            String search = request.getParameter("search");
-                        if (search == null) {%>
+                            String search = Utility.safeRequest(request, "search");
+                            if (search.equals("")) {%>
                     <div class="row">
                         <div class="col-md-12">
                             <form action="es_paym.jsp" method="post" >
@@ -275,64 +273,64 @@
                     <!-- END PAGE TITLE-->
                     <!-- END PAGE HEADER-->
                 </div>
-                </div>
-                <!-- END CONTENT -->
-                <!-- BEGIN QUICK SIDEBAR -->
-                <!-- END QUICK SIDEBAR -->
             </div>
-            <!-- END CONTAINER -->
-            <!-- BEGIN FOOTER -->
-            <div class="page-footer">
-                <div class="page-footer-inner"> <%=et_index.getFooter()%></div>
-                <div class="scroll-to-top">
-                    <i class="icon-arrow-up"></i>
-                </div>
+            <!-- END CONTENT -->
+            <!-- BEGIN QUICK SIDEBAR -->
+            <!-- END QUICK SIDEBAR -->
+        </div>
+        <!-- END CONTAINER -->
+        <!-- BEGIN FOOTER -->
+        <div class="page-footer">
+            <div class="page-footer-inner"> <%=et_index.getFooter()%></div>
+            <div class="scroll-to-top">
+                <i class="icon-arrow-up"></i>
             </div>
-            <!-- END FOOTER -->
-            <!-- BEGIN CORE PLUGINS -->
-            <script src="assets/soop/jquery-3.6.4.min.js" type="text/javascript"></script>
-            <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-            
-            <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js" type="text/javascript"></script>
-            <!-- END CORE PLUGINS -->
-            <!-- BEGIN PAGE LEVEL PLUGINS -->
-            <script src="assets/soop/select2-4.0.13/js/select2.full.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
-            <!-- END PAGE LEVEL PLUGINS -->
-            <!-- BEGIN THEME GLOBAL SCRIPTS -->
-            <script src="assets/global/scripts/app.min.js" type="text/javascript"></script>
-            <!-- END THEME GLOBAL SCRIPTS -->
-            <!-- BEGIN PAGE LEVEL SCRIPTS -->
-            
-            <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-            
-            <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
-            <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
-            <!-- END PAGE LEVEL SCRIPTS -->
-            <!-- BEGIN THEME LAYOUT SCRIPTS -->
-            <script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
-            <script src="assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
-            <script src="assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
-            <!-- END CORE PLUGINS -->
-            <!-- BEGIN PAGE LEVEL PLUGINS -->
-            <!-- END PAGE LEVEL PLUGINS -->
-            <script src="assets/global/scripts/datatable.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
-            <script src="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
-            <!-- END CORE PLUGINS -->
-            <!-- BEGIN PAGE LEVEL PLUGINS -->
-            <!-- END PAGE LEVEL PLUGINS -->
-            <!-- BEGIN THEME GLOBAL SCRIPTS -->
-            <!-- END THEME LAYOUT SCRIPTS -->
-            <!-- BEGIN THEME GLOBAL SCRIPTS -->
-            <script type="text/javascript">
+        </div>
+        <!-- END FOOTER -->
+        <!-- BEGIN CORE PLUGINS -->
+        <script src="assets/soop/jquery-3.6.4.min.js" type="text/javascript"></script>
+        <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+
+        <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js" type="text/javascript"></script>
+        <!-- END CORE PLUGINS -->
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <script src="assets/soop/select2-4.0.13/js/select2.full.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
+        <!-- END PAGE LEVEL PLUGINS -->
+        <!-- BEGIN THEME GLOBAL SCRIPTS -->
+        <script src="assets/global/scripts/app.min.js" type="text/javascript"></script>
+        <!-- END THEME GLOBAL SCRIPTS -->
+        <!-- BEGIN PAGE LEVEL SCRIPTS -->
+
+        <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
+
+        <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
+        <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
+        <!-- END PAGE LEVEL SCRIPTS -->
+        <!-- BEGIN THEME LAYOUT SCRIPTS -->
+        <script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
+        <script src="assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
+        <script src="assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
+        <!-- END CORE PLUGINS -->
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <!-- END PAGE LEVEL PLUGINS -->
+        <script src="assets/global/scripts/datatable.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+        <!-- END CORE PLUGINS -->
+        <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <!-- END PAGE LEVEL PLUGINS -->
+        <!-- BEGIN THEME GLOBAL SCRIPTS -->
+        <!-- END THEME LAYOUT SCRIPTS -->
+        <!-- BEGIN THEME GLOBAL SCRIPTS -->
+        <script type="text/javascript">
                                 jQuery(document).ready(function () {
                                     var dt1 = function () {
                                         var f = $("#sample_0");
@@ -380,16 +378,16 @@
                                     };
                                     jQuery().dataTable && dt1();
                                 });
-            </script>
-            <script type="text/javascript">
-
-                $(document).ready(function () {
+        </script>
+        <script type="text/javascript">
+            
+            $(document).ready(function () {
+                window.history.pushState(null, "", window.location.href);
+                window.onpopstate = function () {
                     window.history.pushState(null, "", window.location.href);
-                    window.onpopstate = function () {
-                        window.history.pushState(null, "", window.location.href);
-                    };
-                });
-            </script>
+                };
+            });
+        </script>
     </body>
 
 </html>

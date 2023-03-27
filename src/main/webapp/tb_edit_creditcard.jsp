@@ -142,13 +142,13 @@
                     <div class="clearfix"></div>
                     <%
                         
-                         String view = request.getParameter("view");
-                            if (view == null) {
+                         String view = Utility.safeRequest(request, "view");
+                            if (view.equals("")) {
                                 view = "0";
                             }
-                        String fil = request.getParameter("fil");
+                        String fil = Utility.safeRequest(request, "fil");
                         ArrayList<Branch> array_branch = Engine.list_branch_enabled();
-                        String cc_code = request.getParameter("cc_code");
+                        String cc_code = Utility.safeRequest(request, "cc_code");
                         ArrayList<String[]> array_cc = Engine.credit_card(fil);
                         if (cc_code != null) {
                             String descr = Utility.formatAL(cc_code, array_cc, 1);
@@ -339,10 +339,7 @@
                     </form>
                     <%}%>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";

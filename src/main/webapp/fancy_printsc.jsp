@@ -192,7 +192,7 @@
                     </div>
 
                     <%
-                        String cod = request.getParameter("cod");
+                        String cod = Utility.safeRequest(request, "cod");
                         String resp = Utility.sendPOS_transaction(cod);
                         if (resp == null) {
                             resp = "Generic error";

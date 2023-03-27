@@ -34,19 +34,19 @@
 
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
 
         <link href="assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
 
         <!-- END PAGE LEVEL PLUGINS -->
@@ -62,8 +62,8 @@
         <!-- END THEME LAYOUT STYLES -->
         <link rel="shortcut icon" href="favicon.ico" /> 
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
-        
-        
+
+
 
     </head>
     <!-- END HEAD -->
@@ -90,25 +90,21 @@
                     <!-- BEGIN PAGE TITLE-->
 
                     <%
-
-                        String code = request.getParameter("code");
-
+                        String code = Utility.safeRequest(request, "code");
                         Codici_sblocco cs = Engine.getCods(code);
-
                         if (cs != null) {
-                            
-                        String branch = "";
-                        String trid = "";
-                        String type = "";
-                        
-                        if(cs.getCod_tr().length()>3){
-                             branch = cs.getCod_tr().substring(0,3);
-                             Ch_transaction tr = Engine.query_transaction_ch(cs.getCod_tr());
-                             trid = tr.getId();
-                             type = Engine.formatUsageCodiceSblocco(cs.getTy_util());
-                             
-                        }
-                        
+                            String branch = "";
+                            String trid = "";
+                            String type = "";
+
+                            if (cs.getCod_tr().length() > 3) {
+                                branch = cs.getCod_tr().substring(0, 3);
+                                Ch_transaction tr = Engine.query_transaction_ch(cs.getCod_tr());
+                                trid = tr.getId();
+                                type = Engine.formatUsageCodiceSblocco(cs.getTy_util());
+
+                            }
+
                     %>
 
                     <form class="form-horizontal" role="form" name="f1" method="post">
@@ -157,7 +153,7 @@
                                             <label class="col-md-3 control-label">Date Usage</label>
                                             <div class="col-md-9">
                                                 <input type="text" class="form-control uppercase" disabled="disabled" 
-                                                       
+
                                                        value="<%=Utility.formatStringtoStringDate(cs.getDt_utilizzo(), Constant.patternsqldate, Constant.patternnormdate)%>"/> 
                                             </div>
                                         </div>
@@ -188,7 +184,7 @@
         <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
 
@@ -209,9 +205,9 @@
 
         <!-- END THEME GLOBAL SCRIPTS -->
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        
+
         <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
         <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
 
@@ -222,7 +218,7 @@
         <script src="assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
 
         <input type="text" id="test1" name="test1" style="display: none; width: 1px;"/>
-        
+
         <script type="text/javascript">
 
             $(document).ready(function () {

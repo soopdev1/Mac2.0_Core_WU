@@ -46,7 +46,7 @@
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
@@ -65,7 +65,7 @@
 
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
         <!-- FANCYBOX -->
-        
+
         <script type="text/javascript" src="assets/soop/js/jquery.fancybox.js?v=2.1.5"></script>
         <link rel="stylesheet" type="text/css" href="assets/soop/css/jquery.fancybox.css?v=2.1.5" media="screen" />
         <script type="text/javascript" src="assets/soop/js/fancy.js"></script>
@@ -198,6 +198,7 @@
                         <button type="button" id="saerchmodbtn" class="" data-toggle="modal" data-target="#saerchmod"></button>
                     </div>
                     <%
+                        String search = Utility.safeRequest(request, "search");
                         //if (Constant.test) {
                         if (Constant.is_IT) {
                             //if (Constant.external) {
@@ -207,7 +208,7 @@
                             String[] fil = Engine.getFil();
                             ArrayList<String[]> status = Engine.sito_stati(null, null, true);
                             //ArrayList<String[]> status = Engine.listStatus_booking(null, null, true);
-                            if (request.getParameter("search") == null) {
+                            if (search.equals("")) {
                     %>
                     <form name="f1" method="post" action="web_tran.jsp">
                         <input type="hidden" name="search" value="<%=scode%>"/>
@@ -284,7 +285,7 @@
                             </div>
                         </div>
                     </form>
-                    <%} else if (request.getParameter("search").equals("r1")) {%>
+                    <%} else if (search.equals("r1")) {%>
                     <form name="f1" id="f1" method="post" action="web_tran.jsp">
                         <input type="hidden" name="search" value="<%=scode%>"/>
                         <div class="row">
@@ -308,8 +309,8 @@
                                                             <option value="" selected="selected"></option>
                                                             <%for (int j = 0; j < array_branch.size(); j++) {
                                                                     String sel = "";
-                                                                    if (array_branch.get(j).getCod().equals(request.getParameter(""))) {
-                                                                        sel = "";
+                                                                    if (array_branch.get(j).getCod().equals(Utility.safeRequest(request, "branch"))) {
+                                                                        sel = "selected";
                                                                     }
                                                             %>
                                                             <option <%=sel%> value="<%=array_branch.get(j).getCod()%>">
@@ -333,7 +334,7 @@
                                                         <label>Status</label>
                                                         <select class="bs-select form-control" data-show-subtext="true" id="status" name="status">
                                                             <%for (int i = 0; i < status.size(); i++) {
-                                                                    if (status.get(i)[0].equals(request.getParameter("status"))) {%>
+                                                                    if (status.get(i)[0].equals(Utility.safeRequest(request, "status"))) {%>
                                                             <option value="<%=status.get(i)[0]%>" selected data-content="<%=status.get(i)[2]%>"><%=status.get(i)[0]%></option>
                                                             <%} else {%>
                                                             <option value="<%=status.get(i)[0]%>" data-content="<%=status.get(i)[2]%>"><%=status.get(i)[0]%></option>
@@ -345,13 +346,13 @@
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label>Date From</label>
-                                                        <input type="text" class="form-control date-picker" id="d1" name="d1" value="<%=request.getParameter("d1")%>"/>
+                                                        <input type="text" class="form-control date-picker" id="d1" name="d1" value="<%=Utility.safeRequest(request, "d1")%>"/>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label>Date To</label>
-                                                        <input type="text" class="form-control date-picker" id="d2" name="d2" value="<%=request.getParameter("d2")%>"/>
+                                                        <input type="text" class="form-control date-picker" id="d2" name="d2" value="<%=Utility.safeRequest(request, "d2")%>"/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -470,13 +471,13 @@
 
     <!-- END THEME GLOBAL SCRIPTS -->
     <!-- BEGIN PAGE LEVEL SCRIPTS -->
-    
+
     <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-    
+
     <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
     <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
     <!-- END PAGE LEVEL SCRIPTS -->
-    
+
     <!-- BEGIN THEME LAYOUT SCRIPTS -->
     <script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
     <script src="assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
@@ -502,9 +503,10 @@
                                                         zeroRecords: "No results found.",
                                                         paginate: {previous: "Prev", next: "Next", last: "Last", first: "First"}},
                                                     ajax: {
-                                                        url: "Query?type=prenot_list&branch=<%=Utility.parseArrayValues(request.getParameterValues("branch"))%>&d1=<%=request.getParameter("d1")%>&d2=<%=request.getParameter("d2")%>&status=<%=request.getParameter("status")%>&pdf=<%=pdfstr%>",
+                                                        url: "Query?type=prenot_list&pdf=<%=pdfstr%>",
                                                         dataSrc: "aaData",
-                                                        type: "GET"
+                                                        type: "POST",
+                                                        data: $('#f1').serializeArray()
                                                     },
                                                     initComplete: function (settings, json) {
                                                         $('.popovers').popover();

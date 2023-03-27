@@ -158,10 +158,7 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";
@@ -196,8 +193,8 @@
 
                     <%
 
-                        String view = request.getParameter("view");
-                        if (view == null) {
+                        String view = Utility.safeRequest(request, "view");
+                        if (view.equals("")) {
                             view = "0";
                         }
 
@@ -205,7 +202,7 @@
                         ArrayList<String[]> listtype = Users.listTypeuser();
                         ArrayList<String[]> liststatus = Users.listStatususer();
 
-                        String us_code = request.getParameter("us_code");
+                        String us_code = Utility.safeRequest(request, "us_code");
                         Users us = Engine.get_user(us_code);
                         if (us != null) {
                             String codATL = Engine.get_user_ATL(us_code);

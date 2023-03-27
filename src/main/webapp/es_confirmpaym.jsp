@@ -31,12 +31,12 @@
         <link href="assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
@@ -51,7 +51,7 @@
         <link href="assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
         <!-- END THEME LAYOUT STYLES -->
         <link rel="shortcut icon" href="favicon.ico" /> 
-        
+
         <script type="text/javascript" src="assets/soop/js/jquery.fancybox.js?v=2.1.5"></script>
         <link rel="stylesheet" type="text/css" href="assets/soop/css/jquery.fancybox.css?v=2.1.5" media="screen" />
         <script type="text/javascript" src="assets/soop/js/fancy.js"></script>
@@ -218,15 +218,8 @@
                         </div>
                     </div>
                     <%
-                        String cod = request.getParameter("cod");
-                        if (cod == null) {
-                            cod = "";
-                        }
-
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String cod = Utility.safeRequest(request, "cod");
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";
@@ -240,7 +233,7 @@
                             classal = "alert-danger";
                             classfa = "fa-exclamation-triangle";
                             msg = "Error";
-                            msg1 = request.getParameter("errmsg");
+                            msg1 = Utility.safeRequest(request, "errmsg");
                         }
                         if (!esito.equals("")) {
                     %>
@@ -252,21 +245,19 @@
                         </div>
                     </div>
                     <%}
-                        if (request.getParameter("paynew") != null) {
+                        if (!Utility.safeRequest(request, "paynew").equals("")) {
                             String fil = Engine.getFil()[0];
-                            String paynew = request.getParameter("paynew");
-                            String bra = request.getParameter("bra").trim();
-                            String idbra = request.getParameter("idbra");
-                            String codtaglio = request.getParameter("codtaglio");
-                            String tipolo = request.getParameter("tipolo");
-                            String desc = request.getParameter("desc");
-                            if (desc != null) {
-                                if (!desc.contains("€")) {
-                                    desc = Utility.getStringUTF8(request.getParameter("desc"));
-                                }
+                            String paynew = Utility.safeRequest(request, "paynew");
+                            String bra = Utility.safeRequest(request, "bra");
+                            String idbra = Utility.safeRequest(request, "idbra");
+                            String codtaglio = Utility.safeRequest(request, "codtaglio");
+                            String tipolo = Utility.safeRequest(request, "tipolo");
+                            String desc = Utility.safeRequest(request, "desc");
+                            if (!desc.contains("€")) {
+                                desc = Utility.getStringUTF8(desc);
                             }
 
-                            String tipoprodotto = request.getParameter("tipoprodotto");
+                            String tipoprodotto = Utility.safeRequest(request, "tipoprodotto");
 
                             String[] value_NC = Engine.get_temp_paymat(codtaglio);
                             ArrayList<String[]> array_kind_payment = null;
@@ -276,8 +267,6 @@
                                 array_kind_payment = Engine.kind_payment();
                             }
 
-                            //ArrayList<String[]> array_kind_payment = Engine.kind_payment();
-//                            ArrayList<String[]> array_kind_payment = Engine.nc_causal_payment();
                             ArrayList<String[]> array_credit_card = Engine.credit_card(fil);
                     %>
                     <form id="exec_paymat" action="Operazioni?type=exec_paymat" method="post" onsubmit="return checknumb();">
@@ -417,7 +406,7 @@
             <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
             <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
             <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-            
+
             <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
             <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
             <script src="assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
@@ -433,9 +422,9 @@
             <script src="assets/global/scripts/app.min.js" type="text/javascript"></script>
             <!-- END THEME GLOBAL SCRIPTS -->
             <!-- BEGIN PAGE LEVEL SCRIPTS -->
-            
+
             <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-            
+
             <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
             <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
             <!-- END PAGE LEVEL SCRIPTS -->

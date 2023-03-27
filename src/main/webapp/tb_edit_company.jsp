@@ -8,7 +8,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     String link_value = Engine.verifyUser(request);
-    if(link_value!=null){
+    if (link_value != null) {
         Utility.redirect(request, response, link_value);
     }
 %>
@@ -39,19 +39,19 @@
 
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
 
         <link href="assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
 
         <!-- END PAGE LEVEL PLUGINS -->
@@ -65,10 +65,10 @@
         <link href="assets/layouts/layout/css/themes/darkblue.min.css" rel="stylesheet" type="text/css" id="style_color" />
         <link href="assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
-        
-        
-      
-        
+
+
+
+
         <!-- END THEME LAYOUT STYLES -->
         <link rel="shortcut icon" href="favicon.ico" />
         <%
@@ -89,9 +89,9 @@
                     document.getElementById("errorlargetext").innerHTML = ermsg;
                     return false;
                 }
-                
-                
-                
+
+
+
             }
 
 
@@ -194,8 +194,8 @@
 
 
             }
-            
-            function loadpage(){
+
+            function loadpage() {
                 changecountry('-1', '1');
                 inputvirgola();
             }
@@ -242,19 +242,12 @@
                     <!-- END PAGE BAR -->
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
-                    <%                        
-                        String view = request.getParameter("view");
-                        if (view == null) {
+                    <%
+                        String view = Utility.safeRequest(request, "view");
+                        if (view.equals("")) {
                             view = "0";
                         }
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
-                        
-                        
-                        
-                        
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";
@@ -288,7 +281,7 @@
 
 
 
-                    <%  Company co = Engine.get_Company(request.getParameter("co_code"));
+                    <%  Company co = Engine.get_Company(Utility.safeRequest(request, "co_code"));
                         if (co != null) {
                             ArrayList<Company_attach> list_att = Engine.company_listAttachment(co.getNdg(), "0");
                             String sta = "";
@@ -296,13 +289,12 @@
                                 sta = "checked";
                             }
                             ArrayList<Company> listAgent = Engine.get_Agent_company(co.getNdg());
-                            
-                            
-                            if(view.equals("1")){%>
-                                
-                            
-                            
-                            <form class="form-horizontal" role="form" name="f1" method="post" action="Edit?type=edit_comp" enctype="multipart/form-data" onsubmit="return checkdescr();">
+
+                            if (view.equals("1")) {%>
+
+
+
+                    <form class="form-horizontal" role="form" name="f1" method="post" action="Edit?type=edit_comp" enctype="multipart/form-data" onsubmit="return checkdescr();">
                         <div class="row">
                             <div class="col-md-12">
                                 <!-- BEGIN PORTLET-->
@@ -313,7 +305,7 @@
                                             <span class="caption-subject font-blue bold uppercase">View Company</span>
                                         </div>
                                         <div class="tools"> 
-                                            
+
                                         </div>
                                     </div>
                                     <div class="portlet-body">
@@ -479,7 +471,7 @@
                                                             <input type="text" class="form-control uppercase" value="<%=ag.getNdg()%>" disabled="disabled"> 
                                                         </div>
                                                         <div class="col-md-3">
-                                                            
+
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -637,7 +629,7 @@
                                                     </div><hr>
                                                     <div class="form-group">
                                                         <label class="col-md-6 control-label">Attachment
-                                                            
+
                                                         </label>
                                                         <div class="clearfix"></div>
                                                         <p class='ab'></p>
@@ -673,7 +665,7 @@
                             </div>
                         </div>
                     </form>
-                   <%}else{%>
+                    <%} else {%>
                     <form class="form-horizontal" role="form" name="f1" method="post" action="Edit?type=edit_comp" enctype="multipart/form-data" onsubmit="return checkdescr();">
                         <div class="row">
                             <div class="col-md-12">
@@ -724,7 +716,7 @@
                                                         <div class="col-md-9">
                                                             <input type="text" class="form-control" id="descr" name="descr"
                                                                    onkeypress="return keysub(this, event);" 
-                                                                   onkeyup="return modificaOAM(this,event);" maxlength="70"
+                                                                   onkeyup="return modificaOAM(this, event);" maxlength="70"
                                                                    value="<%=co.getRagione_sociale()%>"> 
                                                         </div>
                                                     </div>
@@ -1053,7 +1045,8 @@
                             </div>
                         </div>
                     </form>
-                    <%}} else {%>
+                    <%}
+                    } else {%>
                     <form class="form-horizontal" role="form" name="f1" method="post" action="Edit?type=ins_comp" onsubmit="return checkdescr();">
                         <div class="row">
                             <div class="col-md-12">
@@ -1091,7 +1084,7 @@
                                                         <div class="col-md-9">
                                                             <input type="text" class="form-control" 
                                                                    id="descr" name="descr"
-                                                                   onkeyup="return modificaOAM(this,event);" maxlength="70"
+                                                                   onkeyup="return modificaOAM(this, event);" maxlength="70"
                                                                    > 
                                                         </div>
                                                     </div>
@@ -1310,7 +1303,7 @@
             <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
             <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
             <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-            
+
             <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
             <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
 
@@ -1331,9 +1324,9 @@
 
             <!-- END THEME GLOBAL SCRIPTS -->
             <!-- BEGIN PAGE LEVEL SCRIPTS -->
-            
+
             <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-            
+
             <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
             <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
 
@@ -1344,16 +1337,16 @@
             <script src="assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
 
             <input type="text" id="test1" name="test1" style="display: none; width: 1px;"/>
-            
-              <script type="text/javascript">
 
-            $(document).ready(function () {
-                window.history.pushState(null, "", window.location.href);
-                window.onpopstate = function () {
-                    window.history.pushState(null, "", window.location.href);
-                };
-            });
-        </script>
+            <script type="text/javascript">
+
+                                                              $(document).ready(function () {
+                                                                  window.history.pushState(null, "", window.location.href);
+                                                                  window.onpopstate = function () {
+                                                                      window.history.pushState(null, "", window.location.href);
+                                                                  };
+                                                              });
+            </script>
 
     </body>
 

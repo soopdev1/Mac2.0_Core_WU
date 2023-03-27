@@ -70,7 +70,7 @@
         <script src="assets/soop/js/validate.min.js" type="text/javascript"></script>
 
         <%
-            Booking bo = Engine.get_prenot(request.getParameter("cod"));
+            Booking bo = Engine.get_prenot(Utility.safeRequest(request, "cod"));
         %>
 
     </head>

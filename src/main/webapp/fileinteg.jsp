@@ -453,21 +453,19 @@
                                 </div>
                             </div>
                             <%
-                                if (request.getParameter("esito") != null) {
-
-                                    if (request.getParameter("esito").equals("okcen")) {
+                                String es1 = Utility.safeRequest(request, "esito");
+                                    if (es1.equals("okcen")) {
                             %>                                
                             <div class="alert alert-success">
                                 <b><center>The file has been successfully released.</center></b>
                             </div>
                             <%}
-                                if (request.getParameter("esito").equals("kocen")) {
+                                if (es1.equals("kocen")) {
 
                             %>
                             <div class="alert alert-danger">
                                 <b><center>Error. The file was not released. Try again.</center></b>
                             </div>
-                            <%}%>
                             <%}%>
                         </div>
                         <%} else {%>
@@ -504,21 +502,18 @@
                                 </div>
                             </div>
                             <%
-                                if (request.getParameter("esito") != null) {
-
-                                    if (request.getParameter("esito").equals("okfil")) {
+                                    if (Utility.safeRequest(request, "esito").equals("okfil")) {
                             %>                                
                             <div class="alert alert-success">
                                 <b><center>The file has been successfully released</center></b>
                             </div>
                             <%}
-                                if (request.getParameter("esito").equals("kofil")) {
+                                if (Utility.safeRequest(request, "esito").equals("kofil")) {
 
                             %>
                             <div class="alert alert-danger">
                                 <b><center>Error. The file was not released. Try again.</center></b>
                             </div>
-                            <%}%>
                             <%}%>
                         </div>
                         <%}%>

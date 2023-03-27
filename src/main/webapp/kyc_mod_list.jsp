@@ -84,7 +84,7 @@
 
             <!-- END MENU -->
             <%
-                String cod = request.getParameter("cod");
+                String cod = Utility.safeRequest(request, "cod");
 
                 ArrayList<Client> list_kyc_modified = Engine.list_kyc_modified(cod);
 

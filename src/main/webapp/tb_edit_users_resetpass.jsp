@@ -150,7 +150,7 @@
                     
                     
                     <%
-                        String us_code = request.getParameter("us_code");
+                        String us_code = Utility.safeRequest(request, "us_code");
                         Users us = Engine.get_user(us_code);
                         if (us != null) {
                     %>

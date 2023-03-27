@@ -227,14 +227,14 @@
 
                         String dateApply = Utility.getDefaultDateAplly(true, false, 0, 0, 30, null);
 
-                        String view = request.getParameter("view");
-                        if (view == null) {
+                        String view = Utility.safeRequest(request, "view");
+                        if (view.equals("")) {
                             view = "0";
                         }
-                        String fil = request.getParameter("fil");
-                        String fi_code = request.getParameter("fi_code");
+                        String fil = Utility.safeRequest(request, "fil");
+                        String fi_code = Utility.safeRequest(request, "fi_code");
                         Figures fi = null;
-                        if (fil != null && fi_code != null) {
+                        if (!fil.equals("") && !fi_code.equals("")) {
                             fi = Engine.get_figures(fi_code, fil);
                         }
 
@@ -837,10 +837,7 @@
                         <%}
                             }%>
                         <%
-                            String esito = request.getParameter("esito");
-                            if (esito == null) {
-                                esito = "";
-                            }
+                            String esito = Utility.safeRequest(request, "esito");
                             String classal = "alert-info";
                             String classfa = "fa-exclamation-triangle";
                             String msg = "Warning";

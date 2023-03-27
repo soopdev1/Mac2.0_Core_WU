@@ -12,8 +12,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     String link_value = Engine.verifyUser(request);
-    if(link_value!=null){
-        Utility.redirect(request, response,link_value);
+    if (link_value != null) {
+        Utility.redirect(request, response, link_value);
     }
 %>
 <!DOCTYPE HTML>
@@ -44,12 +44,12 @@
         <link href="assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
@@ -70,16 +70,16 @@
 
             ArrayList<NC_category> array_nc = Engine.all_nc_category();
             //ArrayList<NC_causal> array_nc = Engine.all_nc_causal();
-                boolean iscentral = Engine.isCentral();
-                
+            boolean iscentral = Engine.isCentral();
+
         %>
 
         <script src="assets/soop/js/pace.js" type="text/javascript"></script>
-        
-        
-        
+
+
+
         <link rel="stylesheet" href="assets/soop/css/pace-theme-center-circle.css" />
-        
+
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
         <script src="assets/soop/js/core-min.js" type="text/javascript"></script>
         <script src="assets/soop/js/md5-min.js" type="text/javascript"></script>
@@ -88,11 +88,11 @@
         <script src="assets/soop/js/accounting.min.js" type="text/javascript"></script>
 
         <script type="text/javascript">
-            
-            
+
+
             var separatordecimal = '<%=Constant.decimal%>';
             var separatorthousand = '<%=Constant.thousand%>';
-            
+
             function loadtill() {
             <%for (int j = 0; j < array_till_open.size(); j++) {%>
                 var o = $("<option/>", {value: "<%=array_till_open.get(j).getCod()%>", text: "<%=Utility.formatAL(array_till_open.get(j).getCod(), array_till, 1)%>"});
@@ -119,8 +119,8 @@
             }
 
             function changetill_to() {
-                document.getElementById('idopentillto').value ='';
-                    document.getElementById('idopentillto_v').value = '';
+                document.getElementById('idopentillto').value = '';
+                document.getElementById('idopentillto_v').value = '';
                 var v1 = document.getElementById('tillto').value;
             <%for (int j = 0; j < array_till_open.size(); j++) {%>
                 var ch = '<%=array_till_open.get(j).getCod()%>';
@@ -152,7 +152,7 @@
             }
 
             function checktill() {
-                
+
                 var tillfrom = document.getElementById("tillfrom").value.trim();
                 var idfrom = document.getElementById("idopentillfrom_v").value.trim();
                 var tillto = document.getElementById("tillto").value.trim();
@@ -164,7 +164,7 @@
                     document.getElementById("errorlargetext").innerHTML = "Warning! Operation not permitted. Fields with <span class='font-red'>*</span> must be completed.";
                     return false;
                 }
-                
+
                 var er1 = true;
                 var msg = "ERROR";
 
@@ -191,22 +191,22 @@
                     document.getElementById("errorlargetext").innerHTML = "Warning! " + msg;
                     return false;
                 }
-                
+
                 return true;
-                
-                
+
+
             }
-            
+
             function subform() {
                 document.getElementById('butconf').disabled = true;
                 $("#butconf").html("<i class='fa fa-circle-o-notch fa-spin'></i> Sending...");
-                
+
                 $('table').each(function () {
                     if ($.fn.dataTable.fnIsDataTable(this)) {
                         $(this).DataTable().search('').draw();
                     }
                 });
-                
+
             }
 
         </script>
@@ -214,7 +214,10 @@
     </head>
     <!-- END HEAD -->
 
-    <%if (request.getParameter("search") == null) {%>
+    <%
+        String s1 = Utility.safeRequest(request, "search");
+        if (s1.equals("")) {
+    %>
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white" onload="return loadpage1();">
         <%} else {%>    
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white" onload="return loadpage2();">
@@ -321,12 +324,9 @@
                         </div>
                         <!-- /.modal-dialog -->
                     </div>
-                    
+
                     <%
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
+                        String esito = Utility.safeRequest(request, "esito");
                         String classal = "alert-info";
                         String classfa = "fa-exclamation-triangle";
                         String msg = "Warning";
@@ -389,9 +389,9 @@
                     </div>
                     <hr>
                     <%}%>
-                    
-                    
-                     <%if(!iscentral){%>
+
+
+                    <%if (!iscentral) {%>
                     <!-- END PAGE TITLE-->
                     <!-- END PAGE HEADER-->
                     <%      if (usr != null) {%>
@@ -411,8 +411,8 @@
                             <a href="it_nochange.jsp" class="btn btn-outline blue"><i class="fa fa-refresh"></i> Refresh</a>
                         </div>
                     </div>
-                    <%} else{%>
-                    <%if (request.getParameter("search") == null) {%>
+                    <%} else {%>
+                    <%if (s1.equals("")) {%>
                     <form name="f1" id="f1" method="post" action="it_nochange.jsp" onsubmit="return checktill();">
                         <input type="hidden" name="search" value="sra1"/>
                         <div class="row">
@@ -461,12 +461,12 @@
                             </div>
                         </div>
                     </form>
-                    <%} else if (request.getParameter("search").equals("sra1")) {
+                    <%} else if (s1.equals("sra1")) {
 
-                        String idopentillfrom = request.getParameter("idopentillfrom");
-                        String idopentillto = request.getParameter("idopentillto");
-                        String tillfrom = request.getParameter("tillfrom");
-                        String tillto = request.getParameter("tillto");
+                        String idopentillfrom = Utility.safeRequest(request, "idopentillfrom");
+                        String idopentillto = Utility.safeRequest(request, "idopentillto");
+                        String tillfrom = Utility.safeRequest(request, "tillfrom");
+                        String tillto = Utility.safeRequest(request, "tillto");
                         boolean es = Engine.insertBlockedOperation(session);
                         if (es) {
                     %>
@@ -559,7 +559,7 @@
                                                                     <input type="text" class="form-control inputright" 
                                                                            id="nc_quantnow<%=i%>" name="nc_quantnow<%=i%>" value="0" 
                                                                            onkeypress="return keysub(this, event);"
-                                                                           onchange="return formatValueINT_1_change(this,separatorthousand,separatordecimal);">
+                                                                           onchange="return formatValueINT_1_change(this, separatorthousand, separatordecimal);">
                                                                 </td>
                                                                 </tr>
                                                                 <%}%>
@@ -586,10 +586,10 @@
                         <%}%>
                     </form>
                     <%}
-                        }
-                    }%>
-                    
-                    <%}else{%>
+                            }
+                        }%>
+
+                    <%} else {%>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="alert alert-danger">
@@ -601,7 +601,7 @@
                     <!-- END CONTENT -->
                     <!-- BEGIN QUICK SIDEBAR -->
                     <!-- END QUICK SIDEBAR -->
-                    
+
                 </div>
                 <!-- END CONTAINER -->
                 <!-- BEGIN FOOTER -->
@@ -617,7 +617,7 @@
                 <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-                
+
                 <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
@@ -634,13 +634,13 @@
 
                 <!-- END THEME GLOBAL SCRIPTS -->
                 <!-- BEGIN PAGE LEVEL SCRIPTS -->
-                
+
                 <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-                
+
                 <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
                 <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
                 <!-- END PAGE LEVEL SCRIPTS -->
-                
+
                 <!-- BEGIN THEME LAYOUT SCRIPTS -->
                 <script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
                 <script src="assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
@@ -661,48 +661,48 @@
 
                 <!-- BEGIN THEME GLOBAL SCRIPTS -->
                 <script type="text/javascript">
-                                                                                   jQuery(document).ready(function () {
-                                                                                       var dt1 = function () {
-                                                                                           var f = $("#sample_1");
-                                                                                           f.dataTable({
-                                                                                               language: {aria: {},
-                                                                                                   sProcessing: "Process...",
-                                                                                                   emptyTable: "No results found.",
-                                                                                                   info: "Show _START_ to _END_ of _TOTAL_ results",
-                                                                                                   infoEmpty: "No results found.",
-                                                                                                   infoFiltered: "(filtered to _MAX_ total)",
-                                                                                                   lengthMenu: "Show _MENU_",
-                                                                                                   search: "Search:",
-                                                                                                   zeroRecords: "No results found.",
-                                                                                                   paginate: {previous: "Prev", next: "Next", last: "Last", first: "First"}},
-                                                                                               columnDefs: [
-                                                                                                   {orderable: !1, targets: [0]},
-                                                                                                   {orderable: !1, targets: [1]},
-                                                                                                   {orderable: !1, targets: [2]}
-                                                                                               ],
-                                                                                               lengthMenu: [[-1], ["All"]],
-                                                                                               pageLength: -1,
-                                                                                               order: [],
-                                                                                               dom: "<'row' <'col-md-12'>><'row'<'col-md-6 col-sm-12'><'col-md-6 col-sm-12'f>r><t>"
-                                                                                           });
-                                                                                       };
+                                                                               jQuery(document).ready(function () {
+                                                                                   var dt1 = function () {
+                                                                                       var f = $("#sample_1");
+                                                                                       f.dataTable({
+                                                                                           language: {aria: {},
+                                                                                               sProcessing: "Process...",
+                                                                                               emptyTable: "No results found.",
+                                                                                               info: "Show _START_ to _END_ of _TOTAL_ results",
+                                                                                               infoEmpty: "No results found.",
+                                                                                               infoFiltered: "(filtered to _MAX_ total)",
+                                                                                               lengthMenu: "Show _MENU_",
+                                                                                               search: "Search:",
+                                                                                               zeroRecords: "No results found.",
+                                                                                               paginate: {previous: "Prev", next: "Next", last: "Last", first: "First"}},
+                                                                                           columnDefs: [
+                                                                                               {orderable: !1, targets: [0]},
+                                                                                               {orderable: !1, targets: [1]},
+                                                                                               {orderable: !1, targets: [2]}
+                                                                                           ],
+                                                                                           lengthMenu: [[-1], ["All"]],
+                                                                                           pageLength: -1,
+                                                                                           order: [],
+                                                                                           dom: "<'row' <'col-md-12'>><'row'<'col-md-6 col-sm-12'><'col-md-6 col-sm-12'f>r><t>"
+                                                                                       });
+                                                                                   };
 
-                                                                                       jQuery().dataTable && dt1();
-                                                                                   });
+                                                                                   jQuery().dataTable && dt1();
+                                                                               });
                 </script>
                 <input type="text" id="test1" name="test1" style="display: none; width: 1px;"/>
-                
-                
+
+
                 <script type="text/javascript">
 
-            $(document).ready(function () {
-                window.history.pushState(null, "", window.location.href);
-                window.onpopstate = function () {
-                    window.history.pushState(null, "", window.location.href);
-                };
-            });
-        </script>
-                
+                    $(document).ready(function () {
+                        window.history.pushState(null, "", window.location.href);
+                        window.onpopstate = function () {
+                            window.history.pushState(null, "", window.location.href);
+                        };
+                    });
+                </script>
+
                 </body>
 
                 </html>

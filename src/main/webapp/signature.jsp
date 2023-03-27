@@ -49,7 +49,7 @@
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
@@ -89,13 +89,13 @@
 
         <!-- END THEME GLOBAL SCRIPTS -->
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        
+
         <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
         <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
         <!-- END PAGE LEVEL SCRIPTS -->
-        
+
         <!-- BEGIN THEME LAYOUT SCRIPTS -->
         <script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
         <script src="assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
@@ -115,16 +115,16 @@
             String codcl = null;
             String base64 = null;
             String base64NOMARK = null;
-            String token = request.getParameter("token");
+            String token = Utility.safeRequest(request, "token");
 
-            String solofirma = request.getParameter("solofirma");
+            String solofirma = Utility.safeRequest(request, "solofirma");
 
-            if (solofirma == null) {
+            if (solofirma.equals("")) {
                 solofirma = "NO";
             }
 
-            String oldloy = request.getParameter("oldloy");
-            if (oldloy == null) {
+            String oldloy = Utility.safeRequest(request, "oldloy");
+            if (oldloy.equals("")) {
                 oldloy = "0";
             }
 

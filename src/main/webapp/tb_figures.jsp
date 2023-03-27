@@ -94,6 +94,8 @@
                 if (tipo == null) {
                     tipo = "";
                 }
+                
+                String bra1 = Utility.safeRequest(request, "branch");
                 //tipo="1";
             %>
             <div class="modal fade" id="largelogin" tabindex="-1" role="dialog" aria-hidden="true">
@@ -212,9 +214,8 @@
 
                             <%
                                 if(central&&tipo.equals("3")){
-                                    String search = request.getParameter("search");
-
-                                    if (search == null) {%>
+                                    String search = Utility.safeRequest(request, "search");
+                                    if (search.equals("")) {%>
                             <form action="tb_figures.jsp" method="post">
                                 <input type="hidden" name="search" value="sra1"/>
                                 <div class="portlet box blue-hoki">
@@ -273,7 +274,7 @@
                                                             <%
 
                                                                 for (int j = 0; j < array_branch.size(); j++) {
-                                                                    if (request.getParameter("branch").equals(array_branch.get(j).getCod())) {%>
+                                                                    if (bra1.equals(array_branch.get(j).getCod())) {%>
                                                             <option selected value="<%=array_branch.get(j).getCod()%>"><%=array_branch.get(j).getCod()%> - <%=array_branch.get(j).getDe_branch()%></option>
                                                             <%} else {%>
                                                             <option value="<%=array_branch.get(j).getCod()%>"><%=array_branch.get(j).getCod()%> - <%=array_branch.get(j).getDe_branch()%></option>
@@ -294,7 +295,7 @@
 
                                         <%
 
-                                            ArrayList<Figures> list_figures = Engine.list_figures(request.getParameter("branch"));
+                                            ArrayList<Figures> list_figures = Engine.list_figures(bra1);
                                         %>
                                         <div class="row">
                                             <div class="col-md-12">
@@ -504,7 +505,7 @@
                                         action: function (e, dt, node, config) {
 
                                             //window.open('Download?type=viewExcel&cod=' + cexcel, '_blank');
-                                            window.open('Fileview?type=tb_figures&filiale=<%=request.getParameter("branch")%>&value=excel', '_blank');
+                                            window.open('Fileview?type=tb_figures&filiale=<%=bra1%>&value=excel', '_blank');
                                         }
                                     },
                                     {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
@@ -512,7 +513,7 @@
                                         action: function (e, dt, node, config) {
 
                                             //window.open('Download?type=viewPdf&cod=' + cpdf, '_blank');
-                                            window.open('Fileview?type=tb_figures&filiale=<%=request.getParameter("branch")%>&value=pdf', '_blank');
+                                            window.open('Fileview?type=tb_figures&filiale=<%=bra1%>&value=pdf', '_blank');
                                         }
                                     },
                                     {extend: "colvis", className: "btn blue-hoki btn-outline", text: "<i class='fa fa-list-alt'></i> Columns"},

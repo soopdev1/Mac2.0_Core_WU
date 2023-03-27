@@ -48,7 +48,7 @@
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
@@ -63,7 +63,7 @@
         <link href="assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
         <!-- END THEME LAYOUT STYLES -->
         <link rel="shortcut icon" href="favicon.ico" /> 
-        <%
+        <%            
             String fil[] = Engine.getFil();
             ArrayList<ET_change> array_frombranch = Engine.get_ET_change_frombranch(fil[0], "0", "NC");
             ArrayList<String[]> array_till = Engine.list_till_enabled();
@@ -71,7 +71,7 @@
             ArrayList<NC_category> array_nc = Engine.all_nc_category();
             ArrayList<Branch> array_branch = Engine.list_branch_enabled();
             ArrayList<String[]> array_credit_card = Engine.list_bank_pos_enabled();
-
+            
             String id_safe = "";
             String desc_safe = "";
             String id_oc = "";
@@ -90,7 +90,7 @@
 
         <script src="assets/soop/js/pace.js" type="text/javascript"></script>
         <link rel="stylesheet" href="assets/soop/css/pace-theme-center-circle.css" />
-        
+
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
         <script src="assets/soop/js/core-min.js" type="text/javascript"></script>
         <script src="assets/soop/js/md5-min.js" type="text/javascript"></script>
@@ -118,13 +118,13 @@
 
         <!-- END THEME GLOBAL SCRIPTS -->
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        
+
         <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
         <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
         <!-- END PAGE LEVEL SCRIPTS -->
-        
+
         <!-- BEGIN THEME LAYOUT SCRIPTS -->
         <script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
         <script src="assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
@@ -140,11 +140,11 @@
         <script src="assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
         <script type="text/javascript">
-
+            
             var separatordecimal = '<%=Constant.decimal%>';
             var separatorthousand = '<%=Constant.thousand%>';
             function isfrombranch() {
-
+                
                 var ty = document.getElementById("typeop").value;
                 var b1 = document.getElementById("bankbranch");
                 if (b1 !== null) {
@@ -169,46 +169,46 @@
                         document.getElementById('srcing_divM').style.display = 'none';
                     }
                 }
-
+                
                 checkoff();
             }
-
+            
             function changetype() {
-
+                
                 $('#bankbranch').empty().trigger('change');
             <%for (int j = 0; j < array_branch.size(); j++) {
-
+                    
                     if (!array_branch.get(j).getCod().equals(fil[0])) {
             %>
                 var o = $("<option/>", {value: "<%=array_branch.get(j).getCod()%>", text: "<%=array_branch.get(j).getCod()%> - <%=array_branch.get(j).getDe_branch().toUpperCase()%>"});
                         $('#bankbranch').append(o);
             <%}
                 }%>
-
+                        
                         $('#bankbranch').val('').trigger('change');
                         //$('#bankbranch').val($('#bankbranch option:first-child').val()).trigger('change');
                         isfrombranch();
                     }
-
-
-
+                    
+                    
+                    
                     function cli(usr) {
                         document.getElementById("errorlarge").className = document.getElementById("errorlarge").className + " in";
                         document.getElementById("errorlarge").style.display = "block";
                         document.getElementById("errorlargetext").innerHTML = "Warning! Operation not permitted. The operation of the same type is in progress by the operator " + usr + ".<p class='ab'></p> Please wait for the end of this operation.";
                     }
-
+                    
                     function subform(type, but) {
                         but.disabled = true;
                         $("#" + but.id).html("<i class='fa fa-circle-o-notch fa-spin'></i> Sending...");
-
+                        
                         $('table').each(function () {
                             if ($.fn.dataTable.fnIsDataTable(this)) {
                                 $(this).DataTable().search('').draw();
                             }
                         });
-
-
+                        
+                        
                         var inputs, index;
                         //var msg = "";
                         inputs = document.getElementById('f2').getElementsByTagName('span');
@@ -220,7 +220,7 @@
                                 }
                             }
                         }
-
+                        
                         if (type === "D") {
                             document.getElementById('conf').value = 'NO';
                             var motiv1 = document.getElementById('motiv1').value.trim();
@@ -235,7 +235,7 @@
                         }
                         document.getElementById('f2').submit();
                     }
-
+                    
                     function checkaut() {
                         var online = document.getElementById('on1').value === "true";
                         if (!online) {
@@ -243,16 +243,16 @@
                             $('#autman').bootstrapSwitch('readonly', true);
                         }
                     }
-
-
+                    
+                    
                     function checkoff() {
                         var online = document.getElementById('on1').value === "true";
-
+                        
                         var autman = true;
                         if (document.getElementById('autman') !== null) {
                             autman = document.getElementById('autman').checked;
                         }
-
+                        
                         if (online && autman) {
                             document.getElementById('srcoff').value = "ONLINE";
                             if (document.getElementById('srcing_div_1') !== null) {
@@ -274,16 +274,16 @@
                             }
                         }
                     }
-
-
+                    
+                    
                     function checkform() {
-
+                        
                         var tillfrom = document.getElementById("tillfrom").value.trim();
                         var idfrom = document.getElementById("idopentillfrom_v").value.trim();
-
+                        
                         var er1 = true;
                         var msg = "ERROR";
-
+                        
                         $.ajax({
                             async: false,
                             type: "POST",
@@ -299,7 +299,7 @@
                                 }
                             }
                         });
-
+                        
                         if (er1) {
                             document.getElementById("errorlarge").className = document.getElementById("errorlarge").className + " in";
                             document.getElementById("errorlarge").style.display = "block";
@@ -314,8 +314,8 @@
                             document.getElementById("errorlargetext").innerHTML = "Error! Field 'Branch' must be completed.";
                             return false;
                         }
-
-
+                        
+                        
                         var ty = document.getElementById("typeop").value;
                         var off = document.getElementById('srcoff').value === "ONLINE";
                         var tofrom = document.getElementById("tofrom").checked;
@@ -336,10 +336,10 @@
                                     document.getElementById("errorlargetext").innerHTML = "Error! Field 'Source Code (From Branch)' must be completed.";
                                     return false;
                                 }
-
+                                
                             }
                         }
-
+                        
                         var autman = document.getElementById("autman").checked;
                         if (ty === 'BR' && !tofrom) {
                             if (!autman) {
@@ -349,14 +349,14 @@
                             }
                         }
                         sub1();
-
-
+                        
+                        
                     }
-
+                    
                     function sub1() {
                         document.getElementById('f1').submit();
                     }
-
+                    
                     function loadpage1() {
                         online();
                         changetype();
@@ -377,7 +377,10 @@
     </head>
     <!-- END HEAD -->
 
-    <%if (request.getParameter("search") == null) {%>
+    <%
+        String s1 = Utility.safeRequest(request, "search");
+        
+        if (s1.equals("")) {%>
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white" onload="return loadpage1();">
         <%} else {%>    
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white" onload="return loadpage2();">
@@ -394,7 +397,7 @@
             <!-- BEGIN MENU -->
             <%@ include file="menu/menu_tr6.jsp"%>
             <!-- END MENU -->
-            <%
+            <%                
                 String lan_index = (String) session.getAttribute("language");
                 lan_index = "IT";
                 Etichette et_index = new Etichette(lan_index);
@@ -402,7 +405,7 @@
                 String pswx = session.getAttribute("us_pwd").toString();
                 boolean iscentral = Engine.isCentral();
                 //iscentral = false;
-%>
+                %>
 
             <div class="modal fade" id="largelogin_hid" tabindex="-1" role="dialog" aria-hidden="true">
                 <button type="button" class="btn btn-info btn-lg" id="largelogin_butt" data-toggle="modal" data-target="#largelogin">Open Modal</button>
@@ -535,12 +538,10 @@
                     <%} else {%>
                     <%
                         boolean mostraaltro = true;
-                        String esito = request.getParameter("esito");
-                        if (esito == null) {
-                            esito = "";
-                        }
-                        String pr = request.getParameter("pr");
-                        if (pr == null) {
+                        String esito = Utility.safeRequest(request, "esito");
+                        
+                        String pr = Utility.safeRequest(request, "pr");
+                        if (pr.equals("")) {
                             pr = "N";
                         }
                         String classal = "alert-info";
@@ -594,7 +595,7 @@
                             msg = "Success";
                             msg1 = "Operation completed successfully.";
                         }
-
+                        
                         if (!esito.equals("")) {
                     %>
                     <div class="row">
@@ -603,8 +604,8 @@
                                 <strong><%=msg%> <i class="fa <%=classfa%>"></i></strong> <%=msg1%>
                             </div>
                             <%if (esito.equals("OK")) {
-                                    String cod = request.getParameter("cod");
-                                    if (cod != null) {%>
+                                    String cod = Utility.safeRequest(request, "cod");
+                                    if (!cod.equals("")) {%>
                             <form action="Download?type=viewET_frbr_receipt" method="post" target="_blank" name="f3" id="f3">
                                 <input type="hidden" name="cod" value="<%=cod%>"/>
                                 <input type="hidden" id="typeop" name="typeop" value="NC"/>
@@ -626,7 +627,7 @@
 
                     <!-- END PAGE TITLE-->
                     <!-- END PAGE HEADER-->
-                    <%if (request.getParameter("search") == null) {%>
+                    <%if (s1.equals("")) {%>
                     <form name="f1" id="f1" method="post" action="et_nochange.jsp">
                         <input type="hidden" name="srcoff" id="srcoff"/>
                         <input type="hidden" name="search" value="sra1"/>
@@ -708,38 +709,36 @@
                             </div>
                         </div>
                     </form>
-                    <%} else if (request.getParameter("search").equals("sra1")) {
-                        String tillfrom = request.getParameter("tillfrom");
-                        String tofrom = request.getParameter("tofrom");
-                        String typeop = request.getParameter("typeop");
-
-                        String autman = request.getParameter("autman");
-
-                        String idopentillfrom = request.getParameter("idopentillfrom");
-                        String bankbranch = request.getParameter("bankbranch");
-                        String srcing = request.getParameter("srcing");
-                        String srcing2 = request.getParameter("srcing2");
-                        String srcoff = request.getParameter("srcoff");
+                    <%} else if (s1.equals("sra1")) {
+                        String tillfrom = Utility.safeRequest(request, "tillfrom");
+                        String tofrom = Utility.safeRequest(request, "tofrom");
+                        String typeop = Utility.safeRequest(request, "typeop");
+                        String autman = Utility.safeRequest(request, "autman");
+                        String idopentillfrom = Utility.safeRequest(request, "idopentillfrom");
+                        String bankbranch = Utility.safeRequest(request, "bankbranch");
+                        String srcing = Utility.safeRequest(request, "srcing");
+                        String srcing2 = Utility.safeRequest(request, "srcing2");
+                        String srcoff = Utility.safeRequest(request, "srcoff");
                         String tf = "";
-                        if (tofrom == null) {
+                        if (tofrom.equals("")) {
                             tf = "";
                             tofrom = "F";
                         } else if (!tofrom.equals("F")) {
                             tf = "checked";
                             tofrom = "T";
                         }
-
+                        
                         String am = "";
-                        if (autman == null) {
+                        if (autman.equals("")) {
                             am = "";
                             autman = "M";
                         } else {
                             am = "checked";
                             autman = "A";
                         }
-
+                        
                         ArrayList<String[]> list_oc_nochange = Engine.list_oc_nochange_real(idopentillfrom);
-
+                        
                         boolean es = Engine.insertBlockedOperation(session);
                         if (es) {%>
                     <form name="f2" id="f2" method="post" action="Operazioni?type=et_nochange">
@@ -802,7 +801,7 @@
                                 <div class="form-group">
                                     <label>Branch</label>
                                     <input type="text" class="form-control"  readonly  name="bankbranch"
-                                           value="<%=Engine.formatBankBranch(bankbranch, typeop, null, array_branch,array_credit_card)%>"></input>
+                                           value="<%=Engine.formatBankBranch(bankbranch, typeop, null, array_branch, array_credit_card)%>"></input>
                                     <input type="hidden"  name="bankbranchv"value="<%=bankbranch%>"/>
                                 </div>
                             </div>
@@ -1161,7 +1160,7 @@
         });
     </script>
     <script type="text/javascript">
-
+        
         $(document).ready(function () {
             window.history.pushState(null, "", window.location.href);
             window.onpopstate = function () {

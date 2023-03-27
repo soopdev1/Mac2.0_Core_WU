@@ -1,3 +1,4 @@
+<%@page import="rc.so.util.Utility"%>
 <%@page import="rc.so.util.Etichette"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML>
@@ -151,9 +152,9 @@
 
                 String link = (String) session.getAttribute("linkfirma");
 
-                String nc = request.getParameter("nc");
-                String cod = request.getParameter("cod");
-                if (nc == null) {
+                String nc = Utility.safeRequest(request, "nc");
+                String cod = Utility.safeRequest(request, "cod");
+                if (nc.equals("")) {
                     nc = "f";
                     cod = "";
                 }

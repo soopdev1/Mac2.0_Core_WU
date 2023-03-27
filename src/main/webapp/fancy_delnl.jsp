@@ -75,8 +75,8 @@
             <div class="page-content-wrapper">
                 <!-- BEGIN CONTENT BODY -->
                 <div class="page-content">
-                    <%String code = request.getParameter("code");
-                        if (code != null) {%>
+                    <%String code = Utility.safeRequest(request, "code");
+                        if (!code.equals("")) {%>
                     <form id="deletetrmod" name="deletetrmod" action="Operazioni?type=del_nl" method="post">
                         <div class="modal-header">
                             <h4 class="modal-title">Delete Newsletters</h4>

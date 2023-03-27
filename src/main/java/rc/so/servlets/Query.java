@@ -91,6 +91,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import static org.apache.commons.lang3.StringUtils.replace;
 import org.joda.time.DateTime;
+import rc.so.util.Utility;
 
 /**
  *
@@ -460,6 +461,10 @@ public class Query extends HttpServlet {
      * @throws IOException
      */
     protected void query_et_list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        
+        Utility.printRequest(request);
+        
+        
         response.setContentType("text/plain; charset=ISO-8859-1");
         response.setCharacterEncoding("ISO-8859-1");
         String typeop = request.getParameter("typeop");

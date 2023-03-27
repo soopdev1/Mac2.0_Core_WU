@@ -9,7 +9,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     String link_value = Engine.verifyUser(request);
-    if(link_value!=null){
+    if (link_value != null) {
         Utility.redirect(request, response, link_value);
     }
 %>
@@ -41,12 +41,12 @@
         <link href="assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
@@ -62,13 +62,13 @@
         <link rel="shortcut icon" href="favicon.ico" /> 
         <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
         <!-- FANCYBOX -->
-        
+
         <script type="text/javascript" src="assets/soop/js/jquery.fancybox.js?v=2.1.5"></script>
         <link rel="stylesheet" type="text/css" href="assets/soop/css/jquery.fancybox.css?v=2.1.5" media="screen" />
         <script type="text/javascript" src="assets/soop/js/fancy.js"></script>
-        
-        
-        
+
+
+
     </head>
     <!-- END HEAD -->
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white" onload="return online();">
@@ -134,10 +134,10 @@
                     <!-- END PAGE TITLE-->
                     <!-- END PAGE HEADER-->
                     <!-- SELECT TILL -->
-                    <%                        
-                        ArrayList<String[]> list_status = Newsletters.list_status_news();
-                        if (request.getParameter("search") == null) {
-                            String search = Utility.generaId();
+                    <%                        ArrayList<String[]> list_status = Newsletters.list_status_news();
+                        String search = Utility.safeRequest(request, "search");
+                        if (search.equals("")) {
+                            search = Utility.generaId();
                     %>
                     <form action="nl_view.jsp" method="post" name="f1">
                         <input type="hidden" name="search" value="<%=search%>">
@@ -183,10 +183,10 @@
                             </div>
                         </div>
                     </form>
-                    <%} else if (request.getParameter("search").length() != 20 || request.getParameter("status") == null) {
+                    <%} else if (search.length() != 20 || Utility.safeRequest(request, "status").equals("")) {
                         Utility.redirect(request, response, "nl_view.jsp");
                     } else {
-                        String search = request.getParameter("search");
+                        search = Utility.safeRequest(request, "search");
                     %>
                     <form action="nl_view.jsp" method="post" name="f1">
                         <input type="hidden" name="search" value="<%=search%>">
@@ -210,7 +210,7 @@
                                                     <select class="form-control select2" name="status" placeholder="...">
                                                         <option value="...">All</option>
                                                         <%for (int i = 0; i < list_status.size(); i++) {
-                                                                if (request.getParameter("status").equals(list_status.get(i)[0])) {%>
+                                                                if (Utility.safeRequest(request,"status").equals(list_status.get(i)[0])) {%>
                                                         <option value="<%=list_status.get(i)[0]%>" selected="selected"><%=list_status.get(i)[1]%></option>
                                                         <%} else {%>
                                                         <option value="<%=list_status.get(i)[0]%>"><%=list_status.get(i)[1]%></option>
@@ -305,7 +305,7 @@
                 <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-                
+
                 <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
                 <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
 
@@ -325,9 +325,9 @@
                 <script src="assets/global/scripts/app.min.js" type="text/javascript"></script>
                 <!-- END THEME GLOBAL SCRIPTS -->
                 <!-- BEGIN PAGE LEVEL SCRIPTS -->
-                
+
                 <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-                
+
                 <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
                 <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
                 <!-- END PAGE LEVEL SCRIPTS -->
@@ -362,7 +362,7 @@
                                                 zeroRecords: "No results found.",
                                                 paginate: {previous: "Prev", next: "Next", last: "Last", first: "First"}},
                                             ajax: {
-                                                url: "Query?type=newsletter&status=<%=request.getParameter("status")%>",
+                                                url: "Query?type=newsletter&status=<%=Utility.safeRequest(request,"status")%>",
                                                 dataSrc: "aaData",
                                                 type: "GET"
                                             },
@@ -373,24 +373,24 @@
                                                 {orderable: 1, targets: [3]},
                                                 {orderable: !1, targets: [4]}
                                             ],
-                                                    initComplete: function (settings, json) {
-                                                        $('.popovers').popover();
-                                                    },
+                                            initComplete: function (settings, json) {
+                                                $('.popovers').popover();
+                                            },
                                             buttons: [
                                                 {text: "<i class='fa fa-file-pdf-o'></i> Excel",
-                                                                        className: "btn white btn-outline",
-                                                                        action: function (e, dt, node, config) {                                                                           
-                                                                            //window.open('Download?type=viewExcel&cod=' + cexcel, '_blank');
-                                                                            window.open('Fileview?type=nlview&status=<%=request.getParameter("status")%>&value=excel', '_blank');
-                                                                        }
-                                                                    },
-                                                                    {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
-                                                                        className: "btn white btn-outline",
-                                                                        action: function (e, dt, node, config) {                                                                         
-                                                                            //window.open('Download?type=viewPdf&cod=' + cpdf, '_blank');
-                                                                            window.open('Fileview?type=nlview&status=<%=request.getParameter("status")%>&value=pdf', '_blank');
-                                                                        }
-                                                                    },
+                                                    className: "btn white btn-outline",
+                                                    action: function (e, dt, node, config) {
+                                                        //window.open('Download?type=viewExcel&cod=' + cexcel, '_blank');
+                                                        window.open('Fileview?type=nlview&status=<%=Utility.safeRequest(request,"status")%>&value=excel', '_blank');
+                                                    }
+                                                },
+                                                {text: "<i class='fa fa-file-pdf-o'></i> Pdf",
+                                                    className: "btn white btn-outline",
+                                                    action: function (e, dt, node, config) {
+                                                        //window.open('Download?type=viewPdf&cod=' + cpdf, '_blank');
+                                                        window.open('Fileview?type=nlview&status=<%=Utility.safeRequest(request,"status")%>&value=pdf', '_blank');
+                                                    }
+                                                },
                                                 {extend: "colvis", className: "btn white btn-outline", text: "<i class='fa fa-list-alt'></i> Columns"},
                                                 {text: "<i class='fa fa fa-refresh'></i>",
                                                     className: "btn white btn-outline",
@@ -400,7 +400,7 @@
                                                 }]
                                             ,
                                             colReorder: {reorderCallback: function () {
-                                                    
+
                                                 }},
                                             lengthMenu: [
                                                 [25, 50, 100, -1],
@@ -435,17 +435,17 @@
                                     jQuery().dataTable && dt1();
                                 });
                 </script>
-                
+
                 <script type="text/javascript">
 
-            $(document).ready(function () {
-                window.history.pushState(null, "", window.location.href);
-                window.onpopstate = function () {
-                    window.history.pushState(null, "", window.location.href);
-                };
-            });
-        </script>
-                
-                
+                    $(document).ready(function () {
+                        window.history.pushState(null, "", window.location.href);
+                        window.onpopstate = function () {
+                            window.history.pushState(null, "", window.location.href);
+                        };
+                    });
+                </script>
+
+
                 </body>
                 </html>

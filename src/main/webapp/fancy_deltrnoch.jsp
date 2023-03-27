@@ -3,8 +3,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     String link_value = Engine.verifyUser(request);
-    if(link_value!=null){
-        Utility.redirect(request, response,link_value);
+    if (link_value != null) {
+        Utility.redirect(request, response, link_value);
     }
 %>
 
@@ -35,19 +35,19 @@
 
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
 
         <link href="assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
 
         <!-- END PAGE LEVEL PLUGINS -->
@@ -62,11 +62,11 @@
         <link href="assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css" />
         <!-- END THEME LAYOUT STYLES -->
         <link rel="shortcut icon" href="favicon.ico" /> 
-<script src="assets/soop/js/controlli.js" type="text/javascript"></script>
+        <script src="assets/soop/js/controlli.js" type="text/javascript"></script>
 
 
 
-<script type="text/javascript">
+        <script type="text/javascript">
             function check() {
                 var occ = "true";
                 $.ajax({
@@ -92,7 +92,7 @@
         <!-- BEGIN HEADER -->
         <!-- END HEADER -->
         <!-- BEGIN HEADER & CONTENT DIVIDER -->
-<div class="modal fade bs-modal-lg" id="errorlarge" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal fade bs-modal-lg" id="errorlarge" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -118,9 +118,8 @@
                 <!-- BEGIN CONTENT BODY -->
                 <div class="page-content">
                     <%
-                        
-                        String code = request.getParameter("code");
-                        if (code != null) {%>
+                        String code = Utility.safeRequest(request, "code");
+                        if (!code.equals("")) {%>
                     <form id="deletetrmod" name="deletetrmod" action="Operazioni?type=del_tr_noch" method="post" onsubmit="return check();">
                         <div class="modal-header">
                             <h4 class="modal-title">Delete Transaction</h4>
@@ -137,7 +136,7 @@
                         </div>
                     </form>
                     <%} else {%>
-                        
+
                     <%}%>
                 </div>
             </div>
@@ -155,7 +154,7 @@
         <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
 
@@ -176,9 +175,9 @@
 
         <!-- END THEME GLOBAL SCRIPTS -->
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        
+
         <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
         <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
 
@@ -190,14 +189,14 @@
 
         <script type="text/javascript">
 
-            $(document).ready(function () {
-                window.history.pushState(null, "", window.location.href);
-                window.onpopstate = function () {
-                    window.history.pushState(null, "", window.location.href);
-                };
-            });
+                                    $(document).ready(function () {
+                                        window.history.pushState(null, "", window.location.href);
+                                        window.onpopstate = function () {
+                                            window.history.pushState(null, "", window.location.href);
+                                        };
+                                    });
         </script>
-        
+
     </body>
 
 </html>

@@ -94,8 +94,8 @@
                     <!-- BEGIN PAGE TITLE-->
                     <div class="clearfix"></div>
                     <%
-                        String codtr = request.getParameter("codtr");
-                        String coddoc = request.getParameter("coddoc");
+                        String codtr = Utility.safeRequest(request, "codtr");
+                        String coddoc = Utility.safeRequest(request, "coddoc");
                         String[] val = Engine.get_typedoc_tra(coddoc);
                     %>
 
