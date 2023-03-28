@@ -7137,7 +7137,6 @@ public class Engine {
     public static String checkDeleteTR(String codtr) {
         String ok = "OK";
         try {
-            out.println("rc.so.util.Engine.checkDeleteTR() " + codtr);
             Db_Master db6 = new Db_Master();
             Ch_transaction tmp = db6.query_transaction_ch(codtr);
             if (tmp == null) {

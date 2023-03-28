@@ -213,6 +213,7 @@ import static org.apache.commons.io.FilenameUtils.getExtension;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.apache.commons.lang3.StringUtils.replace;
 import static org.apache.commons.lang3.StringUtils.substring;
+import org.owasp.esapi.ESAPI;
 
 /**
  *
@@ -1020,9 +1021,8 @@ public class Operazioni extends HttpServlet {
         if (user == null) {
             user = "9999";
         }
-        StringBuilder us1 = new StringBuilder(user);
-        String code = request.getParameter("idtrdel");
-        String motiv = request.getParameter("motiv1");
+        String code = Utility.safeRequest(request, "idtrdel");
+        String motiv = Utility.safeRequest(request, "motiv1");
 
         Db_Master db1 = new Db_Master();
         String valutalocale = db1.get_local_currency()[0];
@@ -7624,8 +7624,8 @@ public class Operazioni extends HttpServlet {
      * @throws IOException
      */
     protected void loy_assign_new(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String codcl = request.getParameter("codcl");
-        String loya = request.getParameter("loya");
+        String codcl = Utility.safeRequest(request, "codcl");
+        String loya = Utility.safeRequest(request, "loya");
         boolean es = false;
         if (loya == null) {
             loya = "";
@@ -7753,7 +7753,8 @@ public class Operazioni extends HttpServlet {
     protected void logintangerine(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getSession().getAttribute("us_user").toString();
         try ( PrintWriter pw = response.getWriter()) {
-            pw.println(login_TA(username, filiale));
+            String log1 = login_TA(username, filiale);
+            pw.println(ESAPI.encoder().encodeForHTML(log1));
         }
     }
 

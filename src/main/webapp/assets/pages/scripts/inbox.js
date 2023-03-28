@@ -1,3 +1,9 @@
+function htmlEncode(str){
+    return String(str).replace(/[^\w. ]/gi, function(c){
+        return '&#'+c.charCodeAt(0)+';';
+    });
+}
+
 var AppInbox = function () {
 
     var content = $('.inbox-content');
@@ -10,7 +16,7 @@ var AppInbox = function () {
         listListing = name;
 
         loading.show();
-        content.html('');
+        content.html(htmlEncode(''));
         toggleButton(el);
 
         $.ajax({
@@ -27,7 +33,7 @@ var AppInbox = function () {
                 $('.inbox-header > h1').text(title);
 
                 loading.hide();
-                content.html(res);
+                content.html(htmlEncode(res));
                 if (Layout.fixContentHeight) {
                     Layout.fixContentHeight();
                 }
@@ -53,7 +59,7 @@ var AppInbox = function () {
         var url = 'app_inbox_view.html';
 
         loading.show();
-        content.html('');
+        content.html(htmlEncode(''));
         toggleButton(el);
 
         var message_id = el.parent('tr').attr("data-messageid");  
@@ -74,7 +80,7 @@ var AppInbox = function () {
                 $('.inbox-header > h1').text('View Message');
 
                 loading.hide();
-                content.html(res);
+                content.html(htmlEncode(res));
                 Layout.fixContentHeight();
             },
             error: function(xhr, ajaxOptions, thrownError)
@@ -118,7 +124,7 @@ var AppInbox = function () {
         var url = 'app_inbox_compose.html';
 
         loading.show();
-        content.html('');
+        content.html(htmlEncode(''));
         toggleButton(el);
 
         // load the form via ajax
@@ -135,7 +141,7 @@ var AppInbox = function () {
                 $('.inbox-header > h1').text('Compose');
 
                 loading.hide();
-                content.html(res);
+                content.html(htmlEncode(res));
 
                 initFileupload();
                 initWysihtml5();
@@ -157,7 +163,7 @@ var AppInbox = function () {
         var url = 'app_inbox_reply.html&messageid=' + messageid;
         
         loading.show();
-        content.html('');
+        content.html(htmlEncode(''));
         toggleButton(el);
 
         // load the form via ajax
@@ -174,7 +180,7 @@ var AppInbox = function () {
                 $('.inbox-header > h1').text('Reply');
 
                 loading.hide();
-                content.html(res);
+                content.html(htmlEncode(res));
                 $('[name="message"]').val($('#reply_email_content_body').html());
 
                 handleCCInput(); // init "CC" input field
@@ -196,7 +202,7 @@ var AppInbox = function () {
         var url = 'app_inbox_inbox.html';
 
         loading.show();
-        content.html('');
+        content.html(htmlEncode(''));
         toggleButton(el);
 
         $.ajax({
@@ -212,7 +218,7 @@ var AppInbox = function () {
                 $('.inbox-header > h1').text('Search');
 
                 loading.hide();
-                content.html(res);
+                content.html(htmlEncode(res));
                 Layout.fixContentHeight();
                 App.initUniform();
             },

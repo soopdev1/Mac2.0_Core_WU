@@ -98,7 +98,7 @@
                         url: "Query?type=queryloy_ass&q=" + loya,
                         success: function (data) {
                             if (data !== "") {
-                                es = data;
+                                es = htmlEncode(data);
                             }
                         }
                     });

@@ -57,7 +57,7 @@
         <link href="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
         <link href="assets/soop/bootstrap-select-1.13.14/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
@@ -89,7 +89,7 @@
         <script src="assets/soop/js/cf.js" type="text/javascript"></script>
         <script src="assets/soop/js/validate.min.js" type="text/javascript"></script>
 
-        
+
         <script type="text/javascript" src="assets/soop/js/jquery.fancybox.js?v=2.1.5"></script>
         <link rel="stylesheet" type="text/css" href="assets/soop/css/jquery.fancybox.css?v=2.1.5" media="screen" />
         <script type="text/javascript" src="assets/soop/js/fancy.js"></script>
@@ -1608,7 +1608,7 @@
                             if (parseFloatRaf(document.getElementById("payout1").value, separatorthousand, separatordecimal) > parseFloatRaf(document.getElementById('maxweek').value.trim(), separatorthousand, separatordecimal)) {
                                 document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                                 document.getElementById('errorlarge').style.display = "block";
-                                document.getElementById('errorlargetext').innerHTML = "You can not complete the transaction. The PayIn exceeds the Max Weekly Threshold (" + document.getElementById('maxweek').value.trim() + ")";
+                                document.getElementById('errorlargetext').innerHTML = "You can not complete the transaction. The PayIn exceeds the Max Weekly Threshold (" + htmlEncode(document.getElementById('maxweek').value.trim()) + ")";
                                 return false;
                             }
                         }
@@ -1919,7 +1919,7 @@
 
                                     var msg = "";
                                     for (var e = 0; e < arrayJson.length; e++) {
-                                        msg = msg + arrayJson[e] + "<p class='ab'></p>";
+                                        msg = msg + htmlEncode(arrayJson[e]) + "<p class='ab'></p>";
                                     }
                                     document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                                     document.getElementById('errorlarge').style.display = "block";
@@ -2256,7 +2256,7 @@
                                             document.getElementById('heavy_pob_date').readOnly = true;
 
                                         } else {
-                                            es = arrayJson[0];
+                                            es = htmlEncode(arrayJson[0]);
                                         }
                                     }
                                 }
@@ -2312,7 +2312,7 @@
 
                                         document.getElementById('infotra').className = document.getElementById('infotra').className + " in";
                                         document.getElementById('infotra').style.display = "block";
-                                        document.getElementById('infotratext').innerHTML = arrayJson[1];
+                                        document.getElementById('infotratext').innerHTML = htmlEncode(arrayJson[1]);
 
                                         document.getElementById('infolarge').className = "modal fade";
                                         document.getElementById('infolarge').style.display = "none";
@@ -2690,7 +2690,7 @@
                                             totalspread = totalspread + fx1;
 
                                         }
-                                        console.log(totalspread);
+//                                        console.log(totalspread);
 
                                         document.getElementById("spread" + index).value = accounting.formatNumber(new BigNumber(totalspread.toString()).toFixed(2, 5), 2, separatorthousand, separatordecimal);
                                         document.getElementById("totalspread").innerHTML =
@@ -2700,7 +2700,7 @@
                                         if (arrayJson[0] !== "-") {
                                             document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                                             document.getElementById('errorlarge').style.display = "block";
-                                            document.getElementById('errorlargetext').innerHTML = arrayJson[0];
+                                            document.getElementById('errorlargetext').innerHTML = htmlEncode(arrayJson[0]);
                                             return false;
                                         }
                                     }
@@ -2746,10 +2746,10 @@
                                     if (arrayJson[0] === "false1") {
                                         document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                                         document.getElementById('errorlarge').style.display = "block";
-                                        document.getElementById('errorlargetext').innerHTML = arrayJson[1];
+                                        document.getElementById('errorlargetext').innerHTML = htmlEncode(arrayJson[1]);
                                         exit = false;
                                     } else if (arrayJson[0] === "false3") {
-                                        var msg = arrayJson[1];
+                                        var msg = htmlEncode(arrayJson[1]);
                                         document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                                         document.getElementById('errorlarge').style.display = "block";
                                         document.getElementById('errorlargetext').innerHTML = msg;
@@ -2757,7 +2757,7 @@
                                     } else if (arrayJson[0] === "false2") {
                                         var msg = "";
                                         for (var e = 1; e < arrayJson.length; e++) {
-                                            msg = msg + arrayJson[e] + "<p class='ab'></p>";
+                                            msg = msg + htmlEncode(arrayJson[e]) + "<p class='ab'></p>";
                                         }
                                         document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                                         document.getElementById('errorlarge').style.display = "block";
@@ -3854,7 +3854,8 @@
                                                                         for (var i = 0; i < arrayJson.length - 1; i = i + 2) {
                                                                             var span1 = document.createElement('span');
                                                                             span1.className = 'label label-sm label-success';
-                                                                            span1.innerHTML = arrayJson[i] + ' - <b>' + arrayJson[i + 1] + '</b>';
+                                                                            span1.innerHTML = htmlEncode(arrayJson[i]) + ' - <b>'
+                                                                                    + htmlEncode(arrayJson[i + 1]) + '</b>';
                                                                             var span2 = document.createElement('span');
                                                                             span2.innerHTML = '&nbsp;';
                                                                             document.getElementById('ex9').appendChild(span1);
@@ -3881,7 +3882,8 @@
                                                                         for (var i = 0; i < arrayJson.length - 1; i = i + 2) {
                                                                             var span1 = document.createElement('span');
                                                                             span1.className = 'label label-sm label-success';
-                                                                            span1.innerHTML = arrayJson[i] + ' - <b>' + arrayJson[i + 1] + '</b>';
+                                                                            span1.innerHTML = htmlEncode(arrayJson[i]) + ' - <b>' 
+                                                                                    + htmlEncode(arrayJson[i + 1]) + '</b>';
                                                                             var span2 = document.createElement('span');
                                                                             span2.innerHTML = '&nbsp;';
                                                                             document.getElementById('ex10').appendChild(span1);
@@ -4484,13 +4486,13 @@
             <script src="assets/global/scripts/app.min.js" type="text/javascript"></script>
             <!-- END THEME GLOBAL SCRIPTS -->
             <!-- BEGIN PAGE LEVEL SCRIPTS -->
-            
+
             <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
-            
+
             <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
             <script src="assets/soop/js/form-input-mask.min.js" type="text/javascript"></script>
             <!-- END PAGE LEVEL SCRIPTS -->
-            
+
             <!-- BEGIN THEME LAYOUT SCRIPTS -->
             <script src="assets/layouts/layout/scripts/layout.min.js" type="text/javascript"></script>
             <script src="assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>

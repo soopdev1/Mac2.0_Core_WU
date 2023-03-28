@@ -176,7 +176,7 @@
                     $('#deltrbutton').html("<i class='fa fa-remove'></i> Delete Transaction");
                     $('#confbutton').html("<i class='fa fa-check'></i> Confirm");
                     /////////////////////////////////////////////////////////////
-                    document.getElementById('errorlargetext').innerHTML = esitob;
+                    document.getElementById('errorlargetext').innerHTML = htmlEncode(esitob);
                     document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                     document.getElementById('errorlarge').style.display = "block";
                     return false;
@@ -198,7 +198,7 @@
                     $('#confbutton2').html("YES");
                     $('#delbutton2').html("NO");
 
-                    document.getElementById('errorlargetext').innerHTML = esitob;
+                    document.getElementById('errorlargetext').innerHTML = htmlEncode(esitob;)
                     document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                     document.getElementById('errorlarge').style.display = "block";
                     return false;

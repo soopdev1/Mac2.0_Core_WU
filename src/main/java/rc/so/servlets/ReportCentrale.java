@@ -3012,7 +3012,7 @@ public class ReportCentrale extends HttpServlet {
 
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = Utility.safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         if (br1.isEmpty()) {
             br1 = (ArrayList<String>) allenabledbr.stream().map(valore -> valore.getCod()).distinct().collect(toList());

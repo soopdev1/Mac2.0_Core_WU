@@ -112,7 +112,7 @@
                                         if (data === null) {
                                             document.getElementById("errorlargetext").innerHTML = "GENERIC ERROR.";
                                         } else {
-                                            document.getElementById("errorlargetext").innerHTML = data;
+                                            document.getElementById("errorlargetext").innerHTML = htmlEncode(data);
                                         }
                                         return false;
                                     } else {

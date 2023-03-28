@@ -74,7 +74,8 @@
                             document.getElementById('showres').click();
                             return false;
                         } else {
-                            document.getElementById("errorlargetext").innerHTML = data;
+                            
+                            document.getElementById("errorlargetext").innerHTML = htmlEncode(data);
                             document.getElementById('showerror').click();
                             return false;
                         }

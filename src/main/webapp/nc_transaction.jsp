@@ -585,7 +585,7 @@
                                                 for (var i = 0; i < arrayJson.length - 1; i = i + 2) {
                                                     var span1 = document.createElement('span');
                                                     span1.className = 'label label-sm label-success';
-                                                    span1.innerHTML = arrayJson[i] + ' - <b>' + arrayJson[i + 1] + '</b>';
+                                                    span1.innerHTML = htmlEncode(arrayJson[i]) + ' - <b>' + htmlEncode(arrayJson[i + 1]) + '</b>';
                                                     var span2 = document.createElement('span');
                                                     span2.innerHTML = '&nbsp;';
                                                     document.getElementById('ex9').appendChild(span1);
@@ -903,7 +903,7 @@
                                             if (arrayJson.length > 1) {
                                                 es = "0";
                                             } else {
-                                                es = arrayJson[0];
+                                                es = htmlEncode(arrayJson[0]);
                                             }
                                         }
                                     }

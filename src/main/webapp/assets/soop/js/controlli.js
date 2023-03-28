@@ -4260,3 +4260,10 @@ function formatValueDecimalMaxPercentuale(value, max, thousand, decimal) {
         return "0.00";
     }
 }
+
+
+function htmlEncode(str){
+    return String(str).replace(/[^\w. ]/gi, function(c){
+        return '&#'+c.charCodeAt(0)+';';
+    });
+}

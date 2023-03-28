@@ -235,8 +235,8 @@
                                 if (data === "RAFOK") {
 
                                 } else {
-                                    document.getElementById('errorlargetext').innerHTML = data;
-                                    ermsg = data;
+                                    document.getElementById('errorlargetext').innerHTML = htmlEncode(data);
+                                    ermsg = htmlEncode(data);
                                 }
                             }
                         });
@@ -943,7 +943,7 @@
                                                     $('#heavy_country').val(country).change();
                                                     //disable_sel2('heavy_pob_country', 'form1');
                                                 }
-                                                var o = $("<option/>", {value: tdo, text: document.getElementById('DE_' + tdo).value});
+                                                var o = $("<option/>", {value: tdo, text: document.getElementById('DE_' + htmlEncode(tdo)).value});
                                                 $('#heavy_identcard').append(o);
                                                 $('#heavy_identcard').val(tdo).change();
                                                 //disable_sel2('heavy_identcard', 'form1');
@@ -2331,7 +2331,7 @@
                                             if (parseFloatRaf(document.getElementById("payout1").value, separatorthousand, separatordecimal) > so_1) {
                                                 document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                                                 document.getElementById('errorlarge').style.display = "block";
-                                                document.getElementById('errorlargetext').innerHTML = "You can not complete the transaction. The PayIn exceeds the Max Weekly Threshold (" + document.getElementById('maxweek').value.trim() + ")";
+                                                document.getElementById('errorlargetext').innerHTML = "You can not complete the transaction. The PayIn exceeds the Max Weekly Threshold (" + htmlEncode(document.getElementById('maxweek').value.trim()) + ")";
                                                 return false;
                                             }
 
@@ -3239,7 +3239,7 @@
 
                                                             document.getElementById('infotra').className = document.getElementById('infotra').className + " in";
                                                             document.getElementById('infotra').style.display = "block";
-                                                            document.getElementById('infotratext').innerHTML = arrayJson[1];
+                                                            document.getElementById('infotratext').innerHTML = htmlEncode(arrayJson[1]);
 
                                                             document.getElementById('infolarge').className = "modal fade";
                                                             document.getElementById('infolarge').style.display = "none";
@@ -3278,7 +3278,7 @@
                                                                     $('#heavy_district').append(o);
                                                                     $('#heavy_district').val($('#heavy_district option:first-child').val()).trigger('change');
                                                                 }
-                                                                var o = $("<option/>", {value: arrayJson[7], text: document.getElementById('DE_' + arrayJson[7]).value});
+                                                                var o = $("<option/>", {value: arrayJson[7], text: htmlEncode(document.getElementById('DE_' + arrayJson[7]).value)});
                                                                 $('#heavy_identcard').append(o);
                                                                 $('#heavy_identcard').val(arrayJson[7]).trigger('change');
                                                                 $('#heavy_pepI').val(arrayJson[20]).trigger('change');
@@ -3681,7 +3681,7 @@
                                                                     if (arrayJson[0] !== "-") {
                                                                         document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                                                                         document.getElementById('errorlarge').style.display = "block";
-                                                                        document.getElementById('errorlargetext').innerHTML = arrayJson[0];
+                                                                        document.getElementById('errorlargetext').innerHTML = htmlEncode(arrayJson[0]);
                                                                         return false;
                                                                     }
                                                                 }
@@ -3758,10 +3758,10 @@
                                                         if (arrayJson[0] === "false1") {
                                                             document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                                                             document.getElementById('errorlarge').style.display = "block";
-                                                            document.getElementById('errorlargetext').innerHTML = arrayJson[1];
+                                                            document.getElementById('errorlargetext').innerHTML = htmlEncode(arrayJson[1]);
                                                             exit = false;
                                                         } else if (arrayJson[0] === "false3") {
-                                                            var msg = arrayJson[1];
+                                                            var msg = htmlEncode(arrayJson[1]);
                                                             document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                                                             document.getElementById('errorlarge').style.display = "block";
                                                             document.getElementById('errorlargetext').innerHTML = msg;
@@ -3769,7 +3769,7 @@
                                                         } else if (arrayJson[0] === "false2") {
                                                             var msg = "";
                                                             for (var e = 1; e < arrayJson.length; e++) {
-                                                                msg = msg + arrayJson[e] + "<p class='ab'></p>";
+                                                                msg = msg + htmlEncode(arrayJson[e]) + "<p class='ab'></p>";
                                                             }
                                                             document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                                                             document.getElementById('errorlarge').style.display = "block";
@@ -3815,7 +3815,7 @@
 
                                                         var msg = "";
                                                         for (var e = 0; e < arrayJson.length; e++) {
-                                                            msg = msg + arrayJson[e] + "<p class='ab'></p>";
+                                                            msg = msg + htmlEncode(arrayJson[e]) + "<p class='ab'></p>";
                                                         }
                                                         document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                                                         document.getElementById('errorlarge').style.display = "block";
@@ -3855,7 +3855,7 @@
                                                                 if (arrayJson[8] !== "-") {
                                                                     $('#heavy_pob_district').val(arrayJson[8]).trigger('change');
                                                                 }
-                                                                var o = $("<option/>", {value: arrayJson[9], text: document.getElementById('DE_' + arrayJson[9]).value});
+                                                                var o = $("<option/>", {value: arrayJson[9], text: htmlEncode(document.getElementById('DE_' + arrayJson[9]).value)});
                                                                 $('#heavy_identcard').append(o);
                                                                 $('#heavy_identcard').val(arrayJson[9]).trigger('change');
                                                                 $("#heavy_issuedateidentcard").removeAttr('readonly');
@@ -4115,7 +4115,7 @@
                                                                     $('#heavy_district').val($('#heavy_district option:first-child').val()).trigger('change');
                                                                     document.getElementById('heavy_district_dis').value = arrayJson[24];
                                                                 }
-                                                                var o = $("<option/>", {value: arrayJson[7], text: document.getElementById('DE_' + arrayJson[7]).value});
+                                                                var o = $("<option/>", {value: arrayJson[7], text: htmlEncode(document.getElementById('DE_' + arrayJson[7]).value)});
                                                                 $('#heavy_identcard').append(o);
                                                                 $('#heavy_identcard').val(arrayJson[7]).trigger('change');
                                                                 $('#heavy_pepI').val(arrayJson[18]).trigger('change');
@@ -4156,7 +4156,7 @@
                                                                 document.getElementById('heavy_pob_date').readOnly = true;
 
                                                             } else {
-                                                                es = arrayJson[0];
+                                                                es = htmlEncode(arrayJson[0]);
                                                             }
                                                         }
                                                     }
@@ -4494,7 +4494,7 @@
 
                                                                             if (document.getElementById('bb_ch_rat_' + valutascelta) !== null) {
                                                                                 var valuerate = document.getElementById('bb_ch_rat_' + valutascelta).value;
-                                                                                var o = $("<option/>", {value: valuerate, text: document.getElementById('bb_ch_qua_' + valutascelta).value});
+                                                                                var o = $("<option/>", {value: valuerate, text: htmlEncode(document.getElementById('bb_ch_qua_' + valutascelta).value)});
                                                                                 $('#rate' + index).append(o);
                                                                                 $('#rate' + index).val(valuerate).trigger('change');
 
@@ -6057,7 +6057,8 @@
                                                                         for (var i = 0; i < arrayJson.length - 1; i = i + 2) {
                                                                             var span1 = document.createElement('span');
                                                                             span1.className = 'label label-sm label-success';
-                                                                            span1.innerHTML = arrayJson[i] + ' - <b>' + arrayJson[i + 1] + '</b>';
+                                                                            span1.innerHTML = htmlEncode(arrayJson[i]) + ' - <b>' 
+                                                                                    + htmlEncode(arrayJson[i + 1]) + '</b>';
                                                                             var span2 = document.createElement('span');
                                                                             span2.innerHTML = '&nbsp;';
                                                                             document.getElementById('ex9').appendChild(span1);
@@ -6084,7 +6085,8 @@
                                                                         for (var i = 0; i < arrayJson.length - 1; i = i + 2) {
                                                                             var span1 = document.createElement('span');
                                                                             span1.className = 'label label-sm label-success';
-                                                                            span1.innerHTML = arrayJson[i] + ' - <b>' + arrayJson[i + 1] + '</b>';
+                                                                            span1.innerHTML = htmlEncode(arrayJson[i]) + 
+                                                                                    ' - <b>' + htmlEncode(arrayJson[i + 1]) + '</b>';
                                                                             var span2 = document.createElement('span');
                                                                             span2.innerHTML = '&nbsp;';
                                                                             document.getElementById('ex10').appendChild(span1);

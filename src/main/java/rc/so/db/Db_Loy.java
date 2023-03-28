@@ -79,7 +79,7 @@ public class Db_Loy {
             if (this.c != null) {
                 this.c.close();
             }
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
     }
@@ -91,13 +91,16 @@ public class Db_Loy {
      */
     public String getCodiceCliente_pub(String codloya) {
         try {
-            String sql = "SELECT codcliente FROM mac_associate WHERE RIGHT(codloya,8) = '" + codloya + "'";
-            PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getString(1);
+            String sql = "SELECT codcliente FROM mac_associate WHERE RIGHT(codloya,8) = ?";
+            try ( PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE)) {
+                ps.setString(1, codloya);
+                try ( ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return rs.getString(1);
+                    }
+                }
             }
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return null;
@@ -110,13 +113,16 @@ public class Db_Loy {
      */
     public String getCodiceCliente(String codloya) {
         try {
-            String sql = "SELECT codcliente FROM mac_associate WHERE codloya = '" + codloya + "'";
-            PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getString(1);
+            String sql = "SELECT codcliente FROM mac_associate WHERE codloya = ?";
+            try ( PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE)) {
+                ps.setString(1, codloya);
+                try ( ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return rs.getString(1);
+                    }
+                }
             }
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return null;
@@ -131,15 +137,18 @@ public class Db_Loy {
      */
     public String getCodiceCompleto(String codloya, String stato) {
         try {
-            String sql = "SELECT codice FROM codici WHERE pubblico = '" + codloya + "' AND stato='" + stato + "'";
-            PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getString(1);
+            String sql = "SELECT codice FROM codici WHERE pubblico = ? AND stato = ?";
+            try ( PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE)) {
+                ps.setString(1, codloya);
+                ps.setString(2, stato);
+                try ( ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return rs.getString(1);
+                    }
+                }
             }
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
-
         }
         return null;
     }
@@ -151,14 +160,17 @@ public class Db_Loy {
      */
     public String[] getCodiceCompleto(String codloya) {
         try {
-            String sql = "SELECT codice,stato FROM codici WHERE pubblico = '" + codloya + "'";
-            PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                String[] o = {rs.getString(1), rs.getString(2)};
-                return o;
+            String sql = "SELECT codice,stato FROM codici WHERE pubblico = ?";
+            try ( PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE)) {
+                ps.setString(1, codloya);
+                try ( ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        String[] o = {rs.getString(1), rs.getString(2)};
+                        return o;
+                    }
+                }
             }
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
 
         }
@@ -175,13 +187,14 @@ public class Db_Loy {
     public boolean update_mac_associate(String codcliente, String codloya, String stato) {
         try {
             String upd = "UPDATE mac_associate SET stato = ? WHERE codcliente = ? AND codloya = ?";
-            PreparedStatement ps = this.c.prepareStatement(upd, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-            ps.setString(1, stato);
-            ps.setString(2, codcliente);
-            ps.setString(3, codloya);
-            ps.executeUpdate();
+            try ( PreparedStatement ps = this.c.prepareStatement(upd, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE)) {
+                ps.setString(1, stato);
+                ps.setString(2, codcliente);
+                ps.setString(3, codloya);
+                ps.executeUpdate();
+            }
             return true;
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
 
         }
@@ -197,12 +210,13 @@ public class Db_Loy {
     public boolean update_stato_codici(String codloya, String stato) {
         try {
             String upd = "UPDATE codici SET stato = ? WHERE codice = ?";
-            PreparedStatement ps = this.c.prepareStatement(upd, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-            ps.setString(1, stato);
-            ps.setString(2, codloya);
-            ps.executeUpdate();
+            try ( PreparedStatement ps = this.c.prepareStatement(upd, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE)) {
+                ps.setString(1, stato);
+                ps.setString(2, codloya);
+                ps.executeUpdate();
+            }
             return true;
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
 
         }
@@ -218,13 +232,14 @@ public class Db_Loy {
     public boolean ins_mac_associate(String codcliente, String codloya) {
         try {
             String ins = "INSERT INTO mac_associate (codcliente,codloya,data) VALUES (?,?,?)";
-            PreparedStatement ps = this.c.prepareStatement(ins, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-            ps.setString(1, codcliente);
-            ps.setString(2, codloya);
-            ps.setString(3, new DateTime().toString(patternsqldate));
-            ps.execute();
+            try ( PreparedStatement ps = this.c.prepareStatement(ins, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE)) {
+                ps.setString(1, codcliente);
+                ps.setString(2, codloya);
+                ps.setString(3, new DateTime().toString(patternsqldate));
+                ps.execute();
+            }
             return true;
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
             if (ex.getMessage().contains("Duplicate")) {
                 return update_mac_associate(codcliente, codloya, "1");
@@ -241,14 +256,16 @@ public class Db_Loy {
     public String getCodiceClienteAttivo(String codcliente) {
         try {
             String sql = "SELECT RIGHT(codloya,8) FROM mac_associate WHERE codcliente = ? AND stato = ? ";
-            PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-            ps.setString(1, codcliente);
-            ps.setString(2, "1");
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getString(1);
+            try (PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE)) {
+                ps.setString(1, codcliente);
+                ps.setString(2, "1");
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return rs.getString(1);
+                    }
+                }
             }
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
 
         }
@@ -264,15 +281,17 @@ public class Db_Loy {
         try {
             ArrayList<String[]> str = new ArrayList<>();
             String sql = "SELECT RIGHT(codloya,8),stato FROM mac_associate WHERE codcliente = ? ORDER BY data DESC";
-            PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-            ps.setString(1, codcliente);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                String[] o1 = {rs.getString(1), rs.getString(2)};
-                str.add(o1);
+            try (PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE)) {
+                ps.setString(1, codcliente);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        String[] o1 = {rs.getString(1), rs.getString(2)};
+                        str.add(o1);
+                    }
+                }
             }
             return str;
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
 
         }
@@ -287,13 +306,15 @@ public class Db_Loy {
     public boolean is_firsttransaction_cod(String codloya) {
         try {
             String sql = "select count(*) from mac_associate where codloya = ?";
-            PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-            ps.setString(1, codloya);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) == 1;
+            try (PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE)) {
+                ps.setString(1, codloya);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return rs.getInt(1) == 1;
+                    }
+                }
             }
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return false;
@@ -307,11 +328,13 @@ public class Db_Loy {
     public boolean is_firsttransaction(String codcliente) {
         try {
             String sql = "select count(*) from mac_associate where codcliente = ?";
-            PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-            ps.setString(1, codcliente);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) == 1;
+            try (PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE)) {
+                ps.setString(1, codcliente);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return rs.getInt(1) == 1;
+                    }
+                }
             }
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());

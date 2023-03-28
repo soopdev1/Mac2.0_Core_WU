@@ -622,7 +622,7 @@
                 if (er) {
                     document.getElementById('errorpresent').value = "Y";
                     document.getElementById('finalmodal_title').innerHTML = "Error Handling";
-                    document.getElementById('finalmodal_body').innerHTML = msgerrr;
+                    document.getElementById('finalmodal_body').innerHTML = htmlEncode(msgerrr);
                 } else {
                     document.getElementById('errorpresent').value = "N";
                     document.getElementById('finalmodal_title').innerHTML = "Confirm Close";

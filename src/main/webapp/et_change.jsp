@@ -323,7 +323,6 @@
                                         }
                                     }
 
-                                    //var s_totv = document.getElementById('s_totv' + index).innerHTML.trim();
                                     if (s_quantnow !== "" && s_quantnow !== "0" && s_totnow !== "" &&
                                             s_totnow !== "0" + separatordecimal + "00") {
                                         if ((parseFloatRaf(s_quantold, separatorthousand, separatordecimal) < parseFloatRaf(s_quantnow, separatorthousand, separatordecimal)) || (parseFloatRaf(s_totold, separatorthousand, separatordecimal) < parseFloatRaf(s_totnow, separatorthousand, separatordecimal))) {
@@ -390,8 +389,8 @@
                                                             if (data !== "") {
 
                                                                 var arrayJson = JSON.parse(data);
-                                                                document.getElementById('s_spread' + index).innerHTML = arrayJson[1];
-                                                                document.getElementById('s_buyv' + index).innerHTML = arrayJson[2];
+                                                                document.getElementById('s_spread' + index).innerHTML = htmlEncode(arrayJson[1]);
+                                                                document.getElementById('s_buyv' + index).innerHTML = htmlEncode(arrayJson[2]);
 
                                                                 if (tobranch) {
                                                                     document.getElementById('s_rate' + index).value = arrayJson[3];
@@ -408,7 +407,7 @@
                                                                     if (arrayJson[0] !== "-") {
                                                                         document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                                                                         document.getElementById('errorlarge').style.display = "block";
-                                                                        document.getElementById('errorlargetext').innerHTML = arrayJson[0];
+                                                                        document.getElementById('errorlargetext').innerHTML = htmlEncode(arrayJson[0]);
                                                                         return false;
                                                                     }
                                                                 }
@@ -478,15 +477,15 @@
                                                 success: function (data) {
                                                     if (data !== "") {
                                                         var arrayJson = JSON.parse(data);
-                                                        document.getElementById('s_spread' + index).innerHTML = arrayJson[1];
-                                                        document.getElementById('s_buyv' + index).innerHTML = arrayJson[2];
+                                                        document.getElementById('s_spread' + index).innerHTML = htmlEncode(arrayJson[1]);
+                                                        document.getElementById('s_buyv' + index).innerHTML = htmlEncode(arrayJson[2]);
                                                         s_spread = arrayJson[1];
                                                         if (arrayJson[0] === "OK") {
                                                         } else {
                                                             if (arrayJson[0] !== "-") {
                                                                 document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                                                                 document.getElementById('errorlarge').style.display = "block";
-                                                                document.getElementById('errorlargetext').innerHTML = arrayJson[0];
+                                                                document.getElementById('errorlargetext').innerHTML = htmlEncode(arrayJson[0]);
                                                                 return false;
                                                             }
                                                         }
@@ -700,7 +699,7 @@
                                             msg = "";
                                         } else {
                                             er1 = true;
-                                            msg = data;
+                                            msg = htmlEncode(data);
                                         }
                                     }
                                 });

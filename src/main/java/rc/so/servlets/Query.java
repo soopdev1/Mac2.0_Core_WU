@@ -129,7 +129,7 @@ public class Query extends HttpServlet {
         ArrayList<NC_category> result = db.query_nc_category(kind_1);
         ArrayList<String[]> array_nc_kind = db.nc_kind();
         db.closeDB();
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
@@ -143,7 +143,8 @@ public class Query extends HttpServlet {
                     } else {
                         l1 = "<a href='nc_edit_cat.jsp?view=1&nc_code=" + res.getGruppo_nc() + "' class='btn btn-xs blue btn-outline btn-circle popovers fancyBoxRaf' "
                                 + " container='body' data-trigger='hover' data-container='body' data-placement='top' data-content='View'><i class='fa fa-eye'></i></a>";
-                    }   String l2 = "<a href='nc_category.jsp?kind_1=" + kind_1 + "&search=" + search + "&show=" + search + "&codnc=" + res.getGruppo_nc() + "'" + " class='btn btn-xs blue btn-outline btn-circle popovers' container='body' data-trigger='hover' data-container='body'" + " data-placement='top' data-content='Show Causal'><i class='fa fa-search'></i></a>";
+                    }
+                    String l2 = "<a href='nc_category.jsp?kind_1=" + kind_1 + "&search=" + search + "&show=" + search + "&codnc=" + res.getGruppo_nc() + "'" + " class='btn btn-xs blue btn-outline btn-circle popovers' container='body' data-trigger='hover' data-container='body'" + " data-placement='top' data-content='Show Causal'><i class='fa fa-search'></i></a>";
                     String az = "<div class='btn-group'>" + l1 + l2 + "</div>";
                     String s1 = replace(visualizzaStringaMySQL(res.getDe_gruppo_nc()), "€", "&#0128;");
                     valore = valore + " [ \"" + res.getGruppo_nc() + "\",\""
@@ -177,7 +178,7 @@ public class Query extends HttpServlet {
 
         ArrayList<NC_causal> result = db.query_nc_causal(codnc);
         db.closeDB();
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
@@ -223,22 +224,22 @@ public class Query extends HttpServlet {
         }
 
         db.closeDB();
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
             if (result.size() > 0) {
                 for (int i = 0; i < result.size(); i++) {
                     String[] res = (String[]) result.get(i);
-                    
+
                     String az = "";
                     if (central && tipo.equals("3")) {
                         az = "<a href='tb_edit_city.jsp?cit_code=" + res[0] + "' class='btn btn-sm blue btn-outline btn-circle fancyBoxRaf'><i class='fa fa-wrench'></i> Edit</a>";
                     }
-                    
+
                     valore = valore + " [ \"" + res[0] + "\",\"" + res[1] + "\",\"" + az + "\"],";
                 }
-                
+
                 String x = inizio + valore.substring(0, valore.length() - 1) + fine;
                 out.print(x);
             } else {
@@ -258,7 +259,7 @@ public class Query extends HttpServlet {
         response.setContentType("text/plain; charset=ISO-8859-1");
         response.setCharacterEncoding("ISO-8859-1");
 
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
@@ -271,14 +272,14 @@ public class Query extends HttpServlet {
                     listbranch = listbranch + array_branch.get(j).getCod() + ";";
                 }
             }
-            
+
             ArrayList<Currency> result = db.list_figures_query_edit(listbranch.split(";")[0]);
             if (result.isEmpty()) {
                 result = db.list_figures_query_edit("000");
             }
-            
+
             db.closeDB();
-            
+
             if (result.size() > 0) {
                 for (int i = 0; i < result.size(); i++) {
                     Currency res = (Currency) result.get(i);
@@ -287,7 +288,7 @@ public class Query extends HttpServlet {
                     valore = valore + " [ \"" + res.getCode() + "\",\"" + res.getDescrizione() + "\",\""
                             + formatMysqltoDisplay(res.getCambio_bce()) + "\",\"" + az + "\"],";
                 }
-                
+
                 String x = inizio + valore.substring(0, valore.length() - 1) + fine;
                 out.print(x);
             } else {
@@ -312,7 +313,7 @@ public class Query extends HttpServlet {
         Branch b = db.get_branch(fil[0]);
         ArrayList<Currency> result = db.list_figures_query_edit(fil[0]);
         db.closeDB();
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
@@ -321,9 +322,11 @@ public class Query extends HttpServlet {
             String editce = request.getParameter("editce");
             if (editce == null) {
                 editce = "0";
-            }   if (central) {
+            }
+            if (central) {
                 editce = "1";
-            }   String listbranch = fil[0] + ";";
+            }
+            String listbranch = fil[0] + ";";
             if (editce.equals("1")) {
                 listbranch = request.getParameter("listbranch");
                 if (listbranch == null || listbranch.equals("null")) {
@@ -334,7 +337,8 @@ public class Query extends HttpServlet {
                 }
             } else {
                 branchmodrate = b.getFg_modrate().equals("1");
-            }   if (result.size() > 0) {
+            }
+            if (result.size() > 0) {
                 for (int i = 0; i < result.size(); i++) {
                     Currency res = (Currency) result.get(i);
                     String az;
@@ -356,7 +360,7 @@ public class Query extends HttpServlet {
                     valore = valore + " [ \"" + res.getCode() + "\",\"" + res.getDescrizione() + "\",\""
                             + formatMysqltoDisplay(res.getCambio_bce()) + "\",\"" + az + "\"],";
                 }
-                
+
                 String x = inizio + valore.substring(0, valore.length() - 1) + fine;
                 out.print(x);
             } else {
@@ -384,7 +388,7 @@ public class Query extends HttpServlet {
             tipo = "";
         }
 
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
@@ -396,7 +400,8 @@ public class Query extends HttpServlet {
                         az = "<a href='tb_edit_agency.jsp?view=0&ag_code=" + ck.getAgenzia() + "' class='btn btn-sm btn-outline blue btn-circle fancyBoxRafreload'><i class='fa fa-wrench'></i> Edit</a></li>";
                     } else {
                         az = "<a href='tb_edit_agency.jsp?view=1&ag_code=" + ck.getAgenzia() + "' class='btn btn-sm btn-outline blue btn-circle fancyBoxRaf'><i class='fa fa-eye'></i> View</a></li>";
-                    }   valore = valore + " [ \"" + ck.getAgenzia() + "\",\"" + ck.getDe_agenzia() + "\",\"" + formatStatus_general(ck.getFg_annullato()) + "\",\"" + az + "\"],";
+                    }
+                    valore = valore + " [ \"" + ck.getAgenzia() + "\",\"" + ck.getDe_agenzia() + "\",\"" + formatStatus_general(ck.getFg_annullato()) + "\",\"" + az + "\"],";
                 }
                 String x = inizio + valore.substring(0, valore.length() - 1) + fine;
                 out.print(x);
@@ -425,7 +430,7 @@ public class Query extends HttpServlet {
         }
 
         db.closeDB();
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
@@ -438,11 +443,13 @@ public class Query extends HttpServlet {
                         link2 = "<li><a href='tb_edit_company.jsp?view=0&co_code=" + ck.getNdg() + "' class='fancyBoxRafreload'><i class='fa fa-wrench'></i> Edit </a></li>";
                     } else {
                         link2 = "<li><a href='tb_edit_company.jsp?view=1&co_code=" + ck.getNdg() + "' class='fancyBoxRaf'><i class='fa fa-eye'></i> View </a></li>";
-                        
-                    }   String link3 = "";
+
+                    }
+                    String link3 = "";
                     if (listAgent.size() < 2 && central && tipo.equals("3")) {
                         link3 = "<li><a href='tb_edit_agent.jsp?co_code=" + ck.getNdg() + "' class='fancyBoxRafreload'><i class='fa fa-plus'></i> Add Agent </a></li>";
-                    }   String az = "<div class='btn-group'><a class='btn btn-sm blue btn-outline btn-circle' href='javascript:;' data-toggle='dropdown' ><i class='fa fa-wrench'></i></a><ul class='dropdown-menu' data-content='body'>" + link2 + link3 + "</ul></div>";
+                    }
+                    String az = "<div class='btn-group'><a class='btn btn-sm blue btn-outline btn-circle' href='javascript:;' data-toggle='dropdown' ><i class='fa fa-wrench'></i></a><ul class='dropdown-menu' data-content='body'>" + link2 + link3 + "</ul></div>";
                     valore = valore + " [ \"" + ck.getNdg() + "\",\"" + ck.getRagione_sociale() + "\",\"" + formatStatus_general(ck.getFg_annullato()) + "\",\"" + az + "\"],";
                 }
                 String x = inizio + valore.substring(0, valore.length() - 1) + fine;
@@ -461,10 +468,9 @@ public class Query extends HttpServlet {
      * @throws IOException
      */
     protected void query_et_list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         Utility.printRequest(request);
-        
-        
+
         response.setContentType("text/plain; charset=ISO-8859-1");
         response.setCharacterEncoding("ISO-8859-1");
         String typeop = request.getParameter("typeop");
@@ -483,7 +489,7 @@ public class Query extends HttpServlet {
         }
         ArrayList<ET_change> result = db.query_et(typeop, d1, d2, branch);
         db.closeDB();
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
@@ -530,38 +536,43 @@ public class Query extends HttpServlet {
                                     + "data-placement='top' data-content='Delete'><i class='fa fa-trash font-grey-silver'></i></a></div>";
                         }
                     } else if (res.getFg_brba().equals("BR")) {
-                        
+
                         if (!activefr || res.getFg_annullato().equals("1") || res.getFg_tofrom().equals("F")) {
                             link_3 = "<div class='col-md-3'><a disabled "
                                     + "class='btn btn-sm btn-circle white btn btn-icon-only popovers' container='body' data-trigger='hover' data-container='body' "
                                     + "data-placement='top' data-content='Delete'><i class='fa fa-trash font-grey-silver'></i></a></div>";
                         }
-                    }   String auto = "";
+                    }
+                    String auto = "";
                     if (!res.getAuto().equals("A")) {
                         auto = " <a href='*.jsp' class='font-red bold popovers fancyBoxRaf' "
                                 + "container='body' data-trigger='hover' data-container='body' "
                                 + "data-placement='top' data-content='Information' "
                                 + "style='text-decoration:none;'>&nbsp;&nbspM&nbsp;&nbsp</a>";
-                        
-                    }   if (res.getFg_tofrom().equals("T")) {
+
+                    }
+                    if (res.getFg_tofrom().equals("T")) {
                         if (complete.contains(res.getCod_in()) || complete.contains(res.getCod())) {
                             link_3 = "<div class='col-md-3'><a disabled "
                                     + "class='btn btn-sm btn-circle btn btn-icon-only white popovers' container='body' data-trigger='hover' data-container='body' "
                                     + "data-placement='top' data-content='Delete'><i class='fa fa-trash font-grey-silver'></i></a></div>";
                         }
-                    }   boolean isCentral = isCentral();
+                    }
+                    boolean isCentral = isCentral();
                     String tipologia = format_tofrom_brba(res.getFg_tofrom(), res.getFg_brba(), res.getCod_dest(), array_credit_card);
                     if (isCentral) {
                         link_3 = "<div class='col-md-3'><a disabled "
                                 + "class='btn btn-sm btn-circle btn btn-icon-only white popovers' container='body' data-trigger='hover' data-container='body' "
                                 + "data-placement='top' data-content='Delete'><i class='fa fa-trash font-grey-silver'></i></a></div>";
-                    }   String total;
+                    }
+                    String total;
                     if (typeop.equals("CH")) {
                         double t1 = 0.00;
                         ArrayList<ET_change> val = get_ET_change_value(res.getCod());
                         for (int x = 0; x < val.size(); x++) {
                             t1 += fd(val.get(x).getIp_total());
-                        }   total = formatMysqltoDisplay(roundDoubleandFormat(t1, 2));
+                        }
+                        total = formatMysqltoDisplay(roundDoubleandFormat(t1, 2));
                     } else {
                         double t1 = 0.00;
                         ArrayList<ET_change> val = get_ET_nochange_value(res.getCod());
@@ -576,34 +587,34 @@ public class Query extends HttpServlet {
                     }
                     //VERIFica NUOVA
 //                if (Constant.newpread) {
-boolean branchauto = res.getFg_brba().equals("BR")
-        && res.getAuto().equals("A");
-if (branchauto
-        || isCentral
-        || tipologia.contains("POS")
-        || typeop.equals("NC")
-        || res.getFg_annullato().equals("1")) {
-    link_4 = "<div class='col-md-3'>"
-            + "<a disabled class='btn btn-icon-only btn-sm btn-circle white popovers' "
-            + "container='body' data-trigger='hover' data-container='body' "
-            + "data-placement='top' data-content='Change Rate'><i class='fa fa-asterisk font-grey-silver'></i></a>"
-            + "</div>";
-} else {
-    link_4 = "<div class='col-md-3'>"
-            + "<a href='error_rate.jsp?code=" + res.getCod()
-            + "' class='btn btn-sm btn-circle white btn btn-icon-only popovers fancyBoxRafreload' "
-            + "container='body' data-trigger='hover' data-container='body' "
-            + "data-placement='top' data-content='Change Rate'><i class='fa fa-asterisk'></i></a>"
-            + "</div>";
-}
+                    boolean branchauto = res.getFg_brba().equals("BR")
+                            && res.getAuto().equals("A");
+                    if (branchauto
+                            || isCentral
+                            || tipologia.contains("POS")
+                            || typeop.equals("NC")
+                            || res.getFg_annullato().equals("1")) {
+                        link_4 = "<div class='col-md-3'>"
+                                + "<a disabled class='btn btn-icon-only btn-sm btn-circle white popovers' "
+                                + "container='body' data-trigger='hover' data-container='body' "
+                                + "data-placement='top' data-content='Change Rate'><i class='fa fa-asterisk font-grey-silver'></i></a>"
+                                + "</div>";
+                    } else {
+                        link_4 = "<div class='col-md-3'>"
+                                + "<a href='error_rate.jsp?code=" + res.getCod()
+                                + "' class='btn btn-sm btn-circle white btn btn-icon-only popovers fancyBoxRafreload' "
+                                + "container='body' data-trigger='hover' data-container='body' "
+                                + "data-placement='top' data-content='Change Rate'><i class='fa fa-asterisk'></i></a>"
+                                + "</div>";
+                    }
 //                }
-String az = "<div='btn-group pull-left'>" + link_1 + link_2 + "<div class='clearfix'></div>" + link_3 + link_4 + "</div>";
-valore = valore
-        + " [ \""
-        + az
-        + "\",\"" + res.getFiliale()
-        + "\",\"" + res.getId()
-        + "\",\"" + formatStringtoStringDate(res.getDt_it(), patternsqldate, patternnormdate) + "\",\"" + res.getUser() + auto + "\",\"" + tipologia + "\",\"" + res.getCod_dest() + "\",\"" + total + "\",\"" + dt_del + "\",\"" + res.formatStatus(res.getFg_annullato()) + "\"],";
+                    String az = "<div='btn-group pull-left'>" + link_1 + link_2 + "<div class='clearfix'></div>" + link_3 + link_4 + "</div>";
+                    valore = valore
+                            + " [ \""
+                            + az
+                            + "\",\"" + res.getFiliale()
+                            + "\",\"" + res.getId()
+                            + "\",\"" + formatStringtoStringDate(res.getDt_it(), patternsqldate, patternnormdate) + "\",\"" + res.getUser() + auto + "\",\"" + tipologia + "\",\"" + res.getCod_dest() + "\",\"" + total + "\",\"" + dt_del + "\",\"" + res.formatStatus(res.getFg_annullato()) + "\"],";
                 }
                 String x = inizio + valore.substring(0, valore.length() - 1) + fine;
                 out.print(x);
@@ -634,7 +645,7 @@ valore = valore
         ArrayList<Openclose> result = db.query_oc(till, d1, d2, branch);
         db.closeDB();
 
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
@@ -684,7 +695,7 @@ valore = valore
         ArrayList<IT_change> result = db.query_it(typeop, d1, d2, branch);
         String oggi = db.curdate();
         db.closeDB();
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
@@ -706,14 +717,14 @@ valore = valore
                     } else {
                         boolean activefr = false;
                         boolean activeto = false;
-                        
+
                         for (int j = 0; j < array_till.size(); j++) {
                             if (array_till.get(j).getId_opcl().equals(res.getIdopen_from())) {
                                 activefr = true;
                                 break;
                             }
                         }
-                        
+
                         for (int j = 0; j < array_till.size(); j++) {
                             if (array_till.get(j).getId_opcl().equals(res.getIdopen_to())) {
                                 activeto = true;
@@ -721,7 +732,7 @@ valore = valore
                             }
                         }
                         if (activefr && activeto) {
-                            
+
                         } else {
                             link2 = "<div class='col-md-4'><a disabled "
                                     + "class='btn btn-sm btn-circle white popovers' container='body' data-trigger='hover' data-container='body' "
@@ -739,10 +750,12 @@ valore = valore
                     Openclose oc_fr = db2.query_oc(res.getIdopen_from());
                     if (oc_fr != null) {
                         fr = oc_fr.getId();
-                    }   Openclose oc_to = db2.query_oc(res.getIdopen_to());
+                    }
+                    Openclose oc_to = db2.query_oc(res.getIdopen_to());
                     if (oc_to != null) {
                         to = oc_to.getId();
-                    }   db2.closeDB();
+                    }
+                    db2.closeDB();
                     boolean isCentral = isCentral();
                     if (isCentral) {
                         link2 = "<div class='col-md-4'><a disabled "
@@ -755,7 +768,8 @@ valore = valore
                                     + "data-placement='top' data-content='Delete'>"
                                     + "<i class='fa fa-trash'></i></a></div";
                         }
-                    }   String az = "<div class='btn-group'>" + link1 + link2 + "</div>";
+                    }
+                    String az = "<div class='btn-group'>" + link1 + link2 + "</div>";
                     valore = valore
                             + " [ \"" + az
                             + "\",\"" + res.getFiliale()
@@ -804,21 +818,22 @@ valore = valore
         db.closeDB();
 
         try (//        Db_Master db1 = new Db_Master();
-//        String base64 = Pdf.pdf_transactionList(new File(db1.getPath("temp") + pdf), result);
-//        db1.closeDB();
-//        if (base64 != null) {
-//            Db_Master db2 = new Db_Master();
-//            db2.insert_pdf_temp(pdf, base64);
-//            db2.closeDB();
-//        }
-                PrintWriter out = response.getWriter()) {
+                //        String base64 = Pdf.pdf_transactionList(new File(db1.getPath("temp") + pdf), result);
+                //        db1.closeDB();
+                //        if (base64 != null) {
+                //            Db_Master db2 = new Db_Master();
+                //            db2.insert_pdf_temp(pdf, base64);
+                //            db2.closeDB();
+                //        }
+                 PrintWriter out = response.getWriter()) {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
             boolean cruscottovisibile = false; // inserire controllo su utente abilitato
             if (filiale.equals("000")) {
                 cruscottovisibile = userkyc.contains(request.getSession().getAttribute("us_user").toString());
-            }   boolean iscentral = isCentral();
+            }
+            boolean iscentral = isCentral();
             Db_Master db2 = new Db_Master();
             if (result.size() > 0) {
                 for (int i = 0; i < result.size(); i++) {
@@ -837,13 +852,15 @@ valore = valore
                     if (res.getRefund().equals("1")) {
                         claref = "font-red";
                         refunded = true;
-                    }   String link2a = "<div class='col-md-3'><a href='transaction_ref.jsp?code=" + res.getCod() + "'  onclick='return controllatilloccupato();'class='btn btn-sm white popovers "
+                    }
+                    String link2a = "<div class='col-md-3'><a href='transaction_ref.jsp?code=" + res.getCod() + "'  onclick='return controllatilloccupato();'class='btn btn-sm white popovers "
                             + claref + " fancyBoxRafreload' container='body' data-trigger='hover' data-container='body' data-placement='top' data-content='Refund'>"
                             + "<i class='fa fa-history'></i></a></div>";
                     String link2b = "<a href='transaction_ref_branch.jsp?code=" + res.getCod() + "'  onclick='return controllatilloccupato();' class='btn btn-sm white popovers' target='_blank' container='body' data-trigger='hover' data-container='body' data-placement='top' data-content='Refund Branch'><i class='fa fa-user'></i></a>";
                     if (db2.getC() == null) {
                         db2 = new Db_Master();
-                    }   Ch_transaction_refund ref = db2.get_refund_trans(res.getCod());
+                    }
+                    Ch_transaction_refund ref = db2.get_refund_trans(res.getCod());
                     if (res.getRefund().equals("1")) {
                         if (ref != null) {
                             if (ref.getStatus().equals("1")) {
@@ -854,17 +871,19 @@ valore = valore
                                         + "data-content='Refunded'><i class='fa fa-user'></i></a>";
                                 visualizzacentrale = true;
                             } else {
-                                
+
                                 link2b = "<a href='transaction_ref_branch.jsp?code=" + res.getCod() + "' onclick='return controllatilloccupato();' "
                                         + "class='btn btn-sm white popovers font-red' "
                                         + "target='_blank' container='body' data-trigger='hover' data-container='body' data-placement='top' "
                                         + "data-content='Refund Branch Authorized from Head Office'><i class='fa fa-user'></i></a>";
                             }
                         }
-                    }   if (deleted) {
+                    }
+                    if (deleted) {
                         link2a = "";
                         link2b = "";
-                    }   String modificasupporto = "<div class='col-md-3'>"
+                    }
+                    String modificasupporto = "<div class='col-md-3'>"
                             + "<a href='fancy_editpaym.jsp?code=" + res.getCod() + "' "
                             + "class='btn btn-sm white popovers fancyBoxRafreload' "
                             + "data-container='body' data-trigger='hover' "
@@ -873,14 +892,15 @@ valore = valore
                     //                String link1 = "<div class='col-md-3'><a href='transaction_view.jsp?cod=" + res.getCod() + "' target='_blank' "
 //                        + "class='btn btn-sm white popovers' container='body' data-trigger='hover' data-container='body' "
 //                        + "data-placement='top' data-content='Show'><i class='fa fa-eye'></i></a></div>";
-String link3 = "<div class='col-md-3'><a href='fancy_deltr.jsp?code=" + res.getCod() + "' "
-        + "class='btn btn-sm white popovers fancyBoxRafreload' container='body' data-trigger='hover' data-container='body' "
-        + "data-placement='top' data-content='Delete'><i class='fa fa-trash' onclick='return controllatilloccupato();'></i></a></div>";
-if (!res.getFa_number().equals("-")) {
-    link3 = "<div class='col-md-3'><a href='fancy_deltr_cn.jsp?code=" + res.getCod() + "' "
-            + "class='btn btn-sm white popovers font-blue' container='body' data-trigger='hover' data-container='body' target='_blank' "
-            + "data-placement='top' data-content='Delete' onclick='return controllatilloccupato();'><i class='fa fa-trash'></i></a></div>";
-}   String dt_del = "";
+                    String link3 = "<div class='col-md-3'><a href='fancy_deltr.jsp?code=" + res.getCod() + "' "
+                            + "class='btn btn-sm white popovers fancyBoxRafreload' container='body' data-trigger='hover' data-container='body' "
+                            + "data-placement='top' data-content='Delete'><i class='fa fa-trash' onclick='return controllatilloccupato();'></i></a></div>";
+                    if (!res.getFa_number().equals("-")) {
+                        link3 = "<div class='col-md-3'><a href='fancy_deltr_cn.jsp?code=" + res.getCod() + "' "
+                                + "class='btn btn-sm white popovers font-blue' container='body' data-trigger='hover' data-container='body' target='_blank' "
+                                + "data-placement='top' data-content='Delete' onclick='return controllatilloccupato();'><i class='fa fa-trash'></i></a></div>";
+                    }
+                    String dt_del = "";
                     if (res.getDel_fg().equals("1") || refunded) {
                         if (res.getDel_fg().equals("1")) {
                             dt_del = formatStringtoStringDate(res.getDel_dt().split("\\.")[0], "yyyy-MM-dd HH:mm:ss", "dd/MM/yyyy HH:mm:ss");
@@ -892,7 +912,8 @@ if (!res.getFa_number().equals("-")) {
                         boolean activefr = false;
                         if (db2.getC() == null) {
                             db2 = new Db_Master();
-                        }   ArrayList<Till> array_till = db2.list_till_status("O", user, res.getFiliale());
+                        }
+                        ArrayList<Till> array_till = db2.list_till_status("O", user, res.getFiliale());
 //                    ArrayList<Till> array_till = db2.list_till_status("O", null, res.getFiliale());
                         for (int j = 0; j < array_till.size(); j++) {
                             if (array_till.get(j).getId_opcl().equals(res.getId_open_till())) {
@@ -913,7 +934,8 @@ if (!res.getFa_number().equals("-")) {
                     String ib = "";
                     if (res.getIntbook().equals("1")) {
                         ib = "<span class='font-green-soft ital'><small>&nbsp;&nbsp;<i class='fa fa-italic'></i><i class='fa fa-bold'></i></small></span>";
-                    }   if (db2.getC() == null) {
+                    }
+                    if (db2.getC() == null) {
                         db2 = new Db_Master();
                     }   //Client cl = db2.query_Client(res.getCl_cod());
                     Client cl = db2.query_Client_transaction(res.getCod(), res.getCl_cod());
@@ -922,42 +944,46 @@ if (!res.getFa_number().equals("-")) {
 //                if (oc != null) {
 //                    idoc = oc.getId();
 //                }
-if (iscentral) {
-    link3 = "<div class='col-md-3'><button class='btn btn-sm white popovers' container='body' data-trigger='hover' data-container='body' data-placement='top' data-content='Delete'><i class='fa fa-trash font-grey-silver'></i></button></div>";
-    link2b = "";
-    modificasupporto = "";
-} else {
-    link2a = "";
-}   if (attivo) {
-    link2b = "";
-    link2a = "";
-}   if (visualizzacentrale) {
-    link2b = "<a href='transaction_ref_branch.jsp?code=" + res.getCod() + "' "
-            + "class='btn btn-sm white popovers font-green-jungle fancyBoxRaf' "
-            + "container='body' data-trigger='hover' data-container='body' data-placement='top' "
-            + "data-content='Refunded'><i class='fa fa-user'></i></a>";
-}   String ca = "";
-String pos = res.getPos();
-if (res.getTipotr().equals("B")) {
-    ArrayList<Ch_transaction_value> va  = db2.query_transaction_value(res.getCod());
-    for (int f = 0; f < va.size(); f++) {
-        if (va.get(f).getSupporto().equals("04")) {
-            pos = va.get(f).getPos();
-            ca = "<span class='font-dark ital'><b> <u>CA</u> </b></span>";
-            break;
-        }
-    }
-    
-    if (ca.equals("")) {
-        modificasupporto = "";
-    }
-    
-}   String link5 = "";
-if (cruscottovisibile) {
-    link5 = "<div class='col-md-3'><a href='kyc_mod.jsp?cod=" + res.getCod() + "' target='_blank' class='btn btn-sm white popovers' container='body' "
-            + "data-trigger='hover' data-container='body' data-placement='top' data-content='Edit KYC'>"
-            + "<i class='fa fa-edit'></i></a></div>";
-}   //link1  - VIEW TRANSACTION
+                    if (iscentral) {
+                        link3 = "<div class='col-md-3'><button class='btn btn-sm white popovers' container='body' data-trigger='hover' data-container='body' data-placement='top' data-content='Delete'><i class='fa fa-trash font-grey-silver'></i></button></div>";
+                        link2b = "";
+                        modificasupporto = "";
+                    } else {
+                        link2a = "";
+                    }
+                    if (attivo) {
+                        link2b = "";
+                        link2a = "";
+                    }
+                    if (visualizzacentrale) {
+                        link2b = "<a href='transaction_ref_branch.jsp?code=" + res.getCod() + "' "
+                                + "class='btn btn-sm white popovers font-green-jungle fancyBoxRaf' "
+                                + "container='body' data-trigger='hover' data-container='body' data-placement='top' "
+                                + "data-content='Refunded'><i class='fa fa-user'></i></a>";
+                    }
+                    String ca = "";
+                    String pos = res.getPos();
+                    if (res.getTipotr().equals("B")) {
+                        ArrayList<Ch_transaction_value> va  = db2.query_transaction_value(res.getCod());
+                        for (int f = 0; f < va.size(); f++) {
+                            if (va.get(f).getSupporto().equals("04")) {
+                                pos = va.get(f).getPos();
+                                ca = "<span class='font-dark ital'><b> <u>CA</u> </b></span>";
+                                break;
+                            }
+                        }
+
+                        if (ca.equals("")) {
+                            modificasupporto = "";
+                        }
+
+                    }
+                    String link5 = "";
+                    if (cruscottovisibile) {
+                        link5 = "<div class='col-md-3'><a href='kyc_mod.jsp?cod=" + res.getCod() + "' target='_blank' class='btn btn-sm white popovers' container='body' "
+                                + "data-trigger='hover' data-container='body' data-placement='top' data-content='Edit KYC'>"
+                                + "<i class='fa fa-edit'></i></a></div>";
+                    }   //link1  - VIEW TRANSACTION
                     //link2  - REPRINT
                     //link2a - REFUND DA CENTRALE (AUTORIZZAZIONE)
                     //link3  - DELETE
@@ -968,7 +994,8 @@ if (cruscottovisibile) {
                     }
                     if (res.getIntbook_type().equals("1")) { //SELL CON TAX FREE NON SI PUO' CAMBIARE
                         modificasupporto = "";
-                    }   if (res.getPos().equals("999")) {
+                    }
+                    if (res.getPos().equals("999")) {
                         modificasupporto = "";
                     }   //                descr = Engine.formatBankBranchReport(oc.getCod_dest(), "BA", array_bank, null);
                     String az = "<div class='btn-group'>" + link1 + link2 + "<div class='clearfix'></div>" + link2a + link3 + "</div><div class='clearfix'></div>" + link5 + modificasupporto + "</div>";
@@ -1052,7 +1079,7 @@ if (cruscottovisibile) {
         db.closeDB();
 
         boolean iscentral = isCentral();
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
@@ -1106,19 +1133,20 @@ if (cruscottovisibile) {
 //                if (oc != null) {
 //                    idoc = oc.getId();
 //                }
-NC_causal nccaus = getNC_causal(array_nc_caus, res.getCausale_nc(), res.getGruppo_nc());
-boolean ext = nccaus.getPaymat().equals("1");
-boolean uscitacass = nccaus.getFg_in_out().equals("2") || nccaus.getFg_in_out().equals("4");
+                    NC_causal nccaus = getNC_causal(array_nc_caus, res.getCausale_nc(), res.getGruppo_nc());
+                    boolean ext = nccaus.getPaymat().equals("1");
+                    boolean uscitacass = nccaus.getFg_in_out().equals("2") || nccaus.getFg_in_out().equals("4");
 //                boolean ext = causal_paymat_enabled.contains(res.getCausale_nc());
-if (iscentral || ext || !res.getCh_transaction().equals("-")) {
-    link3 = "";
+                    if (iscentral || ext || !res.getCh_transaction().equals("-")) {
+                        link3 = "";
 //                    modificasupporto = "";
-}   if (uscitacass) {
-    modificasupporto = "";
-}   //                
-String q1 = formatMysqltoDisplay(roundDoubleandFormat(fd(res.getQuantita()), 0));
-String p1 = formatMysqltoDisplay(res.getPrezzo());
-String f1 = formatMysqltoDisplay("0.00");
+                    }
+                    if (uscitacass) {
+                        modificasupporto = "";
+                    }   //                
+                    String q1 = formatMysqltoDisplay(roundDoubleandFormat(fd(res.getQuantita()), 0));
+                    String p1 = formatMysqltoDisplay(res.getPrezzo());
+                    String f1 = formatMysqltoDisplay("0.00");
                     switch (res.getFg_tipo_transazione_nc()) {
                         case "1":
                             q1 = "1";
@@ -1135,7 +1163,8 @@ String f1 = formatMysqltoDisplay("0.00");
                                 comm = res.getCommissione();
                             } else {
                                 comm = res.getTi_ticket_fee();
-                            }       f1 = formatMysqltoDisplay(comm);
+                            }
+                            f1 = formatMysqltoDisplay(comm);
                             break;
                         default:
                             break;
@@ -1181,18 +1210,18 @@ String f1 = formatMysqltoDisplay("0.00");
 
         ArrayList<Users> result = user_kyc();
 
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
             if (result.size() > 0) {
                 for (int i = 0; i < result.size(); i++) {
                     Users us = (Users) result.get(i);
-                    
+
                     String az = "<a href='tb_edit_users_kyc.jsp?us_code=" + us.getCod() + "' "
                             + "class='btn btn-sm blue btn-outline btn-circle fancyBoxRafreload'> "
                             + "<i class='fa fa-edit'></i> Edit </a>";
-                    
+
                     valore = valore + " [ \"" + us.getCod()
                             + "\",\"" + formatUTFtoLatin(visualizzaStringaMySQL(us.getUsername()))
                             + "\",\"" + formatUTFtoLatin(visualizzaStringaMySQL(us.getDe_cognome()))
@@ -1201,7 +1230,7 @@ String f1 = formatMysqltoDisplay("0.00");
                             + "\",\"" + us.formatStatususer(us.getFg_stato())
                             + "\",\"" + az + "\"],";
                 }
-                
+
                 String x = inizio + valore.substring(0, valore.length() - 1) + fine;
                 out.print(x);
             } else {
@@ -1234,7 +1263,7 @@ String f1 = formatMysqltoDisplay("0.00");
         }
 
         db.closeDB();
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
@@ -1247,7 +1276,8 @@ String f1 = formatMysqltoDisplay("0.00");
                     } else {
                         az = "<a href='tb_edit_users.jsp?fil=" + filiale + "&view=1&us_code=" + us.getCod() + "' "
                                 + "class='btn btn-sm blue btn-outline btn-circle fancyBoxRaf'><i class='fa fa-eye'></i> View </a>";
-                    }   valore = valore + " [ \""
+                    }
+                    valore = valore + " [ \""
                             + us.getCod() + "\",\"" + formatUTFtoLatin(visualizzaStringaMySQL(us.getUsername())) + "\",\"" + formatUTFtoLatin(visualizzaStringaMySQL(us.getDe_cognome())) + "\",\"" + formatUTFtoLatin(visualizzaStringaMySQL(us.getDe_nome())) + "\",\"" + us.formatTypeuser(us.getFg_tipo()) + "\",\"" + us.formatStatususer(us.getFg_stato()) + "\",\"" + az + "\"],";
                 }
                 String x = inizio + valore.substring(0, valore.length() - 1) + fine;
@@ -1279,7 +1309,7 @@ String f1 = formatMysqltoDisplay("0.00");
         Db_Master db = new Db_Master();
         ArrayList<Newsletters> result = db.query_newsletters(user, status);
         db.closeDB();
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
@@ -1315,7 +1345,7 @@ String f1 = formatMysqltoDisplay("0.00");
 //        String user = (String) request.getSession().getAttribute("us_cod");
 
         String err;
-        String q = request.getParameter("q");
+        String q = Utility.safeRequest(request, "q");
         Db_Loy dbl = new Db_Loy();
         //String completo = dbl.getCodiceCompleto(q, "1");
         String completo[] = dbl.getCodiceCompleto(q);
@@ -1342,7 +1372,7 @@ String f1 = formatMysqltoDisplay("0.00");
             }
         }
         dbl.closeDB();
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             out.print(err);
         }
     }
@@ -1358,7 +1388,7 @@ String f1 = formatMysqltoDisplay("0.00");
         response.setContentType("text/plain; charset=ISO-8859-1");
         response.setCharacterEncoding("ISO-8859-1");
         String err = "0";
-        String q = request.getParameter("q");
+        String q = Utility.safeRequest(request, "q");
         Db_Loy dbl = new Db_Loy();
         String completo[] = dbl.getCodiceCompleto(q);
         Gson gson = new Gson();
@@ -1428,7 +1458,7 @@ String f1 = formatMysqltoDisplay("0.00");
             }
         }
         dbl.closeDB();
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             if (err.equals("0")) {
                 out.print(JSONRequest);
             } else {
@@ -1455,7 +1485,7 @@ String f1 = formatMysqltoDisplay("0.00");
         Db_Master db = new Db_Master();
         ArrayList<Newsletters> result = db.query_newsletters();
         db.closeDB();
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
@@ -1495,7 +1525,7 @@ String f1 = formatMysqltoDisplay("0.00");
         ArrayList<String[]> result = db.city_Italy();
         db.closeDB();
         String q = request.getParameter("q");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             if (result.size() > 0) {
                 Gson gson = new Gson();
                 ArrayList<String> JSONRequest = new ArrayList<>();
@@ -1534,7 +1564,7 @@ String f1 = formatMysqltoDisplay("0.00");
 //        ArrayList<String[]> result = db.city_Italy();
         String result = db.city_Italy(q);
         db.closeDB();
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"items\": [ ";
             String fine = "]}";
             if (result == null) {
@@ -1568,7 +1598,7 @@ String f1 = formatMysqltoDisplay("0.00");
         ArrayList<String[]> result = db.city_Italy();
         db.closeDB();
         String q = request.getParameter("q");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"items\": [ ";
             String fine = "]}";
             if (result.size() > 0) {
@@ -1597,7 +1627,7 @@ String f1 = formatMysqltoDisplay("0.00");
         ArrayList<String[]> result = db.city_Italy();
         db.closeDB();
         String q = request.getParameter("q");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"items\": [ ";
             String fine = "]}";
             if (result.size() > 0) {
@@ -1710,7 +1740,7 @@ String f1 = formatMysqltoDisplay("0.00");
             }
         }
 
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             out.print(Boolean.valueOf(ok));
         }
 
@@ -1749,7 +1779,7 @@ String f1 = formatMysqltoDisplay("0.00");
             ok = false;
         }
 
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             out.print(Boolean.valueOf(ok));
         }
     }
@@ -1801,7 +1831,7 @@ String f1 = formatMysqltoDisplay("0.00");
                 ok = false;
             }
         }
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             out.print(ok);
         }
 
@@ -2292,7 +2322,7 @@ String f1 = formatMysqltoDisplay("0.00");
         ArrayList<String[]> result = db.country_cf();
         db.closeDB();
         String q = request.getParameter("q");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"items\": [ ";
             String fine = "]}";
             if (result.size() > 0) {
@@ -2324,13 +2354,13 @@ String f1 = formatMysqltoDisplay("0.00");
 //        ArrayList<String[]> result = db.city_Italy_APM();
         ArrayList<City> result = db.query_city_Italy(q);
         db.closeDB();
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"items\": [ ";
             String fine = "]}";
             String valore = "";
             if (result.size() > 0) {
                 for (int i = 0; i < result.size(); i++) {
-                    
+
 //                boolean presente;
 //
 //                if (Constant.tr_1323) {
@@ -2346,11 +2376,11 @@ String f1 = formatMysqltoDisplay("0.00");
 //                            + "      \"full_name\": \"" + result.get(i)[1] + "\""
 //                            + "},";
 //                }
-valore = valore + "{"
-        + "      \"id\": \"" + result.get(i).getCodice_avv_bancario() + "\","
-        + "      \"name\": \"" + result.get(i).getDenominazione() + "\","
-        + "      \"full_name\": \"" + result.get(i).getDenominazione() + "\""
-        + "},";
+                    valore = valore + "{"
+                            + "      \"id\": \"" + result.get(i).getCodice_avv_bancario() + "\","
+                            + "      \"name\": \"" + result.get(i).getDenominazione() + "\","
+                            + "      \"full_name\": \"" + result.get(i).getDenominazione() + "\""
+                            + "},";
 
                 }
                 String x = inizio + valore.substring(0, valore.length() - 1) + fine;
@@ -2374,7 +2404,7 @@ valore = valore + "{"
         ArrayList<String[]> result = db.district();
         db.closeDB();
         String q = request.getParameter("q");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"items\": [ ";
             String fine = "]}";
             String valore = "";
@@ -2426,7 +2456,7 @@ valore = valore + "{"
         Office of = db.get_national_office();
         ArrayList<Ch_transaction_doc> result = db.query_kyc_list(data1, data2, cl_cog, cl_na, branch);
         db.closeDB();
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
@@ -2510,7 +2540,7 @@ valore = valore + "{"
         ArrayList<Currency> cu = db.list_figures();
         String curdate = db.getCurdateDT().toString(patternsql);
         db.closeDB();
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
@@ -2524,25 +2554,25 @@ valore = valore + "{"
 //                String link2 = "<div class='col-md-4'>"
 //                        + "<a class='btn btn-sm btn-circle white popovers' container='body' data-trigger='hover' "
 //                        + "data-container='body' data-placement='top' data-content='Edit' disabled><i class='fa fa-wrench'></i></a></div>";
-String link3 = "";
+                    String link3 = "";
 //                String link3 = "<div class='col-md-4'>"
 //                        + "<a disabled class='btn btn-sm btn-circle white popovers' container='body' data-trigger='hover' "
 //                        + "data-container='body' data-placement='top' data-content='Sell'><i class='fa fa-exchange'></i></1>"
 //                        + "</div>";
-if ((bo.getStato().equals("0") || bo.getStato().equals("3")) && attuale.getCod().equals(bo.getFiliale())) {
+                    if ((bo.getStato().equals("0") || bo.getStato().equals("3")) && attuale.getCod().equals(bo.getFiliale())) {
 //                if (bo.getStato().equals("0") && attuale.getCod().equals(bo.getFiliale()) && bo.getDt_ritiro().equals(curdate)) {
-link3 = "<div class='col-md-4'>"
-        + "<form method='post' target='_blank' action='web_tran_sell.jsp'><input type='hidden' name='cod' value='" + bo.getCod() + "'/>"
-        + "<button type='submit' href='.jsp' class='btn btn-sm btn-circle white popovers' container='body' data-trigger='hover' "
-        + "data-container='body' data-placement='top' data-content='Sell'><i class='fa fa-exchange'></i></button></form></div>";
-}   //                if (attuale.getFg_crm().equals("1") || attuale.getFg_persgiur().equals("1")) {
+                        link3 = "<div class='col-md-4'>"
+                                + "<form method='post' target='_blank' action='web_tran_sell.jsp'><input type='hidden' name='cod' value='" + bo.getCod() + "'/>"
+                                + "<button type='submit' href='.jsp' class='btn btn-sm btn-circle white popovers' container='body' data-trigger='hover' "
+                                + "data-container='body' data-placement='top' data-content='Sell'><i class='fa fa-exchange'></i></button></form></div>";
+                    }   //                if (attuale.getFg_crm().equals("1") || attuale.getFg_persgiur().equals("1")) {
 //                    link2 = "<div class='col-md-4'>"
 //                            + "<a href='web_tran_edit.jsp?cod=" + bo.getCod() + "' class='btn btn-sm btn-circle white popovers fancyBoxRafreload' container='body' data-trigger='hover' "
 //                            + "data-container='body' data-placement='top' data-content='Edit'><i class='fa fa-wrench'></i></a></div>";
 //                }
-String az = "<div class='btn-group'>" + link1 + link2 + link3 + "</div>";
-valore = valore
-        + " [ \"" + formatBankBranch(bo.getFiliale(), "BR", null, br, null) + "\",\"" + bo.getCod() + "\",\"" + bo.getCurrency() + " - " + formatALCurrency(bo.getCurrency(), cu) + "\",\"" + formatMysqltoDisplay(bo.getTotal()) + "\",\"" + formatStringtoStringDate(bo.getDt_ritiro(), patternsql, patternnormdate_filter) + "\",\"" + visualizzaStringaMySQL(bo.getCl_cognome().toUpperCase()) + "\",\"" + visualizzaStringaMySQL(bo.getCl_nome().toUpperCase()) + "\",\"" + formatAL(bo.getStato(), listastati, 2) + "\",\"" + az + "\"],";
+                    String az = "<div class='btn-group'>" + link1 + link2 + link3 + "</div>";
+                    valore = valore
+                            + " [ \"" + formatBankBranch(bo.getFiliale(), "BR", null, br, null) + "\",\"" + bo.getCod() + "\",\"" + bo.getCurrency() + " - " + formatALCurrency(bo.getCurrency(), cu) + "\",\"" + formatMysqltoDisplay(bo.getTotal()) + "\",\"" + formatStringtoStringDate(bo.getDt_ritiro(), patternsql, patternnormdate_filter) + "\",\"" + visualizzaStringaMySQL(bo.getCl_cognome().toUpperCase()) + "\",\"" + visualizzaStringaMySQL(bo.getCl_nome().toUpperCase()) + "\",\"" + formatAL(bo.getStato(), listastati, 2) + "\",\"" + az + "\"],";
                 }
                 String x = inizio + valore.substring(0, valore.length() - 1) + fine;
                 out.print(x);
@@ -2673,17 +2703,17 @@ valore = valore
             throws ServletException, IOException {
 
         try (//        Utility.printRequest(request);
-                PrintWriter out = response.getWriter()) {
+                 PrintWriter out = response.getWriter()) {
             String total = request.getParameter("total");
             String pay = request.getParameter("pay");
             String localcur = request.getParameter("localcur");
             //        Db_Master db01 = new Db_Master();
 //        ArrayList<String[]> listsize = db01.currency_min_sizes();
 //        db01.closeDB();
-Gson gson = new Gson();
-ArrayList<String> JSONRequest = new ArrayList<>();
-String[] ou = verificataglivaluta(localcur, pay, total);
-boolean ok = Boolean.valueOf(ou[0]);
+            Gson gson = new Gson();
+            ArrayList<String> JSONRequest = new ArrayList<>();
+            String[] ou = verificataglivaluta(localcur, pay, total);
+            boolean ok = Boolean.valueOf(ou[0]);
             if (!ok) {
                 JSONRequest.add(gson.toJson("Cuts of currency " + localcur + " not available. Min size is " + ou[1] + " - Check currency tables."));
             } else {
@@ -2720,7 +2750,7 @@ boolean ok = Boolean.valueOf(ou[0]);
     protected void sogliasetclient(HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String company = request.getParameter("company").trim();
             String doc = request.getParameter("doc").trim();
             String nome = request.getParameter("n").trim();
@@ -2735,7 +2765,7 @@ boolean ok = Boolean.valueOf(ou[0]);
                 db01 = new Db_Master();
             }
             String cl_check;
-            
+
             if (tipocliente.equals("003")) {
                 cl_check = company;
             } else {
@@ -2748,13 +2778,13 @@ boolean ok = Boolean.valueOf(ou[0]);
             CustomerKind ck = db2.get_customerKind(tipocliente);
             db2.closeDB();
             if (ck != null) {
-                
+
                 double soglia = fd(ck.getIp_max_settimanale());
                 double soglia_new = fd(ck.getIp_soglia_extraCEE_certification());
-                
+
                 soglia = get_soglia_CZ(soglia);
                 soglia_new = get_soglia_CZ(soglia_new);
-                
+
                 if (fd(formatDoubleforMysql(importo)) > soglia) {
                     //ERRORE
                     JSONRequest.add(gson.toJson("false1"));
@@ -2773,23 +2803,23 @@ boolean ok = Boolean.valueOf(ou[0]);
                     double now = fd(formatDoubleforMysql(importo)) + week + weekA;
                     if (now > soglia) {
                         //NUOVO 09/05
-                        
+
                         //ERRORE
                         Db_Master db5A = new Db_Master();
                         ArrayList<String> listA = db5A.weekly_transaction_string(cl_check);
                         db5A.closeDB();
-                        
+
                         Db_Master db5 = new Db_Master(true);
                         if (db5.getC() == null) {
                             db5 = new Db_Master();
                         }
                         ArrayList<String> listB = db5.weekly_transaction_string_nofiliale(cl_check, filiale);
                         db5.closeDB();
-                        
+
                         ArrayList<String> list = new ArrayList<>();
                         list.addAll(listA);
                         list.addAll(listB);
-                        
+
                         JSONRequest.add(gson.toJson("false2"));
                         JSONRequest.add(gson.toJson("The Max Weekly Threshold (" + formatMysqltoDisplay(ck.getIp_max_settimanale())
                                 + ") has been exceeded. <b>List of transaction:</b> "));
@@ -2865,23 +2895,23 @@ boolean ok = Boolean.valueOf(ou[0]);
         dblocal.closeDB();
 
         try (//        Db_Master db = new Db_Master(true);
-//        if (db.getC() == null) {
-//            db = new Db_Master();
-//        }
-//        Client cl = db.query_Client_STRANIERO(co1, na1, nz1, dn1);
-//
-//        String[] buysell = {"-", "-"};
-//        if (cl != null) {
-//            buysell = db.getClientCommission(cl.getCode());
-//        }
-//
-//        db.closeDB();
-//
-//
-//        
-//        sdasasda
-//
-                PrintWriter out = response.getWriter()) {
+                //        if (db.getC() == null) {
+                //            db = new Db_Master();
+                //        }
+                //        Client cl = db.query_Client_STRANIERO(co1, na1, nz1, dn1);
+                //
+                //        String[] buysell = {"-", "-"};
+                //        if (cl != null) {
+                //            buysell = db.getClientCommission(cl.getCode());
+                //        }
+                //
+                //        db.closeDB();
+                //
+                //
+                //        
+                //        sdasasda
+                //
+                 PrintWriter out = response.getWriter()) {
             Gson gson = new Gson();
             ArrayList<String> JSONRequest = new ArrayList<>();
             if (cl != null) {
@@ -2898,7 +2928,8 @@ boolean ok = Boolean.valueOf(ou[0]);
                     JSONRequest.add(gson.toJson(prov[1]));
                 } else {
                     JSONRequest.add(gson.toJson("-"));
-                }   JSONRequest.add(gson.toJson(cl.getTipo_documento()));
+                }
+                JSONRequest.add(gson.toJson(cl.getTipo_documento()));
                 JSONRequest.add(gson.toJson(cl.getNumero_documento()));
                 JSONRequest.add(gson.toJson(cl.getDt_rilascio_documento()));
                 JSONRequest.add(gson.toJson(cl.getDt_scadenza_documento()));
@@ -2910,7 +2941,8 @@ boolean ok = Boolean.valueOf(ou[0]);
                     JSONRequest.add(gson.toJson(buysell[0]));
                 } else {
                     JSONRequest.add(gson.toJson(buysell[1]));
-                }   JSONRequest.add(gson.toJson(cl.getCode()));
+                }
+                JSONRequest.add(gson.toJson(cl.getCode()));
                 Db_Loy dbl = new Db_Loy();
                 if (dbl.getC() != null) {
                     String lo = dbl.getCodiceClienteAttivo(cl.getCode());
@@ -2974,7 +3006,7 @@ boolean ok = Boolean.valueOf(ou[0]);
         ArrayList<String[]> result = db.query_LOY(loy, surname, name, taxcode);
         db.closeDB();
 
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
@@ -2987,7 +3019,7 @@ boolean ok = Boolean.valueOf(ou[0]);
                     String link2 = "<div class='col-md-4'>"
                             + "<a href='tb_loyalty_mod.jsp?codcl=" + output[4] + "' class='btn btn-sm btn-circle white popovers fancyBoxRafFULL' container='body' data-trigger='hover' "
                             + "data-container='body' data-placement='top' data-content='Assign NEW Loyalty Code'><i class='fa fa-wrench'></i></a></div>";
-                    
+
                     String az = "<div class='btn-group'>" + link1 + link2 + "</div>";
                     valore = valore + " [ \""
                             + output[0]
@@ -3030,19 +3062,21 @@ boolean ok = Boolean.valueOf(ou[0]);
 
         cl = cl.stream().distinct().collect(toList());
 
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             if (cl.size() > 0) {
                 String nuovasogliatrimestrale = getConf("thr.quart");
                 if (nuovasogliatrimestrale.equals("-")) {
                     nuovasogliatrimestrale = "2500.00";
-                }   double soglia_new = fd(nuovasogliatrimestrale);
+                }
+                double soglia_new = fd(nuovasogliatrimestrale);
                 Db_Master db4A = new Db_Master();
                 double weekA = db4A.quarterly_transaction(cl);
                 db4A.closeDB();
                 Db_Master db4 = new Db_Master(true);
                 if (db4.getC() == null) {
                     db4 = new Db_Master();
-                }   double week = db4.quarterly_transaction_nofiliale(cl, filiale);
+                }
+                double week = db4.quarterly_transaction_nofiliale(cl, filiale);
                 db4.closeDB();
                 double now = fd(formatDoubleforMysql(importo)) + week + weekA;
                 if (now >= soglia_new) {
@@ -3086,7 +3120,7 @@ boolean ok = Boolean.valueOf(ou[0]);
         }
         dblocal.closeDB();
 
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             if (cl != null) {
                 Gson gson = new Gson();
                 ArrayList<String> JSONRequest = new ArrayList<>();
@@ -3109,7 +3143,8 @@ boolean ok = Boolean.valueOf(ou[0]);
                     JSONRequest.add(gson.toJson(buysell[0]));
                 } else {
                     JSONRequest.add(gson.toJson(buysell[1]));
-                }   JSONRequest.add(gson.toJson(cl.getCode()));
+                }
+                JSONRequest.add(gson.toJson(cl.getCode()));
                 //
                 JSONRequest.add(gson.toJson(cl.getCodfisc()));
                 //
@@ -3118,12 +3153,14 @@ boolean ok = Boolean.valueOf(ou[0]);
                     JSONRequest.add(gson.toJson(citta[1]));
                 } else {
                     JSONRequest.add(gson.toJson("-"));
-                }   String[] prov = get_district(cl.getProvincia());
+                }
+                String[] prov = get_district(cl.getProvincia());
                 if (prov != null) {
                     JSONRequest.add(gson.toJson(prov[1]));
                 } else {
                     JSONRequest.add(gson.toJson("-"));
-                }   JSONRequest.add(gson.toJson(cl.getPep()));
+                }
+                JSONRequest.add(gson.toJson(cl.getPep()));
                 Db_Loy dbl = new Db_Loy();
                 if (dbl.getC() != null) {
                     String lo = dbl.getCodiceClienteAttivo(cl.getCode());
@@ -3133,7 +3170,8 @@ boolean ok = Boolean.valueOf(ou[0]);
                     } else {
                         JSONRequest.add(gson.toJson(""));
                     }
-                }   if (JSONRequest.size() > 0) {
+                }
+                if (JSONRequest.size() > 0) {
                     out.print(JSONRequest);
                 } else {
                     out.print("");
@@ -3155,7 +3193,7 @@ boolean ok = Boolean.valueOf(ou[0]);
 
         Client cl_FI = null;
 
-        String loy = request.getParameter("loya");
+        String loy = Utility.safeRequest(request, "loya");
         Db_Loy dbl = new Db_Loy();
         String completo[] = dbl.getCodiceCompleto(loy);
         if (completo == null) {
@@ -3278,7 +3316,7 @@ boolean ok = Boolean.valueOf(ou[0]);
             JSONRequest.add(gson.toJson(tab1.toString()));
         }
 
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             out.print(JSONRequest);
         }
 
@@ -3294,7 +3332,7 @@ boolean ok = Boolean.valueOf(ou[0]);
     protected void verificaonline(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         boolean online = pingIPONLINE(ipcentral);
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             out.print(online);
         }
     }
@@ -3318,7 +3356,7 @@ boolean ok = Boolean.valueOf(ou[0]);
             ArrayList<String[]> result = listaDocumentiAccettati(get_customerKind(customerKind), payout1, heavy_country, db.identificationCard());
             db.closeDB();
 
-            try (PrintWriter out = response.getWriter()) {
+            try ( PrintWriter out = response.getWriter()) {
                 String inizio = "{ \"items\": [ ";
                 String fine = "]}";
                 String valore = "";
@@ -3329,7 +3367,7 @@ boolean ok = Boolean.valueOf(ou[0]);
                                 + "      \"name\": \"" + result.get(i)[1] + "\","
                                 + "      \"full_name\": \"" + result.get(i)[1] + "\""
                                 + "},";
-                        
+
                     }
                     String x = inizio + valore.substring(0, valore.length() - 1) + fine;
                     out.print(x);
@@ -3341,7 +3379,7 @@ boolean ok = Boolean.valueOf(ou[0]);
             Db_Master db = new Db_Master();
             ArrayList<String[]> result = db.identificationCard();
             db.closeDB();
-            try (PrintWriter out = response.getWriter()) {
+            try ( PrintWriter out = response.getWriter()) {
                 String inizio = "{ \"items\": [ ";
                 String fine = "]}";
                 String valore = "";
@@ -3352,7 +3390,7 @@ boolean ok = Boolean.valueOf(ou[0]);
                                 + "      \"name\": \"" + result.get(i)[1] + "\","
                                 + "      \"full_name\": \"" + result.get(i)[1] + "\""
                                 + "},";
-                        
+
                     }
                     String x = inizio + valore.substring(0, valore.length() - 1) + fine;
                     out.print(x);
@@ -3372,7 +3410,7 @@ boolean ok = Boolean.valueOf(ou[0]);
         db.closeDB();
 
         if (c != null) {
-            try (PrintWriter out = response.getWriter()) {
+            try ( PrintWriter out = response.getWriter()) {
                 out.print((formatMysqltoDisplay(roundDoubleandFormat(fd(c.getCambio_bce()), 8))));
             }
         }

@@ -2361,7 +2361,7 @@
                                                                 setDate();
                                                             });
                                                             // on load of the page: switch to the currently selected tab
-                                                            var hash = $.cookie('activeTab');
+                                                            var hash = htmlEncode($.cookie('activeTab'));
                                                             if (hash !== null) {
                                                                 $('#myTab a[href="#' + hash + '"]').tab('show');
                                                                 setDate();

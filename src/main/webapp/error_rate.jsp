@@ -116,7 +116,7 @@
                                 if (arrayJson[0] === "falseV") {
                                     document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                                     document.getElementById('errorlarge').style.display = "block";
-                                    document.getElementById('errorlargetext').innerHTML = arrayJson[1];
+                                    document.getElementById('errorlargetext').innerHTML = htmlEncode(arrayJson[1]);
                                     es = false;
                                     document.getElementById('chra').disabled = true;
                                     document.getElementById('chra').value = document.getElementById('ra_' + idval).value.trim();
@@ -125,10 +125,10 @@
                                     document.getElementById('chra').disabled = false;
                                     document.getElementById('chra').value = document.getElementById('ra_' + idval).value.trim();
 
-                                    var dim_ext = arrayJson[1].split("-")[1].trim();
-                                    var dim_sel = arrayJson[2].split("-")[1].trim();
-                                    var dim_sto = arrayJson[3].split("-")[1].trim();
-                                    var dim_his = arrayJson[4].split("-")[1].trim();
+                                    var dim_ext = htmlEncode(arrayJson[1].split("-")[1].trim());
+                                    var dim_sel = htmlEncode(arrayJson[2].split("-")[1].trim());
+                                    var dim_sto = htmlEncode(arrayJson[3].split("-")[1].trim());
+                                    var dim_his = htmlEncode(arrayJson[4].split("-")[1].trim());
 
                                     if (parseInt(dim_ext) > 0) {
                                         var div = document.getElementById('tab_1_2');
@@ -161,19 +161,19 @@
                                         while (i < limit) {
                                             var row1 = document.createElement("tr");
                                             var th1 = document.createElement("td");
-                                            th1.innerHTML = arrayJson[partenza];
+                                            th1.innerHTML = htmlEncode(arrayJson[partenza]);
                                             partenza++;
                                             var th2 = document.createElement("td");
-                                            th2.innerHTML = arrayJson[partenza];
+                                            th2.innerHTML = htmlEncode(arrayJson[partenza]);
                                             partenza++;
                                             var th3 = document.createElement("td");
-                                            th3.innerHTML = arrayJson[partenza];
+                                            th3.innerHTML = htmlEncode(arrayJson[partenza]);
                                             partenza++;
                                             var th4 = document.createElement("td");
-                                            th4.innerHTML = arrayJson[partenza];
+                                            th4.innerHTML = htmlEncode(arrayJson[partenza]);
                                             partenza++;
                                             var th5 = document.createElement("td");
-                                            th5.innerHTML = arrayJson[partenza];
+                                            th5.innerHTML = htmlEncode(arrayJson[partenza]);
                                             partenza++;
                                             row1.appendChild(th1);
                                             row1.appendChild(th2);
@@ -187,19 +187,19 @@
 
                                         var row1 = document.createElement("tr");
                                         var th1 = document.createElement("td");
-                                        th1.innerHTML = arrayJson[partenza];
+                                        th1.innerHTML = htmlEncode(arrayJson[partenza]);
                                         partenza++;
                                         var th2 = document.createElement("td");
-                                        th2.innerHTML = "<b>" + arrayJson[partenza] + "</b>";
+                                        th2.innerHTML = "<b>" + htmlEncode(arrayJson[partenza]) + "</b>";
                                         partenza++;
                                         var th3 = document.createElement("td");
-                                        th3.innerHTML = "<b>" + arrayJson[partenza] + "</b>";
+                                        th3.innerHTML = "<b>" + htmlEncode(arrayJson[partenza]) + "</b>";
                                         partenza++;
                                         var th4 = document.createElement("td");
-                                        th4.innerHTML = "<b>" + arrayJson[partenza] + "</b>";
+                                        th4.innerHTML = "<b>" + htmlEncode(arrayJson[partenza]) + "</b>";
                                         partenza++;
                                         var th5 = document.createElement("td");
-                                        th5.innerHTML = "<b>" + arrayJson[partenza] + "</b>";
+                                        th5.innerHTML = "<b>" + htmlEncode(arrayJson[partenza]) + "</b>";
 
                                         row1.appendChild(th1);
                                         row1.appendChild(th2);
@@ -254,19 +254,19 @@
                                         while (i < limit) {
                                             var row1 = document.createElement("tr");
                                             var th1 = document.createElement("td");
-                                            th1.innerHTML = arrayJson[partenza];
+                                            th1.innerHTML = htmlEncode(arrayJson[partenza]);
                                             partenza++;
                                             var th2 = document.createElement("td");
-                                            th2.innerHTML = arrayJson[partenza];
+                                            th2.innerHTML = htmlEncode(arrayJson[partenza]);
                                             partenza++;
                                             var th3 = document.createElement("td");
-                                            th3.innerHTML = arrayJson[partenza];
+                                            th3.innerHTML = htmlEncode(arrayJson[partenza]);
                                             partenza++;
                                             var th4 = document.createElement("td");
-                                            th4.innerHTML = arrayJson[partenza];
+                                            th4.innerHTML = htmlEncode(arrayJson[partenza]);
                                             partenza++;
                                             var th5 = document.createElement("td");
-                                            th5.innerHTML = arrayJson[partenza];
+                                            th5.innerHTML = htmlEncode(arrayJson[partenza]);
                                             partenza++;
                                             row1.appendChild(th1);
                                             row1.appendChild(th2);
@@ -280,19 +280,19 @@
 
                                         var row1 = document.createElement("tr");
                                         var th1 = document.createElement("td");
-                                        th1.innerHTML = arrayJson[partenza];
+                                        th1.innerHTML = htmlEncode(arrayJson[partenza]);
                                         partenza++;
                                         var th2 = document.createElement("td");
-                                        th2.innerHTML = "<b>" + arrayJson[partenza] + "</b>";
+                                        th2.innerHTML = "<b>" + htmlEncode(arrayJson[partenza]) + "</b>";
                                         partenza++;
                                         var th3 = document.createElement("td");
-                                        th3.innerHTML = "<b>" + arrayJson[partenza] + "</b>";
+                                        th3.innerHTML = "<b>" + htmlEncode(arrayJson[partenza]) + "</b>";
                                         partenza++;
                                         var th4 = document.createElement("td");
-                                        th4.innerHTML = "<b>" + arrayJson[partenza] + "</b>";
+                                        th4.innerHTML = "<b>" + htmlEncode(arrayJson[partenza]) + "</b>";
                                         partenza++;
                                         var th5 = document.createElement("td");
-                                        th5.innerHTML = "<b>" + arrayJson[partenza] + "</b>";
+                                        th5.innerHTML = "<b>" + htmlEncode(arrayJson[partenza]) + "</b>";
 
                                         row1.appendChild(th1);
                                         row1.appendChild(th2);
@@ -347,19 +347,19 @@
                                         while (i < limit) {
                                             var row1 = document.createElement("tr");
                                             var th1 = document.createElement("td");
-                                            th1.innerHTML = arrayJson[partenza];
+                                            th1.innerHTML = htmlEncode(arrayJson[partenza]);
                                             partenza++;
                                             var th2 = document.createElement("td");
-                                            th2.innerHTML = arrayJson[partenza];
+                                            th2.innerHTML = htmlEncode(arrayJson[partenza]);
                                             partenza++;
                                             var th3 = document.createElement("td");
-                                            th3.innerHTML = arrayJson[partenza];
+                                            th3.innerHTML = htmlEncode(arrayJson[partenza]);
                                             partenza++;
                                             var th4 = document.createElement("td");
-                                            th4.innerHTML = arrayJson[partenza];
+                                            th4.innerHTML = htmlEncode(arrayJson[partenza]);
                                             partenza++;
                                             var th5 = document.createElement("td");
-                                            th5.innerHTML = arrayJson[partenza];
+                                            th5.innerHTML = htmlEncode(arrayJson[partenza]);
                                             partenza++;
                                             row1.appendChild(th1);
                                             row1.appendChild(th2);
@@ -373,19 +373,19 @@
 
                                         var row1 = document.createElement("tr");
                                         var th1 = document.createElement("td");
-                                        th1.innerHTML = arrayJson[partenza];
+                                        th1.innerHTML = htmlEncode(arrayJson[partenza]);
                                         partenza++;
                                         var th2 = document.createElement("td");
-                                        th2.innerHTML = "<b>" + arrayJson[partenza] + "</b>";
+                                        th2.innerHTML = "<b>" + htmlEncode(arrayJson[partenza]) + "</b>";
                                         partenza++;
                                         var th3 = document.createElement("td");
-                                        th3.innerHTML = "<b>" + arrayJson[partenza] + "</b>";
+                                        th3.innerHTML = "<b>" + htmlEncode(arrayJson[partenza]) + "</b>";
                                         partenza++;
                                         var th4 = document.createElement("td");
-                                        th4.innerHTML = "<b>" + arrayJson[partenza] + "</b>";
+                                        th4.innerHTML = "<b>" + htmlEncode(arrayJson[partenza]) + "</b>";
                                         partenza++;
                                         var th5 = document.createElement("td");
-                                        th5.innerHTML = "<b>" + arrayJson[partenza] + "</b>";
+                                        th5.innerHTML = "<b>" + htmlEncode(arrayJson[partenza]) + "</b>";
                                         row1.appendChild(th1);
                                         row1.appendChild(th2);
                                         row1.appendChild(th3);
@@ -434,16 +434,16 @@
                                         while (i < limit) {
                                             var row1 = document.createElement("tr");
                                             var th1 = document.createElement("td");
-                                            th1.innerHTML = arrayJson[partenza];
+                                            th1.innerHTML = htmlEncode(arrayJson[partenza]);
                                             partenza++;
                                             var th2 = document.createElement("td");
-                                            th2.innerHTML = arrayJson[partenza];
+                                            th2.innerHTML = htmlEncode(arrayJson[partenza]);
                                             partenza++;
                                             var th3 = document.createElement("td");
-                                            th3.innerHTML = arrayJson[partenza];
+                                            th3.innerHTML = htmlEncode(arrayJson[partenza]);
                                             partenza++;
                                             var th4 = document.createElement("td");
-                                            th4.innerHTML = arrayJson[partenza];
+                                            th4.innerHTML = htmlEncode(arrayJson[partenza]);
                                             partenza++;
                                             row1.appendChild(th1);
                                             row1.appendChild(th2);

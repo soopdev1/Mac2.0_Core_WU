@@ -1,6 +1,13 @@
 /**
 Core script to handle the entire theme and core functions
 **/
+
+function htmlEncode(str){
+    return String(str).replace(/[^\w. ]/gi, function(c){
+        return '&#'+c.charCodeAt(0)+';';
+    });
+}
+
 var Layout = function () {
 
     var layoutImgPath = 'layouts/layout/img/';
@@ -247,7 +254,7 @@ var Layout = function () {
                     }
 
                     App.stopPageLoading();
-                    pageContentBody.html(res);
+                    pageContentBody.html(htmlEncode(res));
                     Layout.fixContentHeight(); // fix content height
                     App.initAjax(); // initialize core stuff
                 },
@@ -280,7 +287,7 @@ var Layout = function () {
                 dataType: "html",
                 success: function (res) {
                     App.stopPageLoading();
-                    pageContentBody.html(res);
+                    pageContentBody.html(htmlEncode(res));
                     Layout.fixContentHeight(); // fix content height
                     App.initAjax(); // initialize core stuff
                 },

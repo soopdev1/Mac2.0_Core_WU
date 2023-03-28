@@ -1,3 +1,8 @@
+function htmlEncode(str){
+    return String(str).replace(/[^\w. ]/gi, function(c){
+        return '&#'+c.charCodeAt(0)+';';
+    });
+}
 var AppInbox = function () {
 
     var content = $('.inbox-content');
@@ -31,7 +36,7 @@ var AppInbox = function () {
                 el.closest('li').addClass('active');
                 $('.inbox-header > h1').text(title);
 
-                content.html(res);
+                content.html(htmlEncode(res));
 
                 if (Layout.fixContentHeight) {
                     Layout.fixContentHeight();
@@ -84,7 +89,7 @@ var AppInbox = function () {
                 }
                 $('.inbox-header > h1').text('View Message');
 
-                content.html(res);
+                content.html(htmlEncode(res));
                 Layout.fixContentHeight();
             },
             error: function(xhr, ajaxOptions, thrownError)
@@ -149,7 +154,7 @@ var AppInbox = function () {
                 $('.inbox-nav > li.active').removeClass('active');
                 $('.inbox-header > h1').text('Compose');
 
-                content.html(res);
+                content.html(htmlEncode(res));
 
                 initFileupload();
                 initWysihtml5();
@@ -191,7 +196,7 @@ var AppInbox = function () {
                 $('.inbox-nav > li.active').removeClass('active');
                 $('.inbox-header > h1').text('Reply');
 
-                content.html(res);
+                content.html(htmlEncode(res));
                 $('[name="message"]').val($('#reply_email_content_body').html());
 
                 handleCCInput(); // init "CC" input field

@@ -480,7 +480,9 @@
 
                                             }
 
-                                            var o = $("<option/>", {value: arrayJson[7], text: document.getElementById('DE_' + arrayJson[7]).value});
+                                            var o = $("<option/>", {value: arrayJson[7], 
+                                                text: htmlEncode(document.getElementById('DE_' + arrayJson[7]).value)
+                                            });
                                             $('#heavy_identcard').append(o);
                                             $('#heavy_identcard').val(arrayJson[7]).trigger('change');
                                             enable_sel2('heavy_identcard', 'form1');
@@ -668,7 +670,7 @@
                                                 if (document.getElementById('bb_ch_rat_' + valutascelta) !== null) {
 
                                                     var valuerate = document.getElementById('bb_ch_rat_' + valutascelta).value;
-                                                    var o = $("<option/>", {value: valuerate, text: accounting.formatNumber(parseFloatRaf(valuerate.toString(), separatorthousand, separatordecimal, 8), 8, separatorthousand, separatordecimal)});
+                                                    var o = $("<option/>", {value: valuerate, text: accounting.formatNumber(parseFloatRaf(htmlEncode(valuerate.toString()), separatorthousand, separatordecimal, 8), 8, separatorthousand, separatordecimal)});
                                                     $('#rate' + index).append(o);
                                                     $('#rate' + index).val($('#rate' + index + ' option:first-child').val()).trigger('change');
                                                     disable_sel2('rate' + index, 'form1');
@@ -3681,7 +3683,7 @@
 
                                                     document.getElementById('infotra').className = document.getElementById('infotra').className + " in";
                                                     document.getElementById('infotra').style.display = "block";
-                                                    document.getElementById('infotratext').innerHTML = arrayJson[1];
+                                                    document.getElementById('infotratext').innerHTML = htmlEncode(arrayJson[1]);
 
                                                     document.getElementById('infolarge').className = "modal fade";
                                                     document.getElementById('infolarge').style.display = "none";
@@ -4034,10 +4036,10 @@
                                                 if (arrayJson[0] === "false1") {
                                                     document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                                                     document.getElementById('errorlarge').style.display = "block";
-                                                    document.getElementById('errorlargetext').innerHTML = arrayJson[1];
+                                                    document.getElementById('errorlargetext').innerHTML = htmlEncode(arrayJson[1]);
                                                     exit = false;
                                                 } else if (arrayJson[0] === "false3") {
-                                                    var msg = arrayJson[1];
+                                                    var msg = htmlEncode(arrayJson[1]);
                                                     document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                                                     document.getElementById('errorlarge').style.display = "block";
                                                     document.getElementById('errorlargetext').innerHTML = msg;
@@ -4045,7 +4047,7 @@
                                                 } else if (arrayJson[0] === "false2") {
                                                     var msg = "";
                                                     for (var e = 1; e < arrayJson.length; e++) {
-                                                        msg = msg + arrayJson[e] + "<p class='ab'></p>";
+                                                        msg = msg + htmlEncode(arrayJson[e]) + "<p class='ab'></p>";
                                                     }
                                                     document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                                                     document.getElementById('errorlarge').style.display = "block";
@@ -4091,7 +4093,7 @@
 
                                                 var msg = "";
                                                 for (var e = 0; e < arrayJson.length; e++) {
-                                                    msg = msg + arrayJson[e] + "<p class='ab'></p>";
+                                                    msg = msg + htmlEncode(arrayJson[e]) + "<p class='ab'></p>";
                                                 }
                                                 document.getElementById('errorlarge').className = document.getElementById('errorlarge').className + " in";
                                                 document.getElementById('errorlarge').style.display = "block";
@@ -4134,7 +4136,8 @@
                                                         if (arrayJson[8] !== "-") {
                                                             $('#heavy_pob_district').val(arrayJson[8]).trigger('change');
                                                         }
-                                                        var o = $("<option/>", {value: arrayJson[9], text: document.getElementById('DE_' + arrayJson[9]).value});
+                                                        var o = $("<option/>", {value: arrayJson[9], text: 
+                                                                    htmlEncode(document.getElementById('DE_' + arrayJson[9]).value)});
                                                         $('#heavy_identcard').append(o);
                                                         $('#heavy_identcard').val(arrayJson[9]).trigger('change');
                                                         $("#heavy_issuedateidentcard").removeAttr('readonly');
@@ -4286,7 +4289,8 @@
                                                             $('#heavy_district').val($('#heavy_district option:first-child').val()).trigger('change');
                                                             document.getElementById('heavy_district_dis').value = arrayJson[24];
                                                         }
-                                                        var o = $("<option/>", {value: arrayJson[7], text: document.getElementById('DE_' + arrayJson[7]).value});
+                                                        var o = $("<option/>", {value: arrayJson[7], text: 
+                                                                    htmlEncode(document.getElementById('DE_' + arrayJson[7]).value)});
                                                         $('#heavy_identcard').append(o);
                                                         $('#heavy_identcard').val(arrayJson[7]).trigger('change');
                                                         $('#heavy_pepI').val(arrayJson[18]).trigger('change');
@@ -4328,7 +4332,7 @@
                                                         document.getElementById('heavy_pob_date').readOnly = true;
 
                                                     } else {
-                                                        es = arrayJson[0];
+                                                        es = htmlEncode(arrayJson[0]);
                                                     }
                                                 }
                                             }
@@ -5659,7 +5663,7 @@
                                                                         for (var i = 0; i < arrayJson.length - 1; i = i + 2) {
                                                                             var span1 = document.createElement('span');
                                                                             span1.className = 'label label-sm label-primary';
-                                                                            span1.innerHTML = arrayJson[i] + ' - <b>' + arrayJson[i + 1] + '</b>';
+                                                                            span1.innerHTML = htmlEncode(arrayJson[i]) + ' - <b>' + htmlEncode(arrayJson[i + 1]) + '</b>';
                                                                             var span2 = document.createElement('span');
                                                                             span2.innerHTML = '&nbsp;';
                                                                             document.getElementById('ex9').appendChild(span1);
@@ -5686,7 +5690,8 @@
                                                                         for (var i = 0; i < arrayJson.length - 1; i = i + 2) {
                                                                             var span1 = document.createElement('span');
                                                                             span1.className = 'label label-sm label-primary';
-                                                                            span1.innerHTML = arrayJson[i] + ' - <b>' + arrayJson[i + 1] + '</b>';
+                                                                            span1.innerHTML = htmlEncode(arrayJson[i]) + ' - <b>' 
+                                                                                    + htmlEncode(arrayJson[i + 1]) + '</b>';
                                                                             var span2 = document.createElement('span');
                                                                             span2.innerHTML = '&nbsp;';
                                                                             document.getElementById('ex10').appendChild(span1);

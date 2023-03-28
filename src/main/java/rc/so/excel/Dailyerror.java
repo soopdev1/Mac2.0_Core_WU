@@ -55,11 +55,11 @@ public class Dailyerror {
                 sql = sql + "AND STR_TO_DATE(DATA, '%d/%c/%Y') >= '" + datad1 + " 00:00:00' ";
                 sql = sql + "AND STR_TO_DATE(DATA, '%d/%c/%Y') <= '" + datad2 + " 23:59:59' ";
                 sql = sql + " ORDER BY filiale,STR_TO_DATE(DATA, '%d/%c/%Y')";
-                ResultSet rs1 = st1.executeQuery(sql);
-                while (rs1.next()) {
-                    out.add(new Rep(rs1.getString(1), rs1.getString(2), rs1.getString(3), rs1.getString(4), rs1.getString(5), rs1.getString(6), rs1.getString(7)));
+                try (ResultSet rs1 = st1.executeQuery(sql)) {
+                    while (rs1.next()) {
+                        out.add(new Rep(rs1.getString(1), rs1.getString(2), rs1.getString(3), rs1.getString(4), rs1.getString(5), rs1.getString(6), rs1.getString(7)));
+                    }
                 }
-                rs1.close();
             }
             db1.closeDB();
         } catch (Exception e) {

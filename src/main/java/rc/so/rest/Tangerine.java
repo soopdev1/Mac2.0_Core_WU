@@ -69,9 +69,7 @@ public class Tangerine {
             if (entity != null) {
                 try ( InputStream instream = entity.getContent()) {
                     StringBuilder response;
-                    try ( //success
-                             BufferedReader in = new BufferedReader(new InputStreamReader(
-                                    instream))) {
+                    try ( BufferedReader in = new BufferedReader(new InputStreamReader(instream))) {
                         String inputLine;
                         response = new StringBuilder();
                         while ((inputLine = in.readLine()) != null) {
@@ -205,5 +203,5 @@ class Conf_Tangerine {
     public String toString() {
         return ReflectionToStringBuilder.toString(this, SHORT_PREFIX_STYLE);
     }
-    
+
 }

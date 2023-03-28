@@ -914,9 +914,7 @@ public class Operazioni_test extends HttpServlet {
         if (user == null) {
             user = "9999";
         }
-        String codtr = request.getParameter("codtr");
-//        String booking = request.getParameter("booking");
-//        String codop = request.getParameter("codop");
+        String codtr = Utility.safeRequest(request, "codtr");
 
         Db_Master db = new Db_Master();
         String[] cur_default = db.get_local_currency();
@@ -2025,11 +2023,7 @@ public class Operazioni_test extends HttpServlet {
         }
 
         if (ok.equals("0")) {
-            String loya = request.getParameter("loya");
-            if (loya == null) {
-                loya = "";
-            }
-            loya = loya.trim();
+            String loya = Utility.safeRequest(request, "loya");
             if (!loya.equals("")) {
                 Db_Loy dbl = new Db_Loy();
                 if (dbl.getC() != null) {
@@ -2984,7 +2978,7 @@ public class Operazioni_test extends HttpServlet {
 
         //nuovo 07/05
         if (ok.equals("0")) {
-            String loya = getValue_request(request, "loya", false, "");
+            String loya = Utility.safeRequest(request, "loya");
             if (!loya.equals("")) {
                 Db_Loy dbl = new Db_Loy();
                 if (dbl.getC() != null) {
@@ -3728,7 +3722,7 @@ public class Operazioni_test extends HttpServlet {
 
         //nuovo 07/05
         if (ok.equals("0")) {
-            String loya = getValue_request(request, "loya", false, "");
+            String loya = Utility.safeRequest(request, "loya");
             if (!loya.equals("")) {
                 Db_Loy dbl = new Db_Loy();
                 if (dbl.getC() != null) {
@@ -3813,9 +3807,9 @@ public class Operazioni_test extends HttpServlet {
      */
     protected void ch_tr_deletedENGSELL(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String newintbook0 = request.getParameter("newintbook0");
-        String newintbookCanale = request.getParameter("newintbookCanale");
-        String newintbookCodice = request.getParameter("newintbookCodice");
+        String newintbook0 = Utility.safeRequest(request, "newintbook0");
+        String newintbookCanale = Utility.safeRequest(request, "newintbookCanale");
+        String newintbookCodice = Utility.safeRequest(request, "newintbookCodice");
         if (null == newintbook0) {
             newintbook0 = "0";
             newintbookCanale = "";
@@ -3853,7 +3847,7 @@ public class Operazioni_test extends HttpServlet {
         String dt_tr = db.getNow();
         db.closeDB();
 
-        String cod = request.getParameter("cod");
+        String cod = Utility.safeRequest(request, "cod");
 
         String typerate = request.getParameter("typerate");
         String unlockCode_final = request.getParameter("unlockCode_final");

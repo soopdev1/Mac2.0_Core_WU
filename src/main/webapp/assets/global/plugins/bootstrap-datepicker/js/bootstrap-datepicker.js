@@ -1,3 +1,8 @@
+function htmlEncode(str){
+    return String(str).replace(/[^\w. ]/gi, function(c){
+        return '&#'+c.charCodeAt(0)+';';
+    });
+}
 /*!
  * Datepicker for Bootstrap v1.5.1 (https://github.com/eternicode/bootstrap-datepicker)
  *
@@ -827,7 +832,7 @@
 			while (i < 12){
 				html += '<span class="month">'+dates[this.o.language].monthsShort[i++]+'</span>';
 			}
-			this.picker.find('.datepicker-months td').html(html);
+			this.picker.find('.datepicker-months td').html(htmlEncode(html));
 		},
 
 		setRange: function(range){
@@ -1051,7 +1056,7 @@
 				html += '<span class="' + classes.join(' ') + '"' + (tooltip ? ' title="'+tooltip+'"' : '') + '>' + year + '</span>';
 				year += 1;
 			}
-			yearCont.html(html);
+			yearCont.html(htmlEncode(html));
 		},
 
 		updateNavArrows: function(){

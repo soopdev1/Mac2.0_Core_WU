@@ -66,7 +66,7 @@
 
             function checkbranch() {
                 var cbdate = document.getElementById('cbdate').value.trim();
-                document.getElementById('modt').innerHTML = 'CHECK BRANCH - Date ' + cbdate;
+                document.getElementById('modt').innerHTML = 'CHECK BRANCH - Date ' + htmlEncode(cbdate);
                 $.ajax({
                     type: "POST",
                     url: "Query?type=checkbranch&q=" + cbdate,
@@ -76,7 +76,7 @@
                             if (arrayJson.length > 0) {
                                 var msg = "<div class='row'><div class='col-md-12'><center><span class='help-block'><b>Do not result open/close safe in the following branches:</b></span></center></div></div><p class='ab'></p><div class='row'><div class='col-md-12'>";
                                 for (var i = 0; i < arrayJson.length; i++) {
-                                    msg = msg + "<div class='col-md-6'><center>" + arrayJson[i] + "</center></div>";
+                                    msg = msg + "<div class='col-md-6'><center>" + htmlEncode(arrayJson[i]) + "</center></div>";
                                 }
                                 msg = msg + "</div></div>";
                                 document.getElementById('mbll').innerHTML = msg;

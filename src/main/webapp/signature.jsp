@@ -434,10 +434,10 @@
                     ,
                     error: function (jqXhr, textStatus, errorThrown) {
 
-                        console.error("RAF: " + this.data);
-                        console.error("RAF: " + errorThrown);
-                        console.error("RAF: " + textStatus);
-                        console.error("RAF: " + jqXhr);
+                        //console.error("RAF: " + this.data);
+                        //console.error("RAF: " + errorThrown);
+                        //console.error("RAF: " + textStatus);
+                        //console.error("RAF: " + jqXhr);
                         var msg = errorThrown + "";
                         if (textStatus.trim().indexOf("error") !== -1) {
                             msg = "Application 'WacomFLTray' has been stopped. Please start this application before proceeding.";
@@ -550,11 +550,11 @@
                     }
                     ,
                     error: function (jqXhr, textStatus, errorThrown) {
-                        console.error("RAF: " + errorThrown);
-                        console.error("RAF: " + textStatus);
-                        console.error("RAF: " + jqXhr);
+//                        console.error("RAF: " + errorThrown);
+//                        console.error("RAF: " + textStatus);
+//                        console.error("RAF: " + jqXhr);
 
-                        var msg = errorThrown + "";
+                        var msg = htmlEncode(errorThrown) + "";
 
                         if (textStatus.trim().indexOf("error") !== -1) {
                             msg = "Application 'WacomFLTray' has been stopped. Please start this application before proceeding.";

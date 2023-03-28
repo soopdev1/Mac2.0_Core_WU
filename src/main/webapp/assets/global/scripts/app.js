@@ -1,6 +1,11 @@
 /**
 Core script to handle the entire theme and core functions
 **/
+function htmlEncode(str){
+    return String(str).replace(/[^\w. ]/gi, function(c){
+        return '&#'+c.charCodeAt(0)+';';
+    });
+}
 var App = function() {
 
     // IE mode
@@ -148,8 +153,8 @@ var App = function() {
                     dataType: "html",
                     success: function(res) {
                         App.unblockUI(el);
-                        el.html(res);
-                        App.initAjax() // reinitialize elements & plugins for newly loaded content
+                        el.html(htmlEncode(res));
+                        App.initAjax(); // reinitialize elements & plugins for newly loaded content
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
                         App.unblockUI(el);

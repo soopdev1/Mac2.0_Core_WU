@@ -102,7 +102,7 @@
 
             function copyToClipboard() {
                 var aux = document.createElement("input");
-                aux.setAttribute("value", document.getElementById("linkhidd").value);
+                aux.setAttribute("value", htmlEncode(document.getElementById("linkhidd").value));
                 document.body.appendChild(aux);
                 aux.select();
                 document.execCommand("copy");

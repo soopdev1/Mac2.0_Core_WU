@@ -358,7 +358,7 @@
                             
                         } else {
                             er1 = true;
-                            msg = data;
+                            msg = htmlEncode(data);
                         }
                     }
                 });
