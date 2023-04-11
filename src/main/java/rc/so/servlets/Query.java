@@ -92,6 +92,8 @@ import javax.servlet.http.HttpServletResponse;
 import static org.apache.commons.lang3.StringUtils.replace;
 import org.joda.time.DateTime;
 import rc.so.util.Utility;
+import static rc.so.util.Utility.safeRequest;
+import static rc.so.util.Utility.safeRequestMultiple;
 
 /**
  *
@@ -115,8 +117,8 @@ public class Query extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/plain; charset=ISO-8859-1");
         response.setCharacterEncoding("ISO-8859-1");
-        String kind_1 = request.getParameter("kind_1");
-        String search = request.getParameter("search");
+        String kind_1 = safeRequest(request, "kind_1");
+        String search = safeRequest(request, "search");
         Db_Master db = new Db_Master();
 
         boolean central = isCentral();
@@ -168,7 +170,7 @@ public class Query extends HttpServlet {
     protected void query_nc_caus(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/plain; charset=ISO-8859-1");
         response.setCharacterEncoding("ISO-8859-1");
-        String codnc = request.getParameter("codnc");
+        String codnc = safeRequest(request, "codnc");
         Db_Master db = new Db_Master();
         boolean central = isCentral();
         String tipo = (String) request.getSession().getAttribute("us_tip");
@@ -265,7 +267,7 @@ public class Query extends HttpServlet {
             String valore = "";
             Db_Master db = new Db_Master();
             ArrayList<Branch> array_branch = db.list_branch_enabled();
-            String listbranch = request.getParameter("listbranch");
+            String listbranch = safeRequest(request, "listbranch");
             if (listbranch == null || listbranch.equals("null")) {
                 listbranch = "";
                 for (int j = 0; j < array_branch.size(); j++) {
@@ -317,9 +319,9 @@ public class Query extends HttpServlet {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
-            boolean central = Boolean.valueOf(request.getParameter("central"));
+            boolean central = Boolean.valueOf(safeRequest(request, "central"));
             boolean branchmodrate = false;
-            String editce = request.getParameter("editce");
+            String editce = safeRequest(request, "editce");
             if (editce == null) {
                 editce = "0";
             }
@@ -328,7 +330,7 @@ public class Query extends HttpServlet {
             }
             String listbranch = fil[0] + ";";
             if (editce.equals("1")) {
-                listbranch = request.getParameter("listbranch");
+                listbranch = safeRequest(request, "listbranch");
                 if (listbranch == null || listbranch.equals("null")) {
                     listbranch = "";
                     for (int j = 0; j < array_branch.size(); j++) {
@@ -473,10 +475,10 @@ public class Query extends HttpServlet {
 
         response.setContentType("text/plain; charset=ISO-8859-1");
         response.setCharacterEncoding("ISO-8859-1");
-        String typeop = request.getParameter("typeop");
-        String d1 = request.getParameter("d1");
-        String d2 = request.getParameter("d2");
-        String branch = request.getParameter("branch").trim();
+        String typeop = safeRequest(request, "typeop");
+        String d1 = safeRequest(request, "d1");
+        String d2 = safeRequest(request, "d2");
+        String branch = safeRequest(request, "branch").trim();
 
         Db_Master db = new Db_Master();
         ArrayList<String[]> array_credit_card = db.list_bank_pos_enabled();
@@ -636,10 +638,10 @@ public class Query extends HttpServlet {
         response.setContentType("text/plain; charset=ISO-8859-1");
         response.setCharacterEncoding("ISO-8859-1");
 
-        String till = request.getParameter("till");
-        String d1 = request.getParameter("d1");
-        String d2 = request.getParameter("d2");
-        String branch = request.getParameter("branch").trim();
+        String till = safeRequest(request, "till");
+        String d1 = safeRequest(request, "d1");
+        String d2 = safeRequest(request, "d2");
+        String branch = safeRequest(request, "branch").trim();
 
         Db_Master db = new Db_Master();
         ArrayList<Openclose> result = db.query_oc(till, d1, d2, branch);
@@ -685,11 +687,11 @@ public class Query extends HttpServlet {
     protected void query_it_list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/plain; charset=ISO-8859-1");
         response.setCharacterEncoding("ISO-8859-1");
-        String typeop = request.getParameter("typeop");
-        String d1 = request.getParameter("d1");
-        String d2 = request.getParameter("d2");
-        String branch = request.getParameter("branch").trim();
-//        String pdf = request.getParameter("pdf");
+        String typeop = safeRequest(request, "typeop");
+        String d1 = safeRequest(request, "d1");
+        String d2 = safeRequest(request, "d2");
+        String branch = safeRequest(request, "branch").trim();
+//        String pdf = safeRequest(request, "pdf");
 
         Db_Master db = new Db_Master();
         ArrayList<IT_change> result = db.query_it(typeop, d1, d2, branch);
@@ -802,15 +804,15 @@ public class Query extends HttpServlet {
         response.setContentType("text/plain; charset=ISO-8859-1");
         response.setCharacterEncoding("ISO-8859-1");
 
-        String d1 = request.getParameter("d1");
-        String d2 = request.getParameter("d2");
+        String d1 = safeRequest(request, "d1");
+        String d2 = safeRequest(request, "d2");
 
-        String taxcode = replaceApici(request.getParameter("taxcode").trim());
-        String surname = replaceApici(request.getParameter("surname").trim());
-        String name = replaceApici(request.getParameter("name").trim());
-        String branch = request.getParameter("branch").trim();
+        String taxcode = replaceApici(safeRequest(request, "taxcode").trim());
+        String surname = replaceApici(safeRequest(request, "surname").trim());
+        String name = replaceApici(safeRequest(request, "name").trim());
+        String branch = safeRequest(request, "branch").trim();
 
-//        String pdf = request.getParameter("pdf");
+//        String pdf = safeRequest(request, "pdf");
         Db_Master db = new Db_Master();
         ArrayList<String> userkyc = db.list_kyc_enabled();
         DateTime today = db.getCurdateDT();
@@ -1045,11 +1047,11 @@ public class Query extends HttpServlet {
 
         response.setContentType("text/plain; charset=ISO-8859-1");
         response.setCharacterEncoding("ISO-8859-1");
-        String d1 = request.getParameter("d1");
-        String d2 = request.getParameter("d2");
-        String branch = request.getParameter("branch").trim();
+        String d1 = safeRequest(request, "d1");
+        String d2 = safeRequest(request, "d2");
+        String branch = safeRequest(request, "branch").trim();
 
-        String[] nc_cat1 = request.getParameterValues("nc_cat1");
+        String[] nc_cat1 = safeRequestMultiple(request, "nc_cat1");
 
         Db_Master db = new Db_Master();
         DateTime today = db.getCurdateDT();
@@ -1057,7 +1059,7 @@ public class Query extends HttpServlet {
         ArrayList<NC_causal> array_nc_caus = db.list_nc_causal_all(filiale);
 
         String list_nc_cat = "";
-        if (nc_cat1 == null) {
+        if (nc_cat1[0].equals("")) {
             for (int i = 0; i < array_nc_cat.size(); i++) {
                 list_nc_cat = list_nc_cat + array_nc_cat.get(i).getGruppo_nc() + ";";
             }
@@ -1250,8 +1252,8 @@ public class Query extends HttpServlet {
     protected void query_users_list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/plain; charset=ISO-8859-1");
         response.setCharacterEncoding("ISO-8859-1");
-        //String pdf = request.getParameter("pdf");
-        //String excel = request.getParameter("excel");
+        //String pdf = safeRequest(request, "pdf");
+        //String excel = safeRequest(request, "excel");
         Db_Master db = new Db_Master();
 
         ArrayList<Users> result = db.list_all_users();
@@ -1303,8 +1305,8 @@ public class Query extends HttpServlet {
             user = "0001";
         }
 
-        String status = request.getParameter("status");
-        String search = request.getParameter("search");
+        String status = safeRequest(request, "status");
+        String search = safeRequest(request, "search");
 
         Db_Master db = new Db_Master();
         ArrayList<Newsletters> result = db.query_newsletters(user, status);
@@ -1524,7 +1526,7 @@ public class Query extends HttpServlet {
         Db_Master db = new Db_Master();
         ArrayList<String[]> result = db.city_Italy();
         db.closeDB();
-        String q = request.getParameter("q");
+        String q = safeRequest(request, "q");
         try ( PrintWriter out = response.getWriter()) {
             if (result.size() > 0) {
                 Gson gson = new Gson();
@@ -1559,7 +1561,7 @@ public class Query extends HttpServlet {
     protected void querycodcom_distr(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String q = request.getParameter("q");
+        String q = safeRequest(request, "q");
         Db_Master db = new Db_Master();
 //        ArrayList<String[]> result = db.city_Italy();
         String result = db.city_Italy(q);
@@ -1597,7 +1599,7 @@ public class Query extends HttpServlet {
         Db_Master db = new Db_Master();
         ArrayList<String[]> result = db.city_Italy();
         db.closeDB();
-        String q = request.getParameter("q");
+        String q = safeRequest(request, "q");
         try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"items\": [ ";
             String fine = "]}";
@@ -1626,7 +1628,7 @@ public class Query extends HttpServlet {
         Db_Master db = new Db_Master();
         ArrayList<String[]> result = db.city_Italy();
         db.closeDB();
-        String q = request.getParameter("q");
+        String q = safeRequest(request, "q");
         try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"items\": [ ";
             String fine = "]}";
@@ -1653,7 +1655,7 @@ public class Query extends HttpServlet {
     protected void checkunlockcode(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         PrintWriter out = response.getWriter();
-        String codice = request.getParameter("q");
+        String codice = safeRequest(request, "q");
         Db_Master db = new Db_Master();
         boolean esito = db.codici_sblocco_isEnabled(codice);
         db.closeDB();
@@ -1672,7 +1674,7 @@ public class Query extends HttpServlet {
         Db_Master db = new Db_Master();
 
         PrintWriter out = response.getWriter();
-        String d3 = request.getParameter("q");
+        String d3 = safeRequest(request, "q");
 
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
         ArrayList<String> res = db.list_openclose_day(data1);
@@ -1712,15 +1714,15 @@ public class Query extends HttpServlet {
         db.closeDB();
 
         boolean ok = true;
-        String idopentillv = request.getParameter("idopentillv");
+        String idopentillv = safeRequest(request, "idopentillv");
         for (int i = 1; i < 6 && ok; i++) {
-            String kinfig = request.getParameter("kinfig" + i);
-            String codfig = request.getParameter("codfig" + i);
-            String quafig = request.getParameter("quafig" + i);
+            String kinfig = safeRequest(request, "kinfig" + i);
+            String codfig = safeRequest(request, "codfig" + i);
+            String quafig = safeRequest(request, "quafig" + i);
             if (kinfig != null
                     && !codfig.equals("")) {
                 if (codfig.contains(" ")) {
-                    codfig = request.getParameter("codfig" + i).split(" ")[0];
+                    codfig = safeRequest(request, "codfig" + i).split(" ")[0];
                 }
                 boolean found = false;
                 for (int k = 0; k < array_list_oc_change.size() && ok; k++) {
@@ -1759,8 +1761,8 @@ public class Query extends HttpServlet {
         ArrayList<String[]> array_list_oc_change = db.list_oc_change_real_user(request.getSession().getAttribute("us_cod").toString());
         String local_cur = db.get_local_currency()[0];
         db.closeDB();
-        String idopentillv = request.getParameter("idopentillv");
-        String payout1 = request.getParameter("payout1");
+        String idopentillv = safeRequest(request, "idopentillv");
+        String payout1 = safeRequest(request, "payout1");
         boolean found = false;
         boolean ok = true;
 
@@ -1793,13 +1795,13 @@ public class Query extends HttpServlet {
      */
     protected void check_quantity_WK(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String cat1 = request.getParameter("q1");
-        String cat2 = request.getParameter("q2");
+        String cat1 = safeRequest(request, "q1");
+        String cat2 = safeRequest(request, "q2");
 
-        boolean check1 = Boolean.valueOf(request.getParameter("c1"));
-        boolean check2 = Boolean.valueOf(request.getParameter("c2"));
+        boolean check1 = Boolean.valueOf(safeRequest(request, "c1"));
+        boolean check2 = Boolean.valueOf(safeRequest(request, "c2"));
 
-        String idopentillv = request.getParameter("idopentillv");
+        String idopentillv = safeRequest(request, "idopentillv");
         Db_Master db6 = new Db_Master();
         ArrayList<String[]> list_oc_nochange = db6.list_oc_nochange_real(idopentillv);
         db6.closeDB();
@@ -1853,7 +1855,7 @@ public class Query extends HttpServlet {
         db.closeDB();
 
         PrintWriter out = response.getWriter();
-        String val_cat = request.getParameter("q");
+        String val_cat = safeRequest(request, "q");
         Gson gson = new Gson();
         ArrayList<String> JSONRequest = new ArrayList<>();
 
@@ -1916,7 +1918,7 @@ public class Query extends HttpServlet {
 
         db.closeDB();
         PrintWriter out = response.getWriter();
-        String val_cat = request.getParameter("q");
+        String val_cat = safeRequest(request, "q");
         Gson gson = new Gson();
         ArrayList<String> JSONRequest = new ArrayList<>();
 
@@ -1979,7 +1981,7 @@ public class Query extends HttpServlet {
         ArrayList<Currency> cu = db.list_currency(filiale);
 
         PrintWriter out = response.getWriter();
-        String q = request.getParameter("q");
+        String q = safeRequest(request, "q");
         if (q.length() == 18) {
 
             ArrayList<String[]> result = db.list_BB_waiting(q.substring(0, 3), q.substring(3));
@@ -2150,7 +2152,7 @@ public class Query extends HttpServlet {
         db1.closeDB();
 
         PrintWriter out = response.getWriter();
-        String q = request.getParameter("q");
+        String q = safeRequest(request, "q");
 
 //        q = convertFIDCODE(q);
         if (q.length() == 18) {
@@ -2321,7 +2323,7 @@ public class Query extends HttpServlet {
         Db_Master db = new Db_Master();
         ArrayList<String[]> result = db.country_cf();
         db.closeDB();
-        String q = request.getParameter("q");
+        String q = safeRequest(request, "q");
         try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"items\": [ ";
             String fine = "]}";
@@ -2347,7 +2349,7 @@ public class Query extends HttpServlet {
      */
     protected void city_select(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String q = request.getParameter("q");
+        String q = safeRequest(request, "q");
 
         Db_Master db = new Db_Master();
 //        ArrayList<String[]> result = db.city_Italy_APM_like(q);
@@ -2403,7 +2405,7 @@ public class Query extends HttpServlet {
         Db_Master db = new Db_Master();
         ArrayList<String[]> result = db.district();
         db.closeDB();
-        String q = request.getParameter("q");
+        String q = safeRequest(request, "q");
         try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"items\": [ ";
             String fine = "]}";
@@ -2442,12 +2444,12 @@ public class Query extends HttpServlet {
         response.setContentType("text/plain; charset=ISO-8859-1");
         response.setCharacterEncoding("ISO-8859-1");
 
-        String branch = request.getParameter("branch").trim();
+        String branch = safeRequest(request, "branch").trim();
 
-        String d1 = request.getParameter("d1");
-        String d2 = request.getParameter("d2");
-        String cl_cog = replaceApici(request.getParameter("cl_cog"));
-        String cl_na = replaceApici(request.getParameter("cl_na"));
+        String d1 = safeRequest(request, "d1");
+        String d2 = safeRequest(request, "d2");
+        String cl_cog = replaceApici(safeRequest(request, "cl_cog"));
+        String cl_na = replaceApici(safeRequest(request, "cl_na"));
 
         String data1 = formatStringtoStringDate_null(d1, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d2, patternnormdate_filter, patternsql);
@@ -2517,17 +2519,17 @@ public class Query extends HttpServlet {
         Db_Master db = new Db_Master();
         String branch[];
 
-        String br1 = request.getParameter("branch");
+        String br1 = safeRequest(request, "branch");
 
         if (br1 == null || br1.trim().equals("") || br1.trim().equals(";")) {
             branch = parseArrayValues(db.list_branchcode_completeAFTER311217());
         } else {
-            branch = parseArrayValues(request.getParameter("branch"), ";");
+            branch = parseArrayValues(safeRequest(request, "branch"), ";");
         }
 
-        String status = request.getParameter("status");
-        String d1 = request.getParameter("d1");
-        String d2 = request.getParameter("d2");
+        String status = safeRequest(request, "status");
+        String d1 = safeRequest(request, "d1");
+        String d2 = safeRequest(request, "d2");
 
 //        ArrayList<Booking> result = new ArrayList<>();
         ArrayList<Booking> result = db.query_prenot_list_new(branch, status, d1, d2);
@@ -2704,9 +2706,9 @@ public class Query extends HttpServlet {
 
         try (//        Utility.printRequest(request);
                  PrintWriter out = response.getWriter()) {
-            String total = request.getParameter("total");
-            String pay = request.getParameter("pay");
-            String localcur = request.getParameter("localcur");
+            String total = safeRequest(request, "total");
+            String pay = safeRequest(request, "pay");
+            String localcur = safeRequest(request, "localcur");
             //        Db_Master db01 = new Db_Master();
 //        ArrayList<String[]> listsize = db01.currency_min_sizes();
 //        db01.closeDB();
@@ -2718,9 +2720,9 @@ public class Query extends HttpServlet {
                 JSONRequest.add(gson.toJson("Cuts of currency " + localcur + " not available. Min size is " + ou[1] + " - Check currency tables."));
             } else {
                 for (int i = 1; i < 6; i++) {
-                    String kind = request.getParameter("kind" + i);
-                    String figs = request.getParameter("figs" + i);
-                    String quantity = request.getParameter("quantity" + i);
+                    String kind = safeRequest(request, "kind" + i);
+                    String figs = safeRequest(request, "figs" + i);
+                    String quantity = safeRequest(request, "quantity" + i);
                     if (kind != null && !figs.equals("")) {
                         ou = verificataglivaluta(figs, kind, quantity);
                         ok = Boolean.valueOf(ou[0]);
@@ -2751,15 +2753,15 @@ public class Query extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
         try ( PrintWriter out = response.getWriter()) {
-            String company = request.getParameter("company").trim();
-            String doc = request.getParameter("doc").trim();
-            String nome = request.getParameter("n").trim();
-            String cognome = request.getParameter("c").trim();
-            String datanascita = request.getParameter("d").trim();
-            String nazionenascita = request.getParameter("naz").trim();
-            String codfisc = request.getParameter("cf").trim();
-            String tipocliente = request.getParameter("t").trim();
-            String importo = request.getParameter("i").trim();
+            String company = safeRequest(request, "company").trim();
+            String doc = safeRequest(request, "doc").trim();
+            String nome = safeRequest(request, "n").trim();
+            String cognome = safeRequest(request, "c").trim();
+            String datanascita = safeRequest(request, "d").trim();
+            String nazionenascita = safeRequest(request, "naz").trim();
+            String codfisc = safeRequest(request, "cf").trim();
+            String tipocliente = safeRequest(request, "t").trim();
+            String importo = safeRequest(request, "i").trim();
             Db_Master db01 = new Db_Master(true);
             if (db01.getC() == null) {
                 db01 = new Db_Master();
@@ -2869,11 +2871,11 @@ public class Query extends HttpServlet {
      */
     protected void verificaclientstraniero(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String ti = request.getParameter("ti").trim();
-        String co1 = request.getParameter("co1").trim();
-        String na1 = request.getParameter("na1").trim();
-        String nz1 = request.getParameter("nz1").trim();
-        String dn1 = request.getParameter("dn1").trim();
+        String ti = safeRequest(request, "ti").trim();
+        String co1 = safeRequest(request, "co1").trim();
+        String na1 = safeRequest(request, "na1").trim();
+        String nz1 = safeRequest(request, "nz1").trim();
+        String dn1 = safeRequest(request, "dn1").trim();
 
         String[] buysell = {"-", "-"};
         Db_Master dblocal = new Db_Master();
@@ -2997,10 +2999,10 @@ public class Query extends HttpServlet {
         response.setCharacterEncoding("ISO-8859-1");
         //String user = (String) request.getSession().getAttribute("us_cod");
 
-        String loy = request.getParameter("loy");
-        String surname = request.getParameter("surname");
-        String name = request.getParameter("name");
-        String taxcode = request.getParameter("taxcode");
+        String loy = safeRequest(request, "loy");
+        String surname = safeRequest(request, "surname");
+        String name = safeRequest(request, "name");
+        String taxcode = safeRequest(request, "taxcode");
 
         Db_Master db = new Db_Master(true);
         ArrayList<String[]> result = db.query_LOY(loy, surname, name, taxcode);
@@ -3046,12 +3048,12 @@ public class Query extends HttpServlet {
      */
     protected void verificanewuk(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String co1 = request.getParameter("co1").trim();
-        String na1 = request.getParameter("na1").trim();
-        String nz1 = request.getParameter("nz1").trim();
-        String dn1 = request.getParameter("dn1").trim();
-        String importo = request.getParameter("importo").trim();
-//        String tipocliente = request.getParameter("customerKind").trim();
+        String co1 = safeRequest(request, "co1").trim();
+        String na1 = safeRequest(request, "na1").trim();
+        String nz1 = safeRequest(request, "nz1").trim();
+        String dn1 = safeRequest(request, "dn1").trim();
+        String importo = safeRequest(request, "importo").trim();
+//        String tipocliente = safeRequest(request, "customerKind").trim();
 
         Db_Master db = new Db_Master(true);
         if (db.getC() == null) {
@@ -3099,8 +3101,8 @@ public class Query extends HttpServlet {
      * @throws IOException
      */
     protected void verificaclient(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String q = request.getParameter("q").trim();
-        String ti = request.getParameter("ti").trim();
+        String q = safeRequest(request, "q").trim();
+        String ti = safeRequest(request, "ti").trim();
         String[] buysell = {"-", "-"};
         Db_Master dblocal = new Db_Master();
         Client cl = dblocal.query_Client_cf(q);
@@ -3219,11 +3221,11 @@ public class Query extends HttpServlet {
 
         if (cl_FI == null) {
 
-            String cf = request.getParameter("cf").trim();
-            String co1 = request.getParameter("co1").trim();
-            String na1 = request.getParameter("na1").trim();
-            String nz1 = request.getParameter("nz1").trim();
-            String dn1 = request.getParameter("dn1").trim();
+            String cf = safeRequest(request, "cf").trim();
+            String co1 = safeRequest(request, "co1").trim();
+            String na1 = safeRequest(request, "na1").trim();
+            String nz1 = safeRequest(request, "nz1").trim();
+            String dn1 = safeRequest(request, "dn1").trim();
 
             Db_Master dbcentral = new Db_Master(true);
             if (dbcentral.getC() == null) {
@@ -3348,9 +3350,9 @@ public class Query extends HttpServlet {
             throws ServletException, IOException {
 
         if (is_IT) {
-            String customerKind = request.getParameter("customerKind");
-            double payout1 = fd(formatDoubleforMysql(request.getParameter("payout1")));
-            String heavy_country = request.getParameter("heavy_country");
+            String customerKind = safeRequest(request, "customerKind");
+            double payout1 = fd(formatDoubleforMysql(safeRequest(request, "payout1")));
+            String heavy_country = safeRequest(request, "heavy_country");
 
             Db_Master db = new Db_Master();
             ArrayList<String[]> result = listaDocumentiAccettati(get_customerKind(customerKind), payout1, heavy_country, db.identificationCard());
@@ -3428,7 +3430,7 @@ public class Query extends HttpServlet {
                 redirect(request, response, link_value);
             }
             response.setContentType("text/html;charset=UTF-8");
-            String type = request.getParameter("type");
+            String type = safeRequest(request, "type");
             switch (type) {
                 case "nc_cat":
                     query_nc_cat(request, response);

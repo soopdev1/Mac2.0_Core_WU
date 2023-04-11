@@ -54,6 +54,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import org.joda.time.DateTime;
+import static rc.so.util.Utility.safeRequest;
 
 /**
  *
@@ -254,7 +255,7 @@ public class Pdf extends HttpServlet {
      * @throws IOException
      */
     protected void _macnctaxf(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
         Db_Master db = new Db_Master();
         NC_transaction nc = db.get_NC_transaction(cod);
         db.closeDB();
@@ -265,10 +266,10 @@ public class Pdf extends HttpServlet {
             HttpSession se = request.getSession();
             se.setAttribute("payload", payload);
             se.setAttribute("cod", cod1);
-            se.setAttribute("typesi", request.getParameter("type"));
+            se.setAttribute("typesi", safeRequest(request, "type"));
             se.setAttribute("codtr", cod);
             se.setAttribute("codcl", "NC");
-            String oldloy = request.getParameter("oldloy");
+            String oldloy = safeRequest(request, "oldloy");
             if (oldloy == null) {
                 oldloy = "0";
             }
@@ -287,15 +288,15 @@ public class Pdf extends HttpServlet {
      * @throws IOException
      */
     protected void _macautoce(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String solofirma = request.getParameter("solofirma");
+        String solofirma = safeRequest(request, "solofirma");
         if (solofirma == null) {
             solofirma = "NO";
         }
         Db_Master db = new Db_Master();
         String pathtemp = db.getPath("temp");
-        String codtr = request.getParameter("codtr");
-        String codcl = request.getParameter("codcl");
-        String dt = request.getParameter("dt");
+        String codtr = safeRequest(request, "codtr");
+        String codcl = safeRequest(request, "codcl");
+        String dt = safeRequest(request, "dt");
         Client cl = db.query_Client_transaction(codtr, codcl);
         Ch_transaction ct = db.query_transaction_ch(codtr);
         if (ct == null) {
@@ -312,7 +313,7 @@ public class Pdf extends HttpServlet {
             HttpSession se = request.getSession();
             se.setAttribute("payload", payload);
             se.setAttribute("cod", cod1);
-            se.setAttribute("typesi", request.getParameter("type"));
+            se.setAttribute("typesi", safeRequest(request, "type"));
             se.setAttribute("codtr", codtr);
             se.setAttribute("codcl", codcl);
             redirect(request, response, "signature.jsp?solofirma=" + solofirma);
@@ -330,14 +331,14 @@ public class Pdf extends HttpServlet {
      * @throws IOException
      */
     protected void _macprofcl(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String solofirma = request.getParameter("solofirma");
+        String solofirma = safeRequest(request, "solofirma");
         if (solofirma == null) {
             solofirma = "NO";
         }
 
         Db_Master db = new Db_Master();
         String pathtemp = db.getPath("temp");
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
         Ch_transaction tra = db.query_transaction_ch(cod);
         if (tra == null) {
             tra = db.query_transaction_ch_temp(cod);
@@ -346,18 +347,18 @@ public class Pdf extends HttpServlet {
         Client cl = db.query_Client_transaction(cod, tra.getCl_cod());
         Office ma = db.get_national_office();
         Branch br = db.get_branch(tra.getFiliale());
-        String iss = request.getParameter("iss");
-        String cust = request.getParameter("cust");
-        String cust_det = request.getParameter("cust_det");
-        String ann = request.getParameter("ann");
-        String main1 = request.getParameter("main1");
-        String main1_val = request.getParameter("main1_val");
-        String main2 = request.getParameter("main2");
-        String main2_val = request.getParameter("main2_val");
-        String main3 = request.getParameter("main3");
-        String main3_val = request.getParameter("main3_val");
+        String iss = safeRequest(request, "iss");
+        String cust = safeRequest(request, "cust");
+        String cust_det = safeRequest(request, "cust_det");
+        String ann = safeRequest(request, "ann");
+        String main1 = safeRequest(request, "main1");
+        String main1_val = safeRequest(request, "main1_val");
+        String main2 = safeRequest(request, "main2");
+        String main2_val = safeRequest(request, "main2_val");
+        String main3 = safeRequest(request, "main3");
+        String main3_val = safeRequest(request, "main3_val");
 
-        if (request.getParameter("down") != null && request.getParameter("down").equals("OK")) {
+        if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK")) {
             iss = "";
             cust = "";
             cust_det = "";
@@ -383,7 +384,7 @@ public class Pdf extends HttpServlet {
             HttpSession se = request.getSession();
             se.setAttribute("payload", payload);
             se.setAttribute("cod", cod1);
-            se.setAttribute("typesi", request.getParameter("type"));
+            se.setAttribute("typesi", safeRequest(request, "type"));
             se.setAttribute("codtr", cod);
             se.setAttribute("codcl", tra.getCl_cod());
 
@@ -405,8 +406,8 @@ public class Pdf extends HttpServlet {
         Db_Master db = new Db_Master();
         String pathtemp = db.getPath("temp");
 
-        String codtr = request.getParameter("codtr");
-        String codcl = request.getParameter("codcl");
+        String codtr = safeRequest(request, "codtr");
+        String codcl = safeRequest(request, "codcl");
         Ch_transaction tra = db.query_transaction_ch(codtr);
         if (tra == null) {
             tra = db.query_transaction_ch_temp(codtr);
@@ -431,7 +432,7 @@ public class Pdf extends HttpServlet {
             se.setAttribute("payload", payload);
             se.setAttribute("payload2", payload2);
             se.setAttribute("cod", cod);
-            se.setAttribute("typesi", request.getParameter("type"));
+            se.setAttribute("typesi", safeRequest(request, "type"));
             se.setAttribute("codtr", codtr);
             se.setAttribute("codcl", codcl);
             String oldloy = "0";
@@ -455,8 +456,8 @@ public class Pdf extends HttpServlet {
     protected void _maccredinot(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String pathtemp = db.getPath("temp");
-        String codtr = request.getParameter("codtr");
-        String codcl = request.getParameter("codcl");
+        String codtr = safeRequest(request, "codtr");
+        String codcl = safeRequest(request, "codcl");
         Ch_transaction tra = db.query_transaction_ch(codtr);
         if (tra == null) {
             tra = db.query_transaction_ch_temp(codtr);
@@ -487,7 +488,7 @@ public class Pdf extends HttpServlet {
             se.setAttribute("payload", payload);
             se.setAttribute("payload2", payload2);
             se.setAttribute("cod", cod);
-            se.setAttribute("typesi", request.getParameter("type"));
+            se.setAttribute("typesi", safeRequest(request, "type"));
             se.setAttribute("codtr", codtr);
             se.setAttribute("codcl", codcl);
             String oldloy = "0";
@@ -509,7 +510,7 @@ public class Pdf extends HttpServlet {
      * @throws IOException
      */
     protected void _macrefund(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String cod_tr = request.getParameter("codtr");
+        String cod_tr = safeRequest(request, "codtr");
         String datetime = new DateTime().toString(patternnormdate_filter);
         Db_Master db = new Db_Master();
         String pathtemp = db.getPath("temp");
@@ -618,8 +619,8 @@ public class Pdf extends HttpServlet {
      * @throws IOException
      */
     protected void _macfaexseebo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String codtr = request.getParameter("codtr");
-        String codcl = request.getParameter("codcl");
+        String codtr = safeRequest(request, "codtr");
+        String codcl = safeRequest(request, "codcl");
         Db_Master db = new Db_Master();
         String pathtemp = db.getPath("temp");
         Ch_transaction tra = db.query_transaction_ch(codtr);
@@ -648,7 +649,7 @@ public class Pdf extends HttpServlet {
             se.setAttribute("payload", payload);
             se.setAttribute("payload2", payload2);
             se.setAttribute("cod", cod);
-            se.setAttribute("typesi", request.getParameter("type"));
+            se.setAttribute("typesi", safeRequest(request, "type"));
             se.setAttribute("codtr", codtr);
             se.setAttribute("codcl", codcl);
             String oldloy = "0";
@@ -672,8 +673,8 @@ public class Pdf extends HttpServlet {
     protected void _macriseco(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String pathtemp = db.getPath("temp");
-        String codtr = request.getParameter("codtr");
-        String codcl = request.getParameter("codcl");
+        String codtr = safeRequest(request, "codtr");
+        String codcl = safeRequest(request, "codcl");
         Ch_transaction tra = db.query_transaction_ch(codtr);
         if (tra == null) {
             tra = db.query_transaction_ch_temp(codtr);
@@ -698,7 +699,7 @@ public class Pdf extends HttpServlet {
             se.setAttribute("payload", payload);
             se.setAttribute("payload2", payload2);
             se.setAttribute("cod", cod);
-            se.setAttribute("typesi", request.getParameter("type"));
+            se.setAttribute("typesi", safeRequest(request, "type"));
             se.setAttribute("codtr", codtr);
             se.setAttribute("codcl", codcl);
             String oldloy = "0";
@@ -734,8 +735,8 @@ public class Pdf extends HttpServlet {
 
         Db_Master db = new Db_Master();
         String pathtemp = db.getPath("temp");
-        String codtr = request.getParameter("codtr");
-        String codcl = request.getParameter("codcl");
+        String codtr = safeRequest(request, "codtr");
+        String codcl = safeRequest(request, "codcl");
         Ch_transaction tra = db.query_transaction_ch(codtr);
         if (tra == null) {
             tra = db.query_transaction_ch_temp(codtr);
@@ -760,7 +761,7 @@ public class Pdf extends HttpServlet {
             se.setAttribute("payload", payload);
             se.setAttribute("payload2", payload2);
             se.setAttribute("cod", cod);
-            se.setAttribute("typesi", request.getParameter("type"));
+            se.setAttribute("typesi", safeRequest(request, "type"));
             se.setAttribute("codtr", codtr);
             se.setAttribute("codcl", codcl);
             String oldloy = "0";
@@ -782,7 +783,7 @@ public class Pdf extends HttpServlet {
         try {
             response.setContentType("text/html;charset=UTF-8");
 //            request.setCharacterEncoding("UTF-8");
-            String type = request.getParameter("type");
+            String type = safeRequest(request, "type");
             switch (type) {
                 case "returnsign":
                     returnsign(request, response);

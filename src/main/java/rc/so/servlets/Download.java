@@ -82,6 +82,7 @@ import static org.apache.commons.io.FileUtils.readFileToByteArray;
 import org.apache.commons.lang3.StringUtils;
 import static org.apache.commons.lang3.StringUtils.replace;
 import org.joda.time.DateTime;
+import static rc.so.util.Utility.safeRequest;
 
 /**
  *
@@ -98,7 +99,7 @@ public class Download
      * @throws IOException
      */
     protected void viewPdf(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
         Db_Master db = new Db_Master();
         String base64 = db.get_pdf_temp(cod);
         db.closeDB();
@@ -107,7 +108,7 @@ public class Download
             String headerKey = "Content-Disposition";
             String headerValue = format("attachment; filename=\"%s\"", new Object[]{cod + ".pdf"});
             response.setHeader(headerKey, headerValue);
-            try (OutputStream outStream = response.getOutputStream()) {
+            try ( OutputStream outStream = response.getOutputStream()) {
                 outStream.write(decodeBase64(base64.getBytes()));
             }
         } else {
@@ -123,7 +124,7 @@ public class Download
      * @throws IOException
      */
     protected void viewExcel(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
         Db_Master db = new Db_Master();
         String base64 = db.get_pdf_temp(cod);
         db.closeDB();
@@ -132,7 +133,7 @@ public class Download
             String headerKey = "Content-Disposition";
             String headerValue = format("attachment; filename=\"%s\"", new Object[]{cod + ".xlsx"});
             response.setHeader(headerKey, headerValue);
-            try (OutputStream outStream = response.getOutputStream()) {
+            try ( OutputStream outStream = response.getOutputStream()) {
                 outStream.write(decodeBase64(base64.getBytes()));
             }
         } else {
@@ -148,7 +149,7 @@ public class Download
      * @throws IOException
      */
     protected void viewET_receipt(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
         Db_Master db = new Db_Master();
         ET_change et = db.get_ET_change(cod);
         db.closeDB();
@@ -172,7 +173,7 @@ public class Download
      * @throws IOException
      */
     protected void viewET_frbr_receipt(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
         String base64 = null;
         Db_Master db = new Db_Master();
 
@@ -289,7 +290,7 @@ public class Download
             String headerKey = "Content-Disposition";
             String headerValue = format("attachment; filename=\"%s\"", new Object[]{"BranchingSheet_" + new DateTime().toString("ddMMyyyy") + ".pdf"});
             response.setHeader(headerKey, headerValue);
-            try (OutputStream outStream = response.getOutputStream()) {
+            try ( OutputStream outStream = response.getOutputStream()) {
                 outStream.write(decodeBase64(base64.getBytes()));
             }
         } else {
@@ -306,7 +307,7 @@ public class Download
      * @throws IOException
      */
     protected void viewET_frba_receipt(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
         String namesheet = "BankingSheet_";
         Db_Master db = new Db_Master();
         ArrayList<String[]> array_credit_card = db.list_bank_pos_enabled();
@@ -426,7 +427,7 @@ public class Download
             String headerKey = "Content-Disposition";
             String headerValue = format("attachment; filename=\"%s\"", new Object[]{namesheet + new DateTime().toString("ddMMyyyy") + ".pdf"});
             response.setHeader(headerKey, headerValue);
-            try (OutputStream outStream = response.getOutputStream()) {
+            try ( OutputStream outStream = response.getOutputStream()) {
                 outStream.write(decodeBase64(base64.getBytes()));
             }
         } else {
@@ -443,7 +444,7 @@ public class Download
      * @throws IOException
      */
     protected void viewET_company_attach(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
         Db_Master db = new Db_Master();
         String base64 = db.view_Company_attach(cod);
         db.closeDB();
@@ -452,7 +453,7 @@ public class Download
             String headerKey = "Content-Disposition";
             String headerValue = format("attachments; filename=\"%s\"", new Object[]{cod + ".pdf"});
             response.setHeader(headerKey, headerValue);
-            try (OutputStream outStream = response.getOutputStream()) {
+            try ( OutputStream outStream = response.getOutputStream()) {
                 outStream.write(decodeBase64(base64.getBytes()));
             }
         } else {
@@ -468,14 +469,11 @@ public class Download
      * @throws IOException
      */
     protected void view_reprint_nctr(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String cod = request.getParameter("cod");
-        String view = request.getParameter("view");
+        String cod = safeRequest(request, "cod");
+        String view = safeRequest(request, "view");
         boolean ins = false;
-        if (view == null) {
-        } else {
-            if (view.equals("print")) {
-                ins = true;
-            }
+        if (view.equals("print")) {
+            ins = true;
         }
 
         NC_transaction nc = get_NC_transaction(cod);
@@ -513,7 +511,7 @@ public class Download
                 String headerKey = "Content-Disposition";
                 String headerValue = format("attachments; filename=\"%s\"", new Object[]{cod + ".pdf"});
                 response.setHeader(headerKey, headerValue);
-                try (OutputStream outStream = response.getOutputStream()) {
+                try ( OutputStream outStream = response.getOutputStream()) {
                     outStream.write(decodeBase64(base64));
                 }
             } else {
@@ -533,8 +531,8 @@ public class Download
      * @throws IOException
      */
     protected void view_list_cod(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String cod = request.getParameter("cod");
-        String doc = request.getParameter("doc");
+        String cod = safeRequest(request, "cod");
+        String doc = safeRequest(request, "doc");
         String ext = "";
         if (doc.equals("pdf")) {
             ext = ".pdf";
@@ -552,7 +550,7 @@ public class Download
                 String headerKey = "Content-Disposition";
                 String headerValue = format("attachments; filename=\"%s\"", new Object[]{cod + ext});
                 response.setHeader(headerKey, headerValue);
-                try (OutputStream outStream = response.getOutputStream()) {
+                try ( OutputStream outStream = response.getOutputStream()) {
                     outStream.write(decodeBase64(base64.getBytes()));
                 }
             } else {
@@ -570,8 +568,8 @@ public class Download
      * @throws IOException
      */
     protected void viewNewsLetters(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String cod = request.getParameter("cod");
-        String user = request.getParameter("user");
+        String cod = safeRequest(request, "cod");
+        String user = safeRequest(request, "user");
         Db_Master db = new Db_Master();
         insertTR("I", (String) request.getSession().getAttribute("us_cod"), (String) request.getSession().getAttribute("us_fil") + " - VIEW NEWSLETTER FILE " + cod);
         Newsletters nl = db.get_newsletters(cod, user);
@@ -587,7 +585,7 @@ public class Download
                 String headerKey = "Content-Disposition";
                 String headerValue = format("attachments; filename=\"%s\"", new Object[]{cod + ".pdf"});
                 response.setHeader(headerKey, headerValue);
-                try (OutputStream outStream = response.getOutputStream()) {
+                try ( OutputStream outStream = response.getOutputStream()) {
                     outStream.write(decodeBase64(nl.getFileout().getBytes()));
                 }
             } else {
@@ -615,8 +613,8 @@ public class Download
             user = "9999";
         }
 
-        String tr = request.getParameter("tr");
-        String cod = request.getParameter("cod");
+        String tr = safeRequest(request, "tr");
+        String cod = safeRequest(request, "cod");
         Db_Master db = new Db_Master();
         String pathtemp = db.getPath("temp");
         ArrayList<Document> docall = db.list_typedoc_tra("1");
@@ -631,7 +629,7 @@ public class Download
         String content = "application/pdf";
         String display = "inline";
 
-        insertTR("I", (String) request.getSession().getAttribute("us_cod"), 
+        insertTR("I", (String) request.getSession().getAttribute("us_cod"),
                 (String) request.getSession().getAttribute("us_fil") + " - VIEW REPRINT TR DOC " + cod);
         if (chd != null) {
             if (chd.getOnline().equals("Y") || chd.getTipodoc().equals("_docrico")) {
@@ -673,8 +671,8 @@ public class Download
                             ArrayList<Figures> fig = db.list_all_figures();
                             ArrayList<Currency> cur = db.list_figures_query_edit(null);
                             CustomerKind ck = db.get_customerKind(tra.getTipocliente());
-                            VATcode va = db.get_vat_cod(ck.getVatcode());
-                            base64 = new Receipt().print_bill_extrasee_bollo(pathtemp, ma, tra, cl, li, br, fig, cur, va, ck,true);
+                            VATcode va  = db.get_vat_cod(ck.getVatcode());
+                            base64 = new Receipt().print_bill_extrasee_bollo(pathtemp, ma, tra, cl, li, br, fig, cur, va, ck, true);
 
                         } else if (docall.get(x).getTypesign().equals("receiptcommnotzero")) {
 
@@ -684,7 +682,7 @@ public class Download
                             Branch br = db.get_branch(tra.getFiliale());
                             ArrayList<Figures> fig = db.list_all_figures();
                             ArrayList<Currency> cur = db.list_figures_query_edit(null);
-                            base64 = new Receipt().print_receipt_comm_not_zero(pathtemp, ma, tra, cl, li, br, fig, cur,true);
+                            base64 = new Receipt().print_receipt_comm_not_zero(pathtemp, ma, tra, cl, li, br, fig, cur, true);
 
                         } else if (docall.get(x).getTypesign().equals("receiptrefund")) {
 
@@ -725,7 +723,7 @@ public class Download
                             Branch br = db.get_branch(tra.getFiliale());
                             ArrayList<Figures> fig = db.list_all_figures();
                             ArrayList<Currency> cur = db.list_figures_query_edit(null);
-                            base64 = new Receipt().print_receipt_see(pathtemp, ma, tra, cl, li, br, fig, cur,true);
+                            base64 = new Receipt().print_receipt_see(pathtemp, ma, tra, cl, li, br, fig, cur, true);
                         } else if (docall.get(x).getTypesign().equals("receiptchangeIT")) {
 //                            ArrayList<Ch_transaction_value> li = db.query_transaction_value(tra.getCod());
 //                            Client cl = db.query_Client_transaction(tra.getCod(),tra.getCl_cod());
@@ -743,9 +741,9 @@ public class Download
                             ArrayList<Figures> fig = db.list_all_figures();
                             ArrayList<Currency> cur = db.list_figures_query_edit(null);
                             CustomerKind ck = db.get_customerKind(tra.getTipocliente());
-                            VATcode va = db.get_vat_cod(ck.getVatcode());
+                            VATcode va  = db.get_vat_cod(ck.getVatcode());
                             base64 = new Receipt().print_credit_note(pathtemp, ma, tra, cl, li, br, fig, cur, va, ck,
-                                    tra.getFiliale() + tra.getId(), tra.getPay(), true, tra.getPay(), tra.getPay(), true,true);
+                                    tra.getFiliale() + tra.getId(), tra.getPay(), true, tra.getPay(), tra.getPay(), true, true);
                         } else if (docall.get(x).getTypesign().equals("autoc")) {
                             Client cl = db.query_Client_transaction(tra.getCod(), tra.getCl_cod());
                             CustomerKind ck = db.get_customerKind(tra.getTipocliente());
@@ -796,7 +794,7 @@ public class Download
             String headerValue = format(display + "; filename=\"%s\"", new Object[]{name});
             response.setHeader("Content-Type", content);
             response.setHeader(headerKey, headerValue);
-            try (OutputStream outStream = response.getOutputStream()) {
+            try ( OutputStream outStream = response.getOutputStream()) {
                 outStream.write(decodeBase64(base64.getBytes()));
             }
         } else {
@@ -814,7 +812,7 @@ public class Download
     protected void view_doc_tr(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
         Db_Master db = new Db_Master();
         Ch_transaction_doc chd = db.get_tr_doc(cod);
         String base64 = null;
@@ -847,7 +845,7 @@ public class Download
             String headerValue = format(display + "; filename=\"%s\"", new Object[]{name});
             response.setHeader("Content-Type", content);
             response.setHeader(headerKey, headerValue);
-            try (OutputStream outStream = response.getOutputStream()) {
+            try ( OutputStream outStream = response.getOutputStream()) {
                 outStream.write(decodeBase64(base64.getBytes()));
             }
         } else {
@@ -864,7 +862,7 @@ public class Download
      */
     protected void view_doc_tr_attachments(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
         Db_Master db = new Db_Master();
         Ch_transaction_doc chd = db.get_tr_doc(cod);
         String base64 = null;
@@ -886,7 +884,7 @@ public class Download
             String headerValue = format("attachments; filename=\"%s\"", new Object[]{name});
             response.setHeader("Content-Type", "application/pdf");
             response.setHeader(headerKey, headerValue);
-            try (OutputStream outStream = response.getOutputStream()) {
+            try ( OutputStream outStream = response.getOutputStream()) {
                 outStream.write(decodeBase64(base64.getBytes()));
             }
         } else {
@@ -903,7 +901,7 @@ public class Download
      */
     protected void reprint_doc_tr(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
         Db_Master db = new Db_Master();
         Ch_transaction_doc chd = db.get_tr_doc(cod);
         String base64 = null;
@@ -939,7 +937,7 @@ public class Download
             String headerValue = format("inline; filename=\"%s\"", new Object[]{name});
             response.setHeader("Content-Type", "application/pdf");
             response.setHeader(headerKey, headerValue);
-            try (OutputStream outStream = response.getOutputStream()) {
+            try ( OutputStream outStream = response.getOutputStream()) {
                 outStream.write(decodeBase64(base64.getBytes()));
             }
         } else {
@@ -963,7 +961,7 @@ public class Download
 
             response.setContentType("text/html;charset=UTF-8");
 //            request.setCharacterEncoding("UTF-8");
-            String type = request.getParameter("type");
+            String type = safeRequest(request, "type");
             switch (type) {
                 case "viewPdf":
                     viewPdf(request, response);

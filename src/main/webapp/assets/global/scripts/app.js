@@ -220,7 +220,7 @@ var App = function() {
             el.before(newone);  
               
             // remove the original so that it is ready to run on next click
-            $("." + el.attr("class") + ":last", the).remove();
+            $("." + htmlEncode(el.attr("class")) + ":last", the).remove();
         }); 
 
         if ($('body').hasClass('page-md')) { 

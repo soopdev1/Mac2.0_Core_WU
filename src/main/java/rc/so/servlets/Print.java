@@ -71,6 +71,8 @@ import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
 import org.joda.time.DateTime;
+import static rc.so.util.Utility.safeRequest;
+import static rc.so.util.Utility.safeRequestMultiple;
 
 /**
  *
@@ -101,8 +103,8 @@ public class Print extends HttpServlet {
         String bra_loc = db.getCodLocal(true)[0];
 //        String pathtemp = "F:\\com\\";
         String pathtemp = db.getPath("temp");
-        String codtr = request.getParameter("codtr");
-        String codcl = request.getParameter("codcl");
+        String codtr = safeRequest(request, "codtr");
+        String codcl = safeRequest(request, "codcl");
         Ch_transaction tra = db.query_transaction_ch(codtr);
         if (tra == null) {
             tra = db.query_transaction_ch_temp(codtr);
@@ -119,9 +121,9 @@ public class Print extends HttpServlet {
         db.closeDB();
         String filename = new DateTime().toString("yyMMddHHmmssSSS") + codtr + "_macriseco.pdf";
         if (base64 != null) {
-            if (request.getParameter("down") != null && request.getParameter("down").equals("OK")) {
+            if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK")) {
                 onlyprint = true;
-            } else if (request.getParameter("down") != null && request.getParameter("down").equals("OK1")) {
+            } else if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK1")) {
 
                 String headerKey = "Content-Disposition";
                 String headerValue = format("inline; filename=\"%s\"", new Object[]{filename});
@@ -201,8 +203,8 @@ public class Print extends HttpServlet {
         String pathtemp = db.getPath("temp");
         String bra_loc = db.getCodLocal(true)[0];
 
-        String codtr = request.getParameter("codtr");
-        String codcl = request.getParameter("codcl");
+        String codtr = safeRequest(request, "codtr");
+        String codcl = safeRequest(request, "codcl");
         Ch_transaction tra = db.query_transaction_ch(codtr);
         if (tra == null) {
             tra = db.query_transaction_ch_temp(codtr);
@@ -214,8 +216,8 @@ public class Print extends HttpServlet {
         Branch br = db.get_branch(tra.getFiliale());
         boolean onlyprint = br.getFg_pad().equals("0");
         boolean print = onlyprint;
-        if (request.getParameter("req2") != null) {
-            print = valueOf(request.getParameter("req2"));
+        if (safeRequest(request, "req2") != null) {
+            print = valueOf(safeRequest(request, "req2"));
         }
 
         ArrayList<Figures> fig = db.list_all_figures();
@@ -224,9 +226,9 @@ public class Print extends HttpServlet {
         db.closeDB();
         if (base64 != null) {
             String filename = new DateTime().toString("yyMMddHHmmssSSS") + codtr + "_macrecsee.pdf";
-            if (request.getParameter("down") != null && request.getParameter("down").equals("OK")) {
+            if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK")) {
                 print = true;
-            } else if (request.getParameter("down") != null && request.getParameter("down").equals("OK1")) {
+            } else if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK1")) {
 
                 String headerKey = "Content-Disposition";
                 String headerValue = format("inline; filename=\"%s\"", new Object[]{filename});
@@ -304,7 +306,7 @@ public class Print extends HttpServlet {
             user = "9999";
         }
 
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
 
         Db_Master db = new Db_Master();
 
@@ -318,9 +320,9 @@ public class Print extends HttpServlet {
 
         if (base64 != null) {
             String filename = new DateTime().toString("yyMMddHHmmssSSS") + cod + "_macnctaxf.pdf";
-            if (request.getParameter("down") != null && request.getParameter("down").equals("OK")) {
+            if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK")) {
                 onlyprint = true;
-            } else if (request.getParameter("down") != null && request.getParameter("down").equals("OK1")) {
+            } else if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK1")) {
                 String headerKey = "Content-Disposition";
                 String headerValue = format("inline; filename=\"%s\"", new Object[]{filename});
                 response.setHeader("Content-Type", "application/pdf");
@@ -404,9 +406,9 @@ public class Print extends HttpServlet {
         String bra_loc = db.getCodLocal(true)[0];
         boolean onlyprint = db.get_branch(bra_loc).getFg_pad().equals("0");
         String pathtemp = db.getPath("temp");
-        String codtr = request.getParameter("codtr");
-        String codcl = request.getParameter("codcl");
-        String dt = request.getParameter("dt");
+        String codtr = safeRequest(request, "codtr");
+        String codcl = safeRequest(request, "codcl");
+        String dt = safeRequest(request, "dt");
         Client cl = db.query_Client_transaction(codtr, codcl);
         Ch_transaction ct = db.query_transaction_ch(codtr);
         if (ct == null) {
@@ -418,9 +420,9 @@ public class Print extends HttpServlet {
         db.closeDB();
         if (base64 != null) {
             String filename = new DateTime().toString("yyMMddHHmmssSSS") + codtr + "_macautoce.pdf";
-            if (request.getParameter("down") != null && request.getParameter("down").equals("OK")) {
+            if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK")) {
                 onlyprint = true;
-            } else if (request.getParameter("down") != null && request.getParameter("down").equals("OK1")) {
+            } else if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK1")) {
 
                 String headerKey = "Content-Disposition";
                 String headerValue = format("inline; filename=\"%s\"", new Object[]{filename});
@@ -499,8 +501,8 @@ public class Print extends HttpServlet {
         Db_Master db = new Db_Master();
         String bra_loc = db.getCodLocal(true)[0];
         String pathtemp = db.getPath("temp");
-        String codtr = request.getParameter("codtr");
-        String codcl = request.getParameter("codcl");
+        String codtr = safeRequest(request, "codtr");
+        String codcl = safeRequest(request, "codcl");
         Ch_transaction tra = db.query_transaction_ch(codtr);
         if (tra == null) {
             tra = db.query_transaction_ch_temp(codtr);
@@ -523,9 +525,9 @@ public class Print extends HttpServlet {
         db.closeDB();
         String filename = new DateTime().toString("yyMMddHHmmssSSS") + codtr + "_maccredinot.pdf";
         if (base64 != null) {
-            if (request.getParameter("down") != null && request.getParameter("down").equals("OK")) {
+            if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK")) {
                 onlyprint = true;
-            } else if (request.getParameter("down") != null && request.getParameter("down").equals("OK1")) {
+            } else if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK1")) {
 
                 String headerKey = "Content-Disposition";
                 String headerValue = format("inline; filename=\"%s\"", new Object[]{filename});
@@ -603,8 +605,8 @@ public class Print extends HttpServlet {
             user = "9999";
         }
         String bra_loc = db.getCodLocal(true)[0];
-        String codtr = request.getParameter("codtr");
-        String codcl = request.getParameter("codcl");
+        String codtr = safeRequest(request, "codtr");
+        String codcl = safeRequest(request, "codcl");
         Ch_transaction tra = db.query_transaction_ch(codtr);
         if (tra == null) {
             tra = db.query_transaction_ch_temp(codtr);
@@ -622,9 +624,9 @@ public class Print extends HttpServlet {
         db.closeDB();
         String filename = new DateTime().toString("yyMMddHHmmssSSS") + codtr + "_macfaexsee.pdf";
         if (base64 != null) {
-            if (request.getParameter("down") != null && request.getParameter("down").equals("OK")) {
+            if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK")) {
                 onlyprint = true;
-            } else if (request.getParameter("down") != null && request.getParameter("down").equals("OK1")) {
+            } else if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK1")) {
 
                 String cod = generaId(95);
                 String payload = base64;
@@ -704,8 +706,8 @@ public class Print extends HttpServlet {
 //        }
 //        String bra_loc = db.getCodLocal(true)[0];
 //
-//        String codtr = request.getParameter("codtr");
-//        String codcl = request.getParameter("codcl");
+//        String codtr = safeRequest(request, "codtr");
+//        String codcl = safeRequest(request, "codcl");
 //        Ch_transaction tra = db.query_transaction_ch(codtr);
 //        if (tra == null) {
 //            tra = db.query_transaction_ch_temp(codtr);
@@ -721,7 +723,7 @@ public class Print extends HttpServlet {
 //        db.closeDB();
 //        String filename = new DateTime().toString("yyMMddHHmmssSSS") + codtr + "_macreceita.pdf";
 //        if (base64 != null) {
-//            if (request.getParameter("down") != null && request.getParameter("down").equals("OK")) {
+//            if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK")) {
 //                onlyprint = true;
 //            }
 //            if (onlyprint) {
@@ -794,8 +796,8 @@ public class Print extends HttpServlet {
         }
         String bra_loc = db.getCodLocal(true)[0];
 
-        String codtr = request.getParameter("codtr");
-        String codcl = request.getParameter("codcl");
+        String codtr = safeRequest(request, "codtr");
+        String codcl = safeRequest(request, "codcl");
         Ch_transaction tra = db.query_transaction_ch(codtr);
         if (tra == null) {
             tra = db.query_transaction_ch_temp(codtr);
@@ -814,9 +816,9 @@ public class Print extends HttpServlet {
         db.closeDB();
         String filename = new DateTime().toString("yyMMddHHmmssSSS") + codtr + "_macfaexseebo.pdf";
         if (base64 != null) {
-            if (request.getParameter("down") != null && request.getParameter("down").equals("OK")) {
+            if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK")) {
                 onlyprint = true;
-            } else if (request.getParameter("down") != null && request.getParameter("down").equals("OK1")) {
+            } else if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK1")) {
 
                 String headerKey = "Content-Disposition";
                 String headerValue = format("inline; filename=\"%s\"", new Object[]{filename});
@@ -891,8 +893,8 @@ public class Print extends HttpServlet {
         Db_Master db = new Db_Master();
         String pathtemp = db.getPath("temp");
 
-        String codtr = request.getParameter("codtr");
-        String codcl = request.getParameter("codcl");
+        String codtr = safeRequest(request, "codtr");
+        String codcl = safeRequest(request, "codcl");
         Ch_transaction tra = db.query_transaction_ch(codtr);
         if (tra == null) {
             tra = db.query_transaction_ch_temp(codtr);
@@ -968,7 +970,7 @@ public class Print extends HttpServlet {
         }
         String bra_loc = db.getCodLocal(true)[0];
 
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
         Ch_transaction tra = db.query_transaction_ch(cod);
         if (tra == null) {
             tra = db.query_transaction_ch_temp(cod);
@@ -978,18 +980,18 @@ public class Print extends HttpServlet {
         Office ma = db.get_national_office();
         Branch br = db.get_branch(tra.getFiliale());
         boolean onlyprint = br.getFg_pad().equals("0");
-        String iss = request.getParameter("iss");
-        String cust = request.getParameter("cust");
-        String cust_det = request.getParameter("cust_det");
-        String ann = request.getParameter("ann");
-        String main1 = request.getParameter("main1");
-        String main1_val = request.getParameter("main1_val");
-        String main2 = request.getParameter("main2");
-        String main2_val = request.getParameter("main2_val");
-        String main3 = request.getParameter("main3");
-        String main3_val = request.getParameter("main3_val");
+        String iss = safeRequest(request, "iss");
+        String cust = safeRequest(request, "cust");
+        String cust_det = safeRequest(request, "cust_det");
+        String ann = safeRequest(request, "ann");
+        String main1 = safeRequest(request, "main1");
+        String main1_val = safeRequest(request, "main1_val");
+        String main2 = safeRequest(request, "main2");
+        String main2_val = safeRequest(request, "main2_val");
+        String main3 = safeRequest(request, "main3");
+        String main3_val = safeRequest(request, "main3_val");
 
-        if (request.getParameter("down") != null && request.getParameter("down").equals("OK")) {
+        if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK")) {
             iss = "";
             cust = "";
             cust_det = "";
@@ -1010,9 +1012,9 @@ public class Print extends HttpServlet {
         db.closeDB();
         String filename = new DateTime().toString("yyMMddHHmmssSSS") + cod + "_macprofcl.pdf";
         if (base64 != null) {
-            if (request.getParameter("down") != null && request.getParameter("down").equals("OK")) {
+            if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK")) {
                 onlyprint = true;
-            } else if (request.getParameter("down") != null && request.getParameter("down").equals("OK1")) {
+            } else if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK1")) {
 
                 String headerKey = "Content-Disposition";
                 String headerValue = format("inline; filename=\"%s\"", new Object[]{filename});
@@ -1088,7 +1090,7 @@ public class Print extends HttpServlet {
         if (user == null) {
             user = "9999";
         }
-        String cod_tr = request.getParameter("codtr");
+        String cod_tr = safeRequest(request, "codtr");
         String datetime = new DateTime().toString(patternnormdate_filter);
         Db_Master db = new Db_Master();
         String pathtemp = db.getPath("temp");
@@ -1191,9 +1193,9 @@ public class Print extends HttpServlet {
         db.closeDB();
 
         if (base64 != null) {
-            if (request.getParameter("down") != null && request.getParameter("down").equals("OK")) {
+            if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK")) {
                 onlyprint = true;
-            } else if (request.getParameter("down") != null && request.getParameter("down").equals("OK1")) {
+            } else if (safeRequest(request, "down") != null && safeRequest(request, "down").equals("OK1")) {
 
                 String headerKey = "Content-Disposition";
                 String headerValue = format("inline; filename=\"%s\"", new Object[]{filename});
@@ -1266,16 +1268,16 @@ public class Print extends HttpServlet {
     protected void excel_history_rate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         Db_Master db = new Db_Master();
-        String branch = parseArrayValues(request.getParameterValues("branch"));
+        String branch = parseArrayValues(safeRequestMultiple(request, "branch"));
         ArrayList<Branch> libr = db.list_branch_completeAFTER311217();
         ArrayList<String> br1 = parseString(branch, ";");
         if (br1.isEmpty()) {
             br1 = (ArrayList<String>) libr.stream().map(valore -> valore.getCod()).distinct().collect(toList());
         }
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
-        String cur_code = request.getParameter("cur_code");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
+        String cur_code = safeRequest(request, "cur_code");
 
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
@@ -1318,7 +1320,7 @@ public class Print extends HttpServlet {
      * @throws IOException
      */
     protected void reprintdocUKreceipt(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
         Db_Master db = new Db_Master();
         String pathtemp = db.getPath("temp");
         Ch_transaction_doc chd = db.get_tr_doc(cod);
@@ -1345,7 +1347,7 @@ public class Print extends HttpServlet {
      * @throws IOException
      */
     protected void printdocUKreceipt(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
         Db_Master db = new Db_Master();
         String pathtemp = db.getPath("temp");
         Ch_transaction_doc chd = db.get_tr_doc(cod);
@@ -1374,8 +1376,8 @@ public class Print extends HttpServlet {
      */
     protected void heavytransactionform(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String codtr = request.getParameter("codtr");
-        String codcl = request.getParameter("codcl");
+        String codtr = safeRequest(request, "codtr");
+        String codcl = safeRequest(request, "codcl");
 
         Db_Master db = new Db_Master();
         String pathout = db.getPath("temp");
@@ -1413,9 +1415,9 @@ public class Print extends HttpServlet {
      */
     protected void prebuy(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String type = request.getParameter("type");
-        String codtr = request.getParameter("codtr");
-        String codcl = request.getParameter("codcl");
+        String type = safeRequest(request, "type");
+        String codtr = safeRequest(request, "codtr");
+        String codcl = safeRequest(request, "codcl");
 
         String base64;
         ArrayList<Ch_transaction_doc> doc = get_list_tr_doc(codtr);
@@ -1437,7 +1439,7 @@ public class Print extends HttpServlet {
             writeByteArrayToFile(txt, decodeBase64(base64));
             if (txt.canRead()) {
 
-                if (request.getParameter("r") == null) {
+                if (safeRequest(request, "r") == null) {
                     boolean es = printFile(txt);
                     insertTR("I", (String) request.getSession().getAttribute("us_cod"),
                             (String) request.getSession().getAttribute("us_fil") + " - PRINT PRERECEIPT CZ " + codtr + " : " + es);
@@ -1481,9 +1483,9 @@ public class Print extends HttpServlet {
      * @throws IOException
      */
     protected void presell(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String type = request.getParameter("type");
-        String codtr = request.getParameter("codtr");
-        String codcl = request.getParameter("codcl");
+        String type = safeRequest(request, "type");
+        String codtr = safeRequest(request, "codtr");
+        String codcl = safeRequest(request, "codcl");
 
         String base64;
         ArrayList<Ch_transaction_doc> doc = get_list_tr_doc(codtr);
@@ -1504,7 +1506,7 @@ public class Print extends HttpServlet {
             File txt = new File(pathtemp + generaId(50) + "_" + laststring);
             writeByteArrayToFile(txt, decodeBase64(base64));
             if (txt.canRead()) {
-                if (request.getParameter("r") == null) {
+                if (safeRequest(request, "r") == null) {
                     boolean es = printFile(txt);
                     insertTR("I", (String) request.getSession().getAttribute("us_cod"),
                             (String) request.getSession().getAttribute("us_fil") + " - PRINT PRERECEIPT CZ " + codtr + " : " + es);
@@ -1535,9 +1537,9 @@ public class Print extends HttpServlet {
      * @throws IOException
      */
     protected void czsell(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String type = request.getParameter("type");
-        String codtr = request.getParameter("codtr");
-        String codcl = request.getParameter("codcl");
+        String type = safeRequest(request, "type");
+        String codtr = safeRequest(request, "codtr");
+        String codcl = safeRequest(request, "codcl");
 
         String base64;
         ArrayList<Ch_transaction_doc> doc = get_list_tr_doc(codtr);
@@ -1560,7 +1562,7 @@ public class Print extends HttpServlet {
             writeByteArrayToFile(txt, decodeBase64(base64));
             if (txt.canRead()) {
 
-                if (request.getParameter("r") == null) {
+                if (safeRequest(request, "r") == null) {
                     boolean es = printFile(txt);
                     insertTR("I", (String) request.getSession().getAttribute("us_cod"),
                             (String) request.getSession().getAttribute("us_fil") + " - PRINT RECEIPT CZ " + codtr + " : " + es);
@@ -1590,8 +1592,8 @@ public class Print extends HttpServlet {
      * @throws IOException
      */
     protected void czbuy(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String codtr = request.getParameter("codtr");
-        String codcl = request.getParameter("codcl");
+        String codtr = safeRequest(request, "codtr");
+        String codcl = safeRequest(request, "codcl");
 
         Db_Master db = new Db_Master();
         String pathtemp = db.getPath("temp");
@@ -1614,7 +1616,7 @@ public class Print extends HttpServlet {
             writeByteArrayToFile(txt, decodeBase64(base64));
             if (txt.canRead()) {
 
-                if (request.getParameter("r") == null) {
+                if (safeRequest(request, "r") == null) {
                     boolean es = printFile(txt);
                     insertTR("I", (String) request.getSession().getAttribute("us_cod"),
                             (String) request.getSession().getAttribute("us_fil") + " - PRINT RECEIPT CZ " + codtr + " : " + es);
@@ -1649,7 +1651,7 @@ public class Print extends HttpServlet {
             } else {
                 response.setContentType("text/html;charset=UTF-8");
 //                request.setCharacterEncoding("UTF-8");
-                String type = request.getParameter("type");
+                String type = safeRequest(request, "type");
                 if (type.equals("autoc")) {
                     autoc(request, response);
                 } else if (type.equals("receiptcommnotzero")) {

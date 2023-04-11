@@ -44,6 +44,7 @@ import static org.apache.commons.lang3.StringUtils.substring;
 import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
+import static rc.so.util.Utility.safeRequest;
 
 /**
  *
@@ -70,7 +71,7 @@ public class Scan extends HttpServlet {
      * @throws IOException
      */
     protected void checkADDR(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String token = request.getParameter("token").trim();
+        String token = safeRequest(request, "token").trim();
 //        token = "ADD200310122911352JzrM6Ha3qaEnDXgu2zXrJGJYi5vr0Vlc";
         Db_Master db = new Db_Master();
         String[] out = db.get_value_ADDRESS(token);
@@ -315,7 +316,7 @@ public class Scan extends HttpServlet {
      * @throws IOException
      */
     protected void removescannerdocument(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String coddoc_del = request.getParameter("coddoc_del");
+        String coddoc_del = safeRequest(request, "coddoc_del");
         Db_Master db = new Db_Master();
         boolean es = db.delete_doc_transaction_cd(coddoc_del);
         db.closeDB();
@@ -336,7 +337,7 @@ public class Scan extends HttpServlet {
         if (read != null) {
             JsonElement je = parseString(read);
             JsonObject root = je.getAsJsonObject();
-            String codtr = request.getParameter("trid").trim();
+            String codtr = safeRequest(request, "trid").trim();
             String Token = root.get("Token").getAsString().trim();
             String base64 = root.get("Payload").getAsString().trim();
             if (base64.equals("")) {
@@ -373,8 +374,8 @@ public class Scan extends HttpServlet {
      * @throws IOException
      */
     protected void sendPOS_transaction(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String cod = request.getParameter("cod");
-        String esito = request.getParameter("esito");
+        String cod = safeRequest(request, "cod");
+        String esito = safeRequest(request, "esito");
         String resp = Utility.sendPOS_transaction(cod);
         request.getSession().setAttribute("pos1", resp);
         redirect(request, response, "nc_transaction_esito.jsp?esito="+esito+"&cod="+cod);
@@ -393,7 +394,7 @@ public class Scan extends HttpServlet {
             throws ServletException, IOException {
         try {
             response.setContentType("text/html;charset=UTF-8");
-            String type = request.getParameter("type");
+            String type = safeRequest(request, "type");
             switch (type) {
                 case "scanner":
                     scanner(request, response);

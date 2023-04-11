@@ -1,6 +1,11 @@
 /**
 Demo script to handle the theme demo
 **/
+function htmlEncode(str){
+    return String(str).replace(/[^\w. ]/gi, function(c){
+        return '&#'+c.charCodeAt(0)+';';
+    });
+}
 var Demo = function() {
 
     // Handle Theme Settings
@@ -35,7 +40,7 @@ var Demo = function() {
             }
 
             if ($('.page-footer > .container').size() === 1) {
-                $('.page-footer').html($('.page-footer > .container').html());
+                $('.page-footer').html(htmlEncode($('.page-footer > .container').html()));
             } else if ($('.page-footer').parent(".container").size() === 1) {
                 $('.page-footer').insertAfter('.page-container');
                 $('.scroll-to-top').insertAfter('.page-footer');
@@ -81,7 +86,7 @@ var Demo = function() {
 
                 // set footer
                 if (footerOption === 'fixed') {
-                    $('.page-footer').html('<div class="container">' + $('.page-footer').html() + '</div>');
+                    $('.page-footer').html('<div class="container">' + htmlEncode($('.page-footer').html()) + '</div>');
                 } else {
                     $('.page-footer').appendTo('body > .container');
                 }

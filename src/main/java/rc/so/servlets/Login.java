@@ -38,6 +38,7 @@ import org.apache.commons.lang3.StringUtils;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 import static org.apache.commons.lang3.StringUtils.replace;
 import org.joda.time.DateTime;
+import static rc.so.util.Utility.safeRequest;
 
 /**
  *
@@ -84,8 +85,8 @@ public class Login extends HttpServlet {
      */
     protected void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String user = request.getParameter("username");
-        String pass = request.getParameter("password");
+        String user = safeRequest(request, "username");
+        String pass = safeRequest(request, "password");
         if ((user != null) && (pass != null)) {
             if (!user.trim().equals("") && !pass.trim().equals("")) {
                 Db_Master dbm = new Db_Master();
@@ -172,9 +173,9 @@ public class Login extends HttpServlet {
      */
     protected void resetfirst(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession se = request.getSession();
-        String oldp = request.getParameter("old").trim();
-        String newp = request.getParameter("new");
-        String confp = request.getParameter("conf");
+        String oldp = safeRequest(request, "old").trim();
+        String newp = safeRequest(request, "new");
+        String confp = safeRequest(request, "conf");
         String usr = se.getAttribute("us_cod").toString();
 
         if (oldp != null && newp != null && confp != null) {
@@ -213,9 +214,9 @@ public class Login extends HttpServlet {
      */
     protected void resetpsw(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession se = request.getSession();
-        String oldp = request.getParameter("old").trim();
-        String newp = request.getParameter("new");
-        String confp = request.getParameter("conf");
+        String oldp = safeRequest(request, "old").trim();
+        String newp = safeRequest(request, "new");
+        String confp = safeRequest(request, "conf");
         String usr = se.getAttribute("us_cod").toString();
 
         insertTR("I", (String) request.getSession().getAttribute("us_cod"), (String) request.getSession().getAttribute("us_fil") + " - RESET PASSWORD");
@@ -272,7 +273,7 @@ public class Login extends HttpServlet {
 
         try {
 
-            String us = request.getParameter("us");
+            String us = safeRequest(request, "us");
             ArrayList<Users> uslisList = list_all_users();
             Users u = get_username(us, uslisList);
             try (PrintWriter out = response.getWriter()) {
@@ -342,7 +343,7 @@ dbm.closeDB();
         try {
             response.setContentType("text/html;charset=UTF-8");
 ////            request.setCharacterEncoding("UTF-8");
-            String type = request.getParameter("type");
+            String type = safeRequest(request, "type");
             switch (type) {
                 case "1":
                     login(request, response);

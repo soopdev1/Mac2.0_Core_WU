@@ -1,8 +1,5 @@
 package rc.so.servlets;
 
-import com.google.common.base.Splitter;
-import static com.google.common.base.Splitter.on;
-import static com.google.common.base.Splitter.on;
 import static com.google.common.base.Splitter.on;
 import com.google.gson.Gson;
 import rc.so.atlante.Atl_dati_clienti;
@@ -44,19 +41,15 @@ import rc.so.entity.VATcode;
 import rc.so.entity.VerificaRicarica;
 import rc.so.esolver.Client_at;
 import rc.so.esolver.Client_es;
-import rc.so.pdf.Pdf;
 import static rc.so.pdf.Pdf.refund;
 import static rc.so.pdf.Pdf.scontrino_paymat;
 import rc.so.pdf.Receipt;
-import rc.so.rest.Antiriciclaggio;
 import static rc.so.rest.Antiriciclaggio.anagrafica;
 import static rc.so.rest.Antiriciclaggio.registrazione;
 import static rc.so.rest.Monitor.uploadMonitor;
 import rc.so.rest.Paymat_new;
-import rc.so.rest.Sign;
 import static rc.so.rest.Sign.verify_document;
 import static rc.so.rest.Tangerine.login_TA;
-import rc.so.util.Constant;
 import static rc.so.util.Constant.decimal;
 import static rc.so.util.Constant.is_CZ;
 import static rc.so.util.Constant.is_IT;
@@ -67,7 +60,6 @@ import static rc.so.util.Constant.patternnormdate_filter;
 import static rc.so.util.Constant.patternsql;
 import static rc.so.util.Constant.patternsqldate;
 import static rc.so.util.Constant.patternyear;
-import rc.so.util.Engine;
 import static rc.so.util.Engine.checkDeleteTR;
 import static rc.so.util.Engine.delete_ET_change;
 import static rc.so.util.Engine.delete_IT_change_temp;
@@ -99,7 +91,6 @@ import static rc.so.util.Engine.insert_excel_upl_SP;
 import static rc.so.util.Engine.insert_transaction_doc;
 import static rc.so.util.Engine.insert_transaction_doc_FILIALE;
 import static rc.so.util.Engine.kind_figures_openclose;
-import static rc.so.util.Engine.kind_figures_openclose;
 import static rc.so.util.Engine.list_ALL_till_enabled;
 import static rc.so.util.Engine.list_CA_CZ;
 import static rc.so.util.Engine.list_oc_nochange_real;
@@ -109,7 +100,6 @@ import static rc.so.util.Engine.query_LOY_transaction;
 import static rc.so.util.Engine.query_transaction_ch_temp;
 import static rc.so.util.Engine.rate_range_enabled;
 import static rc.so.util.Engine.remove_loy_assign_first_NEW;
-import static rc.so.util.Engine.remove_nochange_transaction;
 import static rc.so.util.Engine.scalareErroridaStock;
 import static rc.so.util.Engine.verifySession;
 import rc.so.util.Utility;
@@ -141,45 +131,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import static java.lang.Boolean.valueOf;
-import static java.lang.Boolean.valueOf;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
 import static java.lang.String.valueOf;
 import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -187,23 +144,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import java.nio.file.Files;
 import static java.nio.file.Files.probeContentType;
 import static java.util.Collections.sort;
-import java.util.UUID;
 import static java.util.UUID.randomUUID;
-import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
@@ -214,6 +163,7 @@ import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.apache.commons.lang3.StringUtils.replace;
 import static org.apache.commons.lang3.StringUtils.substring;
 import org.owasp.esapi.ESAPI;
+import static rc.so.util.Utility.safeRequest;
 
 /**
  *
@@ -233,16 +183,16 @@ public class Operazioni extends HttpServlet {
     protected void verificaeurotill(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String[] loc_cur = db.get_local_currency();
-        NC_causal nc2 = db.get_nc_causal(request.getParameter("nc_caus1"));
+        NC_causal nc2 = db.get_nc_causal(safeRequest(request, "nc_caus1"));
         String inout = db.getFg_inout_ncde(nc2.getFg_tipo_transazione_nc(), nc2.getNc_de());
-        ArrayList<String[]> array_list_oc_change = db.list_oc_change_real(request.getParameter("id_open_till"));
+        ArrayList<String[]> array_list_oc_change = db.list_oc_change_real(safeRequest(request, "id_open_till"));
         db.closeDB();
         String disponibile = "0.00";
         try ( PrintWriter out = response.getWriter()) {
             if (!nc2.getDe_causale_nc().toLowerCase().contains("acquisto")
                     && !nc2.getDe_causale_nc().toLowerCase().contains("buy")) {
                 if (inout.equals("2") || inout.equals("4")) {
-                    String richiesto = formatDoubleforMysql(request.getParameter("total1"));
+                    String richiesto = formatDoubleforMysql(safeRequest(request, "total1"));
                     for (int i = 0; i < array_list_oc_change.size(); i++) {
                         if (array_list_oc_change.get(i)[1].equals("01") && array_list_oc_change.get(i)[2].equalsIgnoreCase(loc_cur[0])) {
                             disponibile = array_list_oc_change.get(i)[3];
@@ -1405,8 +1355,8 @@ public class Operazioni extends HttpServlet {
         if (user == null) {
             user = "9999";
         }
-        String code = request.getParameter("idtrdel");
-        String motiv = request.getParameter("motiv1");
+        String code = safeRequest(request, "idtrdel");
+        String motiv = safeRequest(request, "motiv1");
         IT_change it = get_internal_transfer(code);
         String ok = "0";
 
@@ -1635,8 +1585,8 @@ public class Operazioni extends HttpServlet {
         if (user == null) {
             user = "9999";
         }
-        String code = request.getParameter("idtrdel");
-        String motiv = request.getParameter("motiv1");
+        String code = safeRequest(request, "idtrdel");
+        String motiv = safeRequest(request, "motiv1");
         ET_change et = get_ET_change(code);
         String ok = "0";
 
@@ -1816,8 +1766,8 @@ public class Operazioni extends HttpServlet {
         if (user == null) {
             user = "9999";
         }
-        String code = request.getParameter("idtrdel");
-        String motiv = request.getParameter("motiv1");
+        String code = safeRequest(request, "idtrdel");
+        String motiv = safeRequest(request, "motiv1");
         Db_Master db = new Db_Master();
         DateTime today = db.getCurdateDT();
         String[] loc_cur = db.get_local_currency();
@@ -2556,7 +2506,7 @@ public class Operazioni extends HttpServlet {
      */
     protected void unlockBlockedOperation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        String page = request.getParameter("so");
+        String page = safeRequest(request, "so");
         Db_Master db = new Db_Master();
         boolean es = db.updateBlockedOperation(session.getAttribute("us_cod") + " | " + session.getAttribute("us_user"), "0");
         db.closeDB();
@@ -2571,10 +2521,10 @@ public class Operazioni extends HttpServlet {
     private boolean checkquantity_nc(HttpServletRequest request, ArrayList<String[]> list_oc_nochange) {
         boolean output = false;
         for (int i = 0; i < list_oc_nochange.size(); i++) {
-            String nc_quantnow = request.getParameter("nc_quantnow" + i);
+            String nc_quantnow = safeRequest(request, "nc_quantnow" + i);
             if (nc_quantnow != null) {
                 if (!nc_quantnow.trim().equals("") && !nc_quantnow.trim().equals("0") && checkNumber(nc_quantnow.trim())) {
-                    String nc_quantold = request.getParameter("nc_quantold" + i);
+                    String nc_quantold = safeRequest(request, "nc_quantold" + i);
                     if (fd(nc_quantold) >= fd(formatDoubleforMysql(nc_quantnow))) {
                         output = true;
                     } else {
@@ -2605,10 +2555,10 @@ public class Operazioni extends HttpServlet {
 //        Db_Master db = new Db_Master();
         String ok = "0";
 
-        String idopentillfrom = request.getParameter("idopentillfrom");
-        String idopentillto = request.getParameter("idopentillto");
-        String tillfrom = request.getParameter("tillfrom");
-        String tillto = request.getParameter("tillto");
+        String idopentillfrom = safeRequest(request, "idopentillfrom");
+        String idopentillto = safeRequest(request, "idopentillto");
+        String tillfrom = safeRequest(request, "tillfrom");
+        String tillto = safeRequest(request, "tillto");
 
         String cod = "ITN" + generaId(22);
         IT_change it = new IT_change();
@@ -2637,14 +2587,14 @@ public class Operazioni extends HttpServlet {
             db1.closeDB();
             if (es) {
                 for (int i = 0; i < list_oc_nochange.size(); i++) {
-                    String nc_quantnow = request.getParameter("nc_quantnow" + i);
+                    String nc_quantnow = safeRequest(request, "nc_quantnow" + i);
                     if (nc_quantnow != null) {
-                        nc_quantnow = valueOf(parseIntR(formatDoubleforMysql(request.getParameter("nc_quantnow" + i))));
+                        nc_quantnow = valueOf(parseIntR(formatDoubleforMysql(safeRequest(request, "nc_quantnow" + i))));
 
                         if (!nc_quantnow.trim().equals("") && !nc_quantnow.trim().equals("0") && checkNumber(nc_quantnow.trim())) {
                             quant = true;
-                            String nc_quantold = request.getParameter("nc_quantold" + i);
-                            String nc_causal = request.getParameter("nc_causal" + i);
+                            String nc_quantold = safeRequest(request, "nc_quantold" + i);
+                            String nc_causal = safeRequest(request, "nc_causal" + i);
 
                             if (fd(nc_quantold) >= fd(formatDoubleforMysql(nc_quantnow))) {
                                 IT_change it2 = new IT_change();
@@ -2770,7 +2720,7 @@ public class Operazioni extends HttpServlet {
             String srcing, String bankbranch) {
         String ok = "0";
         boolean quant = false;
-        String conf = request.getParameter("conf");
+        String conf = safeRequest(request, "conf");
         if (conf == null) {
             conf = "NO";
         }
@@ -2794,23 +2744,23 @@ public class Operazioni extends HttpServlet {
                 for (int i = 0; i < array_list_oc_change.size(); i++) {
 
                     if (et.getIdopen_from().equals(array_list_oc_change.get(i)[0])) {
-                        String currency = request.getParameter("currencyv" + i);
-                        String kind = request.getParameter("kindv" + i);
-                        String s_quantold = formatDoubleforMysql(request.getParameter("s_quantold" + i));
-                        String s_totold = formatDoubleforMysql(request.getParameter("s_totold" + i));
-                        String s_quantnow = request.getParameter("s_quantnow" + i);
-                        String s_totnow = request.getParameter("s_totnow" + i);
-                        String s_loc = request.getParameter("s_loc" + i);
+                        String currency = safeRequest(request, "currencyv" + i);
+                        String kind = safeRequest(request, "kindv" + i);
+                        String s_quantold = formatDoubleforMysql(safeRequest(request, "s_quantold" + i));
+                        String s_totold = formatDoubleforMysql(safeRequest(request, "s_totold" + i));
+                        String s_quantnow = safeRequest(request, "s_quantnow" + i);
+                        String s_totnow = safeRequest(request, "s_totnow" + i);
+                        String s_loc = safeRequest(request, "s_loc" + i);
                         if (s_loc == null) {
                             s_loc = "false";
                         }
-                        String s_rate = request.getParameter("s_rate" + i);
+                        String s_rate = safeRequest(request, "s_rate" + i);
 
                         if (s_loc.equals("true")) {
                             s_rate = "1" + decimal + "0000000";
                         }
-                        String s_totv = request.getParameter("s_totv" + i);
-                        String s_buyv = request.getParameter("s_buyv" + i);
+                        String s_totv = safeRequest(request, "s_totv" + i);
+                        String s_buyv = safeRequest(request, "s_buyv" + i);
                         String s_spread = getValue_request(request, "s_spread" + i, false, "KO");
                         if (!s_spread.equals("KO")) {
                             s_spread = formatDoubleforMysql(s_spread);
@@ -2893,11 +2843,11 @@ public class Operazioni extends HttpServlet {
 //                                                    }
 //                                                }
                                                 for (int j = 0; j < array_sizecuts.size(); j++) {
-                                                    String quantnow = request.getParameter("quantnow" + i + "_" + j);
-                                                    String totold = request.getParameter("totold" + i + "_" + j);
-                                                    String quantold = request.getParameter("quantold" + i + "_" + j);
-                                                    String totnow = request.getParameter("totnow" + i + "_" + j);
-                                                    String sizecuts = request.getParameter("sizecuts" + i + "_" + j);
+                                                    String quantnow = safeRequest(request, "quantnow" + i + "_" + j);
+                                                    String totold = safeRequest(request, "totold" + i + "_" + j);
+                                                    String quantold = safeRequest(request, "quantold" + i + "_" + j);
+                                                    String totnow = safeRequest(request, "totnow" + i + "_" + j);
+                                                    String sizecuts = safeRequest(request, "sizecuts" + i + "_" + j);
                                                     if (quantnow != null) {
                                                         if (!quantnow.trim().equals("") && !quantnow.trim().equals("0")) {
                                                             if (checkquantity(false, formatDoubleforMysql(quantold), quantnow)) {
@@ -3142,7 +3092,7 @@ public class Operazioni extends HttpServlet {
 
                 } else {
 
-                    ArrayList<String[]> array_kind_fingures_openclose = kind_figures_openclose(request.getParameter("typeopv"), online);
+                    ArrayList<String[]> array_kind_fingures_openclose = kind_figures_openclose(safeRequest(request, "typeopv"), online);
 
                     Db_Master db7 = new Db_Master();
                     List<Sizecuts> array_figures_sizecuts = db7.figures_sizecuts_enabled();
@@ -3150,22 +3100,22 @@ public class Operazioni extends HttpServlet {
 
                     for (int i = 0; i < array_kind_fingures_openclose.size(); i++) {
 
-                        String currency = request.getParameter("currencyv" + i);
-                        String kind = request.getParameter("kindv" + i);
-                        String s_quantnow = request.getParameter("s_quantnow" + i);
-                        String s_totnow = request.getParameter("s_totnow" + i);
-                        String s_loc = request.getParameter("s_loc" + i);
+                        String currency = safeRequest(request, "currencyv" + i);
+                        String kind = safeRequest(request, "kindv" + i);
+                        String s_quantnow = safeRequest(request, "s_quantnow" + i);
+                        String s_totnow = safeRequest(request, "s_totnow" + i);
+                        String s_loc = safeRequest(request, "s_loc" + i);
                         if (s_loc == null) {
                             s_loc = "false";
                         }
-                        String s_rate = request.getParameter("s_rate" + i);
-                        String s_spread = request.getParameter("s_spread" + i);
+                        String s_rate = safeRequest(request, "s_rate" + i);
+                        String s_spread = safeRequest(request, "s_spread" + i);
                         if (s_loc.equals("true")) {
                             s_rate = "1" + decimal + "0000000";
                             s_spread = "0.00";
                         }
-                        String s_totv = request.getParameter("s_totv" + i);
-                        String s_buyv = request.getParameter("s_buyv" + i);
+                        String s_totv = safeRequest(request, "s_totv" + i);
+                        String s_buyv = safeRequest(request, "s_buyv" + i);
                         if (s_quantnow != null) {
                             if (!s_quantnow.trim().equals("") && !s_quantnow.trim().equals("0")) {
                                 quant = true;
@@ -3249,9 +3199,9 @@ public class Operazioni extends HttpServlet {
 //                                        }
 //                                    }
                                     for (int j = 0; j < array_sizecuts.size(); j++) {
-                                        String quantnow = request.getParameter("quantnow" + i + "_" + j);
-                                        String totnow = request.getParameter("totnow" + i + "_" + j);
-                                        String sizecuts = request.getParameter("sizecuts" + i + "_" + j);
+                                        String quantnow = safeRequest(request, "quantnow" + i + "_" + j);
+                                        String totnow = safeRequest(request, "totnow" + i + "_" + j);
+                                        String sizecuts = safeRequest(request, "sizecuts" + i + "_" + j);
 
                                         if (quantnow != null) {
                                             if (!quantnow.trim().equals("") && !quantnow.trim().equals("0")) {
@@ -3309,7 +3259,7 @@ public class Operazioni extends HttpServlet {
             String srcing, String bankbranch) {
         String ok = "0";
         boolean quant = false;
-        String conf = request.getParameter("conf");
+        String conf = safeRequest(request, "conf");
         if (conf == null) {
             conf = "NO";
         }
@@ -3325,10 +3275,10 @@ public class Operazioni extends HttpServlet {
 
             for (int i = 0; i < array_list_oc_change.size(); i++) {
                 if (et.getIdopen_from().equals(array_list_oc_change.get(i)[0])) {
-                    String s_quantold = formatDoubleforMysql(request.getParameter("s_quantold" + i));
-                    String s_totold = formatDoubleforMysql(request.getParameter("s_totold" + i));
-                    String s_quantnow = request.getParameter("s_quantnow" + i);
-                    String s_totnow = request.getParameter("s_totnow" + i);
+                    String s_quantold = formatDoubleforMysql(safeRequest(request, "s_quantold" + i));
+                    String s_totold = formatDoubleforMysql(safeRequest(request, "s_totold" + i));
+                    String s_quantnow = safeRequest(request, "s_quantnow" + i);
+                    String s_totnow = safeRequest(request, "s_totnow" + i);
                     if (s_quantnow != null) {
                         if (!s_quantnow.trim().equals("") && !s_quantnow.trim().equals("0") && !s_quantnow.trim().equals("0.00")) {
                             if (checkquantity(false, (s_quantold), s_quantnow)) {
@@ -3338,10 +3288,10 @@ public class Operazioni extends HttpServlet {
                                     List<String> array_sizecuts = array_figures_sizecuts.stream().filter(t1 -> t1.getValuta().equals(v1)).map(t1 -> t1.getIp_taglio()).collect(toList());
 
                                     for (int j = 0; j < array_sizecuts.size(); j++) {
-                                        String quantnow = request.getParameter("quantnow" + i + "_" + j);
-                                        String totold = request.getParameter("totold" + i + "_" + j);
-                                        String quantold = request.getParameter("quantold" + i + "_" + j);
-                                        String totnow = request.getParameter("totnow" + i + "_" + j);
+                                        String quantnow = safeRequest(request, "quantnow" + i + "_" + j);
+                                        String totold = safeRequest(request, "totold" + i + "_" + j);
+                                        String quantold = safeRequest(request, "quantold" + i + "_" + j);
+                                        String totnow = safeRequest(request, "totnow" + i + "_" + j);
                                         if (quantnow != null) {
                                             if (!quantnow.trim().equals("") && !quantnow.trim().equals("0")) {
                                                 if (checkquantity(false, formatDoubleforMysql(quantold), quantnow)) {
@@ -3386,9 +3336,9 @@ public class Operazioni extends HttpServlet {
                     break;
                 }
             } else {
-                ArrayList<String[]> array_kind_fingures_openclose = kind_figures_openclose(request.getParameter("typeopv"), online);
+                ArrayList<String[]> array_kind_fingures_openclose = kind_figures_openclose(safeRequest(request, "typeopv"), online);
                 for (int i = 0; i < array_kind_fingures_openclose.size(); i++) {
-                    String s_quantnow = request.getParameter("s_quantnow" + i);
+                    String s_quantnow = safeRequest(request, "s_quantnow" + i);
                     if (s_quantnow != null) {
                         if (!s_quantnow.trim().equals("") && !s_quantnow.trim().equals("0")) {
                             quant = true;
@@ -3409,7 +3359,7 @@ public class Operazioni extends HttpServlet {
             String srcing, String bankbranch) {
         String ok = "0";
         boolean quant = false;
-        String conf = request.getParameter("conf");
+        String conf = safeRequest(request, "conf");
         if (conf == null) {
             conf = "NO";
         }
@@ -3425,9 +3375,9 @@ public class Operazioni extends HttpServlet {
             if (es) {
                 ArrayList<String[]> list_oc_nochange = db.list_oc_nochange_real(et.getIdopen_from());
                 for (int i = 0; i < list_oc_nochange.size(); i++) {
-                    String nc_causal = request.getParameter("nc_causal" + i);
-                    String nc_quantold = formatDoubleforMysql(request.getParameter("nc_quantold" + i));
-                    String nc_quantnow = request.getParameter("nc_quantnow" + i);
+                    String nc_causal = safeRequest(request, "nc_causal" + i);
+                    String nc_quantold = formatDoubleforMysql(safeRequest(request, "nc_quantold" + i));
+                    String nc_quantnow = safeRequest(request, "nc_quantnow" + i);
                     if (nc_quantold != null) {
                         if (!nc_quantnow.trim().equals("") && !nc_quantnow.trim().equals("0")) {
                             if (checkquantity(false, nc_quantold, nc_quantnow)) {
@@ -3569,8 +3519,8 @@ public class Operazioni extends HttpServlet {
                     for (int i = 0; i < array_list_nochange.size(); i++) {
 
                         String cod = array_list_nochange.get(i)[0];
-                        String nc_causal = request.getParameter("nc_causal" + i);
-                        String nc_quantnow = request.getParameter("nc_quantnow" + i);
+                        String nc_causal = safeRequest(request, "nc_causal" + i);
+                        String nc_quantnow = safeRequest(request, "nc_quantnow" + i);
 
                         if (nc_quantnow != null) {
                             if (!nc_quantnow.trim().equals("") && !nc_quantnow.trim().equals("0")) {
@@ -3646,18 +3596,18 @@ public class Operazioni extends HttpServlet {
 
         String oper = new DateTime().toString(patternsqldate);
         String cod = "ETN" + generaId(22);
-        String bankbranch = request.getParameter("bankbranchv");
-        String typeop = request.getParameter("typeop");
-        String tofrom = request.getParameter("tofrom");
-        String idopentillfrom = request.getParameter("idopentillfrom");
-        String tillfrom = request.getParameter("tillfrom");
-        String note = request.getParameter("note");
-        String srcoff = request.getParameter("srcoff");
+        String bankbranch = safeRequest(request, "bankbranchv");
+        String typeop = safeRequest(request, "typeop");
+        String tofrom = safeRequest(request, "tofrom");
+        String idopentillfrom = safeRequest(request, "idopentillfrom");
+        String tillfrom = safeRequest(request, "tillfrom");
+        String note = safeRequest(request, "note");
+        String srcoff = safeRequest(request, "srcoff");
         if (srcoff == null) {
             srcoff = "OFFLINE";
         }
 
-        String autman = request.getParameter("autman");
+        String autman = safeRequest(request, "autman");
         if (autman == null) {
             autman = "A";
             srcoff = "ONLINE";
@@ -3689,7 +3639,7 @@ public class Operazioni extends HttpServlet {
         //altri
         et.setIp_oneri("0.00");
 
-        String srcing = request.getParameter("srcing");
+        String srcing = safeRequest(request, "srcing");
         if (srcing == null) {
             srcing = "";
         }
@@ -3774,7 +3724,7 @@ public class Operazioni extends HttpServlet {
 //        }
 
         String cod = "OCO" + generaId(22);
-        String safetill = request.getParameter("safetill");
+        String safetill = safeRequest(request, "safetill");
 
         String ok = "0";
         if (isopentill(safetill)) {
@@ -3792,7 +3742,7 @@ public class Operazioni extends HttpServlet {
                 user = "9999";
             }
 
-            String setall = request.getParameter("setall");
+            String setall = safeRequest(request, "setall");
 
             if (setall.equals("1")) {
                 Db_Master db1 = new Db_Master();
@@ -3804,9 +3754,9 @@ public class Operazioni extends HttpServlet {
 
             boolean dividi = db.get_national_office().getChangetype().equals("/");
 
-            String errorpresent = request.getParameter("errorpresent");
+            String errorpresent = safeRequest(request, "errorpresent");
 
-            String opencloseid = request.getParameter("opencloseid");
+            String opencloseid = safeRequest(request, "opencloseid");
 
             ArrayList<String[]> al_kifi = new ArrayList<>();
             ArrayList<String[]> al_sicu = new ArrayList<>();
@@ -3820,13 +3770,13 @@ public class Operazioni extends HttpServlet {
 //        String errorsvalue = "N";
             for (int i = 0; i < array_kind_fingures_openclose.size(); i++) {
 
-                String s_curr = request.getParameter("s_curr" + i);
-                String s_kind = request.getParameter("s_kind" + i);
-                String s_quantnow = request.getParameter("s_quantnow" + i);
-                String s_totnow = request.getParameter("s_totnow" + i);
-                String s_quantold = request.getParameter("s_quantold" + i);
-                String s_totalold = request.getParameter("s_totalold" + i);
-                String s_diffgap = request.getParameter("s_diffgap" + i);
+                String s_curr = safeRequest(request, "s_curr" + i);
+                String s_kind = safeRequest(request, "s_kind" + i);
+                String s_quantnow = safeRequest(request, "s_quantnow" + i);
+                String s_totnow = safeRequest(request, "s_totnow" + i);
+                String s_quantold = safeRequest(request, "s_quantold" + i);
+                String s_totalold = safeRequest(request, "s_totalold" + i);
+                String s_diffgap = safeRequest(request, "s_diffgap" + i);
                 if (s_diffgap == null) {
                     s_diffgap = "0.00";
                 }
@@ -3845,14 +3795,14 @@ public class Operazioni extends HttpServlet {
                     List<String> array_sizecuts = array_figures_sizecuts.stream().filter(t1 -> t1.getValuta().equals(v9)).map(t1 -> t1.getIp_taglio()).collect(toList());
                     for (int j = 0; j < array_sizecuts.size(); j++) {
 
-                        String curr = request.getParameter("curr" + i + "_" + j);
-                        String kind = request.getParameter("kind" + i + "_" + j);
-                        String cuts = request.getParameter("cuts" + i + "_" + j);
-                        String quantnow = request.getParameter("quantnow" + i + "_" + j);
-                        String totnow = request.getParameter("totnow" + i + "_" + j);
-                        String quantold = request.getParameter("quantold" + i + "_" + j);
-                        String totold = request.getParameter("totold" + i + "_" + j);
-                        String diffgapsize = request.getParameter("diffgapsize" + i + "_" + j);
+                        String curr = safeRequest(request, "curr" + i + "_" + j);
+                        String kind = safeRequest(request, "kind" + i + "_" + j);
+                        String cuts = safeRequest(request, "cuts" + i + "_" + j);
+                        String quantnow = safeRequest(request, "quantnow" + i + "_" + j);
+                        String totnow = safeRequest(request, "totnow" + i + "_" + j);
+                        String quantold = safeRequest(request, "quantold" + i + "_" + j);
+                        String totold = safeRequest(request, "totold" + i + "_" + j);
+                        String diffgapsize = safeRequest(request, "diffgapsize" + i + "_" + j);
                         if (diffgapsize == null) {
                             diffgapsize = "0.00";
                         }
@@ -3870,10 +3820,10 @@ public class Operazioni extends HttpServlet {
 
             for (int i = 0; i < array_list_nochange.size(); i++) {
 
-                String nc_cod = request.getParameter("nc_cod" + i);
-                String nc_quantnow = request.getParameter("nc_quantnow" + i);
-                String nc_quantold = request.getParameter("nc_quantold" + i);
-                String nc_diffgap = request.getParameter("nc_diffgap" + i);
+                String nc_cod = safeRequest(request, "nc_cod" + i);
+                String nc_quantnow = safeRequest(request, "nc_quantnow" + i);
+                String nc_quantold = safeRequest(request, "nc_quantold" + i);
+                String nc_diffgap = safeRequest(request, "nc_diffgap" + i);
                 String nc_differr = "N";
                 if (nc_diffgap == null) {
                     nc_diffgap = "0.00";
@@ -3950,7 +3900,7 @@ public class Operazioni extends HttpServlet {
                     }
                     if (s_differr.equals("Y")) {
                         //INSERT ERROR CON MOTIV
-                        String err = request.getParameter("trfigerr_" + v1[0] + "_" + v1[1]);
+                        String err = safeRequest(request, "trfigerr_" + v1[0] + "_" + v1[1]);
                         if (err != null) {
                             Openclose cherr = new Openclose();
                             cherr.setFiliale(filiale);
@@ -4106,7 +4056,7 @@ public class Operazioni extends HttpServlet {
 
                     if (nc_differr.equals("Y")) {
                         //INSERT ERROR CON MOTIV
-                        String err = request.getParameter("trnocerr_" + v3[0]);
+                        String err = safeRequest(request, "trnocerr_" + v3[0]);
                         if (err != null) {
                             Openclose cherr = new Openclose();
                             cherr.setFiliale(filiale);
@@ -4518,7 +4468,7 @@ public class Operazioni extends HttpServlet {
     protected void oc_close(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 //        Utility.printRequest(request);
-        String safetill = request.getParameter("safetill");
+        String safetill = safeRequest(request, "safetill");
 
         String ok = "0";
         if (isclosetill(safetill)) {
@@ -4535,7 +4485,7 @@ public class Operazioni extends HttpServlet {
                 user = "9999";
             }
 
-            String setall = request.getParameter("setall");
+            String setall = safeRequest(request, "setall");
 
             if (setall.equals("1")) {
                 Db_Master db1 = new Db_Master();
@@ -4549,12 +4499,12 @@ public class Operazioni extends HttpServlet {
 
             String loc_val[] = db.get_local_currency();
 
-            String errorpresent = request.getParameter("errorpresent");
+            String errorpresent = safeRequest(request, "errorpresent");
 
-            String opencloseid = request.getParameter("opencloseid");
+            String opencloseid = safeRequest(request, "opencloseid");
 
-            String idsafe = request.getParameter("idsafe");
-            String idsafeopenclose = request.getParameter("idsafeopenclose");
+            String idsafe = safeRequest(request, "idsafe");
+            String idsafeopenclose = safeRequest(request, "idsafeopenclose");
 
             ArrayList<String[]> al_kifi = new ArrayList<>();
             ArrayList<String[]> al_sicu = new ArrayList<>();
@@ -4566,7 +4516,7 @@ public class Operazioni extends HttpServlet {
             ArrayList<String[]> array_list_nochange = db.list_nochange();
             ArrayList<String[]> array_list_kind_pos = db.list_kind_pos();
 
-            String foreign_tr = request.getParameter("foreign_tr");
+            String foreign_tr = safeRequest(request, "foreign_tr");
             if (foreign_tr == null) {
                 foreign_tr = "N";
             } else if (foreign_tr.trim().equals("on")) {
@@ -4574,7 +4524,7 @@ public class Operazioni extends HttpServlet {
             } else {
                 foreign_tr = "N";
             }
-            String local_tr = request.getParameter("local_tr");
+            String local_tr = safeRequest(request, "local_tr");
             if (local_tr == null) {
                 local_tr = "N";
             } else if (local_tr.trim().equals("on")) {
@@ -4582,7 +4532,7 @@ public class Operazioni extends HttpServlet {
             } else {
                 local_tr = "N";
             }
-            String stock_tr = request.getParameter("stock_tr");
+            String stock_tr = safeRequest(request, "stock_tr");
             if (stock_tr == null) {
                 stock_tr = "N";
             } else if (stock_tr.trim().equals("on")) {
@@ -4595,13 +4545,13 @@ public class Operazioni extends HttpServlet {
 
             for (int i = 0; i < array_kind_fingures_openclose.size(); i++) {
 
-                String s_curr = request.getParameter("s_curr" + i);
-                String s_kind = request.getParameter("s_kind" + i);
-                String s_quantnow = request.getParameter("s_quantnow" + i);
-                String s_totnow = request.getParameter("s_totnow" + i);
-                String s_quantold = request.getParameter("s_quantold" + i);
-                String s_totalold = request.getParameter("s_totalold" + i);
-                String s_diffgap = request.getParameter("s_diffgap" + i);
+                String s_curr = safeRequest(request, "s_curr" + i);
+                String s_kind = safeRequest(request, "s_kind" + i);
+                String s_quantnow = safeRequest(request, "s_quantnow" + i);
+                String s_totnow = safeRequest(request, "s_totnow" + i);
+                String s_quantold = safeRequest(request, "s_quantold" + i);
+                String s_totalold = safeRequest(request, "s_totalold" + i);
+                String s_diffgap = safeRequest(request, "s_diffgap" + i);
                 if (s_diffgap == null) {
                     s_diffgap = "0.00";
                 }
@@ -4619,14 +4569,14 @@ public class Operazioni extends HttpServlet {
 
                     for (int j = 0; j < array_sizecuts.size(); j++) {
 
-                        String curr = request.getParameter("curr" + i + "_" + j);
-                        String kind = request.getParameter("kind" + i + "_" + j);
-                        String cuts = request.getParameter("cuts" + i + "_" + j);
-                        String quantnow = request.getParameter("quantnow" + i + "_" + j);
-                        String totnow = request.getParameter("totnow" + i + "_" + j);
-                        String quantold = request.getParameter("quantold" + i + "_" + j);
-                        String totold = request.getParameter("totold" + i + "_" + j);
-                        String diffgapsize = request.getParameter("diffgapsize" + i + "_" + j);
+                        String curr = safeRequest(request, "curr" + i + "_" + j);
+                        String kind = safeRequest(request, "kind" + i + "_" + j);
+                        String cuts = safeRequest(request, "cuts" + i + "_" + j);
+                        String quantnow = safeRequest(request, "quantnow" + i + "_" + j);
+                        String totnow = safeRequest(request, "totnow" + i + "_" + j);
+                        String quantold = safeRequest(request, "quantold" + i + "_" + j);
+                        String totold = safeRequest(request, "totold" + i + "_" + j);
+                        String diffgapsize = safeRequest(request, "diffgapsize" + i + "_" + j);
                         if (diffgapsize == null) {
                             diffgapsize = "0.00";
                         }
@@ -4643,10 +4593,10 @@ public class Operazioni extends HttpServlet {
 
             for (int i = 0; i < array_list_nochange.size(); i++) {
 
-                String nc_cod = request.getParameter("nc_cod" + i);
-                String nc_quantnow = request.getParameter("nc_quantnow" + i);
-                String nc_quantold = request.getParameter("nc_quantold" + i);
-                String nc_diffgap = request.getParameter("nc_diffgap" + i);
+                String nc_cod = safeRequest(request, "nc_cod" + i);
+                String nc_quantnow = safeRequest(request, "nc_quantnow" + i);
+                String nc_quantold = safeRequest(request, "nc_quantold" + i);
+                String nc_diffgap = safeRequest(request, "nc_diffgap" + i);
                 String nc_differr = "N";
                 if (!nc_diffgap.equals("0.00") && !nc_diffgap.equals("0,00")) {
                     nc_differr = "Y";
@@ -4665,16 +4615,16 @@ public class Operazioni extends HttpServlet {
             }
 
             for (int i = 0; i < sizepos; i++) {
-                String pos_ki = request.getParameter("pos_ki_" + i);
+                String pos_ki = safeRequest(request, "pos_ki_" + i);
                 if (pos_ki == null) {
                     continue;
                 }
-                String pos_cc = request.getParameter("pos_cc_" + i);
-                String pos_quantnow = request.getParameter("pos_quantnow" + i);
-                String pos_totnow = request.getParameter("pos_totnow" + i);
-                String pos_quantold = request.getParameter("pos_quantold" + i);
-                String pos_totold = request.getParameter("pos_totold" + i);
-                String pos_diffgap = request.getParameter("pos_diffgap" + i);
+                String pos_cc = safeRequest(request, "pos_cc_" + i);
+                String pos_quantnow = safeRequest(request, "pos_quantnow" + i);
+                String pos_totnow = safeRequest(request, "pos_totnow" + i);
+                String pos_quantold = safeRequest(request, "pos_quantold" + i);
+                String pos_totold = safeRequest(request, "pos_totold" + i);
+                String pos_diffgap = safeRequest(request, "pos_diffgap" + i);
                 String pos_buy_value = "0.00";
                 String pos_rate_value = "1.00000000";
                 String pos_spread_value = "0.00";
@@ -4691,22 +4641,22 @@ public class Operazioni extends HttpServlet {
 
             for (int i = 0; i < sizeposCZ; i++) {
                 String pos_ki = "04";
-                String pos_cc = request.getParameter("pos_ki_P" + i) + "-" + request.getParameter("pos_cc_P" + i);
-                String pos_quantnow = request.getParameter("pos_quantnowP" + i);
-                String pos_totnow = request.getParameter("pos_totnowP" + i);
-                String pos_quantold = request.getParameter("pos_quantoldP" + i);
-                String pos_totold = request.getParameter("pos_totoldP" + i);
-                String pos_diffgap = request.getParameter("pos_diffgapP" + i);
-                String pos_buy_value = request.getParameter("pos_buyP" + i);
-                String pos_rate_value = request.getParameter("pos_ratenowP" + i);
-                String pos_spread_value = request.getParameter("pos_diffspreadP" + i);
-                String pos_contr = request.getParameter("pos_contrP" + i);
+                String pos_cc = safeRequest(request, "pos_ki_P" + i) + "-" + safeRequest(request, "pos_cc_P" + i);
+                String pos_quantnow = safeRequest(request, "pos_quantnowP" + i);
+                String pos_totnow = safeRequest(request, "pos_totnowP" + i);
+                String pos_quantold = safeRequest(request, "pos_quantoldP" + i);
+                String pos_totold = safeRequest(request, "pos_totoldP" + i);
+                String pos_diffgap = safeRequest(request, "pos_diffgapP" + i);
+                String pos_buy_value = safeRequest(request, "pos_buyP" + i);
+                String pos_rate_value = safeRequest(request, "pos_ratenowP" + i);
+                String pos_spread_value = safeRequest(request, "pos_diffspreadP" + i);
+                String pos_contr = safeRequest(request, "pos_contrP" + i);
                 String pos_differr = "N";
                 if (pos_diffgap != null && !pos_diffgap.equals("0.00") && !pos_diffgap.equals("0,00")) {
                     pos_differr = "Y";
                 }
                 String[] v4 = {pos_quantnow, pos_totnow, pos_quantold, pos_totold, pos_diffgap, pos_differr, pos_ki, pos_cc, pos_buy_value,
-                    pos_spread_value, request.getParameter("pos_ki_P" + i), request.getParameter("pos_cc_P" + i), pos_rate_value, pos_contr};
+                    pos_spread_value, safeRequest(request, "pos_ki_P" + i), safeRequest(request, "pos_cc_P" + i), pos_rate_value, pos_contr};
                 al_posv.add(v4);
             }
             Openclose oc = new Openclose();
@@ -4807,7 +4757,7 @@ public class Operazioni extends HttpServlet {
                         }
                     }
                     if (s_differr.equals("Y")) {
-                        String err = request.getParameter("trfigerr_" + v1[0] + "_" + v1[1]);
+                        String err = safeRequest(request, "trfigerr_" + v1[0] + "_" + v1[1]);
                         if (err != null) {
                             Openclose cherr = new Openclose();
                             cherr.setFiliale(filiale);
@@ -4995,7 +4945,7 @@ public class Operazioni extends HttpServlet {
                     }
 
                     if (nc_differr.equals("Y")) {
-                        String err = request.getParameter("trnocerr_" + v3[0]);
+                        String err = safeRequest(request, "trnocerr_" + v3[0]);
                         if (err != null) {
 
                             Openclose cherr = new Openclose();
@@ -5157,11 +5107,11 @@ public class Operazioni extends HttpServlet {
                     }
 
                     if (pos_differr.equals("Y")) {
-                        String err = request.getParameter("trposerr_" + v4[6] + "-" + v4[7]);
+                        String err = safeRequest(request, "trposerr_" + v4[6] + "-" + v4[7]);
                         String valuta = loc_val[0];
                         String carcre = v4[7];
                         if (err == null && is_CZ) {
-                            err = request.getParameter("trposerr_" + v4[7]);
+                            err = safeRequest(request, "trposerr_" + v4[7]);
                             try {
                                 valuta = v4[7].split("-")[1];
                                 carcre = v4[7].split("-")[0];
@@ -5264,20 +5214,20 @@ public class Operazioni extends HttpServlet {
         String oper = new DateTime().toString(patternsqldate);
         String cod = "ET" + generaId(23);
 
-        String bankbranch = request.getParameter("bankbranchv");
-        String typeop = request.getParameter("typeopv");
-        String tofrom = request.getParameter("tofrom");
+        String bankbranch = safeRequest(request, "bankbranchv");
+        String typeop = safeRequest(request, "typeopv");
+        String tofrom = safeRequest(request, "tofrom");
 
-        String idopentillfrom = request.getParameter("idopentillfrom");
-        String tillfrom = request.getParameter("tillfrom");
-        String note = request.getParameter("note");
+        String idopentillfrom = safeRequest(request, "idopentillfrom");
+        String tillfrom = safeRequest(request, "tillfrom");
+        String note = safeRequest(request, "note");
 
-        String srcoff = request.getParameter("srcoff");
+        String srcoff = safeRequest(request, "srcoff");
         if (srcoff == null) {
             srcoff = "OFFLINE";
         }
 
-        String autman = request.getParameter("autman");
+        String autman = safeRequest(request, "autman");
         if (autman == null) {
             autman = "A";
             srcoff = "ONLINE";
@@ -5309,7 +5259,7 @@ public class Operazioni extends HttpServlet {
         //altri
         et.setIp_oneri("0.00");
 
-        String srcing = request.getParameter("srcing");
+        String srcing = safeRequest(request, "srcing");
         if (srcing == null) {
             srcing = "";
         }
@@ -5395,14 +5345,14 @@ public class Operazioni extends HttpServlet {
             user = "9999";
         }
 
-        String safefr = request.getParameter("safefr");
-        String safeto = request.getParameter("safeto");
+        String safefr = safeRequest(request, "safefr");
+        String safeto = safeRequest(request, "safeto");
 
-        String idopentillfrom = request.getParameter("idopentillfrom");
-        String idopentillto = request.getParameter("idopentillto");
+        String idopentillfrom = safeRequest(request, "idopentillfrom");
+        String idopentillto = safeRequest(request, "idopentillto");
 
-        String tillfrom = request.getParameter("tillfrom");
-        String tillto = request.getParameter("tillto");
+        String tillfrom = safeRequest(request, "tillfrom");
+        String tillto = safeRequest(request, "tillto");
 
         String cod = "IT" + generaId(23);
         IT_change it = new IT_change();
@@ -5432,12 +5382,12 @@ public class Operazioni extends HttpServlet {
 
         for (int i = 0; i < array_list_oc_change.size(); i++) {
             if (idopentillfrom.equals(array_list_oc_change.get(i)[0])) {
-                String currency = request.getParameter("currency" + i);
-                String kind = request.getParameter("kind" + i);
-                String s_quantold = formatDoubleforMysql(request.getParameter("s_quantold" + i));
-                String s_totold = formatDoubleforMysql(request.getParameter("s_totold" + i));
-                String s_quantnow = formatDoubleforMysql(request.getParameter("s_quantnow" + i));
-                String s_totnow = formatDoubleforMysql(request.getParameter("s_totnow" + i));
+                String currency = safeRequest(request, "currency" + i);
+                String kind = safeRequest(request, "kind" + i);
+                String s_quantold = formatDoubleforMysql(safeRequest(request, "s_quantold" + i));
+                String s_totold = formatDoubleforMysql(safeRequest(request, "s_totold" + i));
+                String s_quantnow = formatDoubleforMysql(safeRequest(request, "s_quantnow" + i));
+                String s_totnow = formatDoubleforMysql(safeRequest(request, "s_totnow" + i));
                 String[] v1 = {currency, kind, s_quantold, s_totold, s_quantnow, s_totnow};
                 al_kifi.add(v1);
 
@@ -5447,13 +5397,13 @@ public class Operazioni extends HttpServlet {
                     }
                 }
                 for (int j = 0; j < array_sizecuts.size(); j++) {
-                    String cuts_kind = request.getParameter("cuts_kind" + i + "_" + j);
-                    String cuts_currency = request.getParameter("cuts_currency" + i + "_" + j);
-                    String quantnow = formatDoubleforMysql(request.getParameter("quantnow" + i + "_" + j));
-                    String totold = formatDoubleforMysql(request.getParameter("totold" + i + "_" + j));
-                    String totnow = formatDoubleforMysql(request.getParameter("totnow" + i + "_" + j));
-                    String sizecuts = request.getParameter("sizecuts" + i + "_" + j);
-                    String quantold = formatDoubleforMysql(request.getParameter("quantold" + i + "_" + j));
+                    String cuts_kind = safeRequest(request, "cuts_kind" + i + "_" + j);
+                    String cuts_currency = safeRequest(request, "cuts_currency" + i + "_" + j);
+                    String quantnow = formatDoubleforMysql(safeRequest(request, "quantnow" + i + "_" + j));
+                    String totold = formatDoubleforMysql(safeRequest(request, "totold" + i + "_" + j));
+                    String totnow = formatDoubleforMysql(safeRequest(request, "totnow" + i + "_" + j));
+                    String sizecuts = safeRequest(request, "sizecuts" + i + "_" + j);
+                    String quantold = formatDoubleforMysql(safeRequest(request, "quantold" + i + "_" + j));
                     String[] v2 = {cuts_currency, cuts_kind, sizecuts, quantnow, totnow, quantold, totold};
                     al_sicu.add(v2);
                 }
@@ -5469,12 +5419,12 @@ public class Operazioni extends HttpServlet {
             if (es) {
                 for (int i = 0; i < array_list_oc_change.size(); i++) {
                     if (idopentillfrom.equals(array_list_oc_change.get(i)[0])) {
-                        String currency = request.getParameter("currency" + i);
-                        String kind = request.getParameter("kind" + i);
-                        String s_quantold = formatDoubleforMysql(request.getParameter("s_quantold" + i));
-                        String s_totold = formatDoubleforMysql(request.getParameter("s_totold" + i));
-                        String s_quantnow = formatDoubleforMysql(request.getParameter("s_quantnow" + i));
-                        String s_totnow = formatDoubleforMysql(request.getParameter("s_totnow" + i));
+                        String currency = safeRequest(request, "currency" + i);
+                        String kind = safeRequest(request, "kind" + i);
+                        String s_quantold = formatDoubleforMysql(safeRequest(request, "s_quantold" + i));
+                        String s_totold = formatDoubleforMysql(safeRequest(request, "s_totold" + i));
+                        String s_quantnow = formatDoubleforMysql(safeRequest(request, "s_quantnow" + i));
+                        String s_totnow = formatDoubleforMysql(safeRequest(request, "s_totnow" + i));
                         String[] v1 = {currency, kind, s_quantold, s_totold, s_quantnow, s_totnow};
                         al_kifi.add(v1);
                         if (s_quantnow != null) {
@@ -5565,11 +5515,11 @@ public class Operazioni extends HttpServlet {
                                             db3.closeDB();
 
                                             for (int j = 0; j < array_sizecuts.size(); j++) {
-                                                String quantnow = formatDoubleforMysql(request.getParameter("quantnow" + i + "_" + j));
-                                                String totold = formatDoubleforMysql(request.getParameter("totold" + i + "_" + j));
-                                                String quantold = formatDoubleforMysql(request.getParameter("quantold" + i + "_" + j));
-                                                String totnow = formatDoubleforMysql(request.getParameter("totnow" + i + "_" + j));
-                                                String sizecuts = request.getParameter("sizecuts" + i + "_" + j);
+                                                String quantnow = formatDoubleforMysql(safeRequest(request, "quantnow" + i + "_" + j));
+                                                String totold = formatDoubleforMysql(safeRequest(request, "totold" + i + "_" + j));
+                                                String quantold = formatDoubleforMysql(safeRequest(request, "quantold" + i + "_" + j));
+                                                String totnow = formatDoubleforMysql(safeRequest(request, "totnow" + i + "_" + j));
+                                                String sizecuts = safeRequest(request, "sizecuts" + i + "_" + j);
                                                 if (sizecuts != null) {
                                                     if (!quantnow.trim().equals("") && !quantnow.trim().equals("0") && !quantnow.trim().equals("0.00") && !quantnow.trim().equals("0,00")) {
                                                         if (verifyquantIT(safefr, quantold, quantnow)) {
@@ -5716,8 +5666,8 @@ public class Operazioni extends HttpServlet {
 //            return;
 //        }
         boolean es = true;
-        String cod_tr = request.getParameter("idtr");
-        String enable = request.getParameter("status");
+        String cod_tr = safeRequest(request, "idtr");
+        String enable = safeRequest(request, "status");
         if (null == enable) {
             enable = "0";
         } else {
@@ -5751,14 +5701,14 @@ public class Operazioni extends HttpServlet {
                 String timestamp = new DateTime().toString(patternsqldate);
                 String user_refund = "-";
                 String dt_refund = "1901-01-01 00:00:00";
-                boolean update = valueOf(request.getParameter("update"));
+                boolean update = valueOf(safeRequest(request, "update"));
 
                 //new
-                String cod = request.getParameter("idref");
+                String cod = safeRequest(request, "idref");
                 String status = "0";
 
-                String value = formatDoubleforMysql(request.getParameter("val"));
-                String method = request.getParameter("method");
+                String value = formatDoubleforMysql(safeRequest(request, "val"));
+                String method = safeRequest(request, "method");
                 if (null == method) {
                     method = "BO";
                 } else {
@@ -5783,7 +5733,7 @@ public class Operazioni extends HttpServlet {
                     status = "1";
                 }
 
-                String type = request.getParameter("typeref");
+                String type = safeRequest(request, "typeref");
                 if (null == type) {
                     type = "PA";
                 } else {
@@ -5798,7 +5748,7 @@ public class Operazioni extends HttpServlet {
                 }
 
                 if (type.equals("CO")) {
-                    value = request.getParameter("completevalue");
+                    value = safeRequest(request, "completevalue");
                     //Chiedere value da rimborsare nei vari casi
                 }
 
@@ -5850,8 +5800,8 @@ public class Operazioni extends HttpServlet {
      * @throws IOException
      */
     protected void verify_sign(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String codtr = request.getParameter("codtr");
-        String coddoc = request.getParameter("coddoc");
+        String codtr = safeRequest(request, "codtr");
+        String coddoc = safeRequest(request, "coddoc");
         Db_Master db = new Db_Master();
         String pathtemp = db.getPath("temp");
 
@@ -5897,8 +5847,8 @@ public class Operazioni extends HttpServlet {
      * @throws IOException
      */
     protected void verify_sign_nc(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String codtr = request.getParameter("codtr");
-        String coddoc = request.getParameter("coddoc");
+        String codtr = safeRequest(request, "codtr");
+        String coddoc = safeRequest(request, "coddoc");
         Db_Master db = new Db_Master();
         String pathtemp = db.getPath("temp");
         //pathtemp = "F:\\com\\";
@@ -5970,20 +5920,20 @@ public class Operazioni extends HttpServlet {
         if (user_refund == null) {
             user_refund = "9999";
         }
-        String idtr = request.getParameter("idtr");
-        String idref = request.getParameter("idref");
-        String value = request.getParameter("val");
-        String idopentill = request.getParameter("idopentill");
-        String till = request.getParameter("till");
+        String idtr = safeRequest(request, "idtr");
+        String idref = safeRequest(request, "idref");
+        String value = safeRequest(request, "val");
+        String idopentill = safeRequest(request, "idopentill");
+        String till = safeRequest(request, "till");
         String type;
-        boolean autonomo = ((String) request.getParameter("autonomo")).equals("SI");
+        boolean autonomo = ((String) safeRequest(request, "autonomo")).equals("SI");
 
         Db_Master db = new Db_Master();
         boolean dividi = db.get_national_office().getChangetype().equals("/");
         String codusagetta = "-";
         if (autonomo) {
-            codusagetta = request.getParameter("codusagetta");
-            type = request.getParameter("typeref");
+            codusagetta = safeRequest(request, "codusagetta");
+            type = safeRequest(request, "typeref");
             if (null == type) {
                 type = "PA";
             } else {
@@ -6410,7 +6360,7 @@ public class Operazioni extends HttpServlet {
 //        String pathtemp = "F:\\com\\";
         String pathtemp = dbm.getPath("temp");
 
-        String codtr = request.getParameter("codtr");
+        String codtr = safeRequest(request, "codtr");
 
         Ch_transaction tr1 = dbm.query_transaction_ch(codtr);
         if (tr1 == null) {
@@ -6418,7 +6368,7 @@ public class Operazioni extends HttpServlet {
         }
 
         String codclient = tr1.getCl_cod();
-        String coddoc = request.getParameter("coddoc");
+        String coddoc = safeRequest(request, "coddoc");
         String cod = generaId(50);
         String dateoper = new DateTime().toString(patternsqldate);
         String namefile = new DateTime().toString("yyMMddhhmmssSSS") + coddoc + ".pdf";
@@ -6590,7 +6540,7 @@ public class Operazioni extends HttpServlet {
      */
     protected void del_tr(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String codtr = request.getParameter("codtr");
+        String codtr = safeRequest(request, "codtr");
         Db_Master dbm = new Db_Master();
         Ch_transaction tra = dbm.query_transaction_ch(codtr);
         if (tra == null) {
@@ -6752,19 +6702,19 @@ public class Operazioni extends HttpServlet {
         Till t1 = dbm.get_till_opened(user);
         dbm.closeDB();
 
-        String paynew = request.getParameter("paynew");
-        String bra = request.getParameter("bra").trim();
-        String idbra = request.getParameter("idbra");
-        String codtaglio = request.getParameter("codtaglio");
-        String tipolo = request.getParameter("tipolo");
-        String numb = request.getParameter("numb");
-        //String desc = request.getParameter("desc");
-        String desc = request.getParameter("desc");
-        String tipoprodotto = request.getParameter("tipoprodotto");
+        String paynew = safeRequest(request, "paynew");
+        String bra = safeRequest(request, "bra").trim();
+        String idbra = safeRequest(request, "idbra");
+        String codtaglio = safeRequest(request, "codtaglio");
+        String tipolo = safeRequest(request, "tipolo");
+        String numb = safeRequest(request, "numb");
+        //String desc = safeRequest(request, "desc");
+        String desc = safeRequest(request, "desc");
+        String tipoprodotto = safeRequest(request, "tipoprodotto");
 
-        String kind = request.getParameter("kind_1");
-        String pos = request.getParameter("pos_1");
-        String posnum = request.getParameter("posnum");
+        String kind = safeRequest(request, "kind_1");
+        String pos = safeRequest(request, "pos_1");
+        String posnum = safeRequest(request, "posnum");
 
         boolean pay_value = false;
         String err = "0";
@@ -6863,8 +6813,8 @@ public class Operazioni extends HttpServlet {
      * @throws IOException
      */
     protected void coraexp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String from = request.getParameter("from");
-        String sendtype = request.getParameter("sendtype");
+        String from = safeRequest(request, "from");
+        String sendtype = safeRequest(request, "sendtype");
         String base64;
         if (sendtype.equals("0")) {
             try {
@@ -6906,10 +6856,10 @@ public class Operazioni extends HttpServlet {
      */
     protected void antiexp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String from_ant = request.getParameter("from_ant");
-        String to_ant = request.getParameter("to_ant");
+        String from_ant = safeRequest(request, "from_ant");
+        String to_ant = safeRequest(request, "to_ant");
 
-        String sendtype = request.getParameter("sendtype");
+        String sendtype = safeRequest(request, "sendtype");
 
         String data_from = formatStringtoStringDate_null(from_ant, patternnormdate_filter, patternsql);
         String data_to = formatStringtoStringDate_null(to_ant, patternnormdate_filter, patternsql);
@@ -6951,8 +6901,8 @@ public class Operazioni extends HttpServlet {
     protected void esolv(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //Utility.printRequest(request);
 
-        String from = request.getParameter("from");
-        String branching = request.getParameter("branch");
+        String from = safeRequest(request, "from");
+        String branching = safeRequest(request, "branch");
         String data1 = formatStringtoStringDate_null(from, patternnormdate_filter, patternsql);
         String anno = formatStringtoStringDate_null(from, patternnormdate_filter, patternyear);
         if (branching.equals("---")) {
@@ -7172,8 +7122,8 @@ public class Operazioni extends HttpServlet {
      * @throws IOException
      */
     protected void oamexp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String from = request.getParameter("from");
-        String tipoinvio = request.getParameter("sendtype");
+        String from = safeRequest(request, "from");
+        String tipoinvio = safeRequest(request, "sendtype");
         Iterable<String> parameters = on("/").split(from);
         Iterator<String> it = parameters.iterator();
         if (it.hasNext()) {
@@ -7206,7 +7156,7 @@ public class Operazioni extends HttpServlet {
      * @throws IOException
      */
     protected void monfil(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         Db_Master dbm = new Db_Master();
         String path = dbm.getPath("temp");
         boolean es = uploadMonitor(path, branch, null);
@@ -7227,7 +7177,7 @@ public class Operazioni extends HttpServlet {
      */
     protected void moncentr(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         Db_Master dbm = new Db_Master();
         String path = dbm.getPath("temp");
         ArrayList<Branch> brl = null;
@@ -7363,8 +7313,8 @@ public class Operazioni extends HttpServlet {
             user = "9999";
         }
 
-        String code = request.getParameter("code");
-        String source = request.getParameter("source");
+        String code = safeRequest(request, "code");
+        String source = safeRequest(request, "source");
         Db_Master db0 = new Db_Master();
         boolean es = db0.cambia_dest_POS(code, source, user);
         db0.closeDB();
@@ -7394,8 +7344,8 @@ public class Operazioni extends HttpServlet {
             user = "9999";
         }
 
-        String idval = request.getParameter("kind_1");
-        String chra = formatDoubleforMysql(request.getParameter("chra"));
+        String idval = safeRequest(request, "kind_1");
+        String chra = formatDoubleforMysql(safeRequest(request, "chra"));
 
         Iterable<String> parameters = on(";").split(idval);
         Iterator<String> it = parameters.iterator();
@@ -7575,7 +7525,7 @@ public class Operazioni extends HttpServlet {
      */
     protected void del_nl(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String user = (String) request.getSession().getAttribute("us_cod");
-        String idnldel = request.getParameter("idnldel");
+        String idnldel = safeRequest(request, "idnldel");
         Db_Master db1 = new Db_Master();
         boolean es = db1.delete_newsletters(idnldel, user);
         db1.closeDB();
@@ -7597,7 +7547,7 @@ public class Operazioni extends HttpServlet {
         if (user == null) {
             user = "9999";
         }
-        String codext = request.getParameter("codext");
+        String codext = safeRequest(request, "codext");
         String ok = "0";
         ET_change et = get_ET_change(codext);
         if (et == null) {
@@ -7659,11 +7609,11 @@ public class Operazioni extends HttpServlet {
      */
     protected void verificaRate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String tipotr = request.getParameter("tipotr");
-        String kind = request.getParameter("kind");
-        String cur = request.getParameter("cur");
-        String rate = request.getParameter("rate");
-        String controvcheck = request.getParameter("controvcheck");
+        String tipotr = safeRequest(request, "tipotr");
+        String kind = safeRequest(request, "kind");
+        String cur = safeRequest(request, "cur");
+        String rate = safeRequest(request, "rate");
+        String controvcheck = safeRequest(request, "controvcheck");
 
         List<String> output = new ArrayList<>();
 
@@ -7854,7 +7804,7 @@ public class Operazioni extends HttpServlet {
             if (link_value != null) {
                 redirect(request, response, link_value);
             } else {
-                String type = request.getParameter("type");
+                String type = safeRequest(request, "type");
                 switch (type) {
                     case "nc_tr":
                         insertTR("W", (String) request.getSession().getAttribute("us_cod"), (String) request.getSession().getAttribute("us_fil") + " - TRANSAZIONE NO CHANGE");

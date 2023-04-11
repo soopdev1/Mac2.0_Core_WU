@@ -184,6 +184,8 @@ import static org.apache.commons.io.FileUtils.readFileToByteArray;
 import org.apache.commons.lang3.StringUtils;
 import static org.apache.commons.lang3.StringUtils.replace;
 import org.joda.time.DateTime;
+import static rc.so.util.Utility.safeRequest;
+import static rc.so.util.Utility.safeRequestMultiple;
 
 /**
  *
@@ -202,7 +204,7 @@ public class Fileview extends HttpServlet {
 
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
@@ -244,12 +246,12 @@ public class Fileview extends HttpServlet {
 
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
 
-        String filiale = request.getParameter("filiale");
+        String filiale = safeRequest(request, "filiale");
 
         ArrayList<Figures> result = db.list_figures(filiale);
         db.closeDB();
@@ -291,7 +293,7 @@ public class Fileview extends HttpServlet {
     protected void tb_currency(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
@@ -336,11 +338,11 @@ public class Fileview extends HttpServlet {
     protected void tb_safetill(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
-        String filiale = request.getParameter("filiale");
+        String filiale = safeRequest(request, "filiale");
 
         ArrayList<String[]> result = db.list_till(filiale);
         db.closeDB();
@@ -382,7 +384,7 @@ public class Fileview extends HttpServlet {
     protected void tb_bank(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
@@ -425,7 +427,7 @@ public class Fileview extends HttpServlet {
     protected void tb_fixcomm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
@@ -468,7 +470,7 @@ public class Fileview extends HttpServlet {
     protected void tb_kindfixcomm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
@@ -511,12 +513,12 @@ public class Fileview extends HttpServlet {
     protected void tb_raterange(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
 
-        String filiale = request.getParameter("filiale");
+        String filiale = safeRequest(request, "filiale");
 
         ArrayList<String[]> result = rate_range(filiale);
         db.closeDB();
@@ -557,7 +559,7 @@ public class Fileview extends HttpServlet {
     protected void tb_lowcomm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
@@ -601,7 +603,7 @@ public class Fileview extends HttpServlet {
     protected void tb_doctype(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
@@ -645,7 +647,7 @@ public class Fileview extends HttpServlet {
     protected void tb_nations(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
@@ -689,7 +691,7 @@ public class Fileview extends HttpServlet {
     protected void tb_district(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
@@ -733,7 +735,7 @@ public class Fileview extends HttpServlet {
     protected void tb_city(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
@@ -777,7 +779,7 @@ public class Fileview extends HttpServlet {
     protected void tb_intbook(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
@@ -821,7 +823,7 @@ public class Fileview extends HttpServlet {
     protected void tb_agency(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
@@ -865,7 +867,7 @@ public class Fileview extends HttpServlet {
     protected void tb_blackM(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
@@ -909,7 +911,7 @@ public class Fileview extends HttpServlet {
     protected void tb_vatcode(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
@@ -953,7 +955,7 @@ public class Fileview extends HttpServlet {
     protected void tb_company(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
@@ -998,20 +1000,20 @@ public class Fileview extends HttpServlet {
     protected void transaction_list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
 
-        String d1 = request.getParameter("d1");
-        String d2 = request.getParameter("d2");
+        String d1 = safeRequest(request, "d1");
+        String d2 = safeRequest(request, "d2");
 
-        String taxcode = replaceApici(request.getParameter("taxcode").trim());
-        String surname = replaceApici(request.getParameter("surname").trim());
-        String name = replaceApici(request.getParameter("name").trim());
-        String branch = request.getParameter("branch").trim();
+        String taxcode = replaceApici(safeRequest(request, "taxcode").trim());
+        String surname = replaceApici(safeRequest(request, "surname").trim());
+        String name = replaceApici(safeRequest(request, "name").trim());
+        String branch = safeRequest(request, "branch").trim();
 
-//        String pdf = request.getParameter("pdf");
+//        String pdf = safeRequest(request, "pdf");
 //        DateTime today = db.getCurdateDT();
         ArrayList<Ch_transaction> result = db.query_transaction_ch_new(d1, d2, branch, surname, name, taxcode);
         db.closeDB();
@@ -1052,18 +1054,18 @@ public class Fileview extends HttpServlet {
     protected void transactionnc_list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
-        String d1 = request.getParameter("d1");
-        String d2 = request.getParameter("d2");
-        String branch = request.getParameter("branch");
+        String d1 = safeRequest(request, "d1");
+        String d2 = safeRequest(request, "d2");
+        String branch = safeRequest(request, "branch");
 
         ArrayList<NC_category> array_nc_cat = db.list_nc_category_enabled();
-        String[] nc_cat1 = request.getParameterValues("nc_cat1");
+        String[] nc_cat1 = safeRequestMultiple(request, "nc_cat1");
         String list_nc_cat = "";
-        if (nc_cat1 == null) {
+        if (nc_cat1[0].equals("")) {
             for (int i = 0; i < array_nc_cat.size(); i++) {
                 list_nc_cat = list_nc_cat + array_nc_cat.get(i).getGruppo_nc() + ";";
             }
@@ -1119,15 +1121,15 @@ public class Fileview extends HttpServlet {
     protected void kyc_list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
-        String branch = request.getParameter("branch");
-        String d1 = request.getParameter("d1");
-        String d2 = request.getParameter("d2");
-        String cl_cog = replaceApici(request.getParameter("cl_cog"));
-        String cl_na = replaceApici(request.getParameter("cl_na"));
+        String branch = safeRequest(request, "branch");
+        String d1 = safeRequest(request, "d1");
+        String d2 = safeRequest(request, "d2");
+        String cl_cog = replaceApici(safeRequest(request, "cl_cog"));
+        String cl_na = replaceApici(safeRequest(request, "cl_na"));
 
         String data1 = formatStringtoStringDate_null(d1, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d2, patternnormdate_filter, patternsql);
@@ -1171,11 +1173,11 @@ public class Fileview extends HttpServlet {
     protected void nc_category_cat(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
-        String kind_1 = request.getParameter("kind_1");
+        String kind_1 = safeRequest(request, "kind_1");
 
 //        boolean central = true;
         ArrayList<NC_category> result = db.query_nc_category(kind_1);
@@ -1217,13 +1219,13 @@ public class Fileview extends HttpServlet {
     protected void nc_viewbranch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
 
-        String status = request.getParameter("status");
+        String status = safeRequest(request, "status");
         ArrayList<String[]> array_nc_kind = nc_kind();
 
         ArrayList<NC_category> licateg = query_nc_category_filial(branch, status);
@@ -1267,7 +1269,7 @@ public class Fileview extends HttpServlet {
     protected void es_paym(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
@@ -1311,11 +1313,11 @@ public class Fileview extends HttpServlet {
     protected void nc_category_cas(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
-        String codnc = request.getParameter("codnc");
+        String codnc = safeRequest(request, "codnc");
         ArrayList<NC_causal> result = db.query_nc_causal(codnc);
         db.closeDB();
         String cod = generaId(75);
@@ -1355,14 +1357,14 @@ public class Fileview extends HttpServlet {
     protected void it_list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
-        String typeop = request.getParameter("typeop");
-        String d1 = request.getParameter("d1");
-        String d2 = request.getParameter("d2");
-        String branch = request.getParameter("branch");
+        String typeop = safeRequest(request, "typeop");
+        String d1 = safeRequest(request, "d1");
+        String d2 = safeRequest(request, "d2");
+        String branch = safeRequest(request, "branch");
 
         ArrayList<IT_change> result = db.query_it(typeop, d1, d2, branch);
         db.closeDB();
@@ -1403,14 +1405,14 @@ public class Fileview extends HttpServlet {
     protected void et_list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
-        String typeop = request.getParameter("typeop");
-        String d1 = request.getParameter("d1");
-        String d2 = request.getParameter("d2");
-        String branch = request.getParameter("branch");
+        String typeop = safeRequest(request, "typeop");
+        String d1 = safeRequest(request, "d1");
+        String d2 = safeRequest(request, "d2");
+        String branch = safeRequest(request, "branch");
         ArrayList<NC_category> nc_cat;
         if (branch != null && !branch.equals("") && !branch.equals("...")) {
             nc_cat = db.query_nc_category_filial(branch, null);
@@ -1456,19 +1458,19 @@ public class Fileview extends HttpServlet {
     protected void web_trans(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
-        String status = request.getParameter("status");
-        String d1 = request.getParameter("d1");
-        String d2 = request.getParameter("d2");
+        String status = safeRequest(request, "status");
+        String d1 = safeRequest(request, "d1");
+        String d2 = safeRequest(request, "d2");
         String branch[];
-        String br1 = request.getParameter("branch");
+        String br1 = safeRequest(request, "branch");
         if (br1 == null || br1.trim().equals("")) {
             branch = parseArrayValues(db.list_branchcode_ENABLED());
         } else {
-            branch = parseArrayValues(request.getParameter("branch"), ";");
+            branch = parseArrayValues(safeRequest(request, "branch"), ";");
         }
 
         ArrayList<Booking> result = db.query_prenot_list(branch, status, null, d1, d2);
@@ -1512,11 +1514,11 @@ public class Fileview extends HttpServlet {
     protected void nl_view(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
-        String status = request.getParameter("status");
+        String status = safeRequest(request, "status");
         String user = (String) request.getSession().getAttribute("us_cod");
         ArrayList<Newsletters> result = db.query_newsletters(user, status);
         db.closeDB();
@@ -1557,15 +1559,15 @@ public class Fileview extends HttpServlet {
     protected void oc_list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
 
-        String d1 = request.getParameter("d1");
-        String d2 = request.getParameter("d2");
-        String till = request.getParameter("till");
-        String branch = request.getParameter("branch");
+        String d1 = safeRequest(request, "d1");
+        String d2 = safeRequest(request, "d2");
+        String till = safeRequest(request, "till");
+        String branch = safeRequest(request, "branch");
 
         ArrayList<Openclose> result = db.query_oc(till, d1, d2, branch);
         ArrayList<Till> listTill = db.list_ALLtill();
@@ -1608,7 +1610,7 @@ public class Fileview extends HttpServlet {
     protected void tb_branch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
@@ -1652,7 +1654,7 @@ public class Fileview extends HttpServlet {
     protected void tb_kindtrans(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
@@ -1696,11 +1698,11 @@ public class Fileview extends HttpServlet {
     protected void tb_creditcard(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
-        String filiale = request.getParameter("filiale");
+        String filiale = safeRequest(request, "filiale");
 
         ArrayList<String[]> result = credit_card(filiale);
         db.closeDB();
@@ -1743,7 +1745,7 @@ public class Fileview extends HttpServlet {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
         Office of = db.get_national_office();
-        String filiale = request.getParameter("filiale");
+        String filiale = safeRequest(request, "filiale");
         String[] fil = new String[2];
         fil[0] = filiale;
         fil[1] = formatBankBranchReport(filiale, "BR", null, list_branch_completeAFTER311217());
@@ -1754,7 +1756,7 @@ public class Fileview extends HttpServlet {
         db.closeDB();
 
         String base64 = null;
-        String naz = request.getParameter("naz");
+        String naz = safeRequest(request, "naz");
 
         switch (naz) {
             case "ITA":
@@ -1792,7 +1794,7 @@ public class Fileview extends HttpServlet {
     protected void tb_groupbr(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
         String path = db.getPath("temp");
-        String value = request.getParameter("value");
+        String value = safeRequest(request, "value");
         if (value == null) {
             value = "";
         }
@@ -1888,7 +1890,7 @@ public class Fileview extends HttpServlet {
      * @throws IOException
      */
     protected void listpdfclient(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
 
         if (cod != null) {
             Db_Master dbcentral = new Db_Master(true);
@@ -1932,7 +1934,7 @@ public class Fileview extends HttpServlet {
      */
     protected void transactionpdf(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
         if (cod != null) {
             Db_Master db = new Db_Master();
             String path = db.getPath("temp");
@@ -1962,7 +1964,7 @@ public class Fileview extends HttpServlet {
      * @throws IOException
      */
     protected void viewncfile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
         NC_transaction nc = get_NC_transaction(cod);
         if (nc != null) {
             if (nc.getDocrico() != null && !nc.getDocrico().equals("-")) {
@@ -2017,7 +2019,7 @@ public class Fileview extends HttpServlet {
             }
             response.setContentType("text/html;charset=UTF-8");
 //            request.setCharacterEncoding("UTF-8");
-            String type = request.getParameter("type");
+            String type = safeRequest(request, "type");
             if (type.equals("viewncfile")) {
                 viewncfile(request, response);
             }

@@ -5,13 +5,11 @@ import rc.so.entity.Branch;
 import rc.so.entity.Branchbudget;
 import rc.so.entity.NC_category;
 import rc.so.entity.NC_transaction;
-import rc.so.excel.BudgetRep;
 import static rc.so.excel.BudgetRep.create;
 import rc.so.excel.BudgetTill;
 import rc.so.excel.CambioMTD_YTD;
 import rc.so.excel.Colonna;
 import rc.so.excel.DailyChange;
-import rc.so.excel.DailyChangeExcel;
 import static rc.so.excel.DailyChangeExcel.create;
 import static rc.so.excel.DailyChangeExcel.create_cdc;
 import static rc.so.excel.DailyChangeExcel.create_uk_contabilita;
@@ -20,7 +18,6 @@ import rc.so.excel.DatiWU_MTD_YTD;
 import rc.so.excel.GM;
 import static rc.so.excel.Giornaliero.giornalieroCG;
 import rc.so.excel.LimitInsur;
-import rc.so.excel.Massimali;
 import static rc.so.excel.Massimali.create;
 import rc.so.excel.NC_val;
 import rc.so.excel.Riga;
@@ -29,15 +26,12 @@ import rc.so.report.DailyKind;
 import rc.so.report.Daily_value;
 import static rc.so.util.Constant.patternnormdate_filter;
 import static rc.so.util.Constant.patternsql;
-import rc.so.util.Engine;
 import static rc.so.util.Engine.all_nc_category;
-import static rc.so.util.Engine.getNC_category;
 import static rc.so.util.Engine.getNC_category;
 import static rc.so.util.Engine.get_Branch;
 import static rc.so.util.Engine.insertTR;
 import static rc.so.util.Engine.unlockratejustify;
 import static rc.so.util.Engine.verifySession;
-import rc.so.util.Utility;
 import static rc.so.util.Utility.descr_for_report;
 import static rc.so.util.Utility.divisione_controllozero;
 import static rc.so.util.Utility.fd;
@@ -57,75 +51,22 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
 import static java.lang.System.out;
 import static java.lang.Thread.currentThread;
 import java.util.ArrayList;
-import java.util.Collections;
 import static java.util.Collections.sort;
 import java.util.HashMap;
-import java.util.Locale;
 import static java.util.Locale.ITALY;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 import static org.joda.time.format.DateTimeFormat.forPattern;
 import org.joda.time.format.DateTimeFormatter;
+import static rc.so.util.Utility.safeRequest;
+import static rc.so.util.Utility.safeRequestMultiple;
 
 /**
  *
@@ -145,7 +86,7 @@ public class Gestione extends HttpServlet {
 //        if(true)
 //            return;
 
-        String deleted = request.getParameter("deleted");
+        String deleted = safeRequest(request, "deleted");
         if (null == deleted) {
             deleted = "0";
         } else switch (deleted) {
@@ -157,21 +98,21 @@ public class Gestione extends HttpServlet {
                 break;
         }
 
-//        String branch = request.getParameter("branch");
+//        String branch = safeRequest(request, "branch");
         ArrayList<String> brList = new ArrayList<>();
 
-        String[] branch2 = request.getParameterValues("branch");
+        String[] branch2 = safeRequestMultiple(request, "branch");
 
-        if (branch2 != null && !branch2[0].equals("null")) {
+        if (!branch2[0].equals("")&& !branch2[0].equals("null")) {
             brList = formatArrayValues(branch2);
         }
 
-        String mese = request.getParameter("date2");
+        String mese = safeRequest(request, "date2");
 
-        String gr1 = request.getParameter("gr1");
-        String[] gr2 = request.getParameterValues("gr2");
+        String gr1 = safeRequest(request, "gr1");
+        String[] gr2 = safeRequestMultiple(request, "gr2");
         ArrayList<String> gr02list = new ArrayList<>();
-        if (gr2 != null) {
+        if (!gr2[0].equals("")) {
             gr02list = formatArrayValues(gr2);
         }
 
@@ -227,25 +168,25 @@ public class Gestione extends HttpServlet {
     protected void change(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 //        Utility.printRequest(request);
-//        String branch = request.getParameter("branch");
+//        String branch = safeRequest(request, "branch");
 
         ArrayList<String> brList = new ArrayList<>();
 
-        String[] branch2 = request.getParameterValues("branch");
+        String[] branch2 = safeRequestMultiple(request, "branch");
 
-        if (branch2 != null && !branch2[0].equals("null")) {
+        if (!branch2[0].equals("") && !branch2[0].equals("null")) {
             brList = formatArrayValues(branch2);
         }
 
-        String mese = request.getParameter("date2");
+        String mese = safeRequest(request, "date2");
 
-        String gr1 = request.getParameter("gr1");
-        //String gr2 = request.getParameter("gr2");
+        String gr1 = safeRequest(request, "gr1");
+        //String gr2 = safeRequest(request, "gr2");
 
-        String[] gr2 = request.getParameterValues("gr2");
+        String[] gr2 = safeRequestMultiple(request, "gr2");
         ArrayList<String> gr02list = new ArrayList<>();
 
-        if (gr2 != null) {
+        if (!gr2[0].equals("")) {
             gr02list = formatArrayValues(gr2);
         }
 
@@ -429,7 +370,7 @@ public class Gestione extends HttpServlet {
      */
     protected void massimale(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-//        String branch = request.getParameter("branch");
+//        String branch = safeRequest(request, "branch");
         ArrayList<String> brList = new ArrayList<>();
 
         String[] branch2 = request.getParameterValues("branch");
@@ -438,10 +379,10 @@ public class Gestione extends HttpServlet {
             brList = formatArrayValues(branch2);
         }
 
-        String mese = request.getParameter("date2");
+        String mese = safeRequest(request, "date2");
 
-        String gr1 = request.getParameter("gr1");
-        //String gr2 = request.getParameter("gr2");
+        String gr1 = safeRequest(request, "gr1");
+        //String gr2 = safeRequest(request, "gr2");
 
         String[] gr2 = request.getParameterValues("gr2");
         ArrayList<String> gr02list = new ArrayList<>();
@@ -575,10 +516,10 @@ public class Gestione extends HttpServlet {
             brList = formatArrayValues(branch2);
         }
 
-        String mese = request.getParameter("date2");
+        String mese = safeRequest(request, "date2");
 
-        String gr1 = request.getParameter("gr1");
-        //String gr2 = request.getParameter("gr2");
+        String gr1 = safeRequest(request, "gr1");
+        //String gr2 = safeRequest(request, "gr2");
 
         String[] gr2 = request.getParameterValues("gr2");
         ArrayList<String> gr02list = new ArrayList<>();
@@ -810,9 +751,9 @@ public class Gestione extends HttpServlet {
 //            brList = Utility.formatArrayValues(branch2);
 //        }
 //
-//        String mese = request.getParameter("date2");
+//        String mese = safeRequest(request, "date2");
 //
-//        String gr1 = request.getParameter("gr1");
+//        String gr1 = safeRequest(request, "gr1");
 //
 //        String[] gr2 = request.getParameterValues("gr2");
 //        ArrayList<String> gr02list = new ArrayList<>();
@@ -922,7 +863,7 @@ public class Gestione extends HttpServlet {
      */
     protected void buyback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-//        String prevyear = request.getParameter("prevyear");
+//        String prevyear = safeRequest(request, "prevyear");
 //        if (prevyear == null) {
 //            prevyear = "0";
 //        } else if (prevyear.equals("on")) {
@@ -931,7 +872,7 @@ public class Gestione extends HttpServlet {
 //            prevyear = "0";
 //        }
 //
-//        String brgr = request.getParameter("brgr");
+//        String brgr = safeRequest(request, "brgr");
 //        if (brgr == null) {
 //            brgr = "0";
 //        } else if (brgr.equals("on")) {
@@ -940,7 +881,7 @@ public class Gestione extends HttpServlet {
 //            brgr = "0";
 //        }
 //
-////        String branch = request.getParameter("branch");
+////        String branch = safeRequest(request, "branch");
 //        ArrayList<String> brList = new ArrayList<>();
 //
 //        String[] branch2 = request.getParameterValues("branch");
@@ -949,10 +890,10 @@ public class Gestione extends HttpServlet {
 //            brList = Utility.formatArrayValues(branch2);
 //        }
 //
-//        String mese = request.getParameter("date2");
+//        String mese = safeRequest(request, "date2");
 //
-//        String gr1 = request.getParameter("gr1");
-//        //String gr2 = request.getParameter("gr2");
+//        String gr1 = safeRequest(request, "gr1");
+//        //String gr2 = safeRequest(request, "gr2");
 //
 //        String[] gr2 = request.getParameterValues("gr2");
 //        ArrayList<String> gr02list = new ArrayList<>();
@@ -980,21 +921,21 @@ public class Gestione extends HttpServlet {
 
         ArrayList<String> brList = new ArrayList<>();
 
-        String[] branch2 = request.getParameterValues("branch");
+        String[] branch2 = safeRequestMultiple(request, "branch");
 
-        if (branch2 != null && !branch2[0].equals("null")) {
+        if (!branch2[0].equals("") && !branch2[0].equals("null")) {
             brList = formatArrayValues(branch2);
         }
 
-        String mese = request.getParameter("date2");
+        String mese = safeRequest(request, "date2");
 
-        String gr1 = request.getParameter("gr1");
-        //String gr2 = request.getParameter("gr2");
+        String gr1 = safeRequest(request, "gr1");
+        //String gr2 = safeRequest(request, "gr2");
 
-        String[] gr2 = request.getParameterValues("gr2");
+        String[] gr2 =safeRequestMultiple(request, "gr2");
         ArrayList<String> gr02list = new ArrayList<>();
 
-        if (gr2 != null) {
+        if (!gr2[0].equals("")) {
             gr02list = formatArrayValues(gr2);
         }
 
@@ -1030,20 +971,20 @@ public class Gestione extends HttpServlet {
 
         ArrayList<String> brList = new ArrayList<>();
 
-        String[] branch2 = request.getParameterValues("branch");
+        String[] branch2 = safeRequestMultiple(request, "branch");
 
-        if (branch2 != null && !branch2[0].equals("null")) {
+        if (!branch2[0].equals("") && !branch2[0].equals("null")) {
             brList = formatArrayValues(branch2);
         }
 
-        String mese = request.getParameter("date2");
+        String mese = safeRequest(request, "date2");
 
-        String gr1 = request.getParameter("gr1");
+        String gr1 = safeRequest(request, "gr1");
 
-        String[] gr2 = request.getParameterValues("gr2");
+        String[] gr2 = safeRequestMultiple(request, "gr2");
         ArrayList<String> gr02list = new ArrayList<>();
 
-        if (gr2 != null) {
+        if (!gr2[0].equals("")) {
             gr02list = formatArrayValues(gr2);
         }
 
@@ -1099,21 +1040,21 @@ public class Gestione extends HttpServlet {
 //        Stopwatch stopwatch = Stopwatch.createStarted();
         ArrayList<String> brList = new ArrayList<>();
 
-        String[] branch2 = request.getParameterValues("branch");
+        String[] branch2 = safeRequestMultiple(request, "branch");
 
-        if (branch2 != null && !branch2[0].equals("null")) {
+        if (!branch2[0].equals("") && !branch2[0].equals("null")) {
             brList = formatArrayValues(branch2);
         }
 
-        String mese = request.getParameter("date2");
+        String mese = safeRequest(request, "date2");
 
-        String gr1 = request.getParameter("gr1");
-        //String gr2 = request.getParameter("gr2");
+        String gr1 = safeRequest(request, "gr1");
+        //String gr2 = safeRequest(request, "gr2");
 
-        String[] gr2 = request.getParameterValues("gr2");
+        String[] gr2 = safeRequestMultiple(request, "gr2");
         ArrayList<String> gr02list = new ArrayList<>();
 
-        if (gr2 != null) {
+        if (!gr2[0].equals("")) {
             gr02list = formatArrayValues(gr2);
         }
 
@@ -2851,7 +2792,7 @@ public class Gestione extends HttpServlet {
             }
             response.setContentType("text/html;charset=UTF-8");
 //            request.setCharacterEncoding("UTF-8");
-            String type = request.getParameter("type");
+            String type = safeRequest(request, "type");
 
             String user = (String) request.getSession().getAttribute("us_cod");
             insertTR("W", user, "Generate report (GESTIONE) code: " + type);

@@ -104,6 +104,9 @@ import static org.apache.commons.io.FilenameUtils.getExtension;
 import static org.apache.commons.lang3.StringUtils.remove;
 import static org.apache.commons.lang3.StringUtils.replace;
 import org.joda.time.DateTime;
+import rc.so.util.Utility;
+import static rc.so.util.Utility.safeRequest;
+import static rc.so.util.Utility.safeRequestMultiple;
 
 /**
  *
@@ -127,22 +130,20 @@ public class Edit
         }
         Db_Master dbm = new Db_Master();
         String filiale = dbm.getCodLocal(true)[0];
-        String listbranch = request.getParameter("listbranch");
+        String listbranch = safeRequest(request, "listbranch", true);
         String bra[];
-        if (listbranch != null) {
+        if (!listbranch.equals("")) {
             bra = parseArrayValues(listbranch, ";");
         } else {
             bra = parseArrayValues(dbm.list_branchcode_ENABLED());
         }
-        String typetill = request.getParameter("typetill");
-        if (typetill == null) {
-            typetill = "1";
-        } else if (typetill.trim().equalsIgnoreCase("on")) {
+        String typetill = safeRequest(request, "typetill");
+        if (typetill.trim().equalsIgnoreCase("on")) {
             typetill = "0";
         } else {
             typetill = "1";
         }
-        String descr = request.getParameter("descr");
+        String descr = safeRequest(request, "descr", true);
 
         String dtoper = new DateTime().toString(patternsqldate);
 
@@ -171,29 +172,25 @@ public class Edit
      */
     protected void edit_Till(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master dbm = new Db_Master();
-        String listbranch = request.getParameter("listbranch");
-        String view = request.getParameter("view");
-        String fil = request.getParameter("fil");
+        String listbranch = safeRequest(request, "listbranch");
+        String view = safeRequest(request, "view");
+        String fil = safeRequest(request, "fil");
         String filiale = dbm.getCodLocal(true)[0];
         String bra[];
-        if (listbranch != null) {
+        if (!listbranch.equals("")) {
             bra = parseArrayValues(listbranch, ";");
         } else {
             bra = parseArrayValues(dbm.list_branchcode_ENABLED());
         }
 
-        String typetill = request.getParameter("typetill");
-        if (typetill == null) {
-            typetill = "1";
-        } else if (typetill.trim().equalsIgnoreCase("on")) {
+        String typetill = safeRequest(request, "typetill");
+        if (typetill.trim().equalsIgnoreCase("on")) {
             typetill = "0";
         } else {
             typetill = "1";
         }
-        String status = request.getParameter("status");
-        if (status == null) {
-            status = "1";
-        } else if (status.trim().equalsIgnoreCase("on")) {
+        String status = safeRequest(request, "status");
+        if (status.trim().equalsIgnoreCase("on")) {
             status = "0";
         } else {
             status = "1";
@@ -203,8 +200,8 @@ public class Edit
             user = "9999";
         }
         String dtoper = new DateTime().toString(patternsqldate);
-        String descr = request.getParameter("descr");
-        String sa_code = request.getParameter("sa_code");
+        String descr = safeRequest(request, "descr",true);
+        String sa_code = safeRequest(request, "sa_code");
 
         boolean es = dbm.update_Till(sa_code, filiale, descr, typetill, status, user, dtoper);
         if (es) {
@@ -234,8 +231,8 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String di_code = request.getParameter("di_code");
-        String descr = request.getParameter("descr");
+        String di_code = safeRequest(request, "di_code",true);
+        String descr = safeRequest(request, "descr",true);
         Db_Master dbm = new Db_Master();
         String filiale = dbm.getCodLocal(true)[0];
         boolean es = dbm.insert_new_District(filiale, di_code, descr, user);
@@ -259,9 +256,9 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String idpr = request.getParameter("idpr");
-        String di_code = request.getParameter("di_code");
-        String descr = request.getParameter("descr");
+        String idpr = safeRequest(request, "idpr");
+        String di_code = safeRequest(request, "di_code");
+        String descr = safeRequest(request, "descr",true);
         Db_Master dbm = new Db_Master();
         String filiale = dbm.getCodLocal(true)[0];
         boolean es = dbm.update_District(idpr, filiale, di_code, descr, user);
@@ -285,10 +282,10 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String na_code = request.getParameter("na_code");
-        String descr = request.getParameter("descr");
-        String area = request.getParameter("area");
-        String isoc = request.getParameter("isoc");
+        String na_code = safeRequest(request, "na_code");
+        String descr = safeRequest(request, "descr",true);
+        String area = safeRequest(request, "area");
+        String isoc = safeRequest(request, "isoc");
         Db_Master dbm = new Db_Master();
         String filiale = dbm.getCodLocal(true)[0];
         boolean es = dbm.insert_new_Nation(filiale, na_code, descr, area, isoc, user);
@@ -312,10 +309,10 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String co_code = request.getParameter("na_code");
-        String descr = request.getParameter("descr");
-        String area = request.getParameter("area");
-        String isoc = request.getParameter("isoc");
+        String co_code = safeRequest(request, "na_code");
+        String descr = safeRequest(request, "descr");
+        String area = safeRequest(request, "area");
+        String isoc = safeRequest(request, "isoc");
         Db_Master dbm = new Db_Master();
         String filiale = dbm.getCodLocal(true)[0];
         boolean es = dbm.update_Nation(filiale, co_code, descr, area, isoc, user);
@@ -339,9 +336,9 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String doc_code = request.getParameter("doc_code");
-        String descr = request.getParameter("descr");
-        String oam = request.getParameter("oam");
+        String doc_code = safeRequest(request, "doc_code");
+        String descr = safeRequest(request, "descr");
+        String oam = safeRequest(request, "oam");
         Db_Master dbm = new Db_Master();
         String filiale = dbm.getCodLocal(true)[0];
         boolean es = dbm.insert_new_Doctype(filiale, doc_code, descr, oam, user);
@@ -365,9 +362,9 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String doc_code = request.getParameter("doc_code");
-        String descr = request.getParameter("descr");
-        String oam = request.getParameter("oam");
+        String doc_code = safeRequest(request, "doc_code");
+        String descr = safeRequest(request, "descr");
+        String oam = safeRequest(request, "oam");
         Db_Master dbm = new Db_Master();
         String filiale = dbm.getCodLocal(true)[0];
         boolean es = dbm.update_Doctype(filiale, doc_code, descr, oam, user);
@@ -391,7 +388,7 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String descr = request.getParameter("descr");
+        String descr = safeRequest(request, "descr");
         Db_Master dbm = new Db_Master();
         String filiale = dbm.getCodLocal(true)[0];
         boolean es = dbm.insert_new_unlockratejust(filiale, descr, user);
@@ -408,7 +405,7 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String descr = request.getParameter("descr");
+        String descr = safeRequest(request, "descr");
         Db_Master dbm = new Db_Master();
         String filiale = dbm.getCodLocal(true)[0];
         boolean es = dbm.insert_new_Lowcom(filiale, descr, user);
@@ -432,9 +429,9 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String lo_code = request.getParameter("lo_code");
-        String descr = request.getParameter("descr");
-        String status = request.getParameter("status");
+        String lo_code = safeRequest(request, "lo_code");
+        String descr = safeRequest(request, "descr");
+        String status = safeRequest(request, "status");
         if (status == null) {
             status = "1";
         } else if (status.trim().equalsIgnoreCase("on")) {
@@ -459,9 +456,9 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String un_code = request.getParameter("un_code");
-        String descr = request.getParameter("descr");
-        String status = request.getParameter("status");
+        String un_code = safeRequest(request, "un_code");
+        String descr = safeRequest(request, "descr");
+        String status = safeRequest(request, "status");
         if (status == null) {
             status = "1";
         } else if (status.trim().equalsIgnoreCase("on")) {
@@ -493,7 +490,7 @@ public class Edit
         Db_Master dbm = new Db_Master();
 
         String filiale = dbm.getCodLocal(true)[0];
-        String listbranch = request.getParameter("listbranch");
+        String listbranch = safeRequest(request, "listbranch");
         String bra[];
         if (listbranch != null) {
             bra = parseArrayValues(listbranch, ";");
@@ -503,7 +500,7 @@ public class Edit
 
         String dt = new DateTime().toString(patternsqldate);
 
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
@@ -512,8 +509,8 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String descr = request.getParameter("descr");
-        String value = request.getParameter("val");
+        String descr = safeRequest(request, "descr");
+        String value = safeRequest(request, "val");
 
         String es = dbm.insert_new_Fixcomkind(filiale, descr, formatDoubleforMysql(value), user, dt_val, dt);
 
@@ -557,10 +554,10 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String ki_code = request.getParameter("ki_code");
-        String descr = request.getParameter("descr");
-        String value = request.getParameter("val");
-        String status = request.getParameter("status");
+        String ki_code = safeRequest(request, "ki_code");
+        String descr = safeRequest(request, "descr");
+        String value = safeRequest(request, "val");
+        String status = safeRequest(request, "status");
         if (status == null) {
             status = "1";
         } else if (status.trim().equalsIgnoreCase("on")) {
@@ -571,7 +568,7 @@ public class Edit
         Db_Master dbm = new Db_Master();
 
         String filiale = dbm.getCodLocal(true)[0];
-        String listbranch = request.getParameter("listbranch");
+        String listbranch = safeRequest(request, "listbranch");
         String bra[];
         if (listbranch != null) {
             bra = parseArrayValues(listbranch, ";");
@@ -581,7 +578,7 @@ public class Edit
 
         String dt = new DateTime().toString(patternsqldate);
 
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
@@ -616,12 +613,12 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String kind = request.getParameter("kind0");
-        String min = request.getParameter("min");
-        String max = request.getParameter("max");
-        String buy = request.getParameter("buy");
-        String sell = request.getParameter("sell");
-        String listbranch = request.getParameter("listbranch");
+        String kind = safeRequest(request, "kind0");
+        String min = safeRequest(request, "min");
+        String max = safeRequest(request, "max");
+        String buy = safeRequest(request, "buy");
+        String sell = safeRequest(request, "sell");
+        String listbranch = safeRequest(request, "listbranch");
         Db_Master dbm = new Db_Master();
         String filiale = dbm.getCodLocal(true)[0];
         String bra[];
@@ -633,7 +630,7 @@ public class Edit
 
         String dt = new DateTime().toString(patternsqldate);
 
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
@@ -680,16 +677,16 @@ public class Edit
         }
         String dt = new DateTime().toString(patternsqldate);
 
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
 
-        String min = request.getParameter("min");
-        String max = request.getParameter("max");
-        String sell = request.getParameter("sell");
-        String min_old = request.getParameter("min_old");
-        String status = request.getParameter("status");
+        String min = safeRequest(request, "min");
+        String max = safeRequest(request, "max");
+        String sell = safeRequest(request, "sell");
+        String min_old = safeRequest(request, "min_old");
+        String status = safeRequest(request, "status");
         if (status == null) {
             status = "1";
         } else if (status.trim().equalsIgnoreCase("on")) {
@@ -722,7 +719,7 @@ public class Edit
         Db_Master dbm = new Db_Master();
 
         String filiale = dbm.getCodLocal(true)[0];
-        String listbranch = request.getParameter("listbranch");
+        String listbranch = safeRequest(request, "listbranch");
         String bra[];
         if (listbranch != null) {
             bra = parseArrayValues(listbranch, ";");
@@ -732,18 +729,18 @@ public class Edit
 
         String dt = new DateTime().toString(patternsqldate);
 
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
 
-        String fi_code = request.getParameter("fi_code");
-        String min = request.getParameter("min");
-        String max = request.getParameter("max");
-        String buy = request.getParameter("buy");
-        String sell = request.getParameter("sell");
-        String min_old = request.getParameter("min_old");
-        String status = request.getParameter("status");
+        String fi_code = safeRequest(request, "fi_code");
+        String min = safeRequest(request, "min");
+        String max = safeRequest(request, "max");
+        String buy = safeRequest(request, "buy");
+        String sell = safeRequest(request, "sell");
+        String min_old = safeRequest(request, "min_old");
+        String status = safeRequest(request, "status");
         if (status == null) {
             status = "1";
         } else if (status.trim().equalsIgnoreCase("on")) {
@@ -781,20 +778,20 @@ public class Edit
             user = "9999";
         }
 
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
 
-        String descr = request.getParameter("descr");
-        String thr_kyc = request.getParameter("thr_kyc");
-        String maxweek = request.getParameter("maxweek");
-        String thr_aml = request.getParameter("thr_aml");
-        String thr_cee = request.getParameter("thr_cee");
-        String list_type_kind = request.getParameter("list_type_kind");
-        String list_type_customer = request.getParameter("list_type_customer");
-        String list_category_nations = request.getParameter("list_category_nations");
-        String ecee = request.getParameter("ecee");
+        String descr = safeRequest(request, "descr");
+        String thr_kyc = safeRequest(request, "thr_kyc");
+        String maxweek = safeRequest(request, "maxweek");
+        String thr_aml = safeRequest(request, "thr_aml");
+        String thr_cee = safeRequest(request, "thr_cee");
+        String list_type_kind = safeRequest(request, "list_type_kind");
+        String list_type_customer = safeRequest(request, "list_type_customer");
+        String list_category_nations = safeRequest(request, "list_category_nations");
+        String ecee = safeRequest(request, "ecee");
         if (ecee == null) {
             ecee = "0";
         } else if (ecee.trim().equalsIgnoreCase("on")) {
@@ -802,7 +799,7 @@ public class Edit
         } else {
             ecee = "0";
         }
-        String uploadobbl = request.getParameter("uploadobbl");
+        String uploadobbl = safeRequest(request, "uploadobbl");
         if (uploadobbl == null) {
             uploadobbl = "0";
         } else if (uploadobbl.trim().equalsIgnoreCase("on")) {
@@ -810,7 +807,7 @@ public class Edit
         } else {
             uploadobbl = "0";
         }
-        String resid = request.getParameter("resid");
+        String resid = safeRequest(request, "resid");
         if (resid == null) {
             resid = "1";
         } else if (resid.trim().equalsIgnoreCase("on")) {
@@ -819,23 +816,23 @@ public class Edit
             resid = "1";
         }
 
-        String list_type_selecttipov = request.getParameter("list_type_selecttipov");
+        String list_type_selecttipov = safeRequest(request, "list_type_selecttipov");
 
-        String vatcode = request.getParameter("vatcode");
-        String thr_tax_disc = request.getParameter("thr_tax_disc");
+        String vatcode = safeRequest(request, "vatcode");
+        String thr_tax_disc = safeRequest(request, "thr_tax_disc");
         if (thr_tax_disc == null) {
             thr_tax_disc = "0.00";
         }
-        String value_tax_disc = request.getParameter("value_tax_disc");
+        String value_tax_disc = safeRequest(request, "value_tax_disc");
         if (value_tax_disc == null) {
             value_tax_disc = "0.00";
         }
-        String des_tax_disc = request.getParameter("des_tax_disc");
+        String des_tax_disc = safeRequest(request, "des_tax_disc");
         if (des_tax_disc == null) {
             des_tax_disc = "-";
         }
 
-        String taxfree = request.getParameter("taxfree");
+        String taxfree = safeRequest(request, "taxfree");
         if (taxfree == null) {
             taxfree = "0";
         } else if (taxfree.trim().equalsIgnoreCase("on")) {
@@ -886,7 +883,7 @@ public class Edit
      */
     protected void edit_Kindtra(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
@@ -895,16 +892,16 @@ public class Edit
             user = "9999";
         }
 
-        String kt_code = request.getParameter("kt_code");
-        String descr = request.getParameter("descr");
-        String thr_kyc = request.getParameter("thr_kyc");
-        String maxweek = request.getParameter("maxweek");
-        String thr_aml = request.getParameter("thr_aml");
-        String thr_cee = request.getParameter("thr_cee");
-        String list_type_kind = request.getParameter("list_type_kind");
-        String list_type_customer = request.getParameter("list_type_customer");
-        String list_category_nations = request.getParameter("list_category_nations");
-        String ecee = request.getParameter("ecee");
+        String kt_code = safeRequest(request, "kt_code");
+        String descr = safeRequest(request, "descr");
+        String thr_kyc = safeRequest(request, "thr_kyc");
+        String maxweek = safeRequest(request, "maxweek");
+        String thr_aml = safeRequest(request, "thr_aml");
+        String thr_cee = safeRequest(request, "thr_cee");
+        String list_type_kind = safeRequest(request, "list_type_kind");
+        String list_type_customer = safeRequest(request, "list_type_customer");
+        String list_category_nations = safeRequest(request, "list_category_nations");
+        String ecee = safeRequest(request, "ecee");
         if (ecee == null) {
             ecee = "0";
         } else if (ecee.trim().equalsIgnoreCase("on")) {
@@ -912,7 +909,7 @@ public class Edit
         } else {
             ecee = "0";
         }
-        String status = request.getParameter("status");
+        String status = safeRequest(request, "status");
         if (status == null) {
             status = "1";
         } else if (status.trim().equalsIgnoreCase("on")) {
@@ -920,7 +917,7 @@ public class Edit
         } else {
             status = "1";
         }
-        String resid = request.getParameter("resid");
+        String resid = safeRequest(request, "resid");
         if (resid == null) {
             resid = "1";
         } else if (resid.trim().equalsIgnoreCase("on")) {
@@ -929,7 +926,7 @@ public class Edit
             resid = "1";
         }
 
-        String uploadobbl = request.getParameter("uploadobbl");
+        String uploadobbl = safeRequest(request, "uploadobbl");
         if (uploadobbl == null) {
             uploadobbl = "0";
         } else if (uploadobbl.trim().equalsIgnoreCase("on")) {
@@ -937,7 +934,7 @@ public class Edit
         } else {
             uploadobbl = "0";
         }
-        String taxfree = request.getParameter("taxfree");
+        String taxfree = safeRequest(request, "taxfree");
         if (taxfree == null) {
             taxfree = "0";
         } else if (taxfree.trim().equalsIgnoreCase("on")) {
@@ -946,18 +943,18 @@ public class Edit
             taxfree = "0";
         }
 
-        String list_type_selecttipov = request.getParameter("list_type_selecttipov");
+        String list_type_selecttipov = safeRequest(request, "list_type_selecttipov");
 
-        String vatcode = request.getParameter("vatcode");
-        String thr_tax_disc = request.getParameter("thr_tax_disc");
+        String vatcode = safeRequest(request, "vatcode");
+        String thr_tax_disc = safeRequest(request, "thr_tax_disc");
         if (thr_tax_disc == null) {
             thr_tax_disc = "0.00";
         }
-        String value_tax_disc = request.getParameter("value_tax_disc");
+        String value_tax_disc = safeRequest(request, "value_tax_disc");
         if (value_tax_disc == null) {
             value_tax_disc = "0.00";
         }
-        String des_tax_disc = request.getParameter("des_tax_disc");
+        String des_tax_disc = safeRequest(request, "des_tax_disc");
         if (des_tax_disc == null) {
             des_tax_disc = "-";
         }
@@ -991,11 +988,11 @@ public class Edit
         boolean es = dbm.edit_Kindtransaction(ck, user, dt_val);
         dbm.closeDB();
 
-        String thr_mini = request.getParameter("thr_mini");
+        String thr_mini = safeRequest(request, "thr_mini");
         if (thr_mini == null) {
             thr_mini = "1000.00";
         }
-        String thr_quart = request.getParameter("thr_quart");
+        String thr_quart = safeRequest(request, "thr_quart");
         if (thr_quart == null) {
             thr_quart = "2500.00";
         }
@@ -1021,7 +1018,7 @@ public class Edit
      * @throws IOException
      */
     protected void edit_Showag(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String status = request.getParameter("status");
+        String status = safeRequest(request, "status");
         if (status == null) {
             status = "0";
         } else if (status.trim().equalsIgnoreCase("on")) {
@@ -1047,13 +1044,13 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String descr = request.getParameter("descr");
-        String addr = request.getParameter("addr");
-        String zipc = request.getParameter("zipc");
-        String city = request.getParameter("city");
-        String phone = request.getParameter("phone");
-        String fax = request.getParameter("fax");
-        String email = request.getParameter("email");
+        String descr = safeRequest(request, "descr");
+        String addr = safeRequest(request, "addr");
+        String zipc = safeRequest(request, "zipc");
+        String city = safeRequest(request, "city");
+        String phone = safeRequest(request, "phone");
+        String fax = safeRequest(request, "fax");
+        String email = safeRequest(request, "email");
         Db_Master dbm = new Db_Master();
         String filiale = dbm.getCodLocal(true)[0];
         Agency ag = new Agency();
@@ -1088,16 +1085,16 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String ag_code = request.getParameter("ag_code");
-        String descr = request.getParameter("descr");
-        String addr = request.getParameter("addr");
-        String zipc = request.getParameter("zipc");
-        String city = request.getParameter("city");
-        String phone = request.getParameter("phone");
-        String fax = request.getParameter("fax");
-        String email = request.getParameter("email");
+        String ag_code = safeRequest(request, "ag_code");
+        String descr = safeRequest(request, "descr");
+        String addr = safeRequest(request, "addr");
+        String zipc = safeRequest(request, "zipc");
+        String city = safeRequest(request, "city");
+        String phone = safeRequest(request, "phone");
+        String fax = safeRequest(request, "fax");
+        String email = safeRequest(request, "email");
 
-        String status = request.getParameter("status");
+        String status = safeRequest(request, "status");
         if (status == null) {
             status = "1";
         } else if (status.trim().equalsIgnoreCase("on")) {
@@ -1146,7 +1143,7 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String descr = request.getParameter("descr");
+        String descr = safeRequest(request, "descr");
         Db_Master dbm = new Db_Master();
         String filiale = dbm.getCodLocal(true)[0];
         boolean es = dbm.insert_new_Intbooking(filiale, descr, user);
@@ -1170,8 +1167,8 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String inboo_code = request.getParameter("inboo_code");
-        String descr = request.getParameter("descr");
+        String inboo_code = safeRequest(request, "inboo_code");
+        String descr = safeRequest(request, "descr");
         Db_Master dbm = new Db_Master();
         String filiale = dbm.getCodLocal(true)[0];
         boolean es = dbm.edit_Intbooking(filiale, inboo_code, descr, user);
@@ -1196,7 +1193,7 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String listbranch = request.getParameter("listbranch");
+        String listbranch = safeRequest(request, "listbranch");
         String filiale = dbm.getCodLocal(true)[0];
         String bra[];
         if (listbranch != null) {
@@ -1207,8 +1204,8 @@ public class Edit
 
         String dt = new DateTime().toString(patternsqldate);
 
-        String descr = request.getParameter("descr");
-        String cod = request.getParameter("cod");
+        String descr = safeRequest(request, "descr");
+        String cod = safeRequest(request, "cod");
 
         boolean es = dbm.insert_new_Credit(filiale, cod, descr, user, dt);
         if (es) {
@@ -1239,9 +1236,9 @@ public class Edit
             user = "9999";
         }
 
-        String descr = request.getParameter("descr");
-        String cod = request.getParameter("cod");
-        String status = request.getParameter("status");
+        String descr = safeRequest(request, "descr");
+        String cod = safeRequest(request, "cod");
+        String status = safeRequest(request, "status");
         if (status == null) {
             status = "1";
         } else if (status.trim().equalsIgnoreCase("on")) {
@@ -1250,7 +1247,7 @@ public class Edit
             status = "1";
         }
         Db_Master dbm = new Db_Master();
-        String listbranch = request.getParameter("listbranch");
+        String listbranch = safeRequest(request, "listbranch");
         String filiale = dbm.getCodLocal(true)[0];
         String bra[];
         if (listbranch != null) {
@@ -1289,7 +1286,7 @@ public class Edit
             user = "9999";
         }
         Db_Master dbm = new Db_Master();
-        String listbranch = request.getParameter("listbranch");
+        String listbranch = safeRequest(request, "listbranch");
         String filiale = dbm.getCodLocal(true)[0];
         String bra[];
         if (listbranch != null) {
@@ -1300,24 +1297,24 @@ public class Edit
 
         String dt = new DateTime().toString(patternsqldate);
 
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
 
-        String descr = request.getParameter("descr");
-        String list_selectkind = request.getParameter("list_selectkind");
-        String buy_com = request.getParameter("buy_com");
-        String buy_thr = request.getParameter("buy_thr");
-        String buy_fix = request.getParameter("buy_fix");
-        String sel_com = request.getParameter("sel_com");
-        String sel_thr = request.getParameter("sel_thr");
-        String sel_fix = request.getParameter("sel_fix");
+        String descr = safeRequest(request, "descr");
+        String list_selectkind = safeRequest(request, "list_selectkind");
+        String buy_com = safeRequest(request, "buy_com");
+        String buy_thr = safeRequest(request, "buy_thr");
+        String buy_fix = safeRequest(request, "buy_fix");
+        String sel_com = safeRequest(request, "sel_com");
+        String sel_thr = safeRequest(request, "sel_thr");
+        String sel_fix = safeRequest(request, "sel_fix");
 
-        String buy_back = request.getParameter("buy_bac");
-        String sel_bac = request.getParameter("sel_bac");
+        String buy_back = safeRequest(request, "buy_bac");
+        String sel_bac = safeRequest(request, "sel_bac");
 
-        String pay = request.getParameter("pay");
+        String pay = safeRequest(request, "pay");
         if (pay == null) {
             pay = "0";
         } else if (pay.trim().equalsIgnoreCase("on")) {
@@ -1325,7 +1322,7 @@ public class Edit
         } else {
             pay = "0";
         }
-        String kindre = request.getParameter("kindre");
+        String kindre = safeRequest(request, "kindre");
         if (kindre == null) {
             kindre = "0";
         } else if (kindre.trim().equalsIgnoreCase("on")) {
@@ -1334,7 +1331,7 @@ public class Edit
             kindre = "0";
         }
 
-        String uploadobbl = request.getParameter("uploadobbl");
+        String uploadobbl = safeRequest(request, "uploadobbl");
         if (uploadobbl == null) {
             uploadobbl = "0";
         } else if (uploadobbl.trim().equalsIgnoreCase("on")) {
@@ -1343,7 +1340,7 @@ public class Edit
             uploadobbl = "0";
         }
 
-        String upl_thr = request.getParameter("upl_thr");
+        String upl_thr = safeRequest(request, "upl_thr");
 
         String buy = "0";
 
@@ -1458,10 +1455,10 @@ public class Edit
             user = "9999";
         }
         Db_Master dbm = new Db_Master();
-        String fil = request.getParameter("fil");
-        String view = request.getParameter("view");
+        String fil = safeRequest(request, "fil");
+        String view = safeRequest(request, "view");
 
-        String listbranch = request.getParameter("listbranch");
+        String listbranch = safeRequest(request, "listbranch");
         String filiale = dbm.getCodLocal(true)[0];
         String bra[];
         if (listbranch != null) {
@@ -1472,25 +1469,25 @@ public class Edit
 
         String dt = new DateTime().toString(patternsqldate);
 
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
 
-        String fi_code = request.getParameter("fi_code");
-        String descr = request.getParameter("descr");
-        String list_selectkind = request.getParameter("list_selectkind");
-        String buy_com = request.getParameter("buy_com");
-        String buy_thr = request.getParameter("buy_thr");
-        String buy_fix = request.getParameter("buy_fix");
-        String sel_com = request.getParameter("sel_com");
-        String sel_thr = request.getParameter("sel_thr");
-        String sel_fix = request.getParameter("sel_fix");
+        String fi_code = safeRequest(request, "fi_code");
+        String descr = safeRequest(request, "descr");
+        String list_selectkind = safeRequest(request, "list_selectkind");
+        String buy_com = safeRequest(request, "buy_com");
+        String buy_thr = safeRequest(request, "buy_thr");
+        String buy_fix = safeRequest(request, "buy_fix");
+        String sel_com = safeRequest(request, "sel_com");
+        String sel_thr = safeRequest(request, "sel_thr");
+        String sel_fix = safeRequest(request, "sel_fix");
 
-        String buy_back = request.getParameter("buy_bac");
-        String sel_bac = request.getParameter("sel_bac");
+        String buy_back = safeRequest(request, "buy_bac");
+        String sel_bac = safeRequest(request, "sel_bac");
 
-        String pay = request.getParameter("pay");
+        String pay = safeRequest(request, "pay");
         if (pay == null) {
             pay = "0";
         } else if (pay.trim().equalsIgnoreCase("on")) {
@@ -1498,7 +1495,7 @@ public class Edit
         } else {
             pay = "0";
         }
-        String kindre = request.getParameter("kindre");
+        String kindre = safeRequest(request, "kindre");
         if (kindre == null) {
             kindre = "0";
         } else if (kindre.trim().equalsIgnoreCase("on")) {
@@ -1506,7 +1503,7 @@ public class Edit
         } else {
             kindre = "0";
         }
-        String uploadobbl = request.getParameter("uploadobbl");
+        String uploadobbl = safeRequest(request, "uploadobbl");
         if (uploadobbl == null) {
             uploadobbl = "0";
         } else if (uploadobbl.trim().equalsIgnoreCase("on")) {
@@ -1518,7 +1515,7 @@ public class Edit
 
         String fix_com = "0.00";
         String sell = "0";
-        String upl_thr = request.getParameter("upl_thr");
+        String upl_thr = safeRequest(request, "upl_thr");
 
         switch (list_selectkind) {
             case "1":
@@ -1624,9 +1621,9 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String fi_code = request.getParameter("fi_code");
-        String descr = request.getParameter("descr");
-        String typeval = request.getParameter("typeval");
+        String fi_code = safeRequest(request, "fi_code");
+        String descr = safeRequest(request, "descr");
+        String typeval = safeRequest(request, "typeval");
         if (typeval == null) {
             typeval = "1";
         } else if (typeval.trim().equalsIgnoreCase("on")) {
@@ -1634,15 +1631,15 @@ public class Edit
         } else {
             typeval = "1";
         }
-        String perc_value = formatDoubleforMysql(request.getParameter("perc_value"));
-        String euro_value = formatDoubleforMysql(request.getParameter("euro_value"));
-        String sogliaminima = formatDoubleforMysql(request.getParameter("sogliaminima"));
+        String perc_value = formatDoubleforMysql(safeRequest(request, "perc_value"));
+        String euro_value = formatDoubleforMysql(safeRequest(request, "euro_value"));
+        String sogliaminima = formatDoubleforMysql(safeRequest(request, "sogliaminima"));
 
-        String data_start = formatStringtoStringDate(request.getParameter("data_start"), patternnormdate_filter, patternsql);
-        String data_end = formatStringtoStringDate(request.getParameter("data_end"), patternnormdate_filter, patternsql);
+        String data_start = formatStringtoStringDate(safeRequest(request, "data_start"), patternnormdate_filter, patternsql);
+        String data_end = formatStringtoStringDate(safeRequest(request, "data_end"), patternnormdate_filter, patternsql);
 
-        String currency = replace(request.getParameter("currency"), "---", "");
-        String branch = replace(request.getParameter("branch"), "---", "");
+        String currency = replace(safeRequest(request, "currency"), "---", "");
+        String branch = replace(safeRequest(request, "branch"), "---", "");
         String[] valori = {fi_code, descr, typeval, perc_value, euro_value, sogliaminima,
             data_start, data_end, currency, branch};
         Db_Master dbm = new Db_Master();
@@ -1669,10 +1666,10 @@ public class Edit
             user = "9999";
         }
 
-        String fi_code = request.getParameter("fi_code");
-        String descr = request.getParameter("descr");
+        String fi_code = safeRequest(request, "fi_code");
+        String descr = safeRequest(request, "descr");
 
-        String typeval = request.getParameter("typeval");
+        String typeval = safeRequest(request, "typeval");
         if (typeval == null) {
             typeval = "1";
         } else if (typeval.trim().equalsIgnoreCase("on")) {
@@ -1681,7 +1678,7 @@ public class Edit
             typeval = "1";
         }
 
-        String coupon = request.getParameter("coupon");
+        String coupon = safeRequest(request, "coupon");
         if (coupon == null) {
             coupon = "N";
         } else if (coupon.trim().equalsIgnoreCase("on")) {
@@ -1690,22 +1687,23 @@ public class Edit
             coupon = "N";
         }
 
-        String perc_value = formatDoubleforMysql(request.getParameter("perc_value"));
-        String euro_value = formatDoubleforMysql(request.getParameter("euro_value"));
-        String sogliaminima = formatDoubleforMysql(request.getParameter("sogliaminima"));
+        String perc_value = formatDoubleforMysql(safeRequest(request, "perc_value"));
+        String euro_value = formatDoubleforMysql(safeRequest(request, "euro_value"));
+        String sogliaminima = formatDoubleforMysql(safeRequest(request, "sogliaminima"));
 
-        String data_start = formatStringtoStringDate(request.getParameter("data_start"), patternnormdate_filter, patternsql);
-        String data_end = formatStringtoStringDate(request.getParameter("data_end"), patternnormdate_filter, patternsql);
-        String currency = replace(request.getParameter("currency"), "---", "");
-        String branch = replace(request.getParameter("branch"), "---", "");
+        String data_start = formatStringtoStringDate(safeRequest(request, "data_start"), patternnormdate_filter, patternsql);
+        String data_end = formatStringtoStringDate(safeRequest(request, "data_end"), patternnormdate_filter, patternsql);
+        String currency = replace(safeRequest(request, "currency"), "---", "");
+        String branch = replace(safeRequest(request, "branch"), "---", "");
 
         //      NUOVO   //
-//        String cumulabile_con = StringUtils.replace(request.getParameter("cumulabile_con"), "---", "");
-        String[] cumulabile_con = request.getParameterValues("cumulabile_con");
+//        String cumulabile_con = StringUtils.replace(safeRequest(request, "cumulabile_con"), "---", "");
+
+        String[] cumulabile_con = safeRequestMultiple(request, "cumulabile_con");
         StringBuilder cumulabile = new StringBuilder("");
-        if (cumulabile_con != null) {
+        if (!cumulabile_con[0].equals("")) {
             for (String cumulabile_con1 : cumulabile_con) {
-                cumulabile.append(cumulabile_con1 + ";");
+                cumulabile.append(cumulabile_con1).append(";");
             }
             if (cumulabile.toString().contains("---")) {
                 cumulabile = new StringBuilder("---");
@@ -1733,8 +1731,8 @@ public class Edit
      */
     protected void ins_department(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String user = (String) request.getSession().getAttribute("us_cod");
-        String de_code = request.getParameter("de_code");
-        String nochange = request.getParameter("nochange");
+        String de_code = safeRequest(request, "de_code");
+        String nochange = safeRequest(request, "nochange");
         Db_Master dbm = new Db_Master();
         boolean esito = dbm.inser_department_NC(de_code, nochange, user);
         dbm.closeDB();
@@ -1750,7 +1748,7 @@ public class Edit
      */
     protected void delete_depart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String user = (String) request.getSession().getAttribute("us_cod");
-        String nochange = request.getParameter("nochange");
+        String nochange = safeRequest(request, "nochange");
         Db_Master dbm = new Db_Master();
         boolean esito = dbm.delete_department_NC(nochange, user);
         dbm.closeDB();
@@ -1766,8 +1764,8 @@ public class Edit
      */
     protected void edit_department(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String user = (String) request.getSession().getAttribute("us_cod");
-        String de_code = request.getParameter("de_code");
-        String descr = request.getParameter("descr");
+        String de_code = safeRequest(request, "de_code");
+        String descr = safeRequest(request, "descr");
         Db_Master dbm = new Db_Master();
         boolean esito = dbm.update_department(de_code, descr, user);
         dbm.closeDB();
@@ -1787,15 +1785,15 @@ public class Edit
             user = "9999";
         }
         String dt = new DateTime().toString(patternsqldate);
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
-        String ra_code = request.getParameter("ra_code");
-        String min_old = request.getParameter("min_old");
-        String min = formatDoubleforMysql(request.getParameter("min"));
-        String max = formatDoubleforMysql(request.getParameter("max"));
-        String sell = request.getParameter("sell");
+        String ra_code = safeRequest(request, "ra_code");
+        String min_old = safeRequest(request, "min_old");
+        String min = formatDoubleforMysql(safeRequest(request, "min"));
+        String max = formatDoubleforMysql(safeRequest(request, "max"));
+        String sell = safeRequest(request, "sell");
         String[] valori = {ra_code, min, max, sell};
         Db_Master dbm = new Db_Master();
         boolean esito = dbm.update_site_level_rate(valori, min_old, user, dt_val, dt);
@@ -1816,15 +1814,15 @@ public class Edit
             user = "9999";
         }
         String dt = new DateTime().toString(patternsqldate);
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
 
-        String fi_code = request.getParameter("fi_code");
-        String descr = request.getParameter("descr");
+        String fi_code = safeRequest(request, "fi_code");
+        String descr = safeRequest(request, "descr");
 
-        String typeval = request.getParameter("typeval");
+        String typeval = safeRequest(request, "typeval");
         if (typeval == null) {
             typeval = "1";
         } else if (typeval.trim().equalsIgnoreCase("on")) {
@@ -1832,15 +1830,15 @@ public class Edit
         } else {
             typeval = "1";
         }
-        String perc_value = formatDoubleforMysql(request.getParameter("perc_value"));
-        String euro_value = formatDoubleforMysql(request.getParameter("euro_value"));
-        String sogliaminima = formatDoubleforMysql(request.getParameter("sogliaminima"));
+        String perc_value = formatDoubleforMysql(safeRequest(request, "perc_value"));
+        String euro_value = formatDoubleforMysql(safeRequest(request, "euro_value"));
+        String sogliaminima = formatDoubleforMysql(safeRequest(request, "sogliaminima"));
 
-        String data_start = formatStringtoStringDate(request.getParameter("data_start"), patternnormdate_filter, patternsql);
-        String data_end = formatStringtoStringDate(request.getParameter("data_end"), patternnormdate_filter, patternsql);
+        String data_start = formatStringtoStringDate(safeRequest(request, "data_start"), patternnormdate_filter, patternsql);
+        String data_end = formatStringtoStringDate(safeRequest(request, "data_end"), patternnormdate_filter, patternsql);
 
-        String currency = replace(request.getParameter("currency"), "---", "");
-        String branch = replace(request.getParameter("branch"), "---", "");
+        String currency = replace(safeRequest(request, "currency"), "---", "");
+        String branch = replace(safeRequest(request, "branch"), "---", "");
 
         String[] valori = {fi_code, descr, typeval, perc_value, euro_value, sogliaminima, data_start, data_end, currency, branch};
 
@@ -1866,16 +1864,16 @@ public class Edit
             user = "9999";
         }
         String dt = new DateTime().toString(patternsqldate);
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
 
-        String oldccod = request.getParameter("oldccod");
-        String fi_code = request.getParameter("fi_code");
-        String descr = request.getParameter("descr");
+        String oldccod = safeRequest(request, "oldccod");
+        String fi_code = safeRequest(request, "fi_code");
+        String descr = safeRequest(request, "descr");
 
-        String typeval = request.getParameter("typeval");
+        String typeval = safeRequest(request, "typeval");
         if (typeval == null) {
             typeval = "1";
         } else if (typeval.trim().equalsIgnoreCase("on")) {
@@ -1884,7 +1882,7 @@ public class Edit
             typeval = "1";
         }
 
-        String coupon = request.getParameter("coupon");
+        String coupon = safeRequest(request, "coupon");
         if (coupon == null) {
             coupon = "N";
         } else if (coupon.trim().equalsIgnoreCase("on")) {
@@ -1893,22 +1891,22 @@ public class Edit
             coupon = "N";
         }
 
-        String perc_value = formatDoubleforMysql(request.getParameter("perc_value"));
-        String euro_value = formatDoubleforMysql(request.getParameter("euro_value"));
-        String sogliaminima = formatDoubleforMysql(request.getParameter("sogliaminima"));
-        String data_start = formatStringtoStringDate(request.getParameter("data_start"), patternnormdate_filter, patternsql);
-        String data_end = formatStringtoStringDate(request.getParameter("data_end"), patternnormdate_filter, patternsql);
+        String perc_value = formatDoubleforMysql(safeRequest(request, "perc_value"));
+        String euro_value = formatDoubleforMysql(safeRequest(request, "euro_value"));
+        String sogliaminima = formatDoubleforMysql(safeRequest(request, "sogliaminima"));
+        String data_start = formatStringtoStringDate(safeRequest(request, "data_start"), patternnormdate_filter, patternsql);
+        String data_end = formatStringtoStringDate(safeRequest(request, "data_end"), patternnormdate_filter, patternsql);
 
-        String currency = replace(request.getParameter("currency"), "---", "");
-        String branch = replace(request.getParameter("branch"), "---", "");
+        String currency = replace(safeRequest(request, "currency"), "---", "");
+        String branch = replace(safeRequest(request, "branch"), "---", "");
 
         //      NUOVO   //
-//        String cumulabile_con = StringUtils.replace(request.getParameter("cumulabile_con"), "---", "");
-        String[] cumulabile_con = request.getParameterValues("cumulabile_con");
+//        String cumulabile_con = StringUtils.replace(safeRequest(request, "cumulabile_con"), "---", "");
+        String[] cumulabile_con = safeRequestMultiple(request, "cumulabile_con");
         StringBuilder cumulabile = new StringBuilder("");
-        if (cumulabile_con != null) {
+        if (!cumulabile_con[0].equals("")) {
             for (String cumulabile_con1 : cumulabile_con) {
-                cumulabile.append(cumulabile_con1 + ";");
+                cumulabile.append(cumulabile_con1).append(";");
             }
 
             if (cumulabile.toString().contains("---")) {
@@ -1942,13 +1940,13 @@ public class Edit
             user = "9999";
         }
         String dt = new DateTime().toString(patternsqldate);
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
-        String fi_code = request.getParameter("fi_code");
-        String descr = request.getParameter("descr");
-        String note = request.getParameter("note");
+        String fi_code = safeRequest(request, "fi_code");
+        String descr = safeRequest(request, "descr");
+        String note = safeRequest(request, "note");
         String[] valori = {fi_code, descr, note};
         Db_Master dbm = new Db_Master();
         boolean esito = dbm.update_site_causali_variazioni(valori, user, dt_val, dt);
@@ -1969,12 +1967,12 @@ public class Edit
             user = "9999";
         }
         String dt = new DateTime().toString(patternsqldate);
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
-        String fi_code = request.getParameter("fi_code");
-        String sel_com = request.getParameter("sel_com");
+        String fi_code = safeRequest(request, "fi_code");
+        String sel_com = safeRequest(request, "sel_com");
         Db_Master dbm = new Db_Master();
         boolean esito = dbm.update_site_supporti(fi_code, formatDoubleforMysql(sel_com), user, dt_val, dt);
         dbm.closeDB();
@@ -1983,14 +1981,14 @@ public class Edit
 
     private ArrayList<Rate_history> isModify(HttpServletRequest request, String bra[], String user, String dt, boolean spread) {
         ArrayList<Rate_history> li = new ArrayList<>();
-        String cur_code = request.getParameter("cur_code");
-        String editce = request.getParameter("editce");
-        String dt_val = request.getParameter("dt_val");
+        String cur_code = safeRequest(request, "cur_code");
+        String editce = safeRequest(request, "editce");
+        String dt_val = safeRequest(request, "dt_val");
 
         if (null == editce) {
             if (spread) {
 
-//                String typebuy_0 = request.getParameter("typebuy_0");
+//                String typebuy_0 = safeRequest(request, "typebuy_0");
 //                if (typebuy_0 == null) {
 //                    typebuy_0 = "1";
 //                } else if (typebuy_0.trim().equalsIgnoreCase("on")) {
@@ -1999,7 +1997,7 @@ public class Edit
 //                    typebuy_0 = "1";
 //                }
 //
-//                String typesell_0 = request.getParameter("typesell_0");
+//                String typesell_0 = safeRequest(request, "typesell_0");
 //                if (typesell_0 == null) {
 //                    typesell_0 = "1";
 //                } else if (typesell_0.trim().equalsIgnoreCase("on")) {
@@ -2030,54 +2028,56 @@ public class Edit
                 }
 
             }
-        } else switch (editce) {
-            case "0":
-                String buy_std_val = formatDoubleforMysql(request.getParameter("buy_std_val"));
-                String old_buy_std_val = request.getParameter("old_buy_std_val");
-                if (fd(buy_std_val) != fd(old_buy_std_val)) {
-                    for (String bra1 : bra) {
-                        String msg = "Manual modify: buy: " + request.getParameter("buy_std_val");
-                        Rate_history rh = new Rate_history(generaId(50), bra1, cur_code, "2", msg, user, dt);
-                        li.add(rh);
-                    }
-                }
-                String sell_std_val = formatDoubleforMysql(request.getParameter("sell_std_val"));
-                String old_sell_std_val = request.getParameter("old_sell_std_val");
-                if (fd(sell_std_val) != fd(old_sell_std_val)) {
-                    for (String bra1 : bra) {
-                        String msg = "Manual modify: sell: " + request.getParameter("sell_std_val");
-                        Rate_history rh = new Rate_history(generaId(50), bra1, cur_code, "2", msg, user, dt);
-                        li.add(rh);
-                    }
-                }
-                break;
-            case "1":
-                String bce = formatDoubleforMysql(request.getParameter("bce"));
-                String oldbce = request.getParameter("oldbce");
-                if (fd(bce) != fd(oldbce)) {
-                    for (String bra1 : bra) {
-                        Db_Master dbm1 = new Db_Master();
-                        String[] valorivaluta = dbm1.get_currency_filiale(bra1, cur_code);
-                        dbm1.closeDB();
-                        if (valorivaluta != null) {
-                            double d_rifbce = fd(bce);
-                            String buy_perc = valorivaluta[2];
-                            String sel_perc = valorivaluta[4];
-                            double d_standard_b = fd(buy_perc);
-                            double d_standard_s = fd(sel_perc);
-                            String tot_st_b = formatMysqltoDisplay(roundDoubleandFormat((d_rifbce * (100.0D + d_standard_b) / 100.0D), 8));
-                            String tot_st_s = formatMysqltoDisplay(roundDoubleandFormat((d_rifbce * (100.0D + d_standard_s) / 100.0D), 8));
-                            //  calcola buy/Sell
-                            String msg = "Manual modify bce. <br>BCE value " + request.getParameter("bce") + "<br>Buy Std: " + tot_st_b + "<br>Sell Std: " + tot_st_s + "<br>Date validity: " + dt_val;
-                            //String msg = "Manual modify bce. <br> BCE value " + request.getParameter("bce") + " <br>Date validity: " + dt_val;
-                            Rate_history rh = new Rate_history(generaId(50), bra1, cur_code, "0", msg, user, dt);
+        } else {
+            switch (editce) {
+                case "0":
+                    String buy_std_val = formatDoubleforMysql(safeRequest(request, "buy_std_val"));
+                    String old_buy_std_val = safeRequest(request, "old_buy_std_val");
+                    if (fd(buy_std_val) != fd(old_buy_std_val)) {
+                        for (String bra1 : bra) {
+                            String msg = "Manual modify: buy: " + safeRequest(request, "buy_std_val");
+                            Rate_history rh = new Rate_history(generaId(50), bra1, cur_code, "2", msg, user, dt);
                             li.add(rh);
                         }
                     }
-                }
-                break;
-            default:
-                break;
+                    String sell_std_val = formatDoubleforMysql(safeRequest(request, "sell_std_val"));
+                    String old_sell_std_val = safeRequest(request, "old_sell_std_val");
+                    if (fd(sell_std_val) != fd(old_sell_std_val)) {
+                        for (String bra1 : bra) {
+                            String msg = "Manual modify: sell: " + safeRequest(request, "sell_std_val");
+                            Rate_history rh = new Rate_history(generaId(50), bra1, cur_code, "2", msg, user, dt);
+                            li.add(rh);
+                        }
+                    }
+                    break;
+                case "1":
+                    String bce = formatDoubleforMysql(safeRequest(request, "bce"));
+                    String oldbce = safeRequest(request, "oldbce");
+                    if (fd(bce) != fd(oldbce)) {
+                        for (String bra1 : bra) {
+                            Db_Master dbm1 = new Db_Master();
+                            String[] valorivaluta = dbm1.get_currency_filiale(bra1, cur_code);
+                            dbm1.closeDB();
+                            if (valorivaluta != null) {
+                                double d_rifbce = fd(bce);
+                                String buy_perc = valorivaluta[2];
+                                String sel_perc = valorivaluta[4];
+                                double d_standard_b = fd(buy_perc);
+                                double d_standard_s = fd(sel_perc);
+                                String tot_st_b = formatMysqltoDisplay(roundDoubleandFormat((d_rifbce * (100.0D + d_standard_b) / 100.0D), 8));
+                                String tot_st_s = formatMysqltoDisplay(roundDoubleandFormat((d_rifbce * (100.0D + d_standard_s) / 100.0D), 8));
+                                //  calcola buy/Sell
+                                String msg = "Manual modify bce. <br>BCE value " + safeRequest(request, "bce") + "<br>Buy Std: " + tot_st_b + "<br>Sell Std: " + tot_st_s + "<br>Date validity: " + dt_val;
+                                //String msg = "Manual modify bce. <br> BCE value " + safeRequest(request, "bce") + " <br>Date validity: " + dt_val;
+                                Rate_history rh = new Rate_history(generaId(50), bra1, cur_code, "0", msg, user, dt);
+                                li.add(rh);
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         return li;
@@ -2096,7 +2096,7 @@ public class Edit
 //        if (true) {
 //            return;
 //        }
-        String buy = request.getParameter("buy");
+        String buy = safeRequest(request, "buy");
         if (buy == null) {
             buy = "0";
         } else if (buy.trim().equalsIgnoreCase("on")) {
@@ -2105,7 +2105,7 @@ public class Edit
             buy = "0";
         }
 
-        String sell = request.getParameter("sell");
+        String sell = safeRequest(request, "sell");
         if (sell == null) {
             sell = "0";
         } else if (sell.trim().equalsIgnoreCase("on")) {
@@ -2123,23 +2123,23 @@ public class Edit
 
         String datenow = new DateTime().toString(patternsqldate);
 
-        String cur_code = request.getParameter("cur_code");
+        String cur_code = safeRequest(request, "cur_code");
 
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
 
-        String buy_std_perc = request.getParameter("buy_std_perc");
-        String buy_l1 = request.getParameter("buy_l1");
-        String buy_l2 = request.getParameter("buy_l2");
-        String buy_l3 = request.getParameter("buy_l3");
-        String buy_best = request.getParameter("buy_best");
-        String sell_std_perc = request.getParameter("sell_std_perc");
-        String sell_l1 = request.getParameter("sell_l1");
-        String sell_l2 = request.getParameter("sell_l2");
-        String sell_l3 = request.getParameter("sell_l3");
-        String sell_be = request.getParameter("sell_be");
+        String buy_std_perc = safeRequest(request, "buy_std_perc");
+        String buy_l1 = safeRequest(request, "buy_l1");
+        String buy_l2 = safeRequest(request, "buy_l2");
+        String buy_l3 = safeRequest(request, "buy_l3");
+        String buy_best = safeRequest(request, "buy_best");
+        String sell_std_perc = safeRequest(request, "sell_std_perc");
+        String sell_l1 = safeRequest(request, "sell_l1");
+        String sell_l2 = safeRequest(request, "sell_l2");
+        String sell_l3 = safeRequest(request, "sell_l3");
+        String sell_be = safeRequest(request, "sell_be");
 
         String[] valori = {cur_code,
             formatDoubleforMysql(buy_std_perc), formatDoubleforMysql(buy_l1), formatDoubleforMysql(buy_l2),
@@ -2172,7 +2172,7 @@ public class Edit
         }
 
         Db_Master dbm = new Db_Master();
-        String listbranch = request.getParameter("listbranch");
+        String listbranch = safeRequest(request, "listbranch");
         String bra[];
         if (listbranch != null) {
             bra = parseArrayValues(listbranch, ";");
@@ -2183,14 +2183,14 @@ public class Edit
         String dt = new DateTime().toString(patternsqldate);
         ArrayList<Rate_history> li_rh = isModify(request, bra, user, dt, true);
 
-        String cur_code = request.getParameter("cur_code");
+        String cur_code = safeRequest(request, "cur_code");
 
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
 
-        String typebuy_0 = request.getParameter("typebuy_0");
+        String typebuy_0 = safeRequest(request, "typebuy_0");
         if (typebuy_0 == null) {
             typebuy_0 = "1";
         } else if (typebuy_0.trim().equalsIgnoreCase("on")) {
@@ -2199,15 +2199,15 @@ public class Edit
             typebuy_0 = "1";
         }
 
-        String buy_std_perc = request.getParameter("buy_std_perc");
-        String buy_std_val = request.getParameter("buy_std_val");
+        String buy_std_perc = safeRequest(request, "buy_std_perc");
+        String buy_std_val = safeRequest(request, "buy_std_val");
 
-        String buy_l1 = request.getParameter("buy_l1");
-        String buy_l2 = request.getParameter("buy_l2");
-        String buy_l3 = request.getParameter("buy_l3");
-        String buy_best = request.getParameter("buy_best");
+        String buy_l1 = safeRequest(request, "buy_l1");
+        String buy_l2 = safeRequest(request, "buy_l2");
+        String buy_l3 = safeRequest(request, "buy_l3");
+        String buy_best = safeRequest(request, "buy_best");
 
-        String typesell_0 = request.getParameter("typesell_0");
+        String typesell_0 = safeRequest(request, "typesell_0");
         if (typesell_0 == null) {
             typesell_0 = "1";
         } else if (typesell_0.trim().equalsIgnoreCase("on")) {
@@ -2216,13 +2216,13 @@ public class Edit
             typesell_0 = "1";
         }
 
-        String sell_std_perc = request.getParameter("sell_std_perc");
-        String sell_std_val = request.getParameter("sell_std_val");
+        String sell_std_perc = safeRequest(request, "sell_std_perc");
+        String sell_std_val = safeRequest(request, "sell_std_val");
 
-        String sell_l1 = request.getParameter("sell_l1");
-        String sell_l2 = request.getParameter("sell_l2");
-        String sell_l3 = request.getParameter("sell_l3");
-        String sell_be = request.getParameter("sell_be");
+        String sell_l1 = safeRequest(request, "sell_l1");
+        String sell_l2 = safeRequest(request, "sell_l2");
+        String sell_l3 = safeRequest(request, "sell_l3");
+        String sell_be = safeRequest(request, "sell_be");
 
         String error = "0";
         for (String bra1 : bra) {
@@ -2280,7 +2280,7 @@ public class Edit
         }
 
         //21/05
-        String sellba = request.getParameter("sellba");
+        String sellba = safeRequest(request, "sellba");
         if (sellba == null) {
             sellba = "0";
         } else if (sellba.trim().equalsIgnoreCase("on")) {
@@ -2290,7 +2290,7 @@ public class Edit
         }
 
         Db_Master dbm = new Db_Master();
-        String listbranch = request.getParameter("listbranch");
+        String listbranch = safeRequest(request, "listbranch");
         String filiale = dbm.getCodLocal(true)[0];
         boolean modifica_da_filiale = !filiale.equals("000");
         String bra[];
@@ -2304,16 +2304,16 @@ public class Edit
         String dt = new DateTime().toString(patternsqldate);
         ArrayList<Rate_history> li_rh = isModify(request, bra, user, dt, false);
 
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
-        String editce = request.getParameter("editce");
-        String cur_code = request.getParameter("cur_code");
-        String uic_code = request.getParameter("uic_code");
-        String descr = request.getParameter("descr");
-        String messa = request.getParameter("messa");
-        String internal = request.getParameter("internal");
+        String editce = safeRequest(request, "editce");
+        String cur_code = safeRequest(request, "cur_code");
+        String uic_code = safeRequest(request, "uic_code");
+        String descr = safeRequest(request, "descr");
+        String messa = safeRequest(request, "messa");
+        String internal = safeRequest(request, "internal");
         if (internal == null) {
             internal = "0";
         } else if (internal.trim().equalsIgnoreCase("on")) {
@@ -2322,9 +2322,9 @@ public class Edit
             internal = "0";
         }
 //
-        String bce = request.getParameter("bce");
-        String oldbce = request.getParameter("oldbce");
-        String buy = request.getParameter("buy");
+        String bce = safeRequest(request, "bce");
+        String oldbce = safeRequest(request, "oldbce");
+        String buy = safeRequest(request, "buy");
         if (buy == null) {
             buy = "0";
         } else if (buy.trim().equalsIgnoreCase("on")) {
@@ -2332,7 +2332,7 @@ public class Edit
         } else {
             buy = "0";
         }
-        String sell = request.getParameter("sell");
+        String sell = safeRequest(request, "sell");
         if (sell == null) {
             sell = "0";
         } else if (sell.trim().equalsIgnoreCase("on")) {
@@ -2341,7 +2341,7 @@ public class Edit
             sell = "0";
         }
 
-        String typebuy_0 = request.getParameter("typebuy_0");
+        String typebuy_0 = safeRequest(request, "typebuy_0");
         if (typebuy_0 == null) {
             typebuy_0 = "1";
         } else if (typebuy_0.trim().equalsIgnoreCase("on")) {
@@ -2350,16 +2350,16 @@ public class Edit
             typebuy_0 = "1";
         }
 
-        String buy_std_perc = request.getParameter("buy_std_perc");
-        String buy_std_val = request.getParameter("buy_std_val");
-        String old_buy_std_val = request.getParameter("old_buy_std_val");
+        String buy_std_perc = safeRequest(request, "buy_std_perc");
+        String buy_std_val = safeRequest(request, "buy_std_val");
+        String old_buy_std_val = safeRequest(request, "old_buy_std_val");
 
-        String buy_l1 = request.getParameter("buy_l1");
-        String buy_l2 = request.getParameter("buy_l2");
-        String buy_l3 = request.getParameter("buy_l3");
-        String buy_best = request.getParameter("buy_best");
+        String buy_l1 = safeRequest(request, "buy_l1");
+        String buy_l2 = safeRequest(request, "buy_l2");
+        String buy_l3 = safeRequest(request, "buy_l3");
+        String buy_best = safeRequest(request, "buy_best");
 
-        String typesell_0 = request.getParameter("typesell_0");
+        String typesell_0 = safeRequest(request, "typesell_0");
         if (typesell_0 == null) {
             typesell_0 = "1";
         } else if (typesell_0.trim().equalsIgnoreCase("on")) {
@@ -2368,20 +2368,20 @@ public class Edit
             typesell_0 = "1";
         }
 
-        String sell_std_perc = request.getParameter("sell_std_perc");
-        String sell_std_val = request.getParameter("sell_std_val");
-        String old_sell_std_val = request.getParameter("old_sell_std_val");
+        String sell_std_perc = safeRequest(request, "sell_std_perc");
+        String sell_std_val = safeRequest(request, "sell_std_val");
+        String old_sell_std_val = safeRequest(request, "old_sell_std_val");
 
-        String sell_l1 = request.getParameter("sell_l1");
-        String sell_l2 = request.getParameter("sell_l2");
-        String sell_l3 = request.getParameter("sell_l3");
-        String sell_be = request.getParameter("sell_be");
-        String sell_ext = request.getParameter("sell_ext");
+        String sell_l1 = safeRequest(request, "sell_l1");
+        String sell_l2 = safeRequest(request, "sell_l2");
+        String sell_l3 = safeRequest(request, "sell_l3");
+        String sell_be = safeRequest(request, "sell_be");
+        String sell_ext = safeRequest(request, "sell_ext");
 
         ArrayList<String[]> list_kind = list_all_kind(filiale);
         ArrayList<String[]> list_kind_value = new ArrayList<>();
         for (int j = 0; j < list_kind.size(); j++) {
-            String statkind = request.getParameter("statkind" + ((String[]) list_kind.get(j))[0]);
+            String statkind = safeRequest(request, "statkind" + ((String[]) list_kind.get(j))[0]);
             if (statkind == null) {
                 statkind = "0";
             } else if (statkind.trim().equalsIgnoreCase("on")) {
@@ -2393,27 +2393,29 @@ public class Edit
             list_kind_value.add(ris);
         }
 
-        int sizecutindex = parseIntR(request.getParameter("sizecutindex"));
+        int sizecutindex = parseIntR(safeRequest(request, "sizecutindex"));
 
         List<Sizecuts> list_sizecut = new ArrayList<>();
 
 //        ArrayList<String[]> list_sizecut = new ArrayList<>();
         for (int j = 0; j <= sizecutindex; j++) {
-            String sold = request.getParameter("sizecut_old" + j);
-            String snew = formatDoubleforMysql(request.getParameter("sizecut_" + j));
+            String sold = safeRequest(request, "sizecut_old" + j);
+            String snew = formatDoubleforMysql(safeRequest(request, "sizecut_" + j));
             if (sold == null) {
                 sold = snew;
             }
-            String status = request.getParameter("statsizecut_" + j);
+            String status = safeRequest(request, "statsizecut_" + j);
             if (null == status) {
                 status = "0";
-            } else switch (status) {
-                case "on":
-                    status = "1";
-                    break;
-                default:
-                    status = "0";
-                    break;
+            } else {
+                switch (status) {
+                    case "on":
+                        status = "1";
+                        break;
+                    default:
+                        status = "0";
+                        break;
+                }
             }
 
             Sizecuts sz = new Sizecuts("", cur_code, sold, status);
@@ -2513,11 +2515,11 @@ public class Edit
             user = "9999";
         }
 
-        String ba_code = request.getParameter("ba_code");
-        String descr = request.getParameter("descr");
-        String esol = request.getParameter("esol");
+        String ba_code = safeRequest(request, "ba_code");
+        String descr = safeRequest(request, "descr");
+        String esol = safeRequest(request, "esol");
 
-        String bankaccount = request.getParameter("bankaccount");
+        String bankaccount = safeRequest(request, "bankaccount");
         if (bankaccount == null) {
             bankaccount = "N";
         } else if (bankaccount.trim().equalsIgnoreCase("on")) {
@@ -2550,13 +2552,13 @@ public class Edit
             user = "9999";
         }
 
-        String oldba_code = request.getParameter("oldba_code");
-        String ba_code = request.getParameter("ba_code");
-        String descr = request.getParameter("descr");
-        String esol = request.getParameter("esol");
-        String datecanc = request.getParameter("datecanc");
-        String oldstatus = request.getParameter("oldstatus");
-        String status = request.getParameter("status");
+        String oldba_code = safeRequest(request, "oldba_code");
+        String ba_code = safeRequest(request, "ba_code");
+        String descr = safeRequest(request, "descr");
+        String esol = safeRequest(request, "esol");
+        String datecanc = safeRequest(request, "datecanc");
+        String oldstatus = safeRequest(request, "oldstatus");
+        String status = safeRequest(request, "status");
         if (status == null) {
             status = "1";
         } else if (status.trim().equalsIgnoreCase("on")) {
@@ -2571,7 +2573,7 @@ public class Edit
         } else {
             datecanc = "-";
         }
-        String bankaccount = request.getParameter("bankaccount");
+        String bankaccount = safeRequest(request, "bankaccount");
         if (bankaccount == null) {
             bankaccount = "N";
         } else if (bankaccount.trim().equalsIgnoreCase("on")) {
@@ -2605,12 +2607,12 @@ public class Edit
             user = "9999";
         }
 
-        String br_code = request.getParameter("br_code");
-        String descr = request.getParameter("descr");
-        String addr = request.getParameter("addr");
-        String city = request.getParameter("city");
-        String zipc = request.getParameter("zipc");
-        String comp = request.getParameter("comp");
+        String br_code = safeRequest(request, "br_code");
+        String descr = safeRequest(request, "descr");
+        String addr = safeRequest(request, "addr");
+        String city = safeRequest(request, "city");
+        String zipc = safeRequest(request, "zipc");
+        String comp = safeRequest(request, "comp");
         if (comp == null) {
             comp = "0";
         } else if (comp.trim().equalsIgnoreCase("on")) {
@@ -2619,7 +2621,7 @@ public class Edit
             comp = "0";
         }
 
-        String age = request.getParameter("age");
+        String age = safeRequest(request, "age");
         if (age == null) {
             age = "0";
         } else if (age.trim().equalsIgnoreCase("on")) {
@@ -2628,16 +2630,16 @@ public class Edit
             age = "0";
         }
 
-        String datea = request.getParameter("datea");
-        String max_ass = request.getParameter("max_ass");
-        String target = request.getParameter("target");
+        String datea = safeRequest(request, "datea");
+        String max_ass = safeRequest(request, "max_ass");
+        String target = safeRequest(request, "target");
 
         String rv = "-";
         String g01 = "-";
         String g02 = "-";
         String g03 = "-";
 
-        String modra = request.getParameter("modra");
+        String modra = safeRequest(request, "modra");
         if (modra == null) {
             modra = "0";
         } else if (modra.trim().equalsIgnoreCase("on")) {
@@ -2646,7 +2648,7 @@ public class Edit
             modra = "0";
         }
 
-        String crm = request.getParameter("crm");
+        String crm = safeRequest(request, "crm");
         if (crm == null) {
             crm = "0";
         } else if (crm.trim().equalsIgnoreCase("on")) {
@@ -2654,7 +2656,7 @@ public class Edit
         } else {
             crm = "0";
         }
-        String pad = request.getParameter("pad");
+        String pad = safeRequest(request, "pad");
         if (pad == null) {
             pad = "0";
         } else if (pad.trim().equalsIgnoreCase("on")) {
@@ -2663,26 +2665,26 @@ public class Edit
             pad = "0";
         }
 
-//        String oltauser = request.getParameter("oltauser");
-//        String oltapass = request.getParameter("oltapass");
+//        String oltauser = safeRequest(request, "oltauser");
+//        String oltapass = safeRequest(request, "oltapass");
 //
-//        String paymat1 = request.getParameter("paymat1");
-//        String paymat2 = request.getParameter("paymat2");
-//        String paymat3 = request.getParameter("paymat3");
-//        String paymat4 = request.getParameter("paymat4");
-//        String paymat5 = request.getParameter("paymat5");
-//        String paymat6 = request.getParameter("paymat6");
-//        String paymat7 = request.getParameter("paymat7");
-        String brgr_01 = request.getParameter("brgr_01");
-        String brgr_02 = request.getParameter("brgr_02");
-        String brgr_03 = request.getParameter("brgr_03");
-        String brgr_04 = request.getParameter("brgr_04");
-        String brgr_05 = request.getParameter("brgr_05");
-        String brgr_06 = request.getParameter("brgr_06");
-        String brgr_07 = request.getParameter("brgr_07");
-        String brgr_08 = request.getParameter("brgr_08");
-        String brgr_09 = request.getParameter("brgr_09");
-        String brgr_10 = request.getParameter("brgr_10");
+//        String paymat1 = safeRequest(request, "paymat1");
+//        String paymat2 = safeRequest(request, "paymat2");
+//        String paymat3 = safeRequest(request, "paymat3");
+//        String paymat4 = safeRequest(request, "paymat4");
+//        String paymat5 = safeRequest(request, "paymat5");
+//        String paymat6 = safeRequest(request, "paymat6");
+//        String paymat7 = safeRequest(request, "paymat7");
+        String brgr_01 = safeRequest(request, "brgr_01");
+        String brgr_02 = safeRequest(request, "brgr_02");
+        String brgr_03 = safeRequest(request, "brgr_03");
+        String brgr_04 = safeRequest(request, "brgr_04");
+        String brgr_05 = safeRequest(request, "brgr_05");
+        String brgr_06 = safeRequest(request, "brgr_06");
+        String brgr_07 = safeRequest(request, "brgr_07");
+        String brgr_08 = safeRequest(request, "brgr_08");
+        String brgr_09 = safeRequest(request, "brgr_09");
+        String brgr_10 = safeRequest(request, "brgr_10");
 
         String oltauser = "-";
         String oltapass = "-";
@@ -2696,7 +2698,7 @@ public class Edit
         String paymat7 = "-";
 
         if (is_CZ) {
-            paymat7 = request.getParameter("otime");
+            paymat7 = safeRequest(request, "otime");
             if (paymat7 == null) {
                 paymat7 = "-";
             }
@@ -2750,7 +2752,7 @@ public class Edit
         dbm.closeDB();
 
         if (es) {
-            String atl_code = request.getParameter("atl_code");
+            String atl_code = safeRequest(request, "atl_code");
             if (atl_code != null) {
                 Db_Master db0 = new Db_Master();
                 boolean es1 = db0.mod_codice_ATL(br_code, atl_code, "branch_atl");
@@ -2781,12 +2783,12 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String br_code = request.getParameter("br_code");
-        String descr = request.getParameter("descr");
-        String addr = request.getParameter("addr");
-        String city = request.getParameter("city");
-        String zipc = request.getParameter("zipc");
-        String comp = request.getParameter("comp");
+        String br_code = safeRequest(request, "br_code");
+        String descr = safeRequest(request, "descr");
+        String addr = safeRequest(request, "addr");
+        String city = safeRequest(request, "city");
+        String zipc = safeRequest(request, "zipc");
+        String comp = safeRequest(request, "comp");
         if (comp == null) {
             comp = "0";
         } else if (comp.trim().equalsIgnoreCase("on")) {
@@ -2794,7 +2796,7 @@ public class Edit
         } else {
             comp = "0";
         }
-        String age = request.getParameter("age");
+        String age = safeRequest(request, "age");
         if (age == null) {
             age = "0";
         } else if (age.trim().equalsIgnoreCase("on")) {
@@ -2802,21 +2804,21 @@ public class Edit
         } else {
             age = "0";
         }
-        String datea = request.getParameter("datea");
-        String max_ass = request.getParameter("max_ass");
-        String target = request.getParameter("target");
+        String datea = safeRequest(request, "datea");
+        String max_ass = safeRequest(request, "max_ass");
+        String target = safeRequest(request, "target");
 
         String rv = "-";
         String g01 = "-";
         String g02 = "-";
         String g03 = "-";
 
-        String oltauser = request.getParameter("oltauser");
-        String oltapass = request.getParameter("oltapass");
+        String oltauser = safeRequest(request, "oltauser");
+        String oltapass = safeRequest(request, "oltapass");
 
-        String datecanc = request.getParameter("datecanc");
-        String oldstatus = request.getParameter("oldstatus");
-        String status = request.getParameter("status");
+        String datecanc = safeRequest(request, "datecanc");
+        String oldstatus = safeRequest(request, "oldstatus");
+        String status = safeRequest(request, "status");
         if (status == null) {
             status = "1";
         } else if (status.trim().equalsIgnoreCase("on")) {
@@ -2831,7 +2833,7 @@ public class Edit
         } else {
             datecanc = "-";
         }
-        String modra = request.getParameter("modra");
+        String modra = safeRequest(request, "modra");
         if (modra == null) {
             modra = "0";
         } else if (modra.trim().equalsIgnoreCase("on")) {
@@ -2839,7 +2841,7 @@ public class Edit
         } else {
             modra = "0";
         }
-        String pad = request.getParameter("pad");
+        String pad = safeRequest(request, "pad");
         if (pad == null) {
             pad = "0";
         } else if (pad.trim().equalsIgnoreCase("on")) {
@@ -2848,7 +2850,7 @@ public class Edit
             pad = "0";
         }
 
-        String crm = request.getParameter("crm");
+        String crm = safeRequest(request, "crm");
         if (crm == null) {
             crm = "0";
         } else if (crm.trim().equalsIgnoreCase("on")) {
@@ -2857,27 +2859,27 @@ public class Edit
             crm = "0";
         }
 
-        String paymat1 = request.getParameter("paymat1");
-        String paymat2 = request.getParameter("paymat2");
-        String paymat3 = request.getParameter("paymat3");
-        String paymat4 = request.getParameter("paymat4");
-        String paymat5 = request.getParameter("paymat5");
-        String paymat6 = request.getParameter("paymat6");
-        String paymat7 = request.getParameter("paymat7");
+        String paymat1 = safeRequest(request, "paymat1");
+        String paymat2 = safeRequest(request, "paymat2");
+        String paymat3 = safeRequest(request, "paymat3");
+        String paymat4 = safeRequest(request, "paymat4");
+        String paymat5 = safeRequest(request, "paymat5");
+        String paymat6 = safeRequest(request, "paymat6");
+        String paymat7 = safeRequest(request, "paymat7");
 
-        String brgr_01 = request.getParameter("brgr_01");
-        String brgr_02 = request.getParameter("brgr_02");
-        String brgr_03 = request.getParameter("brgr_03");
-        String brgr_04 = request.getParameter("brgr_04");
-        String brgr_05 = request.getParameter("brgr_05");
-        String brgr_06 = request.getParameter("brgr_06");
-        String brgr_07 = request.getParameter("brgr_07");
-        String brgr_08 = request.getParameter("brgr_08");
-        String brgr_09 = request.getParameter("brgr_09");
-        String brgr_10 = request.getParameter("brgr_10");
+        String brgr_01 = safeRequest(request, "brgr_01");
+        String brgr_02 = safeRequest(request, "brgr_02");
+        String brgr_03 = safeRequest(request, "brgr_03");
+        String brgr_04 = safeRequest(request, "brgr_04");
+        String brgr_05 = safeRequest(request, "brgr_05");
+        String brgr_06 = safeRequest(request, "brgr_06");
+        String brgr_07 = safeRequest(request, "brgr_07");
+        String brgr_08 = safeRequest(request, "brgr_08");
+        String brgr_09 = safeRequest(request, "brgr_09");
+        String brgr_10 = safeRequest(request, "brgr_10");
 
         if (is_CZ) {
-            paymat7 = request.getParameter("otime");
+            paymat7 = safeRequest(request, "otime");
             if (paymat7 == null) {
                 paymat7 = "";
             }
@@ -2932,7 +2934,7 @@ public class Edit
         dbm.closeDB();
 
         if (es) {
-            String atl_code = request.getParameter("atl_code");
+            String atl_code = safeRequest(request, "atl_code");
             if (atl_code != null) {
                 Db_Master db0 = new Db_Master();
                 boolean es1 = db0.mod_codice_ATL(br_code, atl_code, "branch_atl");
@@ -2963,9 +2965,9 @@ public class Edit
             user = "9999";
         }
 
-        String surname = request.getParameter("surname").toUpperCase();
-        String name = request.getParameter("name").toUpperCase();
-        String sex = request.getParameter("sex");
+        String surname = safeRequest(request, "surname").toUpperCase();
+        String name = safeRequest(request, "name").toUpperCase();
+        String sex = safeRequest(request, "sex");
         if (sex == null) {
             sex = "F";
         } else if (sex.trim().equalsIgnoreCase("on")) {
@@ -2973,25 +2975,25 @@ public class Edit
         } else {
             sex = "F";
         }
-        String taxc = request.getParameter("taxc").toUpperCase();
-        String country0 = request.getParameter("country0");
-        String city0 = request.getParameter("city0");
-        String addr = request.getParameter("addr");
-        String zipc0 = request.getParameter("zipc0");
-        String district0 = request.getParameter("district0");
-        String email = request.getParameter("email");
-        String phone = request.getParameter("phone");
-        String city1 = request.getParameter("city1");
-        String district1 = request.getParameter("district1");
-        String country1 = request.getParameter("country1");
-        String date1 = request.getParameter("date1");
-        String doctype = request.getParameter("doctype");
-        String numdoc = request.getParameter("numdoc");
-        String isdate = request.getParameter("isdate");
-        String exdate = request.getParameter("exdate");
-        String dociss = request.getParameter("dociss");
-        String docplace = request.getParameter("docplace");
-        String txtmsg = request.getParameter("txtmsg");
+        String taxc = safeRequest(request, "taxc").toUpperCase();
+        String country0 = safeRequest(request, "country0");
+        String city0 = safeRequest(request, "city0");
+        String addr = safeRequest(request, "addr");
+        String zipc0 = safeRequest(request, "zipc0");
+        String district0 = safeRequest(request, "district0");
+        String email = safeRequest(request, "email");
+        String phone = safeRequest(request, "phone");
+        String city1 = safeRequest(request, "city1");
+        String district1 = safeRequest(request, "district1");
+        String country1 = safeRequest(request, "country1");
+        String date1 = safeRequest(request, "date1");
+        String doctype = safeRequest(request, "doctype");
+        String numdoc = safeRequest(request, "numdoc");
+        String isdate = safeRequest(request, "isdate");
+        String exdate = safeRequest(request, "exdate");
+        String dociss = safeRequest(request, "dociss");
+        String docplace = safeRequest(request, "docplace");
+        String txtmsg = safeRequest(request, "txtmsg");
         DateTime dt1 = new DateTime();
 
         BlacklistM bl = new BlacklistM();
@@ -3043,11 +3045,11 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String bl_code = request.getParameter("bl_code");
+        String bl_code = safeRequest(request, "bl_code");
 
-        String surname = request.getParameter("surname").toUpperCase();
-        String name = request.getParameter("name").toUpperCase();
-        String sex = request.getParameter("sex");
+        String surname = safeRequest(request, "surname").toUpperCase();
+        String name = safeRequest(request, "name").toUpperCase();
+        String sex = safeRequest(request, "sex");
         if (sex == null) {
             sex = "F";
         } else if (sex.trim().equalsIgnoreCase("on")) {
@@ -3056,7 +3058,7 @@ public class Edit
             sex = "F";
         }
 
-        String status = request.getParameter("status");
+        String status = safeRequest(request, "status");
         if (status == null) {
             status = "1";
         } else if (status.trim().equalsIgnoreCase("on")) {
@@ -3065,25 +3067,25 @@ public class Edit
             status = "1";
         }
 
-        String taxc = request.getParameter("taxc").toUpperCase();
-        String country0 = request.getParameter("country0");
-        String city0 = request.getParameter("city0");
-        String addr = request.getParameter("addr");
-        String zipc0 = request.getParameter("zipc0");
-        String district0 = request.getParameter("district0");
-        String email = request.getParameter("email");
-        String phone = request.getParameter("phone");
-        String city1 = request.getParameter("city1");
-        String district1 = request.getParameter("district1");
-        String country1 = request.getParameter("country1");
-        String date1 = request.getParameter("date1");
-        String doctype = request.getParameter("doctype");
-        String numdoc = request.getParameter("numdoc");
-        String isdate = request.getParameter("isdate");
-        String exdate = request.getParameter("exdate");
-        String dociss = request.getParameter("dociss");
-        String docplace = request.getParameter("docplace");
-        String txtmsg = request.getParameter("txtmsg");
+        String taxc = safeRequest(request, "taxc").toUpperCase();
+        String country0 = safeRequest(request, "country0");
+        String city0 = safeRequest(request, "city0");
+        String addr = safeRequest(request, "addr");
+        String zipc0 = safeRequest(request, "zipc0");
+        String district0 = safeRequest(request, "district0");
+        String email = safeRequest(request, "email");
+        String phone = safeRequest(request, "phone");
+        String city1 = safeRequest(request, "city1");
+        String district1 = safeRequest(request, "district1");
+        String country1 = safeRequest(request, "country1");
+        String date1 = safeRequest(request, "date1");
+        String doctype = safeRequest(request, "doctype");
+        String numdoc = safeRequest(request, "numdoc");
+        String isdate = safeRequest(request, "isdate");
+        String exdate = safeRequest(request, "exdate");
+        String dociss = safeRequest(request, "dociss");
+        String docplace = safeRequest(request, "docplace");
+        String txtmsg = safeRequest(request, "txtmsg");
         DateTime dt1 = new DateTime();
 
         BlacklistM bl = new BlacklistM();
@@ -3138,18 +3140,18 @@ public class Edit
         }
 
         //NUOVO 22/07
-        String kyc_abfreqdaily = request.getParameter("kyc_abfreqdaily");
-        String kyc_abfreqweek = request.getParameter("kyc_abfreqweek");
-        String kyc_abfreqmont = request.getParameter("kyc_abfreqmont");
+        String kyc_abfreqdaily = safeRequest(request, "kyc_abfreqdaily");
+        String kyc_abfreqweek = safeRequest(request, "kyc_abfreqweek");
+        String kyc_abfreqmont = safeRequest(request, "kyc_abfreqmont");
 
-        String kyc_abvolmont = request.getParameter("kyc_abvolmont");
-        String kyc_abvolqua = request.getParameter("kyc_abvolqua");
+        String kyc_abvolmont = safeRequest(request, "kyc_abvolmont");
+        String kyc_abvolqua = safeRequest(request, "kyc_abvolqua");
 
-        String kyc_rogvol = request.getParameter("kyc_rogvol");
+        String kyc_rogvol = safeRequest(request, "kyc_rogvol");
         if (is_IT) {
-            String[] kyc_rogcountry = request.getParameterValues("kyc_rogcountry");
+            String[] kyc_rogcountry = safeRequestMultiple(request, "kyc_rogcountry");
 
-            String[] kyc_okountry = request.getParameterValues("kyc_okountry");
+            String[] kyc_okountry = safeRequestMultiple(request, "kyc_okountry");
 
             String kyc_fa = kyc_abfreqdaily + ";" + kyc_abfreqweek + ";" + kyc_abfreqmont + ";";
             String kyc_va = formatDoubleforMysql(kyc_abvolmont) + ";" + formatDoubleforMysql(kyc_abvolqua) + ";";
@@ -3175,15 +3177,15 @@ public class Edit
         String path = dbm1.getPath("temp");
         dbm1.closeDB();
 
-        String cod = request.getParameter("cod");
-        String descr = request.getParameter("descr");
-        String addr = request.getParameter("addr");
-        String city = request.getParameter("city");
-        String zipc = request.getParameter("zipc");
-        String piva = request.getParameter("piva");
-        String regi = request.getParameter("regi");
-        String rea = request.getParameter("rea");
-        String change = request.getParameter("change");
+        String cod = safeRequest(request, "cod");
+        String descr = safeRequest(request, "descr");
+        String addr = safeRequest(request, "addr");
+        String city = safeRequest(request, "city");
+        String zipc = safeRequest(request, "zipc");
+        String piva = safeRequest(request, "piva");
+        String regi = safeRequest(request, "regi");
+        String rea = safeRequest(request, "rea");
+        String change = safeRequest(request, "change");
         if (change == null) {
             change = "*";
         } else if (change.trim().equalsIgnoreCase("on")) {
@@ -3192,7 +3194,7 @@ public class Edit
             change = "*";
         }
 
-        String ie1 = request.getParameter("ie1");
+        String ie1 = safeRequest(request, "ie1");
         if (ie1 == null) {
             ie1 = "0";
         } else if (ie1.trim().equalsIgnoreCase("on")) {
@@ -3200,7 +3202,7 @@ public class Edit
         } else {
             ie1 = "0";
         }
-        String ed1 = request.getParameter("ed1");
+        String ed1 = safeRequest(request, "ed1");
         if (ed1 == null) {
             ed1 = "0";
         } else if (ed1.trim().equalsIgnoreCase("on")) {
@@ -3208,7 +3210,7 @@ public class Edit
         } else {
             ed1 = "0";
         }
-        String ch1 = request.getParameter("ie1");
+        String ch1 = safeRequest(request, "ie1");
         if (ch1 == null) {
             ch1 = "0";
         } else if (ch1.trim().equalsIgnoreCase("on")) {
@@ -3217,7 +3219,7 @@ public class Edit
             ch1 = "0";
         }
 
-        String mf1 = request.getParameter("mf1");
+        String mf1 = safeRequest(request, "mf1");
         if (mf1 == null) {
             mf1 = "0";
         } else if (mf1.trim().equalsIgnoreCase("on")) {
@@ -3227,21 +3229,21 @@ public class Edit
         }
 
 //
-        String decim = request.getParameter("decim");
-        String url = request.getParameter("url");
-        String bbdur = request.getParameter("bbdur");
-        String txtrecp1 = request.getParameter("txtrecp1");
-        String txtrecp2 = request.getParameter("txtrecp2");
-        String txtrecp3 = request.getParameter("txtrecp3");
-        String txtrecp4 = request.getParameter("txtrecp4");
-        String txtthr1 = request.getParameter("txtthr1");
-        String txtthr2 = request.getParameter("txtthr2");
-        String minutes = request.getParameter("minutes");
-        String kyc_mesi = request.getParameter("kyc_mesi");
-        String kyc_soglia = request.getParameter("kyc_soglia");
-        String risk_days = request.getParameter("risk_days");
-        String risk_ntr = request.getParameter("risk_ntr");
-        String risk_soglia = request.getParameter("risk_soglia");
+        String decim = safeRequest(request, "decim");
+        String url = safeRequest(request, "url");
+        String bbdur = safeRequest(request, "bbdur");
+        String txtrecp1 = safeRequest(request, "txtrecp1");
+        String txtrecp2 = safeRequest(request, "txtrecp2");
+        String txtrecp3 = safeRequest(request, "txtrecp3");
+        String txtrecp4 = safeRequest(request, "txtrecp4");
+        String txtthr1 = safeRequest(request, "txtthr1");
+        String txtthr2 = safeRequest(request, "txtthr2");
+        String minutes = safeRequest(request, "minutes");
+        String kyc_mesi = safeRequest(request, "kyc_mesi");
+        String kyc_soglia = safeRequest(request, "kyc_soglia");
+        String risk_days = safeRequest(request, "risk_days");
+        String risk_ntr = safeRequest(request, "risk_ntr");
+        String risk_soglia = safeRequest(request, "risk_soglia");
 //
         Office of = new Office();
         of.setCod(cod);
@@ -3301,7 +3303,7 @@ public class Edit
         }
 
         Db_Master dbm = new Db_Master();
-        String listbranch = request.getParameter("listbranch");
+        String listbranch = safeRequest(request, "listbranch");
         String filiale = dbm.getCodLocal(true)[0];
         String bra[];
         if (listbranch != null) {
@@ -3312,16 +3314,16 @@ public class Edit
 
         String dt = new DateTime().toString(patternsqldate);
 
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
 
-        String kind = request.getParameter("kind0");
-        String min = request.getParameter("min");
-        String max = request.getParameter("max");
-        String buy = request.getParameter("buy");
-        String sell = request.getParameter("sell");
+        String kind = safeRequest(request, "kind0");
+        String min = safeRequest(request, "min");
+        String max = safeRequest(request, "max");
+        String buy = safeRequest(request, "buy");
+        String sell = safeRequest(request, "sell");
 
         String es = dbm.insert_new_Ratera(filiale, kind, formatDoubleforMysql(min),
                 formatDoubleforMysql(max), buy, sell, user, dt_val, dt);
@@ -3361,7 +3363,7 @@ public class Edit
         }
         Db_Master dbm = new Db_Master();
         String filiale = dbm.getCodLocal(true)[0];
-        String listbranch = request.getParameter("listbranch");
+        String listbranch = safeRequest(request, "listbranch");
         String bra[];
         if (listbranch != null) {
             bra = parseArrayValues(listbranch, ";");
@@ -3371,18 +3373,18 @@ public class Edit
 
         String dt = new DateTime().toString(patternsqldate);
 
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
 
-        String ra_code = request.getParameter("ra_code");
-        String min = request.getParameter("min");
-        String max = request.getParameter("max");
-        String buy = request.getParameter("buy");
-        String sell = request.getParameter("sell");
-        String min_old = request.getParameter("min_old");
-        String status = request.getParameter("status");
+        String ra_code = safeRequest(request, "ra_code");
+        String min = safeRequest(request, "min");
+        String max = safeRequest(request, "max");
+        String buy = safeRequest(request, "buy");
+        String sell = safeRequest(request, "sell");
+        String min_old = safeRequest(request, "min_old");
+        String status = safeRequest(request, "status");
         if (status == null) {
             status = "1";
         } else if (status.trim().equalsIgnoreCase("on")) {
@@ -3425,9 +3427,9 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String gr_code = request.getParameter("gr_code").toUpperCase();
-        String typegr = request.getParameter("typegr");
-        String descr = getStringUTF8(request.getParameter("descr")).toUpperCase();
+        String gr_code = safeRequest(request, "gr_code").toUpperCase();
+        String typegr = safeRequest(request, "typegr");
+        String descr = getStringUTF8(safeRequest(request, "descr")).toUpperCase();
 //        String table = Engine.formatTableGroup(typegr);
         String table = "branchgroup";
         Db_Master dbm = new Db_Master();
@@ -3462,9 +3464,9 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String gr_code = request.getParameter("gr_code");
-        String typegr = request.getParameter("typegr");
-        String descr = getStringUTF8(request.getParameter("descr")).toUpperCase();
+        String gr_code = safeRequest(request, "gr_code");
+        String typegr = safeRequest(request, "typegr");
+        String descr = getStringUTF8(safeRequest(request, "descr")).toUpperCase();
         String table = "branchgroup";
 
         Db_Master dbm = new Db_Master();
@@ -3496,17 +3498,17 @@ public class Edit
             user = "9999";
         }
 
-        String us_code = request.getParameter("us_code");
+        String us_code = safeRequest(request, "us_code");
         while (us_code.length() < 4) {
             us_code = "0" + us_code;
         }
 
-        String surname = request.getParameter("surname");
-        String name = request.getParameter("name");
-        String typeuser = request.getParameter("typeuser");
-        String valid = request.getParameter("valid");
-        String conto = request.getParameter("conto");
-        String mail = request.getParameter("mail");
+        String surname = safeRequest(request, "surname");
+        String name = safeRequest(request, "name");
+        String typeuser = safeRequest(request, "typeuser");
+        String valid = safeRequest(request, "valid");
+        String conto = safeRequest(request, "conto");
+        String mail = safeRequest(request, "mail");
 
         Db_Master dbm = new Db_Master();
         String filiale = dbm.getCodLocal(true)[0];
@@ -3527,7 +3529,7 @@ public class Edit
 
         //ATLACODE 04/04
         if (es.equals("0")) {
-            String atl_code = request.getParameter("atl_code");
+            String atl_code = safeRequest(request, "atl_code");
             if (atl_code != null) {
                 Db_Master db0 = new Db_Master();
                 boolean es1 = db0.mod_codice_ATL(us_code, atl_code, "user_atl");
@@ -3558,8 +3560,8 @@ public class Edit
             user = "9999";
         }
 
-        String us_code = request.getParameter("us_code");
-        String status = request.getParameter("status");
+        String us_code = safeRequest(request, "us_code");
+        String status = safeRequest(request, "status");
 
         String sql;
         Db_Master dbm = new Db_Master();
@@ -3601,14 +3603,14 @@ public class Edit
             user = "9999";
         }
 
-        String us_code = request.getParameter("us_code");
-        String surname = request.getParameter("surname");
-        String name = request.getParameter("name");
-        String typeuser = request.getParameter("typeuser");
-        String valid = request.getParameter("valid");
-        String conto = request.getParameter("conto");
-        String mail = request.getParameter("mail");
-        String status = request.getParameter("status");
+        String us_code = safeRequest(request, "us_code");
+        String surname = safeRequest(request, "surname");
+        String name = safeRequest(request, "name");
+        String typeuser = safeRequest(request, "typeuser");
+        String valid = safeRequest(request, "valid");
+        String conto = safeRequest(request, "conto");
+        String mail = safeRequest(request, "mail");
+        String status = safeRequest(request, "status");
         Db_Master dbm = new Db_Master();
         Users us = new Users();
         String filiale = dbm.getCodLocal(true)[0];
@@ -3626,7 +3628,7 @@ public class Edit
 
         //ATLACODE 04/04
         if (es) {
-            String atl_code = request.getParameter("atl_code");
+            String atl_code = safeRequest(request, "atl_code");
             if (atl_code != null) {
                 Db_Master db0 = new Db_Master();
                 boolean es1 = db0.mod_codice_ATL(us_code, atl_code, "user_atl");
@@ -3656,8 +3658,8 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String us_code = request.getParameter("us_code");
-        String newpass = request.getParameter("newpass");
+        String us_code = safeRequest(request, "us_code");
+        String newpass = safeRequest(request, "newpass");
         Db_Master dbm = new Db_Master();
         String filiale = dbm.getCodLocal(true)[0];
         boolean es = dbm.edit_Pswuser(filiale, us_code, newpass, user);
@@ -3680,7 +3682,7 @@ public class Edit
 //        
 
         // 02/07
-        String regi = request.getParameter("regi");
+        String regi = safeRequest(request, "regi");
         if (regi == null) {
             regi = "0";
         } else if (regi.trim().equalsIgnoreCase("on")) {
@@ -3691,13 +3693,13 @@ public class Edit
 
         String department = "01";
         if (regi.equals("1")) {
-            department = request.getParameter("department");
+            department = safeRequest(request, "department");
         }
 
 //        
         Db_Master dbm = new Db_Master();
         String filiale = dbm.getCodLocal(true)[0];
-        String listbranch = request.getParameter("listbranch");
+        String listbranch = safeRequest(request, "listbranch");
         String bra[];
         if (listbranch != null) {
             bra = parseArrayValues(listbranch, ";");
@@ -3707,7 +3709,7 @@ public class Edit
 
         String dt = new DateTime().toString(patternsqldate);
 
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
@@ -3716,12 +3718,12 @@ public class Edit
         if (user == null) {
             user = "9999";
         }
-        String descr = getStringUTF8(request.getParameter("descr"));
-        String kind_1 = request.getParameter("kind_1");
-        String price = request.getParameter("price");
-        String tfeevalue = request.getParameter("tfeevalue");
+        String descr = getStringUTF8(safeRequest(request, "descr"));
+        String kind_1 = safeRequest(request, "kind_1");
+        String price = safeRequest(request, "price");
+        String tfeevalue = safeRequest(request, "tfeevalue");
 
-        String titype = request.getParameter("titype");
+        String titype = safeRequest(request, "titype");
         if (titype == null) {
             titype = "0";
         } else if (titype.trim().equalsIgnoreCase("on")) {
@@ -3730,13 +3732,13 @@ public class Edit
             titype = "0";
         }
 
-        String maxti = request.getParameter("maxti");
+        String maxti = safeRequest(request, "maxti");
 
         if (maxti == null || maxti.trim().equals("")) {
             maxti = "0";
         }
 
-        String editti = request.getParameter("editti");
+        String editti = safeRequest(request, "editti");
         if (editti == null) {
             editti = "0";
         } else if (editti.trim().equalsIgnoreCase("on")) {
@@ -3745,12 +3747,12 @@ public class Edit
             editti = "0";
         }
 
-        String esolv1 = request.getParameter("esolv1");
-        String esolv2 = request.getParameter("esolv2");
-        String headre = getStringUTF8(request.getParameter("headre"));
-        String textre = getStringUTF8(request.getParameter("textre"));
+        String esolv1 = safeRequest(request, "esolv1");
+        String esolv2 = safeRequest(request, "esolv2");
+        String headre = getStringUTF8(safeRequest(request, "headre"));
+        String textre = getStringUTF8(safeRequest(request, "textre"));
 
-        String corres = request.getParameter("corres");
+        String corres = safeRequest(request, "corres");
         if (corres == null) {
             corres = "0";
         } else if (corres.trim().equalsIgnoreCase("on")) {
@@ -3758,10 +3760,10 @@ public class Edit
         } else {
             corres = "0";
         }
-        String periva = request.getParameter("periva");
-        String acode = request.getParameter("acode");
+        String periva = safeRequest(request, "periva");
+        String acode = safeRequest(request, "acode");
 
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
 
         if (!kind_1.equals("21")) { //    ticket
             tfeevalue = "0.00";
@@ -3875,7 +3877,7 @@ public class Edit
     protected void edit_category(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         // 02/07
-        String regi = request.getParameter("regi");
+        String regi = safeRequest(request, "regi");
         if (regi == null) {
             regi = "0";
         } else if (regi.trim().equalsIgnoreCase("on")) {
@@ -3886,7 +3888,7 @@ public class Edit
 
         String department = "01";
         if (regi.equals("1")) {
-            department = request.getParameter("department");
+            department = safeRequest(request, "department");
         }
 
         String user = (String) request.getSession().getAttribute("us_cod");
@@ -3895,7 +3897,7 @@ public class Edit
         }
         Db_Master dbm = new Db_Master();
         String filiale = dbm.getCodLocal(true)[0];
-        String listbranch = request.getParameter("listbranch");
+        String listbranch = safeRequest(request, "listbranch");
         String bra[];
         if (listbranch != null) {
             bra = parseArrayValues(listbranch, ";");
@@ -3905,17 +3907,17 @@ public class Edit
 
         String dt = new DateTime().toString(patternsqldate);
 
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
 
-        String descr = getStringUTF8(request.getParameter("descr"));
-        String kind_1 = request.getParameter("kind0");
-        String price = request.getParameter("price");
-        String tfeevalue = request.getParameter("tfeevalue");
+        String descr = getStringUTF8(safeRequest(request, "descr"));
+        String kind_1 = safeRequest(request, "kind0");
+        String price = safeRequest(request, "price");
+        String tfeevalue = safeRequest(request, "tfeevalue");
 
-        String titype = request.getParameter("titype");
+        String titype = safeRequest(request, "titype");
         if (titype == null) {
             titype = "0";
         } else if (titype.trim().equalsIgnoreCase("on")) {
@@ -3924,7 +3926,7 @@ public class Edit
             titype = "0";
         }
 
-        String status = request.getParameter("status");
+        String status = safeRequest(request, "status");
         if (status == null) {
             status = "1";
         } else if (status.trim().equalsIgnoreCase("on")) {
@@ -3932,13 +3934,13 @@ public class Edit
         } else {
             status = "1";
         }
-        String maxti = request.getParameter("maxti");
+        String maxti = safeRequest(request, "maxti");
 
         if (maxti == null || maxti.trim().equals("")) {
             maxti = "0";
         }
 
-        String editti = request.getParameter("editti");
+        String editti = safeRequest(request, "editti");
         if (editti == null) {
             editti = "0";
         } else if (editti.trim().equalsIgnoreCase("on")) {
@@ -3947,12 +3949,12 @@ public class Edit
             editti = "0";
         }
 
-        String esolv1 = request.getParameter("esolv1");
-        String esolv2 = request.getParameter("esolv2");
-        String headre = getStringUTF8(request.getParameter("headre"));
-        String textre = getStringUTF8(request.getParameter("textre"));
+        String esolv1 = safeRequest(request, "esolv1");
+        String esolv2 = safeRequest(request, "esolv2");
+        String headre = getStringUTF8(safeRequest(request, "headre"));
+        String textre = getStringUTF8(safeRequest(request, "textre"));
 
-        String corres = request.getParameter("corres");
+        String corres = safeRequest(request, "corres");
         if (corres == null) {
             corres = "0";
         } else if (corres.trim().equalsIgnoreCase("on")) {
@@ -3961,8 +3963,8 @@ public class Edit
             corres = "0";
         }
 
-        String periva = request.getParameter("periva");
-        String acode = request.getParameter("acode");
+        String periva = safeRequest(request, "periva");
+        String acode = safeRequest(request, "acode");
 
         if (kind_1.equals("7")) { //    internet point
             esolv1 = "";
@@ -3975,7 +3977,7 @@ public class Edit
             acode = "-";
         }
 
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
 
         if (!kind_1.equals("21")) { //    ticket
             maxti = "0";
@@ -4088,7 +4090,7 @@ public class Edit
         }
         Db_Master db = new Db_Master();
         String filiale = db.getCodLocal(true)[0];
-        String listbranch = request.getParameter("listbranch");
+        String listbranch = safeRequest(request, "listbranch");
         String bra[];
         if (listbranch != null) {
             bra = parseArrayValues(listbranch, ";");
@@ -4098,17 +4100,17 @@ public class Edit
 
         String dt = new DateTime().toString(patternsqldate);
 
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
 
-        String gruppo_nc = request.getParameter("gruppo_nc");
-        String tipo_transazione_nc = request.getParameter("tipo_transazione_nc");
-        String descrtype = request.getParameter("descrtype");
-        String descr = getStringUTF8(request.getParameter("descr"));
-        String price = request.getParameter("price");
-        String bonus = request.getParameter("bonus");
+        String gruppo_nc = safeRequest(request, "gruppo_nc");
+        String tipo_transazione_nc = safeRequest(request, "tipo_transazione_nc");
+        String descrtype = safeRequest(request, "descrtype");
+        String descr = getStringUTF8(safeRequest(request, "descr"));
+        String price = safeRequest(request, "price");
+        String bonus = safeRequest(request, "bonus");
         if (bonus == null) {
             bonus = "0";
         } else if (bonus.trim().equalsIgnoreCase("on")) {
@@ -4117,7 +4119,7 @@ public class Edit
             bonus = "0";
         }
 
-        String dri = request.getParameter("dri");
+        String dri = safeRequest(request, "dri");
         if (dri == null) {
             dri = "0";
         } else if (dri.trim().equalsIgnoreCase("on")) {
@@ -4126,7 +4128,7 @@ public class Edit
             dri = "0";
         }
 
-        String batch = request.getParameter("batch");
+        String batch = safeRequest(request, "batch");
         if (batch == null) {
             batch = "0";
         } else if (batch.trim().equalsIgnoreCase("on")) {
@@ -4135,7 +4137,7 @@ public class Edit
             batch = "0";
         }
 
-        String print = request.getParameter("print");
+        String print = safeRequest(request, "print");
         if (print == null) {
             print = "0";
         } else if (print.trim().equalsIgnoreCase("on")) {
@@ -4144,9 +4146,9 @@ public class Edit
             print = "0";
         }
 
-        String tfeevalue = request.getParameter("tfeevalue");
+        String tfeevalue = safeRequest(request, "tfeevalue");
 
-        String titype = request.getParameter("titype");
+        String titype = safeRequest(request, "titype");
         if (titype == null) {
             titype = "0";
         } else if (titype.trim().equalsIgnoreCase("on")) {
@@ -4155,7 +4157,7 @@ public class Edit
             titype = "0";
         }
 
-        String maxti = request.getParameter("maxti");
+        String maxti = safeRequest(request, "maxti");
         if (maxti == null || maxti.trim().equals("")) {
             maxti = "0";
         }
@@ -4166,7 +4168,7 @@ public class Edit
             titype = "0";
         }
 
-        String paymat = request.getParameter("paymat");
+        String paymat = safeRequest(request, "paymat");
         if (paymat == null) {
             paymat = "0";
         } else if (paymat.trim().equalsIgnoreCase("on")) {
@@ -4202,7 +4204,7 @@ public class Edit
             ArrayList<String[]> kind_payment = kind_payment();
             ArrayList<String[]> kind_payment_list = new ArrayList<>();
             for (int i = 0; i < kind_payment.size(); i++) {
-                String pay = request.getParameter("status_" + kind_payment.get(i)[0]);
+                String pay = safeRequest(request, "status_" + kind_payment.get(i)[0]);
                 if (pay == null) {
                     pay = "1";
                 } else if (pay.trim().equalsIgnoreCase("on")) {
@@ -4251,7 +4253,7 @@ public class Edit
                         ArrayList<String[]> kind_payment = kind_payment();
                         ArrayList<String[]> kind_payment_list = new ArrayList<>();
                         for (int i = 0; i < kind_payment.size(); i++) {
-                            String pay = request.getParameter("status_" + kind_payment.get(i)[0]);
+                            String pay = safeRequest(request, "status_" + kind_payment.get(i)[0]);
                             if (pay == null) {
                                 pay = "1";
                             } else if (pay.trim().equalsIgnoreCase("on")) {
@@ -4302,7 +4304,7 @@ public class Edit
         }
         Db_Master db = new Db_Master();
         String filiale = db.getCodLocal(true)[0];
-        String listbranch = request.getParameter("listbranch");
+        String listbranch = safeRequest(request, "listbranch");
         String bra[];
         if (listbranch != null) {
             bra = parseArrayValues(listbranch, ";");
@@ -4312,18 +4314,18 @@ public class Edit
 
         String dt = new DateTime().toString(patternsqldate);
 
-        String dt_val = request.getParameter("dt_val");
+        String dt_val = safeRequest(request, "dt_val");
         if (dt_val == null) {
             dt_val = "";
         }
 
-        String gruppo_nc = request.getParameter("gruppo_nc");
-        String cod = request.getParameter("cod");
-        String tipo_transazione_nc = request.getParameter("tipo_transazione_nc");
-        String descrtype = request.getParameter("descrtype");
-        String descr = getStringUTF8(request.getParameter("descr"));
-        String price = request.getParameter("price");
-        String bonus = request.getParameter("bonus");
+        String gruppo_nc = safeRequest(request, "gruppo_nc");
+        String cod = safeRequest(request, "cod");
+        String tipo_transazione_nc = safeRequest(request, "tipo_transazione_nc");
+        String descrtype = safeRequest(request, "descrtype");
+        String descr = getStringUTF8(safeRequest(request, "descr"));
+        String price = safeRequest(request, "price");
+        String bonus = safeRequest(request, "bonus");
         if (bonus == null) {
             bonus = "0";
         } else if (bonus.trim().equalsIgnoreCase("on")) {
@@ -4332,7 +4334,7 @@ public class Edit
             bonus = "0";
         }
 
-        String dri = request.getParameter("dri");
+        String dri = safeRequest(request, "dri");
         if (dri == null) {
             dri = "0";
         } else if (dri.trim().equalsIgnoreCase("on")) {
@@ -4341,7 +4343,7 @@ public class Edit
             dri = "0";
         }
 
-        String batch = request.getParameter("batch");
+        String batch = safeRequest(request, "batch");
         if (batch == null) {
             batch = "0";
         } else if (batch.trim().equalsIgnoreCase("on")) {
@@ -4350,7 +4352,7 @@ public class Edit
             batch = "0";
         }
 
-        String print = request.getParameter("print");
+        String print = safeRequest(request, "print");
         if (print == null) {
             print = "0";
         } else if (print.trim().equalsIgnoreCase("on")) {
@@ -4359,9 +4361,9 @@ public class Edit
             print = "0";
         }
 
-        String tfeevalue = request.getParameter("tfeevalue");
+        String tfeevalue = safeRequest(request, "tfeevalue");
 
-        String titype = request.getParameter("titype");
+        String titype = safeRequest(request, "titype");
         if (titype == null) {
             titype = "0";
         } else if (titype.trim().equalsIgnoreCase("on")) {
@@ -4370,7 +4372,7 @@ public class Edit
             titype = "0";
         }
 
-        String maxti = request.getParameter("maxti");
+        String maxti = safeRequest(request, "maxti");
         if (maxti == null || maxti.trim().equals("")) {
             maxti = "0";
         }
@@ -4381,7 +4383,7 @@ public class Edit
             titype = "0";
         }
 
-        String status = request.getParameter("status");
+        String status = safeRequest(request, "status");
         if (status == null) {
             status = "1";
         } else if (status.trim().equalsIgnoreCase("on")) {
@@ -4390,7 +4392,7 @@ public class Edit
             status = "1";
         }
 
-        String paymat = request.getParameter("paymat");
+        String paymat = safeRequest(request, "paymat");
         if (paymat == null) {
             paymat = "0";
         } else if (paymat.trim().equalsIgnoreCase("on")) {
@@ -4434,7 +4436,7 @@ public class Edit
 
             ArrayList<String[]> kind_payment_list = new ArrayList<>();
             for (int i = 0; i < nc_causal_payment.size(); i++) {
-                String pay = request.getParameter("status_" + nc_causal_payment.get(i)[0]);
+                String pay = safeRequest(request, "status_" + nc_causal_payment.get(i)[0]);
                 if (pay == null) {
                     pay = "1";
                 } else if (pay.trim().equalsIgnoreCase("on")) {
@@ -4483,25 +4485,25 @@ public class Edit
 //                        if (nc_causal_payment.isEmpty()) {
 //                            nc_causal_payment = db.kind_payment();
 //                        }
-ArrayList<String[]> kind_payment_list = new ArrayList<>();
+                        ArrayList<String[]> kind_payment_list = new ArrayList<>();
 
-for (int i = 0; i < nc_causal_payment.size(); i++) {
-    String pay = request.getParameter("status_" + nc_causal_payment.get(i)[0]);
-    if (pay == null) {
-        pay = "1";
-    } else if (pay.trim().equalsIgnoreCase("on")) {
-        pay = "0";
-    } else {
-        pay = "1";
-    }
-    
-    String[] v = {nc1.getFiliale(), nc1.getGruppo_nc(),
-        nc1.getCausale_nc(),
-        nc_causal_payment.get(i)[0],
-        pay};
-    kind_payment_list.add(v);
-}
-es = db.insert_nc_kind_payment(kind_payment_list, user);
+                        for (int i = 0; i < nc_causal_payment.size(); i++) {
+                            String pay = safeRequest(request, "status_" + nc_causal_payment.get(i)[0]);
+                            if (pay == null) {
+                                pay = "1";
+                            } else if (pay.trim().equalsIgnoreCase("on")) {
+                                pay = "0";
+                            } else {
+                                pay = "1";
+                            }
+
+                            String[] v = {nc1.getFiliale(), nc1.getGruppo_nc(),
+                                nc1.getCausale_nc(),
+                                nc_causal_payment.get(i)[0],
+                                pay};
+                            kind_payment_list.add(v);
+                        }
+                        es = db.insert_nc_kind_payment(kind_payment_list, user);
                     }
                 }
             }
@@ -4526,8 +4528,8 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
      */
     protected void delete_company_attach(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
-        String cod = request.getParameter("cod");
-        String co_cod = request.getParameter("co_code");
+        String cod = safeRequest(request, "cod");
+        String co_cod = safeRequest(request, "co_code");
         db.delete_Company_attach(cod);
         db.closeDB();
         redirect(request, response, "tb_edit_company.jsp?co_code=" + co_cod);
@@ -4542,8 +4544,8 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
      */
     protected void delete_agent(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Db_Master db = new Db_Master();
-        String cod_ag = request.getParameter("cod_ag");
-        String co_cod = request.getParameter("co_cod");
+        String cod_ag = safeRequest(request, "cod_ag");
+        String co_cod = safeRequest(request, "co_cod");
         Company ag = db.get_Agent(cod_ag);
         if (ag != null) {
             db.delete_Agent(ag);
@@ -4582,7 +4584,7 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
 
         String ag_surname = getRequestValue(request, "ag_surname");
         String ag_name = getRequestValue(request, "ag_name");
-        String ag_sex = request.getParameter("ag_sex");
+        String ag_sex = safeRequest(request, "ag_sex");
         if (ag_sex == null) {
             ag_sex = "F";
         } else {
@@ -4693,7 +4695,7 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
         String co_code = getRequestValue(request, "co_code");
         String ag_surname = getRequestValue(request, "ag_surname");
         String ag_name = getRequestValue(request, "ag_name");
-        String ag_sex = request.getParameter("ag_sex");
+        String ag_sex = safeRequest(request, "ag_sex");
         if (ag_sex == null) {
             ag_sex = "F";
         } else {
@@ -4988,12 +4990,12 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
      * @throws IOException
      */
     protected void edit_booking(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String cod = request.getParameter("cod");
-        String total = formatDoubleforMysql(request.getParameter("total"));
-        String branch = request.getParameter("branch");
-        String branch_or = request.getParameter("branch_or");
-        String status = request.getParameter("status");
-        String status_or = request.getParameter("status_or");
+        String cod = safeRequest(request, "cod");
+        String total = formatDoubleforMysql(safeRequest(request, "total"));
+        String branch = safeRequest(request, "branch");
+        String branch_or = safeRequest(request, "branch_or");
+        String status = safeRequest(request, "status");
+        String status_or = safeRequest(request, "status_or");
 
         if (status.equals(status_or)) {
             redirect(request, response, "web_tran_edit.jsp?cod=" + cod + "&esito=war");
@@ -5054,9 +5056,9 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
             user = "9999";
         }
 
-        String va_code = request.getParameter("va_code");
-        String descr = request.getParameter("descr");
-        String esol = request.getParameter("esol");
+        String va_code = safeRequest(request, "va_code");
+        String descr = safeRequest(request, "descr");
+        String esol = safeRequest(request, "esol");
         VATcode vt = new VATcode();
 
         vt.setCodice(va_code);
@@ -5098,11 +5100,11 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
         if (user == null) {
             user = "9999";
         }
-        String va_id = request.getParameter("va_id");
-        String va_code = request.getParameter("va_code");
-        String descr = request.getParameter("descr");
-        String esol = request.getParameter("esol");
-        String status = request.getParameter("status");
+        String va_id = safeRequest(request, "va_id");
+        String va_code = safeRequest(request, "va_code");
+        String descr = safeRequest(request, "descr");
+        String esol = safeRequest(request, "esol");
+        String status = safeRequest(request, "status");
         if (status == null) {
             status = "1";
         } else if (status.trim().equalsIgnoreCase("on")) {
@@ -5152,8 +5154,8 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
         if (user == null) {
             user = "9999";
         }
-        int numb = parseInt(request.getParameter("numb"));
-        String dest = request.getParameter("dest");
+        int numb = parseInt(safeRequest(request, "numb"));
+        String dest = safeRequest(request, "dest");
 
         Db_Master db = new Db_Master();
         Users us = db.get_user(dest);
@@ -5164,7 +5166,7 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
         Codici_sblocco_file csf = new Codici_sblocco_file();
         csf.setUser(user);
         csf.setDest(us.getCod() + " - " + us.getUsername());
-        csf.setNumcod(request.getParameter("numb"));
+        csf.setNumcod(safeRequest(request, "numb"));
         String filepdf = new Receipt().print_code_unlock(pathtemp, listcod, timestamp, us.getCod() + " - " + us.getUsername());
         String xlsx = new Excel().print_code_unlock(pathtemp, listcod, timestamp, us.getCod() + " - " + us.getUsername());
         csf.setPdf(filepdf);
@@ -5194,8 +5196,8 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
         if (user == null) {
             user = "9999";
         }
-        String cit_code = request.getParameter("cit_code");
-        String descr = request.getParameter("descr");
+        String cit_code = safeRequest(request, "cit_code");
+        String descr = safeRequest(request, "descr");
 
         Db_Master db = new Db_Master();
         boolean es = db.edit_city(cit_code, descr, "-", user);
@@ -5219,8 +5221,8 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
 //        Utility.printRequest(request);
 //        if(true)
 //            return;
-        String codtr_del = request.getParameter("codtr_del");
-        String coddoc_del = request.getParameter("coddoc_del");
+        String codtr_del = safeRequest(request, "codtr_del");
+        String coddoc_del = safeRequest(request, "coddoc_del");
         Db_Master db = new Db_Master();
         boolean es = db.delete_doc_transaction(codtr_del, coddoc_del);
         db.closeDB();
@@ -5250,8 +5252,8 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
         if (user == null) {
             user = "9999";
         }
-        String cit_code = request.getParameter("cit_code");
-        String descr = request.getParameter("descr");
+        String cit_code = safeRequest(request, "cit_code");
+        String descr = safeRequest(request, "descr");
 
         Db_Master db = new Db_Master();
         boolean es = db.ins_city(cit_code, descr, "-", user);
@@ -5279,9 +5281,9 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
         Db_Master db = new Db_Master();
         boolean es = true;
         for (int i = 1; i < 7 && es; i++) {
-            String idr = request.getParameter("idr_" + i);
-            String r1 = formatDoubleforMysql(request.getParameter("r1_" + i));
-            String r2 = formatDoubleforMysql(request.getParameter("r2_" + i));
+            String idr = safeRequest(request, "idr_" + i);
+            String r1 = formatDoubleforMysql(safeRequest(request, "r1_" + i));
+            String r2 = formatDoubleforMysql(safeRequest(request, "r2_" + i));
             es = db.upd_fasce_cashier_perf(idr, r1, r2, user);
         }
         db.closeDB();
@@ -5307,9 +5309,9 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
         if (user == null) {
             user = "9999";
         }
-        String cod = request.getParameter("cod");
-        String descr = request.getParameter("descr");
-        String acc = request.getParameter("acc");
+        String cod = safeRequest(request, "cod");
+        String descr = safeRequest(request, "descr");
+        String acc = safeRequest(request, "acc");
         Db_Master db = new Db_Master();
         boolean es = db.edit_accode(cod, descr, acc, user);
         db.closeDB();
@@ -5337,9 +5339,9 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
         Db_Master db = new Db_Master();
         boolean es = true;
         for (int i = 7; i < 13 && es; i++) {
-            String idr = request.getParameter("idr_" + i);
-            String r1 = formatDoubleforMysql(request.getParameter("r1_" + i));
-            String r2 = formatDoubleforMysql(request.getParameter("r2_" + i));
+            String idr = safeRequest(request, "idr_" + i);
+            String r1 = formatDoubleforMysql(safeRequest(request, "r1_" + i));
+            String r2 = formatDoubleforMysql(safeRequest(request, "r2_" + i));
             es = db.upd_fasce_cashier_perf(idr, r1, r2, user);
         }
         db.closeDB();
@@ -5364,11 +5366,11 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
             user = "9999";
         }
 
-        String gr_code = request.getParameter("gr_code");
-        String monthyear = formatStringtoStringDate_null(request.getParameter("monthyear"), pattermonthnorm, patternmonthsql);
-        String branch = request.getParameter("branch");
-        String budg = formatDoubleforMysql(request.getParameter("budg"));
-        String budgon = formatDoubleforMysql(request.getParameter("budgon"));
+        String gr_code = safeRequest(request, "gr_code");
+        String monthyear = formatStringtoStringDate_null(safeRequest(request, "monthyear"), pattermonthnorm, patternmonthsql);
+        String branch = safeRequest(request, "branch");
+        String budg = formatDoubleforMysql(safeRequest(request, "budg"));
+        String budgon = formatDoubleforMysql(safeRequest(request, "budgon"));
 
         boolean es = false;
 
@@ -5403,10 +5405,10 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
         }
 
         String gr_code = "B" + generaId(19);
-        String monthyear = formatStringtoStringDate_null(request.getParameter("monthyear"), pattermonthnorm, patternmonthsql);
-        String branch = request.getParameter("branch");
-        String budg = formatDoubleforMysql(request.getParameter("budg"));
-        String budgon = formatDoubleforMysql(request.getParameter("budgon"));
+        String monthyear = formatStringtoStringDate_null(safeRequest(request, "monthyear"), pattermonthnorm, patternmonthsql);
+        String branch = safeRequest(request, "branch");
+        String budg = formatDoubleforMysql(safeRequest(request, "budg"));
+        String budgon = formatDoubleforMysql(safeRequest(request, "budgon"));
 
         boolean es = false;
 
@@ -5439,8 +5441,8 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
         }
 
 //        Utility.printRequest(request);
-        String tr_cod = request.getParameter("tr_cod");
-        String cl_cod = request.getParameter("cl_cod");
+        String tr_cod = safeRequest(request, "tr_cod");
+        String cl_cod = safeRequest(request, "cl_cod");
 
         Ch_transaction tra = query_transaction_ch(tr_cod);
         Client clOR = query_Client_transaction(tr_cod, cl_cod);
@@ -5450,28 +5452,28 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
         if (tra == null || clOR == null) {
         } else {
             String codice_mod = generaId(75);
-            String heavy_surname = request.getParameter("heavy_surname");
-            String heavy_sex = request.getParameter("heavy_sex");
-            String heavy_name = request.getParameter("heavy_name");
-            String heavy_codfisc = request.getParameter("heavy_codfisc");
-            String heavy_country = request.getParameter("heavy_country");
-            String heavy_city = request.getParameter("heavy_city");
-            String heavy_pepI = request.getParameter("heavy_pepI");
-            String heavy_address = request.getParameter("heavy_address");
-            String heavy_zipcode = request.getParameter("heavy_zipcode");
-            String heavy_district = request.getParameter("heavy_district");
-            String heavy_pob_city = request.getParameter("heavy_pob_city");
-            String heavy_pob_district = request.getParameter("heavy_pob_district");
-            String heavy_pob_country = request.getParameter("heavy_pob_country");
-            String heavy_pob_date = request.getParameter("heavy_pob_date");
-            String heavy_identcard = request.getParameter("heavy_identcard");
-            String heavy_numberidentcard = request.getParameter("heavy_numberidentcard");
-            String heavy_issuedateidentcard = request.getParameter("heavy_issuedateidentcard");
-            String heavy_exdateidentcard = request.getParameter("heavy_exdateidentcard");
-            String heavy_issuedbyidentcard = request.getParameter("heavy_issuedbyidentcard");
-            String heavy_issuedplaceidentcard = request.getParameter("heavy_issuedplaceidentcard");
-            String heavy_email = request.getParameter("heavy_email");
-            String heavy_phonenu = request.getParameter("heavy_phonenu");
+            String heavy_surname = safeRequest(request, "heavy_surname");
+            String heavy_sex = safeRequest(request, "heavy_sex");
+            String heavy_name = safeRequest(request, "heavy_name");
+            String heavy_codfisc = safeRequest(request, "heavy_codfisc");
+            String heavy_country = safeRequest(request, "heavy_country");
+            String heavy_city = safeRequest(request, "heavy_city");
+            String heavy_pepI = safeRequest(request, "heavy_pepI");
+            String heavy_address = safeRequest(request, "heavy_address");
+            String heavy_zipcode = safeRequest(request, "heavy_zipcode");
+            String heavy_district = safeRequest(request, "heavy_district");
+            String heavy_pob_city = safeRequest(request, "heavy_pob_city");
+            String heavy_pob_district = safeRequest(request, "heavy_pob_district");
+            String heavy_pob_country = safeRequest(request, "heavy_pob_country");
+            String heavy_pob_date = safeRequest(request, "heavy_pob_date");
+            String heavy_identcard = safeRequest(request, "heavy_identcard");
+            String heavy_numberidentcard = safeRequest(request, "heavy_numberidentcard");
+            String heavy_issuedateidentcard = safeRequest(request, "heavy_issuedateidentcard");
+            String heavy_exdateidentcard = safeRequest(request, "heavy_exdateidentcard");
+            String heavy_issuedbyidentcard = safeRequest(request, "heavy_issuedbyidentcard");
+            String heavy_issuedplaceidentcard = safeRequest(request, "heavy_issuedplaceidentcard");
+            String heavy_email = safeRequest(request, "heavy_email");
+            String heavy_phonenu = safeRequest(request, "heavy_phonenu");
 
             Client cl = new Client();
             cl.setCode(cl_cod);
@@ -5598,8 +5600,8 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
         if (user == null) {
             user = "9999";
         }
-        String cod = request.getParameter("idtrdel");
-        String idopen = request.getParameter("idopen");
+        String cod = safeRequest(request, "idtrdel");
+        String idopen = safeRequest(request, "idopen");
         Db_Master db1 = new Db_Master();
         boolean activefr = false;
         ArrayList<Till> array_till = db1.list_till_status("O", user);
@@ -5619,8 +5621,8 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
         } else {
             boolean mod = false;
 
-            String tipotr = request.getParameter("tipotr");
-            String cc_number = request.getParameter("cc_number");
+            String tipotr = safeRequest(request, "tipotr");
+            String cc_number = safeRequest(request, "cc_number");
 
             Ch_transaction tra = query_transaction_ch(cod);
             switch (tipotr) {
@@ -5628,10 +5630,10 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
                     ArrayList<Ch_transaction_value> val = query_transaction_value(cod);
                     if (tra != null) {
                         for (int i = 0; i < 5; i++) {
-                            String old_pos = request.getParameter("oldpos" + i);
+                            String old_pos = safeRequest(request, "oldpos" + i);
                             if (old_pos != null) {
-                                String new_pos = request.getParameter("newpos" + i);
-                                String notes = request.getParameter("notes" + i);
+                                String new_pos = safeRequest(request, "newpos" + i);
+                                String notes = safeRequest(request, "notes" + i);
                                 if (!old_pos.equals(new_pos)) {
                                     String numeroriga = valueOf(i + 1);
                                     Db_Master db10 = new Db_Master();
@@ -5669,19 +5671,21 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
                     }
                     break;
                 case "S":
-                    String old_kind = request.getParameter("old_kind");
-                    String new_kind = request.getParameter("new_kind");
-                    String old_pos = request.getParameter("old_pos");
-                    String new_pos = request.getParameter("new_pos");
-                    String old_ban = request.getParameter("old_ban");
-                    String new_ban = request.getParameter("new_ban");
-                    String notes = request.getParameter("notes");
-                    String old_ps1 = "-", new_ps1 = "-";
+                    String old_kind = safeRequest(request, "old_kind");
+                    String new_kind = safeRequest(request, "new_kind");
+                    String old_pos = safeRequest(request, "old_pos");
+                    String new_pos = safeRequest(request, "new_pos");
+                    String old_ban = safeRequest(request, "old_ban");
+                    String new_ban = safeRequest(request, "new_ban");
+                    String notes = safeRequest(request, "notes");
+                    String old_ps1 = "-",
+                     new_ps1 = "-";
                     if (old_kind.equals("06")) {
                         old_ps1 = old_pos;
                     } else if (old_kind.equals("08")) {
                         old_ps1 = old_ban;
-                    }   if (tra != null) {
+                    }
+                    if (tra != null) {
                         boolean err = false;
                         switch (new_kind) {
                             case "01":
@@ -5692,24 +5696,28 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
                                     new_ps1 = new_ban;
                                 } else {
                                     err = true;
-                                }       break;
+                                }
+                                break;
                             default:
                                 if (!old_pos.equals(new_pos)) {
                                     old_ps1 = old_pos;
                                     new_ps1 = new_pos;
                                 } else {
                                     err = true;
-                                }       break;
+                                }
+                                break;
                         }
                         if (!new_kind.equals("06")) {
                             cc_number = "-";
-                        }   if (!err) {
+                        }
+                        if (!err) {
                             Db_Master db1A = new Db_Master();
                             boolean esA = db1A.update_modpay_CH_S(cod, new_kind, new_ps1, cc_number, user);
                             boolean esB = db1A.insert_modpay(cod, notes, old_kind, new_kind, old_ps1, new_ps1, user);
                             db1A.closeDB();
                             mod = esA && esB;
-                        }   if (mod) {
+                        }
+                        if (mod) {
                             if (old_kind.equals("01")) {
                                 Real_oc_change t1 = new Real_oc_change();
                                 t1.setFiliale(tra.getFiliale());
@@ -5790,7 +5798,7 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
                                 st1.setUser(tra.getUser());
                                 st1.setDate(dateOP);
                                 st1.setId_op(tra.getFiliale() + tra.getId());
-                                
+
                                 Db_Master db01 = new Db_Master();
                                 mod = db01.insertStock(st1);
                                 db01.closeDB();
@@ -5799,7 +5807,7 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
                                 Db_Master db11 = new Db_Master();
                                 db11.delete_trans_stockreport(cod, tra.getId_open_till(), valutalocale, old_kind);
                                 db11.closeDB();
-                                
+
                             }
 
                             if (new_kind.equals("01")) {
@@ -5842,20 +5850,21 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
                     NC_transaction nc = get_NC_transaction(cod);
                     if (nc != null) {
                         if (nc.getFg_inout().equals("1") || nc.getFg_inout().equals("3")) {
-                            old_kind = request.getParameter("old_kind");
-                            new_kind = request.getParameter("new_kind");
-                            old_pos = request.getParameter("old_pos");
-                            new_pos = request.getParameter("new_pos");
-                            old_ban = request.getParameter("old_ban");
-                            new_ban = request.getParameter("new_ban");
-                            notes = request.getParameter("notes");
+                            old_kind = safeRequest(request, "old_kind");
+                            new_kind = safeRequest(request, "new_kind");
+                            old_pos = safeRequest(request, "old_pos");
+                            new_pos = safeRequest(request, "new_pos");
+                            old_ban = safeRequest(request, "old_ban");
+                            new_ban = safeRequest(request, "new_ban");
+                            notes = safeRequest(request, "notes");
                             old_ps1 = "-";
                             new_ps1 = "-";
                             if (old_kind.equals("06")) {
                                 old_ps1 = old_pos;
                             } else if (old_kind.equals("08")) {
                                 old_ps1 = old_ban;
-                            }   boolean err = false;
+                            }
+                            boolean err = false;
                             switch (new_kind) {
                                 case "01":
                                     break;
@@ -5865,23 +5874,26 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
                                         new_ps1 = new_ban;
                                     } else {
                                         err = true;
-                                    }       break;
+                                    }
+                                    break;
                                 default:
                                     if (!old_pos.equals(new_pos)) {
                                         old_ps1 = old_pos;
                                         new_ps1 = new_pos;
                                     } else {
                                         err = true;
-                                    }       break;
+                                    }
+                                    break;
                             }
                             if (!err) {
                                 Db_Master db1A = new Db_Master();
                                 boolean esA = db1A.update_modpay_NC(cod, new_kind, new_ps1, cc_number, user);
                                 boolean esB = db1A.insert_modpay(cod, notes, old_kind, new_kind, old_ps1, new_ps1, user);
                                 db1A.closeDB();
-                                
+
                                 mod = esA && esB;
-                            }   if (mod) {
+                            }
+                            if (mod) {
                                 if (old_kind.equals("01")) {
                                     Real_oc_change t1 = new Real_oc_change();
                                     t1.setFiliale(nc.getFiliale());
@@ -5945,7 +5957,7 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
                             }
                             if (mod) {
                                 if (old_kind.equals("01")) {
-                                    
+
                                     Stock st1 = new Stock();
                                     st1.setCodice("ST" + generaId(48));
                                     st1.setFiliale(nc.getFiliale());
@@ -5962,15 +5974,15 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
                                     st1.setUser(nc.getUser());
                                     st1.setDate(dateOP);
                                     st1.setId_op(nc.getFiliale() + nc.getId());
-                                    
+
                                     Db_Master db01 = new Db_Master();
                                     mod = db01.insertStock(st1);
                                     //REMOVE STOCK-REPORT
                                     db01.delete_trans_stockreport(cod, nc.getId_open_till(), valutalocale, old_kind);
                                     db01.closeDB();
-                                    
+
                                 }
-                                
+
                                 if (new_kind.equals("01")) {
                                     Stock st1 = new Stock();
                                     st1.setCodice("ST" + generaId(48));
@@ -5988,7 +6000,7 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
                                     st1.setUser(nc.getUser());
                                     st1.setDate(dateOP);
                                     st1.setId_op(nc.getFiliale() + nc.getId());
-                                    
+
                                     Db_Master db01 = new Db_Master();
                                     mod = db01.insertStock(st1);
                                     //INSERT STOCK-REPORT
@@ -6003,7 +6015,7 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
                                     sr.setUser(user);
                                     db01.insert_Stockreport(sr);
                                     db01.closeDB();
-                                    
+
                                 }
                             }
                         }
@@ -6035,7 +6047,7 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
             } else {
                 response.setContentType("text/html;charset=UTF-8");
 //                request.setCharacterEncoding("UTF-8");
-                String type = request.getParameter("type");
+                String type = safeRequest(request, "type");
                 switch (type) {
                     case "ins_newtill":
                         insert_new_Till(request, response);
@@ -6234,7 +6246,7 @@ es = db.insert_nc_kind_payment(kind_payment_list, user);
                     case "edit_client":
                         edit_client(request, response);
                         break;
-                //WEBSITE
+                    //WEBSITE
                     case "ins_branchbudget":
                         ins_branchbudget(request, response);
                         break;

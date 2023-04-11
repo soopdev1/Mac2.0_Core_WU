@@ -11,7 +11,6 @@ import rc.so.entity.NC_causal;
 import rc.so.entity.NC_transaction;
 import rc.so.entity.Openclose;
 import rc.so.excel.Dailyerror;
-import rc.so.pdf.NewETReceipt;
 import static rc.so.pdf.NewETReceipt.complete;
 import rc.so.pdf.Receipt;
 import rc.so.report.BranchStockInquiry;
@@ -74,7 +73,6 @@ import rc.so.reportcentrale.C_WesternUnion_value;
 import rc.so.reportcentrale.C_freeTaxPivotTotale;
 import rc.so.reportcentrale.C_freeTaxPivotTotale_value;
 import static rc.so.servlets.Report.getTimepicker;
-import rc.so.util.Constant;
 import static rc.so.util.Constant.is_CZ;
 import static rc.so.util.Constant.is_IT;
 import static rc.so.util.Constant.is_UK;
@@ -86,16 +84,12 @@ import static rc.so.util.Constant.patternnormdate_filter;
 import static rc.so.util.Constant.patternsql;
 import static rc.so.util.Constant.patternsqldate;
 import static rc.so.util.Constant.patterntsdate2;
-import rc.so.util.Engine;
-import static rc.so.util.Engine.formatBankBranch;
-import static rc.so.util.Engine.formatBankBranch;
 import static rc.so.util.Engine.formatBankBranch;
 import static rc.so.util.Engine.formatBankBranchReport;
 import static rc.so.util.Engine.get_Branch;
 import static rc.so.util.Engine.insertTR;
 import static rc.so.util.Engine.list_branch_completeAFTER311217;
 import static rc.so.util.Engine.verifySession;
-import rc.so.util.Excel;
 import static rc.so.util.Excel.excel_reportpending;
 import static rc.so.util.Excel.excel_transaction_listEVO;
 import static rc.so.util.Excel.excel_transactionnc_list;
@@ -103,8 +97,6 @@ import rc.so.util.Utility;
 import static rc.so.util.Utility.formatArrayValues;
 import static rc.so.util.Utility.formatDoubleforMysql;
 import static rc.so.util.Utility.formatStringtoStringDate_null;
-import static rc.so.util.Utility.generaId;
-import static rc.so.util.Utility.generaId;
 import static rc.so.util.Utility.generaId;
 import static rc.so.util.Utility.getDT;
 import static rc.so.util.Utility.getList_request;
@@ -116,7 +108,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.codec.binary.Base64;
 import org.joda.time.DateTime;
 import static rc.so.util.Utility.parseArrayValues;
 import static rc.so.util.Utility.parseIntR;
@@ -125,28 +116,19 @@ import static rc.so.util.Utility.redirect;
 import static rc.so.util.Utility.replace_SU;
 import java.io.File;
 import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
 import static java.lang.System.out;
 import static java.lang.Thread.currentThread;
-import java.util.Collections;
 import static java.util.Collections.sort;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.codec.binary.Base64.decodeBase64;
-import org.joda.time.format.DateTimeFormat;
 import static org.joda.time.format.DateTimeFormat.forPattern;
 import org.joda.time.format.DateTimeFormatter;
 import static rc.so.util.Constant.patternyear;
+import static rc.so.util.Utility.safeRequest;
+import static rc.so.util.Utility.safeRequestMultiple;
 
 /**
  *
@@ -163,9 +145,9 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void DailyCentral(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
-        String Output = request.getParameter("Output");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -182,7 +164,7 @@ public class ReportCentrale extends HttpServlet {
         Db_Master dbm = new Db_Master();
         String path = dbm.getPath("temp");
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         if (br1.isEmpty()) {
             br1 = (ArrayList<String>) allenabledbr.stream().map(valore -> valore.getCod()).distinct().collect(toList());
@@ -259,12 +241,12 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_AnalysisDetailsTransactionCertificationExtraCEEforBranchAndPeriodR(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
-        String tipor = request.getParameter("tipor");
-        String Output = request.getParameter("Output");
+        String tipor = safeRequest(request, "tipor");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -279,7 +261,7 @@ public class ReportCentrale extends HttpServlet {
         }
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         if (br1.isEmpty()) {
             br1 = (ArrayList<String>) allenabledbr.stream().map(valore -> valore.getCod()).distinct().collect(toList());
@@ -346,10 +328,10 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_AnalysisCurrencyR(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -364,7 +346,7 @@ public class ReportCentrale extends HttpServlet {
         }
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         if (br1.isEmpty()) {
             br1 = (ArrayList<String>) allenabledbr.stream().map(valore -> valore.getCod()).distinct().collect(toList());
@@ -428,10 +410,10 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_AnalysisReprintNoChangeR(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -446,7 +428,7 @@ public class ReportCentrale extends HttpServlet {
         }
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -514,10 +496,10 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_AnalysisReprintR(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -531,7 +513,7 @@ public class ReportCentrale extends HttpServlet {
             }
         }
         Db_Master dbm = new Db_Master();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         if (br1.isEmpty()) {
             br1 = dbm.list_branchcode_completeAFTER311217();
@@ -606,10 +588,10 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_CustomerCareRefundR(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -624,7 +606,7 @@ public class ReportCentrale extends HttpServlet {
         }
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -696,13 +678,13 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_ChangeInternetBookingForBranchesR(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -717,7 +699,7 @@ public class ReportCentrale extends HttpServlet {
         }
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -787,10 +769,10 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_ChangeMovimentDetailForBranchesR(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -809,7 +791,7 @@ public class ReportCentrale extends HttpServlet {
 
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -880,14 +862,14 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_CashierDetails(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
 
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -943,14 +925,14 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_CashierPerformance(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
-        String bss = request.getParameter("bss");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
+        String bss = safeRequest(request, "bss");
 
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -965,7 +947,7 @@ public class ReportCentrale extends HttpServlet {
         }
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
 
         boolean full = false;
@@ -1043,12 +1025,12 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_ChangeMovimentForAgencyR(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -1063,7 +1045,7 @@ public class ReportCentrale extends HttpServlet {
         }
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -1135,10 +1117,10 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_ChangeMovimentForBranchesR(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -1153,7 +1135,7 @@ public class ReportCentrale extends HttpServlet {
         }
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -1221,10 +1203,10 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_ChangeVolumeAffairR(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -1238,7 +1220,7 @@ public class ReportCentrale extends HttpServlet {
             }
         }
 
-        String Sho = request.getParameter("Show");
+        String Sho = safeRequest(request, "Show");
         if (null == Sho) {
             Sho = "N";
         } else {
@@ -1251,7 +1233,7 @@ public class ReportCentrale extends HttpServlet {
                     break;
             }
         }
-        String Summ = request.getParameter("Summ");
+        String Summ = safeRequest(request, "Summ");
         if (null == Summ) {
             Summ = "N";
         } else {
@@ -1271,7 +1253,7 @@ public class ReportCentrale extends HttpServlet {
 
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -1355,10 +1337,10 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_ChangeVolumeAffairCashAdvanceR(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -1371,7 +1353,7 @@ public class ReportCentrale extends HttpServlet {
                     break;
             }
         }
-        String Sho = request.getParameter("Show");
+        String Sho = safeRequest(request, "Show");
         if (null == Sho) {
             Sho = "N";
         } else {
@@ -1384,7 +1366,7 @@ public class ReportCentrale extends HttpServlet {
                     break;
             }
         }
-        String Summ = request.getParameter("Summ");
+        String Summ = safeRequest(request, "Summ");
         if (null == Summ) {
             Summ = "N";
         } else {
@@ -1404,7 +1386,7 @@ public class ReportCentrale extends HttpServlet {
 
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -1496,8 +1478,8 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_CloseBranchR(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-//        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+//        String d4 = safeRequest(request, "d4");
 
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
 //        String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
@@ -1506,7 +1488,7 @@ public class ReportCentrale extends HttpServlet {
 //        if(data1!=null&&data2!=null){
 //            dates = periodic(data1,data2, patternsql);
 //        }
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -1521,7 +1503,7 @@ public class ReportCentrale extends HttpServlet {
         }
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -1586,17 +1568,17 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_InterbranchR(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
 
-        String curr = request.getParameter("curr");
-        String[] state = request.getParameterValues("state");
+        String curr = safeRequest(request, "curr");
+        String[] state = safeRequestMultiple(request,"state");
         ArrayList<String> state_1 = new ArrayList<>();
-        String diff = request.getParameter("diff");
+        String diff = safeRequest(request, "diff");
 
-        if (state == null) {
+        if (state[0].equals("")) {
             state_1.add("OK");
             state_1.add("KOF");
             state_1.add("KOT");
@@ -1604,7 +1586,7 @@ public class ReportCentrale extends HttpServlet {
             state_1 = formatArrayValues(state);
         }
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -1618,7 +1600,7 @@ public class ReportCentrale extends HttpServlet {
             }
         }
         Db_Master dbm = new Db_Master();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         if (br1.isEmpty()) {
             br1 = dbm.list_branchcode_completeAFTER311217();
@@ -1687,17 +1669,17 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_InterbranchDetailsR(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
 
-        String curr = request.getParameter("curr");
-        String[] state = request.getParameterValues("state");
+        String curr = safeRequest(request, "curr");
+        String[] state = safeRequestMultiple(request,"state");
         ArrayList<String> state_1 = new ArrayList<>();
-        String diff = request.getParameter("diff");
+        String diff = safeRequest(request, "diff");
 
-        if (state == null) {
+        if (state[0].equals("")) {
             state_1.add("OK");
             state_1.add("KOF");
             state_1.add("KOT");
@@ -1705,7 +1687,7 @@ public class ReportCentrale extends HttpServlet {
             state_1 = formatArrayValues(state);
         }
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -1719,7 +1701,7 @@ public class ReportCentrale extends HttpServlet {
             }
         }
         Db_Master dbm = new Db_Master();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         if (br1.isEmpty()) {
             br1 = dbm.list_branchcode_completeAFTER311217();
@@ -1789,10 +1771,10 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_NoChangeMovimentForBranchesR(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -1807,7 +1789,7 @@ public class ReportCentrale extends HttpServlet {
         }
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -1870,10 +1852,10 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_SizeAndQuantityR(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
+        String d3 = safeRequest(request, "d3");
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
-        String curr = request.getParameter("curr");
-        String Output = request.getParameter("Output");
+        String curr = safeRequest(request, "curr");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -1888,7 +1870,7 @@ public class ReportCentrale extends HttpServlet {
         }
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -1944,12 +1926,12 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_StockInquiryR(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
         String dt_tot = d3 + " " + d4;
 
         String data1 = formatStringtoStringDate_null(dt_tot, patternnormdate, patternsqldate);
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -1965,7 +1947,7 @@ public class ReportCentrale extends HttpServlet {
 
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -2032,9 +2014,9 @@ public class ReportCentrale extends HttpServlet {
         //
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
-        String branch = request.getParameter("branch");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -2044,9 +2026,9 @@ public class ReportCentrale extends HttpServlet {
 
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
-        String[] nc_cat1 = request.getParameterValues("nc_cat1");
+        String[] nc_cat1 = safeRequestMultiple(request,"nc_cat1");
         String list_nc_cat = "";
-        if (nc_cat1 == null) {
+        if (nc_cat1[0].equals("")) {
             ArrayList<NC_category> array_nc_cat = dbm.list_nc_category_enabled();
             for (int i = 0; i < array_nc_cat.size(); i++) {
                 if (array_nc_cat.get(i).getFg_tipo_transazione_nc().equals("1")) {
@@ -2067,7 +2049,7 @@ public class ReportCentrale extends HttpServlet {
             }
         }
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -2149,13 +2131,13 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_CasherOpenCloseErrorR(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -2174,7 +2156,7 @@ public class ReportCentrale extends HttpServlet {
         } else {
             Db_Master dbm = new Db_Master();
             ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-            String branch = request.getParameter("branch");
+            String branch = safeRequest(request, "branch");
             ArrayList<String> br1 = parseString(branch, ",");
             boolean full = false;
             if (br1.isEmpty()) {
@@ -2274,9 +2256,9 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_TransactionRegisterDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
-        String spage = request.getParameter("spage");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
+        String spage = safeRequest(request, "spage");
 
         try {
             int p = parseInt(spage);
@@ -2284,7 +2266,7 @@ public class ReportCentrale extends HttpServlet {
             spage = "0";
         }
 
-        String srow = request.getParameter("srow");
+        String srow = safeRequest(request, "srow");
 
         try {
             int p = parseInt(srow);
@@ -2295,7 +2277,7 @@ public class ReportCentrale extends HttpServlet {
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -2310,7 +2292,7 @@ public class ReportCentrale extends HttpServlet {
         }
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         if (br1.isEmpty()) {
             br1 = (ArrayList<String>) allenabledbr.stream().map(valore -> valore.getCod()).distinct().collect(toList());
@@ -2389,9 +2371,9 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_TransactionRegisterSummary(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
-        String spage = request.getParameter("spage");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
+        String spage = safeRequest(request, "spage");
 
         try {
             int p = parseInt(spage);
@@ -2402,7 +2384,7 @@ public class ReportCentrale extends HttpServlet {
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -2417,7 +2399,7 @@ public class ReportCentrale extends HttpServlet {
         }
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         if (br1.isEmpty()) {
             br1 = (ArrayList<String>) allenabledbr.stream().map(valore -> valore.getCod()).distinct().collect(toList());
@@ -2505,10 +2487,10 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_FreeTax_BranchCurrency(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -2523,7 +2505,7 @@ public class ReportCentrale extends HttpServlet {
         }
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         if (br1.isEmpty()) {
             br1 = (ArrayList<String>) allenabledbr.stream().map(valore -> valore.getCod()).distinct().collect(toList());
@@ -2591,10 +2573,10 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_FreeTax_CausalBranch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -2610,7 +2592,7 @@ public class ReportCentrale extends HttpServlet {
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
         ArrayList<NC_causal> freetaxlist = dbm.list_nc_causal_enabled_freetax();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         if (br1.isEmpty()) {
             br1 = (ArrayList<String>) allenabledbr.stream().map(valore -> valore.getCod()).distinct().collect(toList());
@@ -2674,10 +2656,10 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_FreeTax_BranchCausal(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -2693,7 +2675,7 @@ public class ReportCentrale extends HttpServlet {
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
 
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         if (br1.isEmpty()) {
             br1 = (ArrayList<String>) allenabledbr.stream().map(valore -> valore.getCod()).distinct().collect(toList());
@@ -2762,13 +2744,13 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_freeTaxPivotTotale(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
         ArrayList<NC_causal> ftena = dbm.list_nc_causal_enabled_freetax();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         if (br1.isEmpty()) {
             br1 = (ArrayList<String>) allenabledbr.stream().map(valore -> valore.getCod()).distinct().collect(toList());
@@ -2862,8 +2844,8 @@ public class ReportCentrale extends HttpServlet {
     protected void HistoricalStockPrice(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //        Utility.printRequest(request);
 
-        String year = request.getParameter("year");
-        String Output = request.getParameter("Output");
+        String year = safeRequest(request, "year");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -2914,10 +2896,10 @@ public class ReportCentrale extends HttpServlet {
 
     protected void BranchStockInquiryA(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = getTimepicker(request.getParameter("d4"));
+        String d3 = safeRequest(request, "d3");
+        String d4 = getTimepicker(safeRequest(request, "d4"));
         String dt_tot = d3 + " " + d4;
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -2933,7 +2915,7 @@ public class ReportCentrale extends HttpServlet {
         String data1 = formatStringtoStringDate_null(dt_tot, patternnormdate, patternsqldate);
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         List<String> br1 = parseString(branch, ",");
         if (br1.isEmpty()) {
             br1 = allenabledbr.stream().map(valore -> valore.getCod()).distinct().collect(toList());
@@ -3007,8 +2989,8 @@ public class ReportCentrale extends HttpServlet {
     }
 
     protected void DailyError(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
@@ -3040,10 +3022,10 @@ public class ReportCentrale extends HttpServlet {
 
     protected void C_FreeTax_Branch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -3059,7 +3041,7 @@ public class ReportCentrale extends HttpServlet {
 
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         if (br1.isEmpty()) {
             br1 = (ArrayList<String>) allenabledbr.stream().map(valore -> valore.getCod()).distinct().collect(toList());
@@ -3127,10 +3109,10 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_FreeTax_AmountBranch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -3145,7 +3127,7 @@ public class ReportCentrale extends HttpServlet {
         }
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         if (br1.isEmpty()) {
             br1 = (ArrayList<String>) allenabledbr.stream().map(valore -> valore.getCod()).distinct().collect(toList());
@@ -3208,10 +3190,10 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_FreeTax_NationAmount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -3226,7 +3208,7 @@ public class ReportCentrale extends HttpServlet {
         }
         Db_Master dbm = new Db_Master();
         ArrayList<String[]> nat = dbm.country();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -3290,10 +3272,10 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_FreeTax_AmountNation(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -3308,7 +3290,7 @@ public class ReportCentrale extends HttpServlet {
         }
         Db_Master dbm = new Db_Master();
         ArrayList<String[]> nat = dbm.country();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -3373,10 +3355,10 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_FreeTax_Analisys(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -3391,7 +3373,7 @@ public class ReportCentrale extends HttpServlet {
         }
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -3453,9 +3435,9 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_BankBranch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
-        String Output = request.getParameter("Output");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -3476,7 +3458,7 @@ public class ReportCentrale extends HttpServlet {
         Enumeration<String> parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
             String paramName = parameterNames.nextElement();
-            String[] paramValues = request.getParameterValues(paramName);
+            String[] paramValues = safeRequestMultiple(request,paramName);
             for (String paramValue : paramValues) {
                 if (paramName.startsWith("check_") && !paramName.equals("check_0")) {
                     if (paramValue.equalsIgnoreCase("on")) {
@@ -3545,7 +3527,7 @@ public class ReportCentrale extends HttpServlet {
     protected void C_OfficeStockPrice_now(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String datareport = new DateTime().toString(patternnormdate);
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -3561,7 +3543,7 @@ public class ReportCentrale extends HttpServlet {
 
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         if (br1.isEmpty()) {
             br1 = (ArrayList<String>) allenabledbr.stream().map(valore -> valore.getCod()).distinct().collect(toList());
@@ -3638,11 +3620,11 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_OfficeStockPrice(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
         String datareport = formatStringtoStringDate_null(d3 + " " + d4, patternnormdate, patternsqldate);
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -3658,7 +3640,7 @@ public class ReportCentrale extends HttpServlet {
 
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -3742,7 +3724,7 @@ public class ReportCentrale extends HttpServlet {
 
         String datareport = new DateTime().toString(patternnormdate_f);
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -3758,7 +3740,7 @@ public class ReportCentrale extends HttpServlet {
 
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -3829,7 +3811,7 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void C_OpenCloseError(HttpServletRequest request, HttpServletResponse response, boolean cashier) throws ServletException, IOException {
 
-        String Show = request.getParameter("Show");
+        String Show = safeRequest(request, "Show");
 
         boolean change = false;
         boolean nochange = false;
@@ -3845,15 +3827,15 @@ public class ReportCentrale extends HttpServlet {
             nochange = true;
         }
 
-        String thres = formatDoubleforMysql(request.getParameter("thres"));
+        String thres = formatDoubleforMysql(safeRequest(request, "thres"));
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -3869,7 +3851,7 @@ public class ReportCentrale extends HttpServlet {
 
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -3955,15 +3937,15 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void QuarterlyCZK(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -4042,15 +4024,15 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void CustomerTransactionList_s(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-//        String thres = request.getParameter("thres");
+//        String thres = safeRequest(request, "thres");
 //
-//        String d3 = request.getParameter("d3");
-//        String d4 = request.getParameter("d4");
+//        String d3 = safeRequest(request, "d3");
+//        String d4 = safeRequest(request, "d4");
 //
 //        String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
 //        String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
 //
-//        String Output = request.getParameter("Output");
+//        String Output = safeRequest(request, "Output");
 //        if (Output == null) {
 //            Output = "EXC";
 //        } else if (Output.equals("on")) {
@@ -4061,7 +4043,7 @@ public class ReportCentrale extends HttpServlet {
 //
 //        Db_Master dbm = new Db_Master();
 //        ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-//        String branch = request.getParameter("branch");
+//        String branch = safeRequest(request, "branch");
 //        ArrayList<String> br1 = parseString(branch, ",");
 //        boolean full = false;
 //        if (br1.isEmpty()) {
@@ -4123,15 +4105,15 @@ public class ReportCentrale extends HttpServlet {
 //        if(true)
 //            return;
 
-        String frequency = request.getParameter("frequency");
+        String frequency = safeRequest(request, "frequency");
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -4147,7 +4129,7 @@ public class ReportCentrale extends HttpServlet {
 
         Db_Master dbm = new Db_Master();
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -4235,15 +4217,15 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void CustomerTransactionList_t(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-//        String tran = request.getParameter("tran");
+//        String tran = safeRequest(request, "tran");
 //
-//        String d3 = request.getParameter("d3");
-//        String d4 = request.getParameter("d4");
+//        String d3 = safeRequest(request, "d3");
+//        String d4 = safeRequest(request, "d4");
 //
 //        String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
 //        String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
 //
-//        String Output = request.getParameter("Output");
+//        String Output = safeRequest(request, "Output");
 //        if (Output == null) {
 //            Output = "EXC";
 //        } else if (Output.equals("on")) {
@@ -4254,7 +4236,7 @@ public class ReportCentrale extends HttpServlet {
 //
 //        Db_Master dbm = new Db_Master();
 //        ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-//        String branch = request.getParameter("branch");
+//        String branch = safeRequest(request, "branch");
 //        ArrayList<String> br1 = parseString(branch, ",");
 //        boolean full = false;
 //        if (br1.isEmpty()) {
@@ -4309,7 +4291,7 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void lnch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String vatref = request.getParameter("vatref");
+        String vatref = safeRequest(request, "vatref");
         if (null == vatref) {
             vatref = "NO";
         } else {
@@ -4323,8 +4305,8 @@ public class ReportCentrale extends HttpServlet {
             }
         }
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
@@ -4332,7 +4314,7 @@ public class ReportCentrale extends HttpServlet {
         Db_Master dbm = new Db_Master();
 
         String path = dbm.getPath("temp");
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         if (br1.isEmpty()) {
             br1 = dbm.list_branchcode_completeAFTER311217();
@@ -4373,10 +4355,10 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void lpos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String cred = request.getParameter("cred");
+        String cred = safeRequest(request, "cred");
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
@@ -4384,7 +4366,7 @@ public class ReportCentrale extends HttpServlet {
         Db_Master dbm = new Db_Master();
         String path = dbm.getPath("temp");
         ArrayList<Branch> allenabledbr = dbm.list_branch_completeAFTER311217();
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         if (br1.isEmpty()) {
             br1 = (ArrayList<String>) allenabledbr.stream().map(valore -> valore.getCod()).distinct().collect(toList());
@@ -4421,15 +4403,15 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void lcha(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
 
         Db_Master dbm = new Db_Master();
         String path = dbm.getPath("temp");
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         boolean full = false;
         if (br1.isEmpty()) {
@@ -4473,10 +4455,10 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void CACZ(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
 
-        String Output = request.getParameter("Output");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -4496,7 +4478,7 @@ public class ReportCentrale extends HttpServlet {
         Db_Master dbm = new Db_Master();
         String path = dbm.getPath("temp");
         //path = "F:\\com\\";
-        String filiale = request.getParameter("branch");
+        String filiale = safeRequest(request, "branch");
         String fil[] = new String[2];
         if (filiale == null || filiale.equals("")) {
             fil = dbm.getCodLocal(false);
@@ -4557,8 +4539,8 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void pending(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
         String data1 = formatStringtoStringDate_null(d3, patternnormdate_filter, patternsql);
         String data2 = formatStringtoStringDate_null(d4, patternnormdate_filter, patternsql);
 
@@ -4566,7 +4548,7 @@ public class ReportCentrale extends HttpServlet {
 
         Db_Master dbm = new Db_Master();
         String path = dbm.getPath("temp");
-        String branch = request.getParameter("branch");
+        String branch = safeRequest(request, "branch");
         ArrayList<String> br1 = parseString(branch, ",");
         if (br1.isEmpty()) {
             br1 = dbm.list_branchcode_completeAFTER311217();
@@ -4605,9 +4587,9 @@ public class ReportCentrale extends HttpServlet {
      */
     protected void TillTransactionList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String d3 = request.getParameter("d3");
-        String d4 = request.getParameter("d4");
-        String Output = request.getParameter("Output");
+        String d3 = safeRequest(request, "d3");
+        String d4 = safeRequest(request, "d4");
+        String Output = safeRequest(request, "Output");
         if (null == Output) {
             Output = "EXC";
         } else {
@@ -4627,7 +4609,7 @@ public class ReportCentrale extends HttpServlet {
         Db_Master dbm = new Db_Master();
         String path = dbm.getPath("temp");
         //path = "F:\\com\\";
-        String filiale = request.getParameter("branch");
+        String filiale = safeRequest(request, "branch");
         String fil[] = new String[2];
         if (filiale == null || filiale.equals("")) {
             fil = dbm.getCodLocal(false);
@@ -4709,7 +4691,7 @@ public class ReportCentrale extends HttpServlet {
             }
             response.setContentType("text/html;charset=UTF-8");
 //            request.setCharacterEncoding("UTF-8");
-            String type = request.getParameter("type");
+            String type = safeRequest(request, "type");
 
             String user = (String) request.getSession().getAttribute("us_cod");
             insertTR("W", user, "Generate report code: " + type);

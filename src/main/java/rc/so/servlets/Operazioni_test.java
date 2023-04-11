@@ -139,6 +139,7 @@ import org.joda.time.format.DateTimeFormat;
 import static org.joda.time.format.DateTimeFormat.forPattern;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONObject;
+import static rc.so.util.Utility.safeRequest;
 
 /**
  *
@@ -161,11 +162,11 @@ public class Operazioni_test extends HttpServlet {
             user = "9999";
         }
 
-        String bookingvalue = request.getParameter("bookingvalue");
-        String operation = request.getParameter("opr");
-        String modified = request.getParameter("modified");
-        String pay = request.getParameter("pay");
-        String cod = request.getParameter("cod");
+        String bookingvalue = safeRequest(request, "bookingvalue");
+        String operation = safeRequest(request, "opr");
+        String modified = safeRequest(request, "modified");
+        String pay = safeRequest(request, "pay");
+        String cod = safeRequest(request, "cod");
         Db_Master db0 = new Db_Master();
         Booking bo = db0.get_prenot(bookingvalue);
 
@@ -219,7 +220,7 @@ public class Operazioni_test extends HttpServlet {
      * @throws IOException
      */
     protected void vercfanno(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String anno = request.getParameter("anno");
+        String anno = safeRequest(request, "anno");
         String d1 = "01/01/19" + anno;
         DateTimeFormatter formatter = forPattern(patternnormdate_filter);
         DateTime nascita = formatter.parseDateTime(d1).plusYears(100);
@@ -264,7 +265,7 @@ public class Operazioni_test extends HttpServlet {
             if (nuovasogliaUK_daverificare.equals("-")) {
                 nuovasogliaUK_daverificare = "1000.00";
             }
-            double output = fd(formatDoubleforMysql(request.getParameter("total")));
+            double output = fd(formatDoubleforMysql(safeRequest(request, "total")));
             if (output > 0) {
                 exituk = output >= fd(nuovasogliaUK_daverificare);
             }
@@ -283,15 +284,15 @@ public class Operazioni_test extends HttpServlet {
      */
     protected void verificasoglianagrafica(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        double soglia = fd(request.getParameter("soglia"));
-        double output = fd(formatDoubleforMysql(request.getParameter("total")));
+        double soglia = fd(safeRequest(request, "soglia"));
+        double output = fd(formatDoubleforMysql(safeRequest(request, "total")));
 
         boolean exit = false;
 
         if (is_CZ) {
-            String currency = request.getParameter("currency");
+            String currency = safeRequest(request, "currency");
             if (currency != null) {
-                double quantity = fd(formatDoubleforMysql(request.getParameter("quantity")));
+                double quantity = fd(formatDoubleforMysql(safeRequest(request, "quantity")));
                 if (currency.equalsIgnoreCase("EUR")) {
                     if (quantity > 0) {
                         exit = quantity >= soglia;
@@ -330,7 +331,7 @@ public class Operazioni_test extends HttpServlet {
             ArrayList<Till> array_till = db0.list_till_status("O", null, filiale);
             db0.closeDB();
             for (int j = 0; j < array_till.size(); j++) {
-                if (array_till.get(j).getId_opcl().equals(request.getParameter("q"))) {
+                if (array_till.get(j).getId_opcl().equals(safeRequest(request, "q"))) {
                     activefr = true;
                 }
             }
@@ -371,9 +372,9 @@ public class Operazioni_test extends HttpServlet {
      * @throws IOException
      */
     protected void verifyquantnoch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String nc_cat1 = request.getParameter("nc_cat1");
-        String id_open_till_v = request.getParameter("id_open_till_v");
-        String quantity = formatDoubleforMysql(request.getParameter("quantity"));
+        String nc_cat1 = safeRequest(request, "nc_cat1");
+        String id_open_till_v = safeRequest(request, "id_open_till_v");
+        String quantity = formatDoubleforMysql(safeRequest(request, "quantity"));
 
         ArrayList<String[]> list_oc_nochange_open = list_oc_nochange_real(id_open_till_v);
         boolean ok = false;
@@ -401,7 +402,7 @@ public class Operazioni_test extends HttpServlet {
      */
     protected void check_changerate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String idval = request.getParameter("idval");
+        String idval = safeRequest(request, "idval");
 
         Iterable<String> parameters = on(";").split(idval);
         Iterator<String> it = parameters.iterator();
@@ -417,8 +418,8 @@ public class Operazioni_test extends HttpServlet {
             String[] locfig = getLocalFigures();
             //
 //
-//        String ra = request.getParameter("ra");
-//        String valuta = request.getParameter("va");
+//        String ra = safeRequest(request, "ra");
+//        String valuta = safeRequest(request, "va");
 //
             Gson gson = new Gson();
             ArrayList<String> JSONRequest = new ArrayList<>();
@@ -533,24 +534,24 @@ public class Operazioni_test extends HttpServlet {
         String typeop = getRequestValue(request, "ettype");
         String tofrom = getRequestValue(request, "ettof");
 
-        String t = request.getParameter("t");
+        String t = safeRequest(request, "t");
         if (t == null) {
             t = "S";
         }
 
-        String f1 = request.getParameter("f1");
+        String f1 = safeRequest(request, "f1");
         if (f1.contains(" ")) {
             f1 = f1.split(" ")[0].trim();
         }
 
-        String ki = request.getParameter("ki");
+        String ki = safeRequest(request, "ki");
         if (ki.contains(" ")) {
             ki = ki.split(" ")[0].trim();
         }
 
         boolean ok = true;
-        String q1 = request.getParameter("q1");
-        String r1 = request.getParameter("r1");
+        String q1 = safeRequest(request, "q1");
+        String r1 = safeRequest(request, "r1");
         String q2 = formatDoubleforMysql(q1);
         if (r1.equals("")) {
             r1 = "0";
@@ -1159,9 +1160,9 @@ public class Operazioni_test extends HttpServlet {
         if (user == null) {
             user = "9999";
         }
-        String booking = request.getParameter("booking");
-        String cod = request.getParameter("codtr");
-        String fil = request.getParameter("filiale");
+        String booking = safeRequest(request, "booking");
+        String cod = safeRequest(request, "codtr");
+        String fil = safeRequest(request, "filiale");
         Db_Master db = new Db_Master();
         Booking bo = db.get_prenot(booking);
 
@@ -1248,7 +1249,7 @@ public class Operazioni_test extends HttpServlet {
         String oldloy = getValue_request(request, "oldloy", false, "0");
 
         // nuovo 23/12
-        String welc = request.getParameter("welc");
+        String welc = safeRequest(request, "welc");
         if (null == welc) {
             welc = "0";
         } else {
@@ -1262,7 +1263,7 @@ public class Operazioni_test extends HttpServlet {
             }
         }
 
-        String fidel = request.getParameter("fidel");
+        String fidel = safeRequest(request, "fidel");
         if (null == fidel) {
             fidel = "0";
         } else {
@@ -1277,7 +1278,7 @@ public class Operazioni_test extends HttpServlet {
         }
 
         //nuovo 11/04
-        String kycpres = request.getParameter("kycpres");
+        String kycpres = safeRequest(request, "kycpres");
         if (null == kycpres) {
             kycpres = "0";
         } else {
@@ -1292,7 +1293,7 @@ public class Operazioni_test extends HttpServlet {
         }
 
         //NUOVO MODBOOK
-        String modbook = request.getParameter("modbook");
+        String modbook = safeRequest(request, "modbook");
         boolean modified = modbook.equals("YES");
 
         //NUOVO SERVIZI AGG
@@ -1300,8 +1301,8 @@ public class Operazioni_test extends HttpServlet {
 
         StringBuilder agevol_active = new StringBuilder("");
         for (int x = 0; x < agevol.size(); x++) {
-            if (request.getParameter("ag_" + agevol.get(x)[0]) != null) {
-                if (request.getParameter("ag_" + agevol.get(x)[0]).equals("on")) {
+            if (safeRequest(request, "ag_" + agevol.get(x)[0]) != null) {
+                if (safeRequest(request, "ag_" + agevol.get(x)[0]).equals("on")) {
                     agevol_active.append(agevol.get(x)[0] + ";");
                 }
             }
@@ -1310,8 +1311,8 @@ public class Operazioni_test extends HttpServlet {
         StringBuilder ser_active = new StringBuilder("");
 //        ArrayList<String> ser_active = new ArrayList<>();
         for (int x = 0; x < ser.size(); x++) {
-            if (request.getParameter("se_" + ser.get(x)[0]) != null) {
-                if (request.getParameter("se_" + ser.get(x)[0]).equals("on")) {
+            if (safeRequest(request, "se_" + ser.get(x)[0]) != null) {
+                if (safeRequest(request, "se_" + ser.get(x)[0]).equals("on")) {
                     ser_active.append(ser.get(x)[0] + ";");
                 }
             }
@@ -1326,9 +1327,9 @@ public class Operazioni_test extends HttpServlet {
 //            return;
 //        }
         // NUOVO INTBOOK
-        String newintbook0 = request.getParameter("newintbook0");
-        String newintbookCanale = request.getParameter("newintbookCanale");
-        String newintbookCodice = request.getParameter("newintbookCodice");
+        String newintbook0 = safeRequest(request, "newintbook0");
+        String newintbookCanale = safeRequest(request, "newintbookCanale");
+        String newintbookCodice = safeRequest(request, "newintbookCodice");
         if (null == newintbook0) {
             newintbook0 = "0";
             newintbookCanale = "";
@@ -1357,10 +1358,10 @@ public class Operazioni_test extends HttpServlet {
         String[] cur_default = db.get_local_currency();
         String dt_tr = db.getNow();
 
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
 
         //nuovo 19/08
-        String notesbigV = request.getParameter("notesbigV");
+        String notesbigV = safeRequest(request, "notesbigV");
         if (null == notesbigV) {
             notesbigV = "0";
         } else {
@@ -1379,46 +1380,46 @@ public class Operazioni_test extends HttpServlet {
         }
         db.closeDB();
 
-        String typerate = request.getParameter("typerate");
+        String typerate = safeRequest(request, "typerate");
 
-        String unlockCode_final = request.getParameter("unlockCode_final");
-        String unlockratesel = request.getParameter("unlockratesel");
+        String unlockCode_final = safeRequest(request, "unlockCode_final");
+        String unlockratesel = safeRequest(request, "unlockratesel");
 
-        String id_open_till = request.getParameter("id_open_till");
-        String till = request.getParameter("till");
-        String customerKind = request.getParameter("customerKind");
-        String payout1 = request.getParameter("payout1");
+        String id_open_till = safeRequest(request, "id_open_till");
+        String till = safeRequest(request, "till");
+        String customerKind = safeRequest(request, "customerKind");
+        String payout1 = safeRequest(request, "payout1");
 
-        String total0 = request.getParameter("total0");
-        String fix0 = request.getParameter("fix0");
-        String com0 = request.getParameter("com0");
-        String round0 = request.getParameter("round0");
-        String commission0 = request.getParameter("commission0");
+        String total0 = safeRequest(request, "total0");
+        String fix0 = safeRequest(request, "fix0");
+        String com0 = safeRequest(request, "com0");
+        String round0 = safeRequest(request, "round0");
+        String commission0 = safeRequest(request, "commission0");
 
-        String note1 = request.getParameter("note1");
+        String note1 = safeRequest(request, "note1");
 
-        String agency = request.getParameter("agroy");
-        String agency_cod = request.getParameter("heavy_agency");
-        String cl_cf = request.getParameter("heavy_codfisc");
+        String agency = safeRequest(request, "agroy");
+        String agency_cod = safeRequest(request, "heavy_agency");
+        String cl_cf = safeRequest(request, "heavy_codfisc");
         if (cl_cf == null) {
             cl_cf = "---";
         }
-        String heavy_surname = request.getParameter("heavy_surname").trim();
-        String heavy_name = request.getParameter("heavy_name").trim();
-        String heavy_sex = request.getParameter("heavy_sex");
+        String heavy_surname = safeRequest(request, "heavy_surname").trim();
+        String heavy_name = safeRequest(request, "heavy_name").trim();
+        String heavy_sex = safeRequest(request, "heavy_sex");
         if (heavy_sex == null || heavy_sex.equals("null")) {
             heavy_sex = "M";
         }
-        String heavy_country = request.getParameter("heavy_country");
-        String heavy_city = request.getParameter("heavy_city");
-        String heavy_city_dis = request.getParameter("heavy_city_dis");
+        String heavy_country = safeRequest(request, "heavy_country");
+        String heavy_city = safeRequest(request, "heavy_city");
+        String heavy_city_dis = safeRequest(request, "heavy_city_dis");
 
-        String heavy_address = request.getParameter("heavy_address");
+        String heavy_address = safeRequest(request, "heavy_address");
         if (heavy_address == null || heavy_address.equals("null")) {
             heavy_address = "-";
         }
 
-        String heavy_zipcode = request.getParameter("heavy_zipcode");
+        String heavy_zipcode = safeRequest(request, "heavy_zipcode");
         if (heavy_zipcode != null) {
             if (heavy_zipcode.trim().length() > 10) {
                 heavy_zipcode = substring(heavy_zipcode.trim(), 0, 10);
@@ -1427,25 +1428,25 @@ public class Operazioni_test extends HttpServlet {
             }
         }
 
-        String heavy_district = request.getParameter("heavy_district");
-        String heavy_district_dis = request.getParameter("heavy_district_dis");
-        String heavy_pob_city = request.getParameter("heavy_pob_city");
-        String heavy_pob_country = request.getParameter("heavy_pob_country").trim();
-        String heavy_pob_date = request.getParameter("heavy_pob_date");
-        String heavy_identcard = request.getParameter("heavy_identcard");
-        String heavy_numberidentcard = request.getParameter("heavy_numberidentcard");
-        String heavy_issuedateidentcard = request.getParameter("heavy_issuedateidentcard");
-        String heavy_exdateidentcard = request.getParameter("heavy_exdateidentcard");
-        String heavy_issuedbyidentcard = request.getParameter("heavy_issuedbyidentcard");
-        String heavy_issuedplaceidentcard = request.getParameter("heavy_issuedplaceidentcard");
-        String heavy_email = request.getParameter("heavy_email");
-        String heavy_phonenu = request.getParameter("heavy_phonenu");
-        String heavy_pepI = request.getParameter("heavy_pepI");
+        String heavy_district = safeRequest(request, "heavy_district");
+        String heavy_district_dis = safeRequest(request, "heavy_district_dis");
+        String heavy_pob_city = safeRequest(request, "heavy_pob_city");
+        String heavy_pob_country = safeRequest(request, "heavy_pob_country").trim();
+        String heavy_pob_date = safeRequest(request, "heavy_pob_date");
+        String heavy_identcard = safeRequest(request, "heavy_identcard");
+        String heavy_numberidentcard = safeRequest(request, "heavy_numberidentcard");
+        String heavy_issuedateidentcard = safeRequest(request, "heavy_issuedateidentcard");
+        String heavy_exdateidentcard = safeRequest(request, "heavy_exdateidentcard");
+        String heavy_issuedbyidentcard = safeRequest(request, "heavy_issuedbyidentcard");
+        String heavy_issuedplaceidentcard = safeRequest(request, "heavy_issuedplaceidentcard");
+        String heavy_email = safeRequest(request, "heavy_email");
+        String heavy_phonenu = safeRequest(request, "heavy_phonenu");
+        String heavy_pepI = safeRequest(request, "heavy_pepI");
         if (heavy_pepI == null || heavy_pepI.trim().equals("") || heavy_pepI.trim().equals("null")) {
             heavy_pepI = "NO";
         }
-        String pr_nas1 = request.getParameter("heavy_pob_district");
-        String pr_nas2 = request.getParameter("heavy_pob_district_STR");
+        String pr_nas1 = safeRequest(request, "heavy_pob_district");
+        String pr_nas2 = safeRequest(request, "heavy_pob_district_STR");
         if (is_IT && heavy_pob_country.equals(codnaz)) { //ITALIA 
             if (pr_nas1 == null) {
                 pr_nas1 = pr_nas2;
@@ -1456,8 +1457,8 @@ public class Operazioni_test extends HttpServlet {
         } else {
             pr_nas1 = "---";
         }
-        String company = request.getParameter("company");
-        String oldclient = request.getParameter("oldclient");
+        String company = safeRequest(request, "company");
+        String oldclient = safeRequest(request, "oldclient");
 
         String cod_cliente = generaId(22) + filiale;
 
@@ -1498,12 +1499,12 @@ public class Operazioni_test extends HttpServlet {
             agency = "1";
         }
 
-//        String totalspread = request.getParameter("totalspread");
-        String kind_p1 = request.getParameter("kind_p1");
+//        String totalspread = safeRequest(request, "totalspread");
+        String kind_p1 = safeRequest(request, "kind_p1");
 
-        String ban_1 = request.getParameter("ban_1");
-        String posnum = request.getParameter("posnum");
-        String cc_number = request.getParameter("cc_number");
+        String ban_1 = safeRequest(request, "ban_1");
+        String posnum = safeRequest(request, "posnum");
+        String cc_number = safeRequest(request, "cc_number");
 
         Ch_transaction trans = new Ch_transaction();
         trans.setTill(till);
@@ -1685,7 +1686,7 @@ public class Operazioni_test extends HttpServlet {
 
                 for (int k = 1; k < 6; k++) {
 
-                    String totalriga = request.getParameter("total" + k);
+                    String totalriga = safeRequest(request, "total" + k);
                     if (!formatDoubleforMysql(totalriga).equals("0.00")) {
 
                         String idriga = generaId(25);
@@ -1693,22 +1694,22 @@ public class Operazioni_test extends HttpServlet {
 
                         String numeroriga = valueOf(k);
 
-                        String supportoriga = request.getParameter("kind" + k);
-                        String valutariga = request.getParameter("figs" + k);
-                        String quantitariga = request.getParameter("quantity" + k);
+                        String supportoriga = safeRequest(request, "kind" + k);
+                        String valutariga = safeRequest(request, "figs" + k);
+                        String quantitariga = safeRequest(request, "quantity" + k);
 
-                        String rateriga = request.getParameter("rate" + k);
+                        String rateriga = safeRequest(request, "rate" + k);
                         if (typerate.equals("UNLOCK")) {
-                            rateriga = formatDoubleforMysql(request.getParameter("fieldrate" + k));
+                            rateriga = formatDoubleforMysql(safeRequest(request, "fieldrate" + k));
                         }
 
-                        String roundvalue = request.getParameter("roundvalue" + k);
+                        String roundvalue = safeRequest(request, "roundvalue" + k);
 
-                        String com_percriga = request.getParameter("comperc" + k);
-                        String totpercriga = request.getParameter("totperc" + k);
-                        String fx_commriga = request.getParameter("fxcomm" + k);
-                        String totcomm1 = request.getParameter("totcomm" + k);
-                        String net1 = request.getParameter("net" + k);
+                        String com_percriga = safeRequest(request, "comperc" + k);
+                        String totpercriga = safeRequest(request, "totperc" + k);
+                        String fx_commriga = safeRequest(request, "fxcomm" + k);
+                        String totcomm1 = safeRequest(request, "totcomm" + k);
+                        String net1 = safeRequest(request, "net" + k);
                         String spreadriga = getValue_request(request, "spread" + k, false, "KO");
                         if (!spreadriga.equals("KO")) {
 
@@ -1734,11 +1735,11 @@ public class Operazioni_test extends HttpServlet {
 
                         }
 
-                        String kind_fix_commriga = request.getParameter("kindfixcomm" + k);
+                        String kind_fix_commriga = safeRequest(request, "kindfixcomm" + k);
                         if (kind_fix_commriga == null) {
                             kind_fix_commriga = "-";
                         }
-                        String low_comm_juriga = request.getParameter("lowcommjus" + k);
+                        String low_comm_juriga = safeRequest(request, "lowcommjus" + k);
                         String bb1 = "N";
 
                         if (low_comm_juriga == null) {
@@ -2109,7 +2110,7 @@ public class Operazioni_test extends HttpServlet {
         String fidel = getValue_request(request, "fidel", true, "0");
 
         // NUOVO INTBOOK
-        String newintbook0 = request.getParameter("newintbook0");
+        String newintbook0 = safeRequest(request, "newintbook0");
 
         String newintbookCanale = getValue_request(request, "newintbookCanale", false, "");
         String newintbookCodice = getValue_request(request, "newintbookCodice", false, "");
@@ -2229,7 +2230,7 @@ public class Operazioni_test extends HttpServlet {
 
         Client_CZ cz = null;
         if (!is_IT) {
-            String showanagVALUE = request.getParameter("showanagVALUE");
+            String showanagVALUE = safeRequest(request, "showanagVALUE");
             String showanagNEWUK = getValue_request(request, "showanagNEWUK", false, "NO");
             String heavy_pno1 = getValue_request(request, "heavy_pno1", false, "");
             String heavy_cz_country = getValue_request(request, "heavy_cz_country", false, "---");
@@ -2306,7 +2307,7 @@ public class Operazioni_test extends HttpServlet {
 //        } else if (agency.equals("on")) {
 //            agency = "1";
 //        }DSA
-//        String totalspread = request.getParameter("totalspread");
+//        String totalspread = safeRequest(request, "totalspread");
         String kind_p1 = getValue_request(request, "kind_p1", false, "");
         String ban_1 = getValue_request(request, "ban_1", false, "");
         String posnum = getValue_request(request, "posnum", false, "");
@@ -2360,9 +2361,9 @@ public class Operazioni_test extends HttpServlet {
             value_intbook_3 = "-";
         }
 
-//        String intbook_4 = request.getParameter("intbook_4");
-//        String code_intbook_4 = request.getParameter("code_intbook_4");
-//        String value_intbook_4 = request.getParameter("value_intbook_4");
+//        String intbook_4 = safeRequest(request, "intbook_4");
+//        String code_intbook_4 = safeRequest(request, "code_intbook_4");
+//        String value_intbook_4 = safeRequest(request, "value_intbook_4");
 //
 //        if (intbook_4 == null || intbook_4.equals("...")) {
 //            intbook_4 = "-";
@@ -2370,9 +2371,9 @@ public class Operazioni_test extends HttpServlet {
 //            value_intbook_4 = "-";
 //        }
 //
-//        String intbook_5 = request.getParameter("intbook_5");
-//        String code_intbook_5 = request.getParameter("code_intbook_5");
-//        String value_intbook_5 = request.getParameter("value_intbook_5");
+//        String intbook_5 = safeRequest(request, "intbook_5");
+//        String code_intbook_5 = safeRequest(request, "code_intbook_5");
+//        String value_intbook_5 = safeRequest(request, "value_intbook_5");
 //
 //        if (intbook_5 == null || intbook_5.equals("...")) {
 //            intbook_5 = "-";
@@ -3063,7 +3064,7 @@ public class Operazioni_test extends HttpServlet {
         String dt_tr = db.getNow();
         db.closeDB();
 
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
 
         //nuovo 11/04
         String kycpres = getValue_request(request, "kycpres", true, "0");
@@ -3140,7 +3141,7 @@ public class Operazioni_test extends HttpServlet {
 
         Client_CZ cz = null;
         if (!is_IT) {
-            String showanagVALUE = request.getParameter("showanagVALUE");
+            String showanagVALUE = safeRequest(request, "showanagVALUE");
             String showanagNEWUK = getValue_request(request, "showanagNEWUK", false, "NO");
             String heavy_pno1 = getValue_request(request, "heavy_pno1", false, "");
             String heavy_cz_country = getValue_request(request, "heavy_cz_country", false, "---");
@@ -3828,7 +3829,7 @@ public class Operazioni_test extends HttpServlet {
         }
 
 //        //nuovo 11/04
-//        String kycpres = request.getParameter("kycpres");
+//        String kycpres = safeRequest(request, "kycpres");
 //        if (kycpres == null) {
 //            kycpres = "0";
 //        } else if (kycpres.equals("on")) {
@@ -3849,42 +3850,42 @@ public class Operazioni_test extends HttpServlet {
 
         String cod = Utility.safeRequest(request, "cod");
 
-        String typerate = request.getParameter("typerate");
-        String unlockCode_final = request.getParameter("unlockCode_final");
-        String unlockratesel = request.getParameter("unlockratesel");
+        String typerate = safeRequest(request, "typerate");
+        String unlockCode_final = safeRequest(request, "unlockCode_final");
+        String unlockratesel = safeRequest(request, "unlockratesel");
 
-        String id_open_till = request.getParameter("id_open_till");
-        String till = request.getParameter("till");
-        String customerKind = request.getParameter("customerKind");
-        String payout1 = request.getParameter("payout1");
+        String id_open_till = safeRequest(request, "id_open_till");
+        String till = safeRequest(request, "till");
+        String customerKind = safeRequest(request, "customerKind");
+        String payout1 = safeRequest(request, "payout1");
 
-        String total0 = request.getParameter("total0");
-        String fix0 = request.getParameter("fix0");
-        String com0 = request.getParameter("com0");
-        String round0 = request.getParameter("round0");
-        String commission0 = request.getParameter("commission0");
+        String total0 = safeRequest(request, "total0");
+        String fix0 = safeRequest(request, "fix0");
+        String com0 = safeRequest(request, "com0");
+        String round0 = safeRequest(request, "round0");
+        String commission0 = safeRequest(request, "commission0");
 
-        String note1 = request.getParameter("note1");
+        String note1 = safeRequest(request, "note1");
 
         String agency = "0";
         String agency_cod = "-";
         String cl_cf = "---";
 
-        String heavy_surname = request.getParameter("heavy_surname").trim();
-        String heavy_name = request.getParameter("heavy_name").trim();
-        String heavy_sex = request.getParameter("heavy_sex");
+        String heavy_surname = safeRequest(request, "heavy_surname").trim();
+        String heavy_name = safeRequest(request, "heavy_name").trim();
+        String heavy_sex = safeRequest(request, "heavy_sex");
         if (heavy_sex == null || heavy_sex.equals("null")) {
             heavy_sex = "M";
         }
-        String heavy_country = request.getParameter("heavy_country");
-        String heavy_city = request.getParameter("heavy_city");
-        String heavy_city_dis = request.getParameter("heavy_city_dis");
-        String heavy_address = request.getParameter("heavy_address");
+        String heavy_country = safeRequest(request, "heavy_country");
+        String heavy_city = safeRequest(request, "heavy_city");
+        String heavy_city_dis = safeRequest(request, "heavy_city_dis");
+        String heavy_address = safeRequest(request, "heavy_address");
         if (heavy_address == null || heavy_address.equals("null")) {
             heavy_address = "-";
         }
 
-        String heavy_zipcode = request.getParameter("heavy_zipcode");
+        String heavy_zipcode = safeRequest(request, "heavy_zipcode");
         if (heavy_zipcode != null) {
             if (heavy_zipcode.trim().length() > 10) {
                 heavy_zipcode = substring(heavy_zipcode.trim(), 0, 10);
@@ -3892,44 +3893,44 @@ public class Operazioni_test extends HttpServlet {
                 heavy_zipcode = heavy_zipcode.trim();
             }
         }
-        String heavy_district = request.getParameter("heavy_district");
-        String heavy_district_dis = request.getParameter("heavy_district_dis");
-        String heavy_pob_city = request.getParameter("heavy_pob_city");
-        String heavy_pob_country = request.getParameter("heavy_pob_country").trim();
-        String heavy_pob_date = request.getParameter("heavy_pob_date").trim();
-        String heavy_identcard = request.getParameter("heavy_identcard");
-        String heavy_numberidentcard = request.getParameter("heavy_numberidentcard");
-        String heavy_issuedateidentcard = request.getParameter("heavy_issuedateidentcard");
-        String heavy_exdateidentcard = request.getParameter("heavy_exdateidentcard");
-        String heavy_issuedbyidentcard = request.getParameter("heavy_issuedbyidentcard");
-        String heavy_issuedplaceidentcard = request.getParameter("heavy_issuedplaceidentcard");
-        String heavy_email = request.getParameter("heavy_email");
-        String heavy_phonenu = request.getParameter("heavy_phonenu");
-        String heavy_pepI = request.getParameter("heavy_pepI");
+        String heavy_district = safeRequest(request, "heavy_district");
+        String heavy_district_dis = safeRequest(request, "heavy_district_dis");
+        String heavy_pob_city = safeRequest(request, "heavy_pob_city");
+        String heavy_pob_country = safeRequest(request, "heavy_pob_country").trim();
+        String heavy_pob_date = safeRequest(request, "heavy_pob_date").trim();
+        String heavy_identcard = safeRequest(request, "heavy_identcard");
+        String heavy_numberidentcard = safeRequest(request, "heavy_numberidentcard");
+        String heavy_issuedateidentcard = safeRequest(request, "heavy_issuedateidentcard");
+        String heavy_exdateidentcard = safeRequest(request, "heavy_exdateidentcard");
+        String heavy_issuedbyidentcard = safeRequest(request, "heavy_issuedbyidentcard");
+        String heavy_issuedplaceidentcard = safeRequest(request, "heavy_issuedplaceidentcard");
+        String heavy_email = safeRequest(request, "heavy_email");
+        String heavy_phonenu = safeRequest(request, "heavy_phonenu");
+        String heavy_pepI = safeRequest(request, "heavy_pepI");
         if (heavy_pepI == null || heavy_pepI.trim().equals("") || heavy_pepI.trim().equals("null")) {
             heavy_pepI = "NO";
         }
         String pr_nas1 = "---";
         String pr_nas2 = "---";
 
-        String company = request.getParameter("company");
-        String oldclient = request.getParameter("oldclient");
+        String company = safeRequest(request, "company");
+        String oldclient = safeRequest(request, "oldclient");
 
         String cod_cliente = generaId(22) + filiale;
 
         //CZ
-        String showanagVALUE = request.getParameter("showanagVALUE");
-        String heavy_pno1 = request.getParameter("heavy_pno1");
-        String heavy_cz_country = request.getParameter("heavy_cz_country");
-        String heavy_cz_issuingcountry = request.getParameter("heavy_cz_issuingcountry");
-        String heavy_sanctions = request.getParameter("heavy_sanctions");
-        String heavy_pep = request.getParameter("heavy_pep");
-        String heavy_transactionre = request.getParameter("heavy_transactionre");
-        String heavy_moneysource = request.getParameter("heavy_moneysource");
-        String heavy_occupation = request.getParameter("heavy_occupation");
+        String showanagVALUE = safeRequest(request, "showanagVALUE");
+        String heavy_pno1 = safeRequest(request, "heavy_pno1");
+        String heavy_cz_country = safeRequest(request, "heavy_cz_country");
+        String heavy_cz_issuingcountry = safeRequest(request, "heavy_cz_issuingcountry");
+        String heavy_sanctions = safeRequest(request, "heavy_sanctions");
+        String heavy_pep = safeRequest(request, "heavy_pep");
+        String heavy_transactionre = safeRequest(request, "heavy_transactionre");
+        String heavy_moneysource = safeRequest(request, "heavy_moneysource");
+        String heavy_occupation = safeRequest(request, "heavy_occupation");
 
-        String pep_position = request.getParameter("pep_position");
-        String pep_country = request.getParameter("pep_country");
+        String pep_position = safeRequest(request, "pep_position");
+        String pep_country = safeRequest(request, "pep_country");
 
         if (heavy_pep.equals("NO")) {
             pep_position = "";
@@ -3937,10 +3938,10 @@ public class Operazioni_test extends HttpServlet {
         }
 
         boolean op_sos;
-        if (request.getParameter("op_sos") == null) {
+        if (safeRequest(request, "op_sos") == null) {
             op_sos = false;
         } else {
-            op_sos = request.getParameter("op_sos").equals("on");
+            op_sos = safeRequest(request, "op_sos").equals("on");
         }
 
         String oldpercent_buy = "-";
@@ -3970,10 +3971,10 @@ public class Operazioni_test extends HttpServlet {
                 heavy_cz_issuingcountry, heavy_sanctions, heavy_pep, heavy_transactionre,
                 heavy_moneysource, valueOf(op_sos), heavy_occupation, pep_position, pep_country);
 
-        String kind_p1 = request.getParameter("kind_p1");
-        String ban_1 = request.getParameter("ban_1");
-        String posnum = request.getParameter("posnum");
-        String cc_number = request.getParameter("cc_number");
+        String kind_p1 = safeRequest(request, "kind_p1");
+        String ban_1 = safeRequest(request, "ban_1");
+        String posnum = safeRequest(request, "posnum");
+        String cc_number = safeRequest(request, "cc_number");
 
         Ch_transaction trans = new Ch_transaction();
         trans.setTill(till);
@@ -3996,7 +3997,7 @@ public class Operazioni_test extends HttpServlet {
         trans.setDel_motiv("-");
         trans.setIntbook(newintbook0);
 
-        String tfnc0 = request.getParameter("tfnc0");
+        String tfnc0 = safeRequest(request, "tfnc0");
         if (tfnc0 == null) {
             tfnc0 = "0";
         } else if (tfnc0.equalsIgnoreCase("on")) {
@@ -4005,9 +4006,9 @@ public class Operazioni_test extends HttpServlet {
             tfnc0 = "0";
         }
 
-        String intbook_1 = request.getParameter("intbook_1");
-        String code_intbook_1 = request.getParameter("code_intbook_1");
-        String value_intbook_1 = request.getParameter("value_intbook_1");
+        String intbook_1 = safeRequest(request, "intbook_1");
+        String code_intbook_1 = safeRequest(request, "code_intbook_1");
+        String value_intbook_1 = safeRequest(request, "value_intbook_1");
 
         if (intbook_1.equals("...")) {
             intbook_1 = "-";
@@ -4015,9 +4016,9 @@ public class Operazioni_test extends HttpServlet {
             value_intbook_1 = "-";
         }
 
-        String intbook_2 = request.getParameter("intbook_2");
-        String code_intbook_2 = request.getParameter("code_intbook_2");
-        String value_intbook_2 = request.getParameter("value_intbook_2");
+        String intbook_2 = safeRequest(request, "intbook_2");
+        String code_intbook_2 = safeRequest(request, "code_intbook_2");
+        String value_intbook_2 = safeRequest(request, "value_intbook_2");
 
         if (intbook_2.equals("...")) {
             intbook_2 = "-";
@@ -4025,9 +4026,9 @@ public class Operazioni_test extends HttpServlet {
             value_intbook_2 = "-";
         }
 
-        String intbook_3 = request.getParameter("intbook_3");
-        String code_intbook_3 = request.getParameter("code_intbook_3");
-        String value_intbook_3 = request.getParameter("value_intbook_3");
+        String intbook_3 = safeRequest(request, "intbook_3");
+        String code_intbook_3 = safeRequest(request, "code_intbook_3");
+        String value_intbook_3 = safeRequest(request, "value_intbook_3");
 
         if (intbook_3.equals("...")) {
             intbook_3 = "-";
@@ -4035,8 +4036,8 @@ public class Operazioni_test extends HttpServlet {
             value_intbook_3 = "-";
         }
 
-        String macval = request.getParameter("macval");
-        String cusval = request.getParameter("cusval");
+        String macval = safeRequest(request, "macval");
+        String cusval = safeRequest(request, "cusval");
 
         if (tfnc0.equals("0")) {
             intbook_1 = "-";
@@ -4163,7 +4164,7 @@ public class Operazioni_test extends HttpServlet {
 
             for (int k = 1; k < 6; k++) {
 
-                String totalriga = request.getParameter("total" + k);
+                String totalriga = safeRequest(request, "total" + k);
                 if (!formatDoubleforMysql(totalriga).equals("0.00")) {
 
                     String idriga = generaId(25);
@@ -4171,23 +4172,23 @@ public class Operazioni_test extends HttpServlet {
 
                     String numeroriga = valueOf(k);
 
-                    String supportoriga = request.getParameter("kind" + k);
-                    String valutariga = request.getParameter("figs" + k);
-                    String quantitariga = request.getParameter("quantity" + k);
+                    String supportoriga = safeRequest(request, "kind" + k);
+                    String valutariga = safeRequest(request, "figs" + k);
+                    String quantitariga = safeRequest(request, "quantity" + k);
 
-                    String rateriga = request.getParameter("rate" + k);
+                    String rateriga = safeRequest(request, "rate" + k);
                     if (typerate.equals("UNLOCK")) {
-                        rateriga = formatDoubleforMysql(request.getParameter("fieldrate" + k));
+                        rateriga = formatDoubleforMysql(safeRequest(request, "fieldrate" + k));
                     }
                     rateriga = removeLast(rateriga);
 
-                    String roundvalue = request.getParameter("roundvalue" + k);
+                    String roundvalue = safeRequest(request, "roundvalue" + k);
 
-                    String com_percriga = request.getParameter("comperc" + k);
-                    String totpercriga = request.getParameter("totperc" + k);
-                    String fx_commriga = request.getParameter("fxcomm" + k);
-                    String totcomm1 = request.getParameter("totcomm" + k);
-                    String net1 = request.getParameter("net" + k);
+                    String com_percriga = safeRequest(request, "comperc" + k);
+                    String totpercriga = safeRequest(request, "totperc" + k);
+                    String fx_commriga = safeRequest(request, "fxcomm" + k);
+                    String totcomm1 = safeRequest(request, "totcomm" + k);
+                    String net1 = safeRequest(request, "net" + k);
                     String spreadriga = getValue_request(request, "spread" + k, false, "KO");
                     if (!spreadriga.equals("KO")) {
                         List<String> calcolospread = calcolaspread2021(
@@ -4211,20 +4212,20 @@ public class Operazioni_test extends HttpServlet {
 
                     }
 
-                    String kind_fix_commriga = request.getParameter("kindfixcomm" + k);
+                    String kind_fix_commriga = safeRequest(request, "kindfixcomm" + k);
                     if (kind_fix_commriga == null) {
                         kind_fix_commriga = "-";
                     }
-                    String low_comm_juriga = request.getParameter("lowcommjus" + k);
+                    String low_comm_juriga = safeRequest(request, "lowcommjus" + k);
 
                     if (low_comm_juriga == null) {
                         low_comm_juriga = "";
                     }
 
                     String sb_bb = "N";
-                    String bbriga = request.getParameter("bb" + k);
-                    String sbriga = request.getParameter("sb" + k);
-                    String sb_fidcoderiga = request.getParameter("fidcode" + k);
+                    String bbriga = safeRequest(request, "bb" + k);
+                    String sbriga = safeRequest(request, "sb" + k);
+                    String sb_fidcoderiga = safeRequest(request, "fidcode" + k);
 
                     if (bbriga == null) {
                         bbriga = "N";
@@ -4442,37 +4443,37 @@ public class Operazioni_test extends HttpServlet {
         Db_Master db = new Db_Master();
         String dt_tr = db.getNow();
         db.closeDB();
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
 
-        String typerate = request.getParameter("typerate");
-        String tipocliente = request.getParameter("tipocliente");
-        String id_open_till = request.getParameter("id_open_till");
-        String till = request.getParameter("till");
-        String pay = request.getParameter("payout1");
-        String total = request.getParameter("total0");
-        String fix = request.getParameter("fix0");
-        String com = request.getParameter("com0");
-        String round = request.getParameter("round0");
-        String commission = request.getParameter("commission0");
-        String note = request.getParameter("note1");
+        String typerate = safeRequest(request, "typerate");
+        String tipocliente = safeRequest(request, "tipocliente");
+        String id_open_till = safeRequest(request, "id_open_till");
+        String till = safeRequest(request, "till");
+        String pay = safeRequest(request, "payout1");
+        String total = safeRequest(request, "total0");
+        String fix = safeRequest(request, "fix0");
+        String com = safeRequest(request, "com0");
+        String round = safeRequest(request, "round0");
+        String commission = safeRequest(request, "commission0");
+        String note = safeRequest(request, "note1");
         String agency = "0";
         String agency_cod = "-";
         String cl_cf = "---";
-        String heavy_surname = request.getParameter("heavy_surname");
-        String heavy_name = request.getParameter("heavy_name");
-        String heavy_sex = request.getParameter("heavy_sex");
+        String heavy_surname = safeRequest(request, "heavy_surname");
+        String heavy_name = safeRequest(request, "heavy_name");
+        String heavy_sex = safeRequest(request, "heavy_sex");
         if (heavy_sex == null || heavy_sex.equals("null")) {
             heavy_sex = "M";
         }
 
-        String heavy_country = request.getParameter("heavy_country");
-        String heavy_city = request.getParameter("heavy_city");
-        String heavy_city_dis = request.getParameter("heavy_city_dis");
-        String heavy_address = request.getParameter("heavy_address");
+        String heavy_country = safeRequest(request, "heavy_country");
+        String heavy_city = safeRequest(request, "heavy_city");
+        String heavy_city_dis = safeRequest(request, "heavy_city_dis");
+        String heavy_address = safeRequest(request, "heavy_address");
         if (heavy_address == null || heavy_address.equals("null")) {
             heavy_address = "-";
         }
-        String heavy_zipcode = request.getParameter("heavy_zipcode");
+        String heavy_zipcode = safeRequest(request, "heavy_zipcode");
 
         if (heavy_zipcode != null) {
             if (heavy_zipcode.trim().length() > 10) {
@@ -4482,37 +4483,37 @@ public class Operazioni_test extends HttpServlet {
             }
         }
 
-        String heavy_district = request.getParameter("heavy_district");
-        String heavy_district_dis = request.getParameter("heavy_district_dis");
-        String heavy_pob_city = request.getParameter("heavy_pob_city");
-        String heavy_pob_country = request.getParameter("heavy_pob_country");
-        String heavy_pob_date = request.getParameter("heavy_pob_date");
-        String heavy_identcard = request.getParameter("heavy_identcard");
-        String heavy_numberidentcard = request.getParameter("heavy_numberidentcard");
-        String heavy_issuedateidentcard = request.getParameter("heavy_issuedateidentcard");
-        String heavy_exdateidentcard = request.getParameter("heavy_exdateidentcard");
-        String heavy_issuedbyidentcard = request.getParameter("heavy_issuedbyidentcard");
-        String heavy_issuedplaceidentcard = request.getParameter("heavy_issuedplaceidentcard");
-        String heavy_email = request.getParameter("heavy_email");
-        String heavy_phonenu = request.getParameter("heavy_phonenu");
+        String heavy_district = safeRequest(request, "heavy_district");
+        String heavy_district_dis = safeRequest(request, "heavy_district_dis");
+        String heavy_pob_city = safeRequest(request, "heavy_pob_city");
+        String heavy_pob_country = safeRequest(request, "heavy_pob_country");
+        String heavy_pob_date = safeRequest(request, "heavy_pob_date");
+        String heavy_identcard = safeRequest(request, "heavy_identcard");
+        String heavy_numberidentcard = safeRequest(request, "heavy_numberidentcard");
+        String heavy_issuedateidentcard = safeRequest(request, "heavy_issuedateidentcard");
+        String heavy_exdateidentcard = safeRequest(request, "heavy_exdateidentcard");
+        String heavy_issuedbyidentcard = safeRequest(request, "heavy_issuedbyidentcard");
+        String heavy_issuedplaceidentcard = safeRequest(request, "heavy_issuedplaceidentcard");
+        String heavy_email = safeRequest(request, "heavy_email");
+        String heavy_phonenu = safeRequest(request, "heavy_phonenu");
         String heavy_pepI = "NO";
-        String pr_nas1 = request.getParameter("heavy_pob_district");
+        String pr_nas1 = safeRequest(request, "heavy_pob_district");
         String cod_cliente = generaId(22) + filiale;
-        String oldclient = request.getParameter("oldclient");
+        String oldclient = safeRequest(request, "oldclient");
 
         //CZ
-        String showanagVALUE = request.getParameter("showanagVALUE");
-        String heavy_pno1 = request.getParameter("heavy_pno1");
-        String heavy_cz_country = request.getParameter("heavy_cz_country");
-        String heavy_cz_issuingcountry = request.getParameter("heavy_cz_issuingcountry");
-        String heavy_sanctions = request.getParameter("heavy_sanctions");
-        String heavy_pep = request.getParameter("heavy_pep");
-        String heavy_transactionre = request.getParameter("heavy_transactionre");
-        String heavy_moneysource = request.getParameter("heavy_moneysource");
-        String heavy_occupation = request.getParameter("heavy_occupation");
+        String showanagVALUE = safeRequest(request, "showanagVALUE");
+        String heavy_pno1 = safeRequest(request, "heavy_pno1");
+        String heavy_cz_country = safeRequest(request, "heavy_cz_country");
+        String heavy_cz_issuingcountry = safeRequest(request, "heavy_cz_issuingcountry");
+        String heavy_sanctions = safeRequest(request, "heavy_sanctions");
+        String heavy_pep = safeRequest(request, "heavy_pep");
+        String heavy_transactionre = safeRequest(request, "heavy_transactionre");
+        String heavy_moneysource = safeRequest(request, "heavy_moneysource");
+        String heavy_occupation = safeRequest(request, "heavy_occupation");
 
-        String pep_position = request.getParameter("pep_position");
-        String pep_country = request.getParameter("pep_country");
+        String pep_position = safeRequest(request, "pep_position");
+        String pep_country = safeRequest(request, "pep_country");
 
         if (heavy_pep.equals("NO")) {
             pep_position = "";
@@ -4520,10 +4521,10 @@ public class Operazioni_test extends HttpServlet {
         }
 
         boolean op_sos;
-        if (request.getParameter("op_sos") == null) {
+        if (safeRequest(request, "op_sos") == null) {
             op_sos = false;
         } else {
-            op_sos = request.getParameter("op_sos").equals("on");
+            op_sos = safeRequest(request, "op_sos").equals("on");
         }
 
         String oldpercent_buy = "-";
@@ -4654,32 +4655,32 @@ public class Operazioni_test extends HttpServlet {
 
             String spreadriga = "-";
             String numeroriga = valueOf(i);
-            String supportoriga = request.getParameter("kind" + i);
-            String posriga = request.getParameter("posvalue" + i);
-            String posnumriga = request.getParameter("posnum" + i);
-            String valutariga = request.getParameter("figs" + i);
-            String quantitariga = request.getParameter("quantity" + i);
+            String supportoriga = safeRequest(request, "kind" + i);
+            String posriga = safeRequest(request, "posvalue" + i);
+            String posnumriga = safeRequest(request, "posnum" + i);
+            String valutariga = safeRequest(request, "figs" + i);
+            String quantitariga = safeRequest(request, "quantity" + i);
 
-            String rateriga = request.getParameter("rate" + i);
+            String rateriga = safeRequest(request, "rate" + i);
             if (typerate.equals("UNLOCK")) {
-                rateriga = formatDoubleforMysql(request.getParameter("fieldrate" + i));
+                rateriga = formatDoubleforMysql(safeRequest(request, "fieldrate" + i));
             }
             rateriga = removeLast(rateriga);
 
-            String roundvalue = request.getParameter("roundvalue" + i);
+            String roundvalue = safeRequest(request, "roundvalue" + i);
 
-            String com_percriga = request.getParameter("comperc" + i);
-            String com_perc_totriga = request.getParameter("totperc" + i);
-            String fx_commriga = request.getParameter("fxcomm" + i);
-            String tot_comriga = request.getParameter("totcomm" + i);
-            String netriga = request.getParameter("net" + i);
+            String com_percriga = safeRequest(request, "comperc" + i);
+            String com_perc_totriga = safeRequest(request, "totperc" + i);
+            String fx_commriga = safeRequest(request, "fxcomm" + i);
+            String tot_comriga = safeRequest(request, "totcomm" + i);
+            String netriga = safeRequest(request, "net" + i);
 
-            String totalriga = request.getParameter("total" + i);
-            String kind_fix_commriga = request.getParameter("kindfixcomm" + i);
+            String totalriga = safeRequest(request, "total" + i);
+            String kind_fix_commriga = safeRequest(request, "kindfixcomm" + i);
             if (kind_fix_commriga == null) {
                 kind_fix_commriga = "-";
             }
-            String low_comm_juriga = request.getParameter("lowcommjus" + i);
+            String low_comm_juriga = safeRequest(request, "lowcommjus" + i);
 
             if (posriga == null) {
                 posriga = "N";
@@ -4692,9 +4693,9 @@ public class Operazioni_test extends HttpServlet {
             }
 
             String sb_bb = "N";
-            String bbriga = request.getParameter("bb" + i);
-            String sbriga = request.getParameter("sb" + i);
-            String bb_fidcoderiga = request.getParameter("fidcode" + i);
+            String bbriga = safeRequest(request, "bb" + i);
+            String sbriga = safeRequest(request, "sb" + i);
+            String bb_fidcoderiga = safeRequest(request, "fidcode" + i);
 
             if (bbriga == null) {
                 bbriga = "N";
@@ -4959,8 +4960,8 @@ public class Operazioni_test extends HttpServlet {
     protected void verificaID_OC_SINGLE(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //        Utility.printRequest(request);
 
-        String tillfrom = request.getParameter("tillfrom");
-        String idfrom = request.getParameter("idfrom");
+        String tillfrom = safeRequest(request, "tillfrom");
+        String idfrom = safeRequest(request, "idfrom");
 
         Db_Master db = new Db_Master();
         String actual_id_F = db.getCodLastOpenclose(tillfrom);
@@ -5005,7 +5006,7 @@ public class Operazioni_test extends HttpServlet {
     }
 
     protected void verificaBLM(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String cod = request.getParameter("cod");
+        String cod = safeRequest(request, "cod");
         Db_Master db = new Db_Master();
         String msg = db.get_TextBlMacc(cod);
         db.closeDB();
@@ -5029,10 +5030,10 @@ public class Operazioni_test extends HttpServlet {
      */
     protected void verificaID_OC(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String tillfrom = request.getParameter("tillfrom");
-        String idfrom = request.getParameter("idfrom");
-        String tillto = request.getParameter("tillto");
-        String idto = request.getParameter("idto");
+        String tillfrom = safeRequest(request, "tillfrom");
+        String idfrom = safeRequest(request, "idfrom");
+        String tillto = safeRequest(request, "tillto");
+        String idto = safeRequest(request, "idto");
 
         Db_Master db = new Db_Master();
         String actual_id_F = db.getCodLastOpenclose(tillfrom);
@@ -5076,7 +5077,7 @@ public class Operazioni_test extends HttpServlet {
             } else {
                 response.setContentType("text/html;charset=UTF-8");
 //                request.setCharacterEncoding("UTF-8");
-                String type = request.getParameter("type");
+                String type = safeRequest(request, "type");
                 switch (type) {
                     case "ch_tr_buy":
                         insertTR("W", (String) request.getSession().getAttribute("us_cod"), (String) request.getSession().getAttribute("us_fil") + " - TRANSAZIONE CHANGE BUY");
