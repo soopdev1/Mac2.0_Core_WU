@@ -63,6 +63,7 @@ import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -377,7 +378,7 @@ public class C_AnalysisReprint {
             boolean firstTime = true;
             boolean lastTime = false;
 
-            File pdffile = new File(path + generaId(50) + "C_AnalysisReprint.pdf");
+            File pdffile = new File(normalize(path + generaId(50) + "C_AnalysisReprint.pdf"));
             OutputStream ou = new FileOutputStream(pdffile);
             Document document = new Document(A4.rotate(), 20, 20, 20, 20);
             PdfWriter wr = getInstance(document, ou);
@@ -565,7 +566,7 @@ public class C_AnalysisReprint {
      */
     public String mainexcel(String path, String d3, String d4, String data1, String data2, ArrayList<String> alcolonne, ArrayList<String> filiali) {
         try {
-            File pdffile = new File(path + generaId(50) + "C_AnalysisReprint.xls");
+            File pdffile = new File(normalize(path + generaId(50) + "C_AnalysisReprint.xls"));
             HSSFWorkbook workbook = new HSSFWorkbook();
             HSSFSheet sheet = workbook.createSheet("C_AnalysisReprint");
 

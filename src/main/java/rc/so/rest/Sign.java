@@ -28,6 +28,8 @@ import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
+import javax.xml.stream.XMLInputFactory;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -43,7 +45,7 @@ public class Sign {
     private static final String psw = getConf("path.ws.sign.pass");
     private static final String usr = getConf("path.ws.sign.user");
     private static final String namespace = getConf("path.ws.sign.name");
-    
+
     /**
      *
      * @param pathout
@@ -57,7 +59,7 @@ public class Sign {
      */
     public static Outputf sign_document(String pathout, String codtr_value, String user_value, String branch_value, String tipodoc_value, String base64_value, String filename_value) {
         Outputf outp = null;
-        File xmlresp = new File(pathout + generaId(55) + "response_cancrt.xml");
+        File xmlresp = new File(normalize(pathout + generaId(55) + "response_cancrt.xml"));
         try {
             SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
             SOAPConnection soapConnection = soapConnectionFactory.createConnection();
@@ -93,8 +95,14 @@ public class Sign {
             out.close();
             soapConnection.close();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+                        factory.setXIncludeAware(false);
             DocumentBuilder builder1 = factory.newDocumentBuilder();
+
             Document doc = builder1.parse(xmlresp);
+
             NodeList preparaFirmaResponse = doc.getElementsByTagName("ns2:preparaFirmaResponse");
             if (preparaFirmaResponse.getLength() == 1) {
                 NodeList returnvalue = doc.getElementsByTagName("return");
@@ -127,7 +135,7 @@ public class Sign {
      */
     public static Outputf verify_document(String pathout, String codtr_value, String typedoc_value) {
         Outputf outp = null;
-        File xmlresp = new File(pathout + generaId(55) + "response_cancrt.xml");
+        File xmlresp = new File(normalize(pathout + generaId(55) + "response_cancrt.xml"));
         try {
             SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
             SOAPConnection soapConnection = soapConnectionFactory.createConnection();
@@ -155,6 +163,10 @@ public class Sign {
             out.close();
             soapConnection.close();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            factory.setXIncludeAware(false);
             DocumentBuilder builder1 = factory.newDocumentBuilder();
             Document doc = builder1.parse(xmlresp);
             NodeList verificaFirmaResponse = doc.getElementsByTagName("ns2:verificaFirmaResponse");
@@ -166,12 +178,12 @@ public class Sign {
                     if (esito.equals("0")) {
                         String codice_documento = doc.getElementsByTagName("codice_documento").item(0).getTextContent();
                         String data_firma = doc.getElementsByTagName("data_firma").item(0).getTextContent();
-                        
+
                         String firma = doc.getElementsByTagName("firma").item(0).getTextContent();
                         String nomefile_firma = doc.getElementsByTagName("nomefile_firma").item(0).getTextContent();
                         String wor_id = doc.getElementsByTagName("wor_id").item(0).getTextContent();
                         outp = new Outputf(codice_documento, data_firma, error, esito, firma, nomefile_firma, wor_id);
-                    }else{
+                    } else {
                         outp = new Outputf("", "", error, esito, "", "", "");
                     }
                 }

@@ -52,6 +52,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import static org.apache.pdfbox.io.MemoryUsageSetting.setupTempFileOnly;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -146,7 +147,7 @@ public class BranchStockInquiry {
 
         list_siq.forEach(siq -> {
             try {
-                File pdf = new File(path + generaId(50) + "BrachStockInquiry_NEW.pdf");
+                File pdf = new File(normalize(path + generaId(50) + "BrachStockInquiry_NEW.pdf"));
                 Document document = new Document(A4, 20, 20, 20, 20);
                 OutputStream ou = new FileOutputStream(pdf);
                 PdfWriter wr = getInstance(document, ou);
@@ -267,7 +268,7 @@ public class BranchStockInquiry {
                 ou.close();
                 pdflist.add(pdf);
                 totalmac.addAndGet(totalcv);
-            } catch (IOException | DocumentException ex) {
+            } catch (Exception ex) {
                 insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
             }
         });
@@ -276,7 +277,7 @@ public class BranchStockInquiry {
             return null;
         } else {
             try {
-                File pdf = new File(path + generaId(50) + "BrachStockInquiry_NEW.pdf");
+                File pdf = new File(normalize(path + generaId(50) + "BrachStockInquiry_NEW.pdf"));
                 PDFMergerUtility obj = new PDFMergerUtility();
                 obj.setDestinationFileName(pdf.getPath());
                 pdflist.forEach(pdf1 -> {
@@ -288,7 +289,7 @@ public class BranchStockInquiry {
                 });
                 //CREO ultima pagina
 
-                File pdftemp = new File(path + generaId(50) + "BrachStockInquiry_last.pdf");
+                File pdftemp = new File(normalize(path + generaId(50) + "BrachStockInquiry_last.pdf"));
                 Document document = new Document(A4, 20, 20, 20, 20);
                 OutputStream ou = new FileOutputStream(pdftemp);
                 PdfWriter wr = getInstance(document, ou);
@@ -352,7 +353,7 @@ public class BranchStockInquiry {
         }
 
         try {
-            File pdf = new File(path + generaId(50) + "BrachStockInquiry_NEW.pdf");
+            File pdf = new File(normalize(path + generaId(50) + "BrachStockInquiry_NEW.pdf"));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -491,7 +492,7 @@ public class BranchStockInquiry {
         }
 
         try {
-            File pdf = new File(path + generaId(50) + "BrachStockInquiry_OK.pdf");
+            File pdf = new File(normalize(path + generaId(50) + "BrachStockInquiry_OK.pdf"));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -628,7 +629,7 @@ public class BranchStockInquiry {
     public String receiptexcel_new(String path, List<BranchStockInquiry_value> list_siq, ArrayList<String> colonne, String datereport) {
 
         try {
-            File pdf = new File(path + generaId(50) + "BrachStockInquiry_NEW.xlsx");
+            File pdf = new File(normalize(path + generaId(50) + "BrachStockInquiry_NEW.xlsx"));
 
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = workbook.createSheet("BranchStockInquiry");
@@ -819,7 +820,7 @@ public class BranchStockInquiry {
     public String receiptexcel(String path, BranchStockInquiry_value siq, ArrayList<String> colonne, String datereport) {
 
         try {
-            File pdf = new File(path + generaId(50) + "BranchStockInquiry.xls");
+            File pdf = new File(normalize(path + generaId(50) + "BranchStockInquiry.xls"));
             HSSFWorkbook workbook = new HSSFWorkbook();
             HSSFSheet sheet = workbook.createSheet("BranchStockInquiry");
             //CREAZIONE FONT

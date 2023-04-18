@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import static org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace;
 import static org.apache.poi.ss.usermodel.BorderStyle.THIN;
 import static org.apache.poi.ss.usermodel.FontUnderline.SINGLE;
@@ -173,7 +174,7 @@ public class Dailyerror {
                 }
             });
             try {
-                File pdffile = new File(path + generaId(50) + "C_Error Recap.xlsx");
+                File pdffile = new File(normalize(path + generaId(50) + "C_Error Recap.xlsx"));
                 String base64;
                 try ( FileOutputStream xls = new FileOutputStream(pdffile)) {
                     workbook.write(xls);

@@ -79,6 +79,7 @@ import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64String;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.commons.lang3.StringUtils;
 import static org.apache.commons.lang3.StringUtils.replace;
 import org.joda.time.DateTime;
@@ -492,7 +493,7 @@ public class Download
                 base64 = firmato.getContent();
                 if (base64.startsWith("FILE[")) {
                     String pa1 = replace(base64, "FILE[", "");
-                    File f = new File(pa1);
+                    File f = new File(normalize(pa1));
                     base64 = encodeBase64String(readFileToByteArray(f));
                 }
             } else {
@@ -833,7 +834,7 @@ public class Download
 
             if (base64.startsWith("FILE[")) {
                 String pa1 = replace(base64, "FILE[", "");
-                File f = new File(pa1);
+                File f = new File(normalize(pa1));
                 base64 = encodeBase64String(readFileToByteArray(f));
             }
         }
@@ -873,7 +874,7 @@ public class Download
             name = chd.getNomefile();
             if (base64.startsWith("FILE[")) {
                 String pa1 = replace(base64, "FILE[", "");
-                File f = new File(pa1);
+                File f = new File(normalize(pa1));
                 base64 = encodeBase64String(readFileToByteArray(f));
             }
 
@@ -913,7 +914,7 @@ public class Download
             name = chd.getNomefile();
             if (base64.startsWith("FILE[")) {
                 String pa1 = replace(base64, "FILE[", "");
-                File f = new File(pa1);
+                File f = new File(normalize(pa1));
                 base64 = encodeBase64String(readFileToByteArray(f));
             }
         } else {
@@ -925,7 +926,7 @@ public class Download
                 name = chd.getNomefile();
                 if (base64.startsWith("FILE[")) {
                     String pa1 = replace(base64, "FILE[", "");
-                    File f = new File(pa1);
+                    File f = new File(normalize(pa1));
                     base64 = encodeBase64String(readFileToByteArray(f));
                 }
             }

@@ -34,7 +34,7 @@
         <!-- END GLOBAL MANDATORY STYLES -->
         <!-- BEGIN PAGE LEVEL PLUGINS -->
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <!-- END PAGE LEVEL PLUGINS -->
         <!-- BEGIN THEME GLOBAL STYLES -->
         <link href="assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
@@ -53,6 +53,8 @@
 
     <script type="text/javascript">
         <%
+            response.setHeader("X-Frame-Options", "SAMEORIGIN");
+            response.setHeader("Content-Security-Policy", " frame-ancestors 'self'");
 
             String fil[] = Engine.getFil();
             boolean central = fil[0].equals("000");
@@ -262,7 +264,7 @@
         <!-- BEGIN CORE PLUGINS -->
         <script src="assets/soop/jquery-3.6.4.min.js" type="text/javascript"></script>        
         <script src="assets/soop/bootstrap-5.2.3/dist/js/bootstrap.min.js" type="text/javascript"></script>
-        
+
         <script src="assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
 
@@ -279,7 +281,7 @@
         <!-- BEGIN THEME GLOBAL SCRIPTS -->
         <script src="assets/global/scripts/app.min.js" type="text/javascript"></script>
 
-        
+
         <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
 
         <!-- END THEME GLOBAL SCRIPTS -->

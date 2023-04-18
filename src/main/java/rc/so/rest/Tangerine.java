@@ -6,7 +6,6 @@ package rc.so.rest;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import rc.so.util.Engine;
 import static rc.so.util.Engine.getConfCentral;
 import static rc.so.util.Engine.insertTR;
 import static rc.so.util.Utility.estraiEccezione;
@@ -14,19 +13,17 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpHeaders;
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClients;
 import static org.apache.http.impl.client.HttpClients.createDefault;
 import org.json.JSONObject;
+import org.owasp.esapi.ESAPI;
 
 /**
  *
@@ -73,7 +70,7 @@ public class Tangerine {
                         String inputLine;
                         response = new StringBuilder();
                         while ((inputLine = in.readLine()) != null) {
-                            response.append(inputLine);
+                            response.append(ESAPI.encoder().encodeForHTML(inputLine));
                         }
                     }
                     String out = response.toString();
@@ -116,7 +113,7 @@ public class Tangerine {
                         String inputLine;
                         response = new StringBuilder();
                         while ((inputLine = in.readLine()) != null) {
-                            response.append(inputLine);
+                            response.append(ESAPI.encoder().encodeForHTML(inputLine));
                         }
                     }
                     String out = response.toString();

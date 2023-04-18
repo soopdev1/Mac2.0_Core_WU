@@ -62,6 +62,7 @@ import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.joda.time.DateTime;
 
 /**
@@ -146,8 +147,7 @@ public class CartelloCambiUK {
 
             DateFormat dateFormat = new SimpleDateFormat("ddddMMyyyy");
             Date date = new Date();
-            File pdf = new File(path + "CartelloCambiUK" + "_" + dateFormat.format(date) + ".pdf");
-            //   File pdf = new File(path + Utility.generaId(50) + "CartelloCambiUK.pdf");
+            File pdf = new File(normalize(path + "CartelloCambiUK" + "_" + dateFormat.format(date) + ".pdf"));
             Document document = new Document(A4, 50, 50, 50, 50);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);

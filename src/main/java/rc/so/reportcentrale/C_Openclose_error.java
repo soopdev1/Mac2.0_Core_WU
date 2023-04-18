@@ -68,6 +68,7 @@ import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.commons.lang3.StringUtils;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 
@@ -177,11 +178,7 @@ public class C_Openclose_error {
             ArrayList<String> colonnedettaglioNoChange, ArrayList<String> colonnedettaglioPOS, String data1, String data2, boolean change,
             boolean nochange, Document document, String thres, int b) {
         try {
-//            File pdf = new File(path + Utility.generaId(50) + "OpenCloseError.pdf");
 
-//            OutputStream ou = new FileOutputStream(pdf);
-//            PdfWriter wr = PdfWriter.getInstance(document, ou);
-//            document.open();
             if (b > 0) {
                 document.newPage();
             }
@@ -913,7 +910,7 @@ public class C_Openclose_error {
 
             boolean add = false;
 
-            File pdffile = new File(path + generaId(50) + "C_BankBranch.pdf");
+            File pdffile = new File(normalize(path + generaId(50) + "C_BankBranch.pdf"));
             OutputStream ou = new FileOutputStream(pdffile);
             Document document = new Document(A4, 20, 20, 20, 20);
             PdfWriter wr = getInstance(document, ou);

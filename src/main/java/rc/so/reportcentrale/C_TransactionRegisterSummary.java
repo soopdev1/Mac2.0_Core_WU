@@ -48,6 +48,7 @@ import static java.lang.Thread.currentThread;
 import java.util.ArrayList;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import static org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL;
@@ -159,7 +160,7 @@ public class C_TransactionRegisterSummary {
 
         try {
 
-            File pdffile = new File(path + generaId(50) + "C_TransactionRegisterSummary.pdf");
+            File pdffile = new File(normalize(path + generaId(50) + "C_TransactionRegisterSummary.pdf"));
             try (OutputStream ou = new FileOutputStream(pdffile)) {
                 Document document = new Document(A4.rotate(), 20, 20, 20, 20);
                 PdfWriter wr = getInstance(document, ou);
@@ -1001,7 +1002,7 @@ insuranceoutamount += fd(actual.getInsoutot());
 
         try {
 
-            File pdf = new File(path + generaId(50) + "C_TransactionRegisterSummary.xls");
+            File pdf = new File(normalize(path + generaId(50) + "C_TransactionRegisterSummary.xls"));
             HSSFWorkbook workbook = new HSSFWorkbook();
             HSSFSheet sheet = workbook.createSheet("C_TransactionRegisterSummary");
             //CREAZIONE FONT

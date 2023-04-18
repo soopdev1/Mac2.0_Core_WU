@@ -74,6 +74,7 @@ import java.util.List;
 import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import static org.apache.commons.codec.binary.Base64.decodeBase64;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.joda.time.DateTime;
 
 /**
@@ -202,7 +203,7 @@ public class NewReceipt_CZ {
         try {
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "PRE_CZ_" + tra.getTipotr() + ".pdf";
 
-            File pdf = new File(pathout + outputfile);
+            File pdf = new File(normalize(pathout + outputfile));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -492,7 +493,7 @@ public class NewReceipt_CZ {
 //        try {
 //            String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_CZ_" + tra.getTipotr() + ".pdf";
 //
-//            File pdf = new File(pathout + outputfile);
+//            File pdf = new File(normalize(pathout + outputfile));
 //            Document document = new Document(PageSize.A4, 20, 20, 20, 20);
 //            OutputStream ou = new FileOutputStream(pdf);
 //            PdfWriter wr = PdfWriter.getInstance(document, ou);
@@ -798,7 +799,7 @@ public class NewReceipt_CZ {
         try {
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_CZ_" + tra.getTipotr() + ".pdf";
 
-            File pdf = new File(pathout + outputfile);
+            File pdf = new File(normalize(pathout + outputfile));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);

@@ -7,9 +7,7 @@ package rc.so.excel;
 
 import rc.so.entity.Branch;
 import static rc.so.util.Constant.formatdataCell;
-import rc.so.util.Engine;
 import static rc.so.util.Engine.insertTR;
-import rc.so.util.Utility;
 import static rc.so.util.Utility.fd;
 import static rc.so.util.Utility.generaId;
 import static rc.so.util.Utility.getCell;
@@ -20,24 +18,17 @@ import java.io.IOException;
 import static java.lang.Thread.currentThread;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
-import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
-import org.apache.commons.lang3.StringUtils;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import static org.apache.commons.lang3.StringUtils.capitalize;
-import org.apache.poi.hssf.usermodel.HSSFFont;
 import static org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL;
-import org.apache.poi.ss.usermodel.BorderStyle;
 import static org.apache.poi.ss.usermodel.BorderStyle.DOUBLE;
 import static org.apache.poi.ss.usermodel.BorderStyle.THIN;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellType;
 import static org.apache.poi.ss.usermodel.CellType.NUMERIC;
-import org.apache.poi.ss.usermodel.FillPatternType;
 import static org.apache.poi.ss.usermodel.FillPatternType.SOLID_FOREGROUND;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import static org.apache.poi.ss.usermodel.IndexedColors.YELLOW;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -342,10 +333,10 @@ public class Massimali {
                 }
                 for (int i = 0; i < quartatabella.size(); i++) {
                     sheet.autoSizeColumn(i);
-                }   out = new File(pathout + generaId(75) + ".xlsx");
-                FileOutputStream fileOut = new FileOutputStream(out);
-                wb.write(fileOut);
-                fileOut.close();
+                }   out = new File(normalize(pathout + generaId(75) + ".xlsx"));
+                try (FileOutputStream fileOut = new FileOutputStream(out)) {
+                    wb.write(fileOut);
+                }
             }
             String base64 = new String(encodeBase64(readFileToByteArray(out)));
             out.delete();

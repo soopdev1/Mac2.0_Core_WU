@@ -159,6 +159,7 @@ import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import static org.apache.commons.fileupload.servlet.ServletFileUpload.isMultipartContent;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
 import static org.apache.commons.io.FilenameUtils.getExtension;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.apache.commons.lang3.StringUtils.replace;
 import static org.apache.commons.lang3.StringUtils.substring;
@@ -287,19 +288,17 @@ public class Operazioni extends HttpServlet {
             try {
                 FileItemFactory factory = new DiskFileItemFactory();
                 ServletFileUpload upload = new ServletFileUpload(factory);
-                List items = upload.parseRequest(request);
-                Iterator iterator = items.iterator();
-                while (iterator.hasNext()) {
-                    FileItem item = (FileItem) iterator.next();
+                List<FileItem> items = upload.parseRequest(request);
+                for (FileItem item : items) {
                     if (!item.isFormField()) {
                         String fileName = item.getName();
                         if (fileName != null) {
-                            File pathdir = new File(pathtemp);
+                            File pathdir = new File(normalize(pathtemp));
                             pathdir.mkdirs();
                             String estensione = getExtension(fileName).toLowerCase();
                             if (extacc.toLowerCase().contains(estensione)) {
                                 String name = generaId(99) + estensione;
-                                nomefile = new File(pathtemp + name);
+                                nomefile = new File(normalize(pathtemp + name));
                                 try {
                                     extfile = estensione;
                                     item.write(nomefile);
@@ -388,7 +387,6 @@ public class Operazioni extends HttpServlet {
                     } else if (item.getFieldName().equals("piva0")) {
                         nc_percentiva = item.getString().trim();
                     }
-
                 }
             } catch (FileUploadException ex) {
                 insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -2204,19 +2202,17 @@ public class Operazioni extends HttpServlet {
             try {
                 FileItemFactory factory = new DiskFileItemFactory();
                 ServletFileUpload upload = new ServletFileUpload(factory);
-                List items = upload.parseRequest(request);
-                Iterator iterator = items.iterator();
-                while (iterator.hasNext()) {
-                    FileItem item = (FileItem) iterator.next();
+                List<FileItem> items = upload.parseRequest(request);
+                for (FileItem item : items) {
                     if (!item.isFormField()) {
                         String fileName = item.getName();
                         if (fileName != null) {
-                            File pathdir = new File(path + day);
+                            File pathdir = new File(normalize(path + day));
                             pathdir.mkdirs();
                             String estensione = getExtension(fileName);
                             if (extacc.toLowerCase().contains(estensione.toLowerCase())) {
                                 String name = cod + "_" + day + estensione;
-                                nomefile = new File(pathdir + separator + name);
+                                nomefile = new File(normalize(pathdir + separator + name));
                                 try {
                                     item.write(nomefile);
                                     break;
@@ -2290,19 +2286,17 @@ public class Operazioni extends HttpServlet {
             try {
                 FileItemFactory factory = new DiskFileItemFactory();
                 ServletFileUpload upload = new ServletFileUpload(factory);
-                List items = upload.parseRequest(request);
-                Iterator iterator = items.iterator();
-                while (iterator.hasNext()) {
-                    FileItem item = (FileItem) iterator.next();
+                List<FileItem> items = upload.parseRequest(request);
+                for (FileItem item : items) {
                     if (!item.isFormField()) {
                         String fileName = item.getName();
                         if (fileName != null) {
-                            File pathdir = new File(path + day);
+                            File pathdir = new File(normalize(path + day));
                             pathdir.mkdirs();
                             String estensione = getExtension(fileName);
                             if (extacc.toLowerCase().contains(estensione.toLowerCase())) {
                                 String name = cod + "_" + day + estensione;
-                                nomefile = new File(pathdir + separator + name);
+                                nomefile = new File(normalize(pathdir + separator + name));
                                 try {
                                     item.write(nomefile);
                                     break;
@@ -2414,10 +2408,8 @@ public class Operazioni extends HttpServlet {
             try {
                 FileItemFactory factory = new DiskFileItemFactory();
                 ServletFileUpload upload = new ServletFileUpload(factory);
-                List items = upload.parseRequest(request);
-                Iterator iterator = items.iterator();
-                while (iterator.hasNext()) {
-                    FileItem item = (FileItem) iterator.next();
+                List<FileItem> items = upload.parseRequest(request);
+                for (FileItem item : items) {
                     if (item.isFormField()) {
                         if (item.getFieldName().equals("reci")) {
                             reci = item.getString().trim();
@@ -2436,12 +2428,12 @@ public class Operazioni extends HttpServlet {
                         if (fileName != null) {
                             if (fileName.toLowerCase().endsWith(".pdf")) {
                                 Db_Master dbm = new Db_Master();
-                                File pathdir = new File(dbm.getPath("temp") + day);
+                                File pathdir = new File(normalize(dbm.getPath("temp") + day));
                                 dbm.closeDB();
                                 pathdir.mkdirs();
                                 String estensione = fileName.substring(fileName.lastIndexOf("."));
                                 String name = cod + "_" + day + estensione;
-                                nomefile = new File(pathdir + separator + name);
+                                nomefile = new File(normalize(pathdir + separator + name));
                                 try {
                                     item.write(nomefile);
                                 } catch (Exception ex) {
@@ -6434,10 +6426,8 @@ public class Operazioni extends HttpServlet {
             try {
                 FileItemFactory factory = new DiskFileItemFactory();
                 ServletFileUpload upload = new ServletFileUpload(factory);
-                List items = upload.parseRequest(request);
-                Iterator iterator = items.iterator();
-                while (iterator.hasNext()) {
-                    FileItem item = (FileItem) iterator.next();
+                List<FileItem> items = upload.parseRequest(request);
+                for (FileItem item : items) {
                     if (item.isFormField()) {
                         if (item.getFieldName().equals("codtr")) {
                             codtr = item.getString().trim();
@@ -6454,7 +6444,7 @@ public class Operazioni extends HttpServlet {
                             if (fileName.toLowerCase().endsWith(".pdf")) {
 
                                 namefile = new DateTime().toString("yyMMddhhmmssSSS") + coddoc + ".pdf";
-                                File pdf = new File(pathtemp + separator + namefile);
+                                File pdf = new File(normalize(pathtemp + separator + namefile));
                                 try {
                                     item.write(pdf);
                                 } catch (Exception ex) {
@@ -7089,7 +7079,7 @@ public class Operazioni extends HttpServlet {
             } else {
                 name = branching + "_" + replace(from, "/", "") + "_eSol_ZIP.zip";
             }
-            File zipout = new File(path + name);
+            File zipout = new File(normalize(path + name));
 
             boolean zipok = zipListFiles(list_f, zipout);
             if (zipok) {
@@ -7726,10 +7716,8 @@ public class Operazioni extends HttpServlet {
             try {
                 FileItemFactory factory = new DiskFileItemFactory();
                 ServletFileUpload upload = new ServletFileUpload(factory);
-                List items = upload.parseRequest(request);
-                Iterator iterator = items.iterator();
-                while (iterator.hasNext()) {
-                    FileItem item = (FileItem) iterator.next();
+                List<FileItem> items = upload.parseRequest(request);
+                for (FileItem item : items) {
                     if (item.isFormField()) {
                         if (item.getFieldName().equals("codtr")) {
                             codtr = item.getString().trim();
@@ -7743,7 +7731,7 @@ public class Operazioni extends HttpServlet {
                             if (fileName.toLowerCase().endsWith(".pdf")) {
 
                                 namefile = new DateTime().toString("yyMMddhhmmssSSS") + coddoc + ".pdf";
-                                File pdf = new File(pathtemp + separator + namefile);
+                                File pdf = new File(normalize(pathtemp + separator + namefile));
                                 try {
                                     item.write(pdf);
                                 } catch (Exception ex) {
@@ -7799,6 +7787,8 @@ public class Operazioni extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=UTF-8");
+        response.setHeader("X-Frame-Options", "SAMEORIGIN");
+        response.setHeader("Content-Security-Policy", " frame-ancestors 'self'");
         try {
             String link_value = verifySession(request);
             if (link_value != null) {

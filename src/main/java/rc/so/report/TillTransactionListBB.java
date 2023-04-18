@@ -51,6 +51,7 @@ import static java.lang.Thread.currentThread;
 import java.util.ArrayList;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import static org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL;
 import static org.apache.poi.ss.usermodel.BorderStyle.THIN;
 import org.apache.poi.ss.usermodel.Cell;
@@ -343,7 +344,7 @@ public class TillTransactionListBB {
         //   String outputfile = "TillTransactionList.pdf";
         try {
 
-            File pdf = new File(path + generaId(50) + "TillTransactionList.pdf");
+            File pdf = new File(normalize(path + generaId(50) + "TillTransactionList.pdf"));
             Document document = new Document(A4.rotate(), 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -1811,7 +1812,7 @@ public class TillTransactionListBB {
 
         //   String outputfile = "TillTransactionList.pdf";
         try {
-            File pdf = new File(path + generaId(50) + "TillTransactionList.xlsx");
+            File pdf = new File(normalize(path + generaId(50) + "TillTransactionList.xlsx"));
             
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = workbook.createSheet("TillTransactionList");

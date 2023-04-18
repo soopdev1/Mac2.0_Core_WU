@@ -210,7 +210,7 @@ var Demo = function() {
         });
 
         $('.theme-colors > ul > li', panel).click(function() {
-            var color = $(this).attr("data-style");
+            var color = htmlEncode($(this).attr("data-style"));
             setColor(color);
             $('ul > li', panel).removeClass("current");
             $(this).addClass("current");

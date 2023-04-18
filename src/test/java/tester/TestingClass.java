@@ -4,17 +4,6 @@
  */
 package tester;
 
-import static rc.so.rest.Tangerine.login_TA;
-import static java.lang.System.out;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
-import java.util.Locale;
-import org.owasp.esapi.ESAPI;
-import static rc.so.util.Utility.formatDoubleforMysql;
-import static rc.so.util.Utility.getValueDiff;
-import static rc.so.util.Utility.parseDoubleR;
-
 /**
  *
  * @author rcosco
@@ -22,9 +11,10 @@ import static rc.so.util.Utility.parseDoubleR;
 public class TestingClass {
     public static void main(String[] args) {
         
-        String safe = ESAPI.encoder().encodeForHTML( "dsaddsada" );
-        
-        System.out.println("tester.TestingClass.main() "+safe);
+////        
+////        String safe = ESAPI.encoder().encodeForHTML( "dsaddsada" );
+////        
+////        System.out.println("tester.TestingClass.main() "+safe);
         
 //        System.out.println("tester.TestingClass.main() "+formatDoubleforMysql("5.001.000,00"));
         

@@ -23,6 +23,7 @@ import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.commons.lang3.StringUtils;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -72,7 +73,7 @@ public class BudgetRep {
         try {
 
             File out;
-            try (XSSFWorkbook wb = new XSSFWorkbook()) {
+            try ( XSSFWorkbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("BUDGET DI CASSA");
                 XSSFFont font = (XSSFFont) wb.createFont();
                 font.setFontName(FONT_ARIAL);
@@ -99,7 +100,8 @@ public class BudgetRep {
                     XSSFRichTextString richString = new XSSFRichTextString(complete);
                     cell.setCellValue(richString);
                     cell.setCellStyle(style);
-                }   for (int i = 0; i < giornidacontrollare.size(); i++) {
+                }
+                for (int i = 0; i < giornidacontrollare.size(); i++) {
                     riga++;
                     row = sheet.createRow(riga);
                     String giorno1 = giornidacontrollare.get(i);
@@ -151,7 +153,8 @@ public class BudgetRep {
                     Cell cell = row.createCell(i);
                     cell.setCellValue(secondatabella.get(i));
                     cell.setCellStyle(style);
-                }   for (int i = 0; i < giornidacontrollare.size(); i++) {
+                }
+                for (int i = 0; i < giornidacontrollare.size(); i++) {
                     riga++;
                     row = sheet.createRow(riga);
                     String giorno1 = giornidacontrollare.get(i);
@@ -203,7 +206,8 @@ public class BudgetRep {
                     Cell cell = row.createCell(i);
                     cell.setCellValue(terzatabella.get(i));
                     cell.setCellStyle(style);
-                }   for (int i = 0; i < giornidacontrollare.size(); i++) {
+                }
+                for (int i = 0; i < giornidacontrollare.size(); i++) {
                     riga++;
                     row = sheet.createRow(riga);
                     String giorno1 = giornidacontrollare.get(i);
@@ -262,15 +266,16 @@ public class BudgetRep {
                 riga++;
                 for (int i = 0; i < terzatabella.size(); i++) {
                     sheet.autoSizeColumn(i);
-                }   out = new File(pathout + generaId(75) + ".xlsx");
-                FileOutputStream fileOut = new FileOutputStream(out);
-                wb.write(fileOut);
-                fileOut.close();
+                }
+                out = new File(normalize(pathout + generaId(75) + ".xlsx"));
+                try (FileOutputStream fileOut = new FileOutputStream(out)) {
+                    wb.write(fileOut);
+                }
             }
             String base64 = new String(encodeBase64(readFileToByteArray(out)));
             out.delete();
             return base64;
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return null;

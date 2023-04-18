@@ -49,6 +49,7 @@ import static java.lang.Thread.currentThread;
 import java.util.ArrayList;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -136,7 +137,7 @@ public class OfficeStockPrice {
         String valutalocale = osp.getLocalcurrency();
 
         try {
-            File pdf = new File(path + generaId(50) + "OfficeStockPrice.pdf");
+            File pdf = new File(normalize(path + generaId(50) + "OfficeStockPrice.pdf"));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -439,7 +440,7 @@ public class OfficeStockPrice {
             String datareport) {
         String valutalocale = osp.getLocalcurrency();
         try {
-            File pdf = new File(path + generaId(50) + "OfficeStockPrice.xls");
+            File pdf = new File(normalize(path + generaId(50) + "OfficeStockPrice.xls"));
             HSSFWorkbook workbook = new HSSFWorkbook();
             HSSFSheet sheet = workbook.createSheet("OfficeStockPrice");
             //CREAZIONE FONT
@@ -672,7 +673,7 @@ public class OfficeStockPrice {
 
 //        String outputfile = "StockPriceReportPerFiliali.pdf";
         try {
-            File pdf = new File(path + generaId(50) + "StockPriceReportPerFiliali.pdf");
+            File pdf = new File(normalize(path + generaId(50) + "StockPriceReportPerFiliali.pdf"));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -1232,7 +1233,7 @@ public class OfficeStockPrice {
     public String receiptcentraleexcel(String path, ArrayList<OfficeStockPrice_value> osplist, ArrayList<String> colonne, String datereport) {
 
         try {
-            File pdf = new File(path + generaId(50) + "OfficeStockPrice.xls");
+            File pdf = new File(normalize(path + generaId(50) + "OfficeStockPrice.xls"));
             HSSFWorkbook workbook = new HSSFWorkbook();
             HSSFSheet sheet = workbook.createSheet("OfficeStockPrice");
             //CREAZIONE FONT

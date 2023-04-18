@@ -55,6 +55,7 @@ import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.joda.time.DateTime;
 
 /**
@@ -112,7 +113,7 @@ public class Txt {
             Branch b1 = get_branch(tra.getFiliale());
 //            Users op = Engine.get_user(tra.getUser());
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_uk_scontrino.txt";
-            File txt = new File(pathout + outputfile);
+            File txt = new File(normalize(pathout + outputfile));
             try (FileOutputStream is = new FileOutputStream(txt)) {
                 OutputStreamWriter osw = new OutputStreamWriter(is, "utf-8");
                 BufferedWriter w = new BufferedWriter(osw);
@@ -190,7 +191,7 @@ osw.close();
             }
 
             Font ft_2 = getFont("Courier", "Cp1252", 6.0F, 0);
-            File pdf = new File(txt.getPath() + ".pdf");
+            File pdf = new File(normalize(txt.getPath() + ".pdf"));
             int si = 52 + (livalue.size() * 4);
             Rectangle rect = new RectangleReadOnly(150.0F, getHeigth(si));
             Document document = new Document(rect, 0.0F, 0.0F, 0.0F, 0.0F);
@@ -244,10 +245,8 @@ osw.close();
         
         try {
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_czb_preric_2502.txt";
-            File txt = new File(pathout + outputfile);
-            try (FileOutputStream is = new FileOutputStream(txt)) {
-                OutputStreamWriter osw = new OutputStreamWriter(is, "utf-8");
-                BufferedWriter w = new BufferedWriter(osw);
+            File txt = new File(normalize(pathout + outputfile));
+            try (FileOutputStream is = new FileOutputStream(txt); OutputStreamWriter osw = new OutputStreamWriter(is, "utf-8"); BufferedWriter w = new BufferedWriter(osw)) {
                 w.write(prepareString(length, score));
                 w.newLine();
                 w.write(prepareString(ma.getDe_office().toUpperCase(), length, false, true, nbsp));
@@ -325,8 +324,6 @@ osw.close();
                 w.write(prepareString("X __", length, false, true, "_"));
                 w.newLine();
                 w.write(prepareString("PODPIS / SIGNATURE", length, nbsp));
-                w.close();
-                osw.close();
             }
             String base64 = new String(encodeBase64(readFileToByteArray(txt)));
             //txt.delete();
@@ -351,10 +348,8 @@ osw.close();
     public String prericevuta_CZ_SELL(String pathout, Office ma, Ch_transaction tra, Client cl, ArrayList<Ch_transaction_value> livalue, Branch br) {
         try {
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_czS_preric_2502.txt";
-            File txt = new File(pathout + outputfile);
-            try (FileOutputStream is = new FileOutputStream(txt)) {
-                OutputStreamWriter osw = new OutputStreamWriter(is, "utf-8");
-                BufferedWriter w = new BufferedWriter(osw);
+            File txt = new File(normalize(pathout + outputfile));
+            try (FileOutputStream is = new FileOutputStream(txt); OutputStreamWriter osw = new OutputStreamWriter(is, "utf-8"); BufferedWriter w = new BufferedWriter(osw)) {
                 w.write(prepareString(length, score));
                 w.newLine();
                 w.write(prepareString(ma.getDe_office().toUpperCase(), length, false, true, nbsp));
@@ -431,8 +426,6 @@ osw.close();
                 w.write(prepareString("X __", length, false, true, "_"));
                 w.newLine();
                 w.write(prepareString("PODPIS / SIGNATURE", length, nbsp));
-                w.close();
-                osw.close();
             }
             String base64 = new String(encodeBase64(readFileToByteArray(txt)));
             //txt.delete();
@@ -458,10 +451,8 @@ osw.close();
     public String ricevuta_CZ_SELL(String pathout, Office ma, Ch_transaction tra, Client cl, ArrayList<Ch_transaction_value> livalue, Branch br, boolean storno) {
         try {
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_czS_scon_2502.txt";
-            File txt = new File(pathout + outputfile);
-            try (FileOutputStream is = new FileOutputStream(txt)) {
-                OutputStreamWriter osw = new OutputStreamWriter(is, "utf-8");
-                BufferedWriter w = new BufferedWriter(osw);
+            File txt = new File(normalize(pathout + outputfile));
+            try (FileOutputStream is = new FileOutputStream(txt); OutputStreamWriter osw = new OutputStreamWriter(is, "utf-8"); BufferedWriter w = new BufferedWriter(osw)) {
                 w.write(prepareString(length, score));
                 w.newLine();
                 w.write(prepareString(ma.getDe_office().toUpperCase(), length, false, true, nbsp));
@@ -528,8 +519,6 @@ osw.close();
                 w.write(prepareString("ALL TERMS AND CONDITIONS, RIGHTS OF CLIENT AND PROCESS OF REFUND OF THIS CHANGE TRANSACTION, "
                         + "ARE STATED IN WRITTEN FORM ON SEPARATED LIST, WHICH IS INTEGRAL PART OF THIS RECEIPT OF THIS CHANGE TRANSACTION.", length, false, true, nbsp));
                 
-                w.close();
-                osw.close();
             }
             String base64 = new String(encodeBase64(readFileToByteArray(txt)));
             //txt.delete();
@@ -554,10 +543,9 @@ osw.close();
     public String ricevuta_CZ_BUY(String pathout, Office ma, Ch_transaction tra, Client cl, ArrayList<Ch_transaction_value> livalue, Branch br, boolean storno) {
         try {
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_czb_scon_2502.txt";
-            File txt = new File(pathout + outputfile);
-            try (FileOutputStream is = new FileOutputStream(txt)) {
-                OutputStreamWriter osw = new OutputStreamWriter(is, "utf-8");
-                BufferedWriter w = new BufferedWriter(osw);
+            File txt = new File(normalize(pathout + outputfile));
+            try (FileOutputStream is = new FileOutputStream(txt); OutputStreamWriter osw = new OutputStreamWriter(is, "utf-8"); 
+                    BufferedWriter w = new BufferedWriter(osw)) {
                 w.write(prepareString(length, score));
                 w.newLine();
                 w.write(prepareString(ma.getDe_office().toUpperCase(), length, false, true, nbsp));
@@ -624,8 +612,6 @@ osw.close();
                 w.write(prepareString("ALL TERMS AND CONDITIONS, RIGHTS OF CLIENT AND PROCESS OF REFUND OF THIS CHANGE TRANSACTION, "
                         + "ARE STATED IN WRITTEN FORM ON SEPARATED LIST, WHICH IS INTEGRAL PART OF THIS RECEIPT OF THIS CHANGE TRANSACTION.", length, false, true, nbsp));
                 
-                w.close();
-                osw.close();
             }
             String base64 = new String(encodeBase64(readFileToByteArray(txt)));
             //txt.delete();

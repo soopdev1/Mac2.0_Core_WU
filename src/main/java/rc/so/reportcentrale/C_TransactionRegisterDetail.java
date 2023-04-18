@@ -5,36 +5,23 @@
  */
 package rc.so.reportcentrale;
 
-import com.itextpdf.text.BaseColor;
 import static com.itextpdf.text.BaseColor.LIGHT_GRAY;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
 import static com.itextpdf.text.Element.ALIGN_LEFT;
 import static com.itextpdf.text.Element.ALIGN_RIGHT;
 import com.itextpdf.text.Font;
 import static com.itextpdf.text.Font.BOLD;
 import static com.itextpdf.text.Font.BOLDITALIC;
 import static com.itextpdf.text.Font.NORMAL;
-import com.itextpdf.text.FontFactory;
 import static com.itextpdf.text.FontFactory.getFont;
-import static com.itextpdf.text.FontFactory.getFont;
-import static com.itextpdf.text.FontFactory.getFont;
-import static com.itextpdf.text.FontFactory.getFont;
-import static com.itextpdf.text.FontFactory.getFont;
-import static com.itextpdf.text.FontFactory.getFont;
-import static com.itextpdf.text.FontFactory.getFont;
-import static com.itextpdf.text.FontFactory.getFont;
-import com.itextpdf.text.PageSize;
 import static com.itextpdf.text.PageSize.A4;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Rectangle;
 import static com.itextpdf.text.Rectangle.BOTTOM;
 import static com.itextpdf.text.Rectangle.NO_BORDER;
 import static com.itextpdf.text.Rectangle.TOP;
-import com.itextpdf.text.pdf.BaseFont;
 import static com.itextpdf.text.pdf.BaseFont.HELVETICA;
 import static com.itextpdf.text.pdf.BaseFont.WINANSI;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -42,13 +29,10 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import static com.itextpdf.text.pdf.PdfWriter.getInstance;
 import com.itextpdf.text.pdf.draw.LineSeparator;
-import rc.so.util.Constant;
 import static rc.so.util.Constant.formatdataCell;
 import static rc.so.util.Constant.formatdataCellRate;
 import static rc.so.util.Constant.formatdataCellint;
-import rc.so.util.Engine;
 import static rc.so.util.Engine.insertTR;
-import rc.so.util.Utility;
 import static rc.so.util.Utility.fd;
 import static rc.so.util.Utility.formatMysqltoDisplay;
 import static rc.so.util.Utility.generaId;
@@ -62,13 +46,10 @@ import static java.lang.String.valueOf;
 import static java.lang.Thread.currentThread;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
-import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
-import org.apache.commons.lang3.StringUtils;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import static org.apache.commons.lang3.StringUtils.substring;
-import org.apache.poi.hssf.usermodel.HSSFFont;
 import static org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -78,11 +59,8 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.ss.usermodel.BorderStyle;
 import static org.apache.poi.ss.usermodel.BorderStyle.THIN;
-import org.apache.poi.ss.usermodel.CellType;
 import static org.apache.poi.ss.usermodel.CellType.NUMERIC;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import static org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER;
 import static org.apache.poi.ss.usermodel.HorizontalAlignment.LEFT;
 import static org.apache.poi.ss.usermodel.HorizontalAlignment.RIGHT;
@@ -175,279 +153,6 @@ public class C_TransactionRegisterDetail {
      * @param pagestart
      * @return
      */
-//    public String receipt_2020(String path, C_TransactionRegisterDetail_value cmfb, ArrayList<String> colonne, int progressivostart, int pagestart) {
-//        try {
-//
-//            File pdffile = new File(path + Utility.generaId(50) + "C_TransactionRegisterDetail.pdf");
-//            OutputStream ou = new FileOutputStream(pdffile);
-//            Document document = new Document(PageSize.A4, 20, 20, 20, 20);
-//            PdfWriter wr = PdfWriter.getInstance(document, ou);
-//            document.open();
-//
-//            PdfPTable table = new PdfPTable(2);
-//            table.setWidths(columnWidths0);
-//            table.setWidthPercentage(100);
-//            Phrase phrase1 = new Phrase();
-//            phrase1.add(new Chunk(intestazionePdf, f3_bold));
-//            PdfPCell cell1 = new PdfPCell(phrase1);
-//            cell1.setBorder(Rectangle.NO_BORDER);
-//            Paragraph pa1 = new Paragraph(new Phrase("", f3_bold));
-//            pa1.setAlignment(Element.ALIGN_RIGHT);
-//            PdfPCell cell2 = new PdfPCell(pa1);
-//            cell2.setBorder(Rectangle.NO_BORDER);
-//            cell2.setHorizontalAlignment(Element.ALIGN_RIGHT);
-//
-//            Phrase phrase4 = new Phrase();
-//            phrase4.add(new Chunk("", f3_normal));
-//            PdfPCell cell4 = new PdfPCell(phrase4);
-//            cell4.setBorder(Rectangle.NO_BORDER);
-//            table.addCell(cell1);
-//            table.addCell(cell2);
-//            table.addCell(cell4);
-//            document.add(table);
-//            vuoto.setFont(f3_normal);
-//            document.add(vuoto);
-//
-//            ArrayList<C_TransactionRegisterDetail_value> dati = cmfb.getDati();
-//
-//            int startrow = 1;
-//
-//            if (dati.size() >= startrow) {
-//
-//                PdfPCell cell;
-//                Phrase phraset;
-//                PdfPCell cellt;
-//                PdfPTable table3;
-//
-//                LineSeparator sep = new LineSeparator();
-//                sep.setOffset(-2);
-//                sep.setLineWidth((float) 0.5);
-//
-//                PdfPTable table4 = new PdfPTable(2);
-//                table4.setWidths(columnWidths0);
-//                table4.setWidthPercentage(100);
-//
-//                phraset = new Phrase();
-//                phraset.add(new Chunk("", f3_bold));
-//                cellt = new PdfPCell(phraset);
-//                cellt.setHorizontalAlignment(Element.ALIGN_LEFT);
-//                cellt.setBorder(Rectangle.BOTTOM);
-//                table4.addCell(cellt);
-//
-//                phraset = new Phrase();
-//                phraset.add(new Chunk("", f4_bold));
-//                cellt = new PdfPCell(phraset);
-//                cellt.setHorizontalAlignment(Element.ALIGN_LEFT);
-//                cellt.setBorder(Rectangle.BOTTOM);
-//                table4.addCell(cellt);
-//
-//                document.add(table4);
-//
-//                PdfPTable table2 = new PdfPTable(colonne.size());
-//                table2.setWidths(columnWidths2);
-//                table2.setWidthPercentage(100);
-//
-//                PdfPCell[] list = new PdfPCell[colonne.size()];
-//                //mi scandisco le colonne
-//                for (int c = 0; c < colonne.size(); c++) {
-//                    Phrase phraset1 = new Phrase();
-//                    phraset1.add(new Chunk(colonne.get(c), f4_bold));
-//                    PdfPCell cellt1 = new PdfPCell(phraset1);
-//                    cellt1.setHorizontalAlignment(Element.ALIGN_RIGHT);
-//                    cellt1.setBorder(Rectangle.BOTTOM | Rectangle.TOP);
-//                    cellt1.setFixedHeight(20f);
-//                    cellt1.setBackgroundColor(BaseColor.LIGHT_GRAY);
-//                    //   cellt1.setBorderWidth(0.7f);
-//                    if (c == 4 || c == 5 || c == 6) {
-//                        cellt1.setHorizontalAlignment(Element.ALIGN_LEFT);
-//                    }
-//                    list[c] = cellt1;
-//                }
-//
-//                table3 = new PdfPTable(colonne.size());
-//                table3.setWidths(columnWidths2);
-//                table3.setWidthPercentage(100);
-//
-//                for (int z = 0; z < list.length; z++) {
-//                    PdfPCell temp = (PdfPCell) (list[z]);
-//                    table3.addCell(temp);
-//                }
-//
-//                document.add(table3);
-//
-//                float availableSpace;
-//
-//                table4 = new PdfPTable(14);
-//                table4.setWidths(columnWidths2);
-//                table4.setWidthPercentage(100);
-//
-//                //for (int j = startrow - 1; j < dati.size(); j++) {
-//                for (int j = 0; j < dati.size(); j++) {
-//
-//                    availableSpace = wr.getVerticalPosition(true) - document.bottomMargin();
-//
-//                    C_TransactionRegisterDetail_value actual = (C_TransactionRegisterDetail_value) dati.get(j);
-//
-//                    table4 = new PdfPTable(14);
-//                    table4.setWidths(columnWidths2);
-//                    table4.setWidthPercentage(100);
-//
-//                    phraset = new Phrase();
-//                    phraset.add(new Chunk(String.valueOf(progressivostart + 1), f3_normal));
-//                    cellt = new PdfPCell(phraset);
-//                    cellt.setHorizontalAlignment(Element.ALIGN_RIGHT);
-//                    cellt.setBorder(Rectangle.BOTTOM);
-//                    table4.addCell(cellt);
-//
-//                    phraset = new Phrase();
-//                    phraset.add(new Chunk(actual.getFiliale(), f3_normal));
-//                    cellt = new PdfPCell(phraset);
-//                    cellt.setHorizontalAlignment(Element.ALIGN_RIGHT);
-//                    cellt.setBorder(Rectangle.BOTTOM);
-//                    table4.addCell(cellt);
-//
-//                    phraset = new Phrase();
-//                    phraset.add(new Chunk(actual.getTill(), f3_normal));
-//                    cellt = new PdfPCell(phraset);
-//                    cellt.setHorizontalAlignment(Element.ALIGN_RIGHT);
-//                    cellt.setBorder(Rectangle.BOTTOM);
-//                    table4.addCell(cellt);
-//
-//                    phraset = new Phrase();
-//                    phraset.add(new Chunk(actual.getUser(), f3_normal));
-//                    cellt = new PdfPCell(phraset);
-//                    cellt.setHorizontalAlignment(Element.ALIGN_RIGHT);
-//                    cellt.setBorder(Rectangle.BOTTOM);
-//                    table4.addCell(cellt);
-//
-//                    phraset = new Phrase();
-//                    phraset.add(new Chunk(actual.getDate(), f3_normal));
-//                    cellt = new PdfPCell(phraset);
-//                    cellt.setHorizontalAlignment(Element.ALIGN_LEFT);
-//                    cellt.setBorder(Rectangle.BOTTOM);
-//                    table4.addCell(cellt);
-//
-//                    phraset = new Phrase();
-//                    phraset.add(new Chunk(actual.getCur(), f3_normal));
-//                    cellt = new PdfPCell(phraset);
-//                    cellt.setHorizontalAlignment(Element.ALIGN_LEFT);
-//                    cellt.setBorder(Rectangle.BOTTOM);
-//                    table4.addCell(cellt);
-//
-//                    phraset = new Phrase();
-//                    phraset.add(new Chunk(actual.getKind(), f3_normal));
-//                    cellt = new PdfPCell(phraset);
-//                    cellt.setHorizontalAlignment(Element.ALIGN_LEFT);
-//                    cellt.setBorder(Rectangle.BOTTOM);
-//                    table4.addCell(cellt);
-//
-//                    phraset = new Phrase();
-//                    phraset.add(new Chunk(Utility.formatMysqltoDisplay(actual.getAmountqty()), f3_normal));
-//                    cellt = new PdfPCell(phraset);
-//                    cellt.setHorizontalAlignment(Element.ALIGN_RIGHT);
-//                    cellt.setBorder(Rectangle.BOTTOM);
-//                    table4.addCell(cellt);
-//
-//                    phraset = new Phrase();
-//                    phraset.add(new Chunk(Utility.formatMysqltoDisplay(actual.getRate()), f3_normal));
-//                    cellt = new PdfPCell(phraset);
-//                    cellt.setHorizontalAlignment(Element.ALIGN_RIGHT);
-//                    cellt.setBorder(Rectangle.BOTTOM);
-//                    table4.addCell(cellt);
-//
-//                    phraset = new Phrase();
-//                    phraset.add(new Chunk(Utility.formatMysqltoDisplay(actual.getTotal()), f3_normal));
-//                    cellt = new PdfPCell(phraset);
-//                    cellt.setHorizontalAlignment(Element.ALIGN_RIGHT);
-//                    cellt.setBorder(Rectangle.BOTTOM);
-//                    table4.addCell(cellt);
-//
-//                    phraset = new Phrase();
-//                    phraset.add(new Chunk(Utility.formatMysqltoDisplay(actual.getPerc()), f3_normal));
-//                    cellt = new PdfPCell(phraset);
-//                    cellt.setHorizontalAlignment(Element.ALIGN_RIGHT);
-//                    cellt.setBorder(Rectangle.BOTTOM);
-//                    table4.addCell(cellt);
-//
-//                    phraset = new Phrase();
-//                    phraset.add(new Chunk(Utility.formatMysqltoDisplay(actual.getCommfee()), f3_normal));
-//                    cellt = new PdfPCell(phraset);
-//                    cellt.setHorizontalAlignment(Element.ALIGN_RIGHT);
-//                    cellt.setBorder(Rectangle.BOTTOM);
-//                    table4.addCell(cellt);
-//
-//                    phraset = new Phrase();
-//                    phraset.add(new Chunk(Utility.formatMysqltoDisplay(actual.getRefundoff()), f3_normal));
-//                    cellt = new PdfPCell(phraset);
-//                    cellt.setHorizontalAlignment(Element.ALIGN_RIGHT);
-//                    cellt.setBorder(Rectangle.BOTTOM);
-//                    table4.addCell(cellt);
-//
-//                    phraset = new Phrase();
-//                    phraset.add(new Chunk(Utility.formatMysqltoDisplay(actual.getPayinout()), f3_normal));
-//                    cellt = new PdfPCell(phraset);
-//                    cellt.setHorizontalAlignment(Element.ALIGN_RIGHT);
-//                    cellt.setBorder(Rectangle.BOTTOM);
-//                    table4.addCell(cellt);
-//
-//                    document.add(table4);
-//
-//                    if ((availableSpace < 80) || (j == (dati.size() - 1))) {
-//
-//                        table = new PdfPTable(3);
-//
-//                        table.setWidths(new int[]{24, 24, 2});
-//                        table.getDefaultCell().setFixedHeight(10);
-//                        cell = new PdfPCell();
-//                        cell.setBorder(0);
-//                        cell.setBorderWidthTop(1);
-//                        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-//                        cell.setPhrase(new Phrase("", f3_normal));
-//                        table.addCell(cell);
-//                        String anno = StringUtils.substring(actual.getDate().split(" ")[0], 6);
-//                        cell = new PdfPCell();
-//                        cell.setBorder(0);
-//                        cell.setBorderWidthTop(1);
-//                        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-//                        cell.setPhrase(new Phrase("Page " + anno + " / " + String.format("%d", pagestart + 1), f3_normal));
-//                        table.addCell(cell);
-//
-//                        cell = new PdfPCell();
-//                        cell.setBorder(0);
-//                        cell.setBorderWidthTop(1);
-//                        table.addCell(cell);
-//                        table.setTotalWidth(document.getPageSize().getWidth()
-//                                - document.leftMargin() - document.rightMargin());
-//                        table.writeSelectedRows(0, +1, document.leftMargin(),
-//                                document.bottomMargin(), wr.getDirectContent());
-//
-////                        document.add(table);
-//                        // document.add(table4);
-//                        pagestart++;
-//
-//                        document.newPage();
-//                    }
-//
-//                    progressivostart++;
-//
-//                }
-//
-//            }
-//
-//            //chiusura documento
-//            document.close();
-//            wr.close();
-//            ou.close();
-////            System.out.println("rc.so.reportcentrale.C_TransactionRegisterDetail.receipt_2020() "+pdffile.getPath());
-//            String base64 = new String(Base64.encodeBase64(FileUtils.readFileToByteArray(pdffile)));
-//            pdffile.delete();
-//            return base64;
-//        } catch (DocumentException | IOException ex) {
-//            Engine.insertTR("E", "System", Thread.currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
-//        }
-//        return null;
-//    }
-//
 //    public String receipt(String path, C_TransactionRegisterDetail_value cmfb, ArrayList<String> colonne, int progressivostart, int pagestart) {
 //
 //        try {
@@ -721,7 +426,6 @@ public class C_TransactionRegisterDetail {
 //        return null;
 //
 //    }
-
     /**
      *
      * @param path
@@ -735,7 +439,7 @@ public class C_TransactionRegisterDetail {
 
         try {
 
-            File pdf = new File(path + generaId(50) + "C_TransactionRegisterDetail.xlsx");
+            File pdf = new File(normalize(path + generaId(50) + "C_TransactionRegisterDetail.xlsx"));
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = workbook.createSheet("C_TransactionRegisterDetail");
             //CREAZIONE FONT
@@ -944,7 +648,7 @@ public class C_TransactionRegisterDetail {
             sheet.autoSizeColumn(18);
             sheet.autoSizeColumn(19);
 
-            try (FileOutputStream out = new FileOutputStream(pdf)) {
+            try ( FileOutputStream out = new FileOutputStream(pdf)) {
                 workbook.write(out);
             }
             String base64 = new String(encodeBase64(readFileToByteArray(pdf)));
@@ -959,14 +663,13 @@ public class C_TransactionRegisterDetail {
 
     public String receipt_2022(String path, C_TransactionRegisterDetail_value cmfb, ArrayList<String> colonne, int progressivostart, int pagestart) {
         try {
-            File pdffile = new File(path + generaId() + "C_TransactionRegisterDetail.pdf");
+            File pdffile = new File(normalize(path + generaId() + "C_TransactionRegisterDetail.pdf"));
             try (OutputStream ou = new FileOutputStream(pdffile)) {
                 Document document = new Document(A4, 20, 20, 20, 20);
                 PdfWriter wr = getInstance(document, ou);
                 document.open();
                 List<C_TransactionRegisterDetail_value> dati = cmfb.getDati();
 
-                
                 String anno = substring(dati.get(0).getDate().split(" ")[0], 6);
                 PdfPTable table0 = new PdfPTable(2);
                 table0.setWidths(columnWidths0);
@@ -980,7 +683,7 @@ public class C_TransactionRegisterDetail {
                 PdfPCell cell2 = new PdfPCell(pa1);
                 cell2.setBorder(NO_BORDER);
                 cell2.setHorizontalAlignment(ALIGN_RIGHT);
-                
+
                 Phrase phrase4 = new Phrase();
                 phrase4.add(new Chunk("", f3_normal));
                 PdfPCell cell4 = new PdfPCell(phrase4);
@@ -991,22 +694,19 @@ public class C_TransactionRegisterDetail {
                 document.add(table0);
                 vuoto.setFont(f3_normal);
                 document.add(vuoto);
-                
-                
-                
-                
+
                 int startrow = 1;
-                
+
                 if (dati.size() >= startrow) {
-                    
+
                     Phrase phraset;
                     PdfPCell cellt;
                     PdfPTable table3;
-                    
+
                     LineSeparator sep = new LineSeparator();
                     sep.setOffset(-2);
                     sep.setLineWidth((float) 0.5);
-                    
+
                     PdfPTable table4 = new PdfPTable(2);
                     table4.setWidths(columnWidths0);
                     table4.setWidthPercentage(100);
@@ -1026,11 +726,11 @@ public class C_TransactionRegisterDetail {
                     table4.addCell(cellt);
 
                     document.add(table4);
-                    
+
                     PdfPTable table2 = new PdfPTable(colonne.size());
                     table2.setWidths(columnWidths2);
                     table2.setWidthPercentage(100);
-                    
+
                     PdfPCell[] list = new PdfPCell[colonne.size()];
                     //mi scandisco le colonne
                     for (int c1 = 0; c1 < colonne.size(); c1++) {
@@ -1051,131 +751,131 @@ public class C_TransactionRegisterDetail {
                     table3 = new PdfPTable(colonne.size());
                     table3.setWidths(columnWidths2);
                     table3.setWidthPercentage(100);
-                    
+
                     for (PdfPCell list1 : list) {
                         PdfPCell temp = (PdfPCell) (list1);
                         table3.addCell(temp);
                     }
-                    
+
                     document.add(table3);
-                    
+
                     float availableSpace;
-                    
+
                     table4 = new PdfPTable(14);
                     table4.setWidths(columnWidths2);
                     table4.setWidthPercentage(100);
-                    
+
                     //for (int j = startrow - 1; j < dati.size(); j++) {
                     for (int j = 0; j < dati.size(); j++) {
-                        
+
                         availableSpace = wr.getVerticalPosition(true) - document.bottomMargin();
-                        
+
                         C_TransactionRegisterDetail_value actual = dati.get(j);
-                        
+
                         table4 = new PdfPTable(14);
                         table4.setWidths(columnWidths2);
                         table4.setWidthPercentage(100);
-                        
+
                         phraset = new Phrase();
                         phraset.add(new Chunk(valueOf(progressivostart + 1), f3_normal));
                         cellt = new PdfPCell(phraset);
                         cellt.setHorizontalAlignment(ALIGN_RIGHT);
                         cellt.setBorder(BOTTOM);
                         table4.addCell(cellt);
-                        
+
                         phraset = new Phrase();
                         phraset.add(new Chunk(actual.getFiliale(), f3_normal));
                         cellt = new PdfPCell(phraset);
                         cellt.setHorizontalAlignment(ALIGN_RIGHT);
                         cellt.setBorder(BOTTOM);
                         table4.addCell(cellt);
-                        
+
                         phraset = new Phrase();
                         phraset.add(new Chunk(actual.getTill(), f3_normal));
                         cellt = new PdfPCell(phraset);
                         cellt.setHorizontalAlignment(ALIGN_RIGHT);
                         cellt.setBorder(BOTTOM);
                         table4.addCell(cellt);
-                        
+
                         phraset = new Phrase();
                         phraset.add(new Chunk(actual.getUser(), f3_normal));
                         cellt = new PdfPCell(phraset);
                         cellt.setHorizontalAlignment(ALIGN_RIGHT);
                         cellt.setBorder(BOTTOM);
                         table4.addCell(cellt);
-                        
+
                         phraset = new Phrase();
                         phraset.add(new Chunk(actual.getDate(), f3_normal));
                         cellt = new PdfPCell(phraset);
                         cellt.setHorizontalAlignment(ALIGN_LEFT);
                         cellt.setBorder(BOTTOM);
                         table4.addCell(cellt);
-                        
+
                         phraset = new Phrase();
                         phraset.add(new Chunk(actual.getCur(), f3_normal));
                         cellt = new PdfPCell(phraset);
                         cellt.setHorizontalAlignment(ALIGN_LEFT);
                         cellt.setBorder(BOTTOM);
                         table4.addCell(cellt);
-                        
+
                         phraset = new Phrase();
                         phraset.add(new Chunk(actual.getKind(), f3_normal));
                         cellt = new PdfPCell(phraset);
                         cellt.setHorizontalAlignment(ALIGN_LEFT);
                         cellt.setBorder(BOTTOM);
                         table4.addCell(cellt);
-                        
+
                         phraset = new Phrase();
                         phraset.add(new Chunk(formatMysqltoDisplay(actual.getAmountqty()), f3_normal));
                         cellt = new PdfPCell(phraset);
                         cellt.setHorizontalAlignment(ALIGN_RIGHT);
                         cellt.setBorder(BOTTOM);
                         table4.addCell(cellt);
-                        
+
                         phraset = new Phrase();
                         phraset.add(new Chunk(formatMysqltoDisplay(actual.getRate()), f3_normal));
                         cellt = new PdfPCell(phraset);
                         cellt.setHorizontalAlignment(ALIGN_RIGHT);
                         cellt.setBorder(BOTTOM);
                         table4.addCell(cellt);
-                        
+
                         phraset = new Phrase();
                         phraset.add(new Chunk(formatMysqltoDisplay(actual.getTotal()), f3_normal));
                         cellt = new PdfPCell(phraset);
                         cellt.setHorizontalAlignment(ALIGN_RIGHT);
                         cellt.setBorder(BOTTOM);
                         table4.addCell(cellt);
-                        
+
                         phraset = new Phrase();
                         phraset.add(new Chunk(formatMysqltoDisplay(actual.getPerc()), f3_normal));
                         cellt = new PdfPCell(phraset);
                         cellt.setHorizontalAlignment(ALIGN_RIGHT);
                         cellt.setBorder(BOTTOM);
                         table4.addCell(cellt);
-                        
+
                         phraset = new Phrase();
                         phraset.add(new Chunk(formatMysqltoDisplay(actual.getCommfee()), f3_normal));
                         cellt = new PdfPCell(phraset);
                         cellt.setHorizontalAlignment(ALIGN_RIGHT);
                         cellt.setBorder(BOTTOM);
                         table4.addCell(cellt);
-                        
+
                         phraset = new Phrase();
                         phraset.add(new Chunk(formatMysqltoDisplay(actual.getRefundoff()), f3_normal));
                         cellt = new PdfPCell(phraset);
                         cellt.setHorizontalAlignment(ALIGN_RIGHT);
                         cellt.setBorder(BOTTOM);
                         table4.addCell(cellt);
-                        
+
                         phraset = new Phrase();
                         phraset.add(new Chunk(formatMysqltoDisplay(actual.getPayinout()), f3_normal));
                         cellt = new PdfPCell(phraset);
                         cellt.setHorizontalAlignment(ALIGN_RIGHT);
                         cellt.setBorder(BOTTOM);
                         table4.addCell(cellt);
-                        
+
                         document.add(table4);
-                        
+
                         if ((availableSpace < 40) || (j == (dati.size() - 1))) {
                             pagestart++;
                             document.newPage();
@@ -1220,5 +920,5 @@ public class C_TransactionRegisterDetail {
         }
         return null;
     }
-    
+
 }

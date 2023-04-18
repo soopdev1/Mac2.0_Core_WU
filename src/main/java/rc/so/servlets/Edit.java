@@ -101,6 +101,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import static org.apache.commons.fileupload.servlet.ServletFileUpload.isMultipartContent;
 import static org.apache.commons.io.FilenameUtils.getExtension;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import static org.apache.commons.lang3.StringUtils.remove;
 import static org.apache.commons.lang3.StringUtils.replace;
 import org.joda.time.DateTime;
@@ -4804,10 +4805,8 @@ public class Edit
                 String extacc = db.getConf("ext.upl.filecompany");
                 FileItemFactory factory = new DiskFileItemFactory();
                 ServletFileUpload upload = new ServletFileUpload(factory);
-                List items = upload.parseRequest(request);
-                Iterator iterator = items.iterator();
-                while (iterator.hasNext()) {
-                    FileItem item = (FileItem) iterator.next();
+                List<FileItem> items = upload.parseRequest(request);
+                for (FileItem item : items) {
                     if (item.isFormField()) {//CAMPI
                         if (item.getFieldName().equals("com_code")) {
                             com_code = item.getString().trim();
@@ -4843,12 +4842,12 @@ public class Edit
                         if (fileName != null) {
                             String fieldName = item.getFieldName().replaceAll("file1_", "").trim();
                             String codtemp = generaId(20);
-                            File pathdir = new File(pathtemp + day);
+                            File pathdir = new File(normalize(pathtemp + day));
                             pathdir.mkdirs();
                             String estensione = getExtension(fileName);
                             if (extacc.toLowerCase().contains(estensione.toLowerCase())) {
                                 String name = codtemp + "_" + day + "." + estensione;
-                                File filetemp = new File(pathdir + separator + name);
+                                File filetemp = new File(normalize(pathdir + separator + name));
                                 try {
                                     item.write(filetemp);
                                     String base64 = getStringBase64(filetemp);

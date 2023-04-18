@@ -819,15 +819,7 @@ public class Query extends HttpServlet {
         ArrayList<Ch_transaction> result = db.query_transaction_ch_new(d1, d2, branch, surname, name, taxcode);
         db.closeDB();
 
-        try (//        Db_Master db1 = new Db_Master();
-                //        String base64 = Pdf.pdf_transactionList(new File(db1.getPath("temp") + pdf), result);
-                //        db1.closeDB();
-                //        if (base64 != null) {
-                //            Db_Master db2 = new Db_Master();
-                //            db2.insert_pdf_temp(pdf, base64);
-                //            db2.closeDB();
-                //        }
-                 PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             String inizio = "{ \"aaData\": [";
             String fine = "] }";
             String valore = "";
@@ -837,7 +829,7 @@ public class Query extends HttpServlet {
             }
             boolean iscentral = isCentral();
             Db_Master db2 = new Db_Master();
-            if (result.size() > 0) {
+            if (!result.isEmpty()) {
                 for (int i = 0; i < result.size(); i++) {
                     Ch_transaction res = result.get(i);
                     boolean attivo;

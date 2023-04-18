@@ -32,6 +32,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import static org.apache.commons.lang3.StringUtils.deleteWhitespace;
 import static org.apache.commons.lang3.StringUtils.replace;
 import org.apache.commons.net.ftp.FTPClient;
@@ -120,9 +121,12 @@ public class Monitor {
 //            String host, int port, String usr, String psw, String dir, String config) {
 //        try {
 //            String directory_str = path + new DateTime().toString(patterndir);
-//            new File(directory_str).mkdirs();
-//            File xml_output = new File(directory_str + File.separator + filiale + ".xml");
+//            File xml_output = new File(normalize(directory_str + File.separator + filiale + ".xml"));
 //            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+//                factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+//            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+//            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+//                factory.setXIncludeAware(false);
 //            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 //            Document doc = docBuilder.newDocument();
 //            Element rootElement = doc.createElement("valute");
@@ -294,7 +298,6 @@ public class Monitor {
         ArrayList<String[]> al = dbm.getValuteForMonitor(filiale);
         dbm.closeDB();
 
-        
         if (al.size() > 0) {
 
             if (filiale.equals("---")) {
@@ -306,7 +309,7 @@ public class Monitor {
                         if (fil.equals(al.get(j)[9])) {
                             alinside.add(al.get(j));
                         }
-                       
+
                     }
                     if (alinside.size() > 0) {
                         boolean es = printFile(path, fil, alinside, config, ftpClient);
@@ -328,9 +331,12 @@ public class Monitor {
     private static boolean printFile(String path, String filiale, ArrayList<String[]> al, String config, FTPClient ftpClient) {
         try {
             String directory_str = path + new DateTime().toString(patterndir);
-            new File(directory_str).mkdirs();
-            File xml_output = new File(directory_str + separator + filiale + ".xml");
+            File xml_output = new File(normalize(directory_str + separator + filiale + ".xml"));
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            docFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            docFactory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            docFactory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            docFactory.setXIncludeAware(false);
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             Document doc = docBuilder.newDocument();
             Element rootElement = doc.createElement("valute");
@@ -359,7 +365,7 @@ public class Monitor {
                     Element nome = doc.createElement("nome");
                     nome.appendChild(doc.createTextNode(al.get(i)[1]));
                     valuta.appendChild(nome);
-                    
+
                     Element buy = doc.createElement("buy");     // VALUTA
                     if (al.get(i)[10].equals("0")) {
                         buy.appendChild(doc.createTextNode(""));
@@ -457,7 +463,7 @@ public class Monitor {
         try {
             String firstRemoteFile = deleteWhitespace(fileup.getName());
             boolean done;
-            try (InputStream inputStream = new FileInputStream(fileup)) {
+            try ( InputStream inputStream = new FileInputStream(fileup)) {
                 done = ftpClient.storeFile(firstRemoteFile, inputStream);
             }
             if (done) {

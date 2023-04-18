@@ -22,6 +22,7 @@ import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.commons.lang3.StringUtils;
 import static org.apache.commons.lang3.StringUtils.leftPad;
 import static org.apache.commons.lang3.StringUtils.leftPad;
@@ -191,7 +192,7 @@ public class Antiriciclaggio {
             sheet.autoSizeColumn(35);
             // Write the output to a file
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_ana.xls";
-            File xlsout = new File(pathtemp + outputfile);
+            File xlsout = new File(normalize(pathtemp + outputfile));
             try (FileOutputStream fileOut = new FileOutputStream(xlsout)) {
                 wb.write(fileOut);
             }
@@ -310,7 +311,7 @@ public class Antiriciclaggio {
             sheet.autoSizeColumn(20);
 // Write the output to a file
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_reg.xls";
-            File xlsout = new File(pathtemp + outputfile);
+            File xlsout = new File(normalize(pathtemp + outputfile));
             try (FileOutputStream fileOut = new FileOutputStream(xlsout)) {
                 wb.write(fileOut);
             }

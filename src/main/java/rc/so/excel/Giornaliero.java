@@ -20,6 +20,7 @@ import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import static org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -71,10 +72,7 @@ public class Giornaliero {
             ArrayList<Riga> elencovaloririgafoglio7
     ) {
         try {
-//            InputStream is = new FileInputStream(new File("C:\\Users\\rcosco\\Documents\\Mac2.0\\maccorp_template.xlsx"));
-
             InputStream is = new ByteArrayInputStream(decodeBase64(getConf("path.giorn")));
-
             XSSFWorkbook wb = new XSSFWorkbook(is);
             // Sheet sheet = wb.createSheet("RC");
             Sheet sheet = wb.getSheetAt(0);
@@ -761,7 +759,7 @@ public class Giornaliero {
 //            }
 // Write the output to a file
             try {
-                File out = new File(pathout + generaId(75) + ".xlsx");
+                File out = new File(normalize(pathout + generaId(75) + ".xlsx"));
                 try (FileOutputStream fileOut = new FileOutputStream(out)) {
                     wb.write(fileOut);
                 }

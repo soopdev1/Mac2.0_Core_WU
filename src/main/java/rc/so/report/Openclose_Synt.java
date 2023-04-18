@@ -55,6 +55,7 @@ import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import static org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL;
@@ -141,7 +142,7 @@ public class Openclose_Synt {
     public String receipt(String path, Openclose_Synt_value osp, ArrayList<String> colonne, String datereport) {
         try {
             Document document = new Document(A4, 20, 20, 20, 20);
-            File pdf = new File(path + generaId(50) + "OpenCloseSintetica.pdf");
+            File pdf = new File(normalize(path + generaId(50) + "OpenCloseSintetica.pdf"));
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
             document.open();
@@ -443,7 +444,7 @@ public class Openclose_Synt {
             sheet.autoSizeColumn(4);
             sheet.autoSizeColumn(5);
             sheet.autoSizeColumn(6);
-            File f = new File(path + generaId(50) + "OpenCloseSintetica.xls");
+            File f = new File(normalize(path + generaId(50) + "OpenCloseSintetica.xls"));
             try (FileOutputStream out = new FileOutputStream(f)) {
                 workbook.write(out);
             }

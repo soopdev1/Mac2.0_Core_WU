@@ -61,6 +61,7 @@ import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import static org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL;
@@ -272,7 +273,7 @@ public class RegisterBuyMonthly {
 
 //        String outputfile = "RegistroMensileUICAcquisti.pdf";
         try {
-            File pdf = new File(path + generaId(50) + "RegistroMensileUICAcquisti.pdf");
+            File pdf = new File(normalize(path + generaId(50) + "RegistroMensileUICAcquisti.pdf"));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -756,7 +757,7 @@ public class RegisterBuyMonthly {
 
 //        String outputfile = "RegistroMensileUICAcquisti.pdf";
         try {
-            File pdf = new File(path + generaId(50) + "RegistroMensileUICAcquisti.xls");
+            File pdf = new File(normalize(path + generaId(50) + "RegistroMensileUICAcquisti.xls"));
             HSSFWorkbook workbook = new HSSFWorkbook();
             HSSFSheet sheet = workbook.createSheet("RegisterBuyMonthly");
             //CREAZIONE FONT

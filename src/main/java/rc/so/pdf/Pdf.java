@@ -146,6 +146,7 @@ import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import static org.apache.commons.lang3.StringUtils.replace;
 import static org.apache.commons.lang3.StringUtils.substring;
 import org.joda.time.DateTime;
@@ -279,7 +280,7 @@ public class Pdf {
         }
         try {
             Document document = new Document(A4, 20.0F, 20.0F, 20.0F, 20.0F);
-            File pdf = new File(pathtemp + outputfile);
+            File pdf = new File(normalize(pathtemp + outputfile));
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
             wr.open();
@@ -543,7 +544,7 @@ public class Pdf {
         db.closeDB();
         try {
             Document document = new Document(A4, 20.0F, 20.0F, 20.0F, 20.0F);
-            File pdf = new File(pathtemp + outputfile);
+            File pdf = new File(normalize(pathtemp + outputfile));
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
             wr.open();
@@ -734,7 +735,7 @@ public class Pdf {
                 f6_normal = getFont(HELVETICA, WINANSI, 5.5f, NORMAL);
                 f6_bold = getFont(HELVETICA, WINANSI, 5.5f, BOLD);
 
-                File pdf = new File(pathtemp + generaId(50) + "TillTransactionList.pdf");
+                File pdf = new File(normalize(pathtemp + generaId(50) + "TillTransactionList.pdf"));
                 Document document = new Document(A4.rotate(), 20, 20, 20, 20);
                 OutputStream ou = new FileOutputStream(pdf);
                 PdfWriter wr = getInstance(document, ou);
@@ -2150,7 +2151,7 @@ public class Pdf {
             try {
                 Document document = new Document(A4.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -2234,7 +2235,7 @@ public class Pdf {
             try {
                 Document document = new Document(A4.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -2315,7 +2316,7 @@ public class Pdf {
             try {
                 Document document = new Document(A4.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -2378,7 +2379,7 @@ public class Pdf {
                 ArrayList<String[]> array_type_till = list_type_till();
                 Document document = new Document(A4.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -2429,7 +2430,7 @@ public class Pdf {
 
                 Document document = new Document(A4.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -2481,7 +2482,7 @@ public class Pdf {
                 ArrayList<String[]> array_kind = list_all_kind(filiale);
                 Document document = new Document(A4.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -2534,7 +2535,7 @@ public class Pdf {
 
                 Document document = new Document(A4.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -2586,7 +2587,7 @@ public class Pdf {
                 ArrayList<String[]> array_kind = list_all_kind(filiale);
                 Document document = new Document(A4.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -2639,7 +2640,7 @@ public class Pdf {
                 ArrayList<String[]> array_kind = list_all_kind(filiale);
                 Document document = new Document(A4.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -2689,7 +2690,7 @@ public class Pdf {
                 ArrayList<String[]> array_kind = list_all_kind(filiale);
                 Document document = new Document(A4.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -2739,7 +2740,7 @@ public class Pdf {
                 ArrayList<String[]> array_category_nations = category_nations();
                 Document document = new Document(A4.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -2790,7 +2791,7 @@ public class Pdf {
                 ArrayList<String[]> array_category_nations = category_nations();
                 Document document = new Document(A4.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -2839,7 +2840,7 @@ public class Pdf {
 
                 Document document = new Document(A4.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -2888,7 +2889,7 @@ public class Pdf {
 
                 Document document = new Document(A4.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -2937,7 +2938,7 @@ public class Pdf {
 
                 Document document = new Document(A4.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -3002,7 +3003,7 @@ public class Pdf {
 
                 Document document = new Document(A3.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -3099,7 +3100,7 @@ public class Pdf {
 
                 Document document = new Document(A4.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -3175,7 +3176,7 @@ public class Pdf {
 
                 Document document = new Document(A4.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -3228,7 +3229,7 @@ public class Pdf {
                 ArrayList<String[]> country = country();
                 Document document = new Document(A3.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -3365,7 +3366,7 @@ public class Pdf {
                 ArrayList<String[]> list_category_nations = category_nations();
                 Document document = new Document(A4.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -3448,7 +3449,7 @@ public class Pdf {
                 ArrayList<String[]> typegroup = selectgroupbranch();
                 Document document = new Document(A4.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -3503,7 +3504,7 @@ public class Pdf {
                 ArrayList<String[]> typegroup = selectgroupbranch();
                 Document document = new Document(A4.rotate(), 20.0F, 20.0F, 20.0F, 20.0F);
                 document.addTitle("Mac 2.0");
-                document.addAuthor("Seta s.r.l.");
+                document.addAuthor("SmartOOP s.r.l.");
                 OutputStream ou = new FileOutputStream(outputfile);
                 PdfWriter wr = getInstance(document, ou);
                 wr.open();
@@ -3552,7 +3553,7 @@ public class Pdf {
      */
     public String print_autocert(String pathout, Client cl, String dt_tr, Ch_transaction ch, CustomerKind ck) {
         String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_autocert.pdf";
-        File pdf = new File(pathout + outputfile);
+        File pdf = new File(normalize(pathout + outputfile));
         String cognome = cl.getCognome().toUpperCase();
         String nome = cl.getNome().toUpperCase();
 
@@ -3803,7 +3804,7 @@ public class Pdf {
     }
 //    public String print_autocert(String pathout, Client cl, String dt_tr, Ch_transaction ch, CustomerKind ck) {
 //        String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_autocert.pdf";
-//        File pdf = new File(pathout + outputfile);
+//        File pdf = new File(normalize(pathout + outputfile));
 //        String cognome = cl.getCognome().toUpperCase();
 //        String nome = cl.getNome().toUpperCase();
 //
@@ -4068,7 +4069,7 @@ public class Pdf {
             File pdfOut;
             try (InputStream is = new FileInputStream(pdfingresso)) {
                 PdfReader reader = new PdfReader(is);
-                pdfOut = new File(pathout + new DateTime().toString("ddMMyyyyHHmmSSS") + "1.down.pdf");
+                pdfOut = new File(normalize(pathout + new DateTime().toString("ddMMyyyyHHmmSSS") + "1.down.pdf"));
                 OutputStream os = new FileOutputStream(pdfOut);
                 PdfStamper stamper = new PdfStamper(reader, os);
                 AcroFields af = stamper.getAcroFields();
@@ -4133,7 +4134,7 @@ public class Pdf {
             PdfReader reader = new PdfReader(decodeBase64(getConf("path.profcl")));
 
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_clientmod.pdf";
-            File pdf = new File(pathout + outputfile);
+            File pdf = new File(normalize(pathout + outputfile));
             OutputStream os = new FileOutputStream(pdf);
             PdfStamper stamper = new PdfStamper(reader, os);
             AcroFields af = stamper.getAcroFields();
@@ -4349,10 +4350,10 @@ public class Pdf {
             Font fontn1 = getFont("conf/FreeSans.ttf", IDENTITY_H, 11.0F, BOLD, BLACK);
 
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_cccz.pdf";
-            File pdf = new File(pathout + outputfile);
+            File pdf = new File(normalize(pathout + outputfile));
             Document document = new Document(A4, 30.0F, 30.0F, 30.0F, 30.0F);
             document.addTitle("Mac 2.0");
-            document.addAuthor("Seta s.r.l.");
+            document.addAuthor("SmartOOP s.r.l.");
 
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -4606,10 +4607,10 @@ public class Pdf {
             Font fontn2_blue = getFont("Helvetica", "Cp1252", 7.0F, BOLD, new BaseColor(0, 76, 153));
 
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_ccita.pdf";
-            File pdf = new File(pathout + outputfile);
+            File pdf = new File(normalize(pathout + outputfile));
             Document document = new Document(A4, 20.0F, 20.0F, 20.0F, 20.0F);
             document.addTitle("Mac 2.0");
-            document.addAuthor("Seta s.r.l.");
+            document.addAuthor("SmartOOP s.r.l.");
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
             wr.open();
@@ -4921,7 +4922,7 @@ public class Pdf {
 
         try {
             PdfReader reader = new PdfReader(pdfingresso);
-            File pdfOut = new File(pathout + new DateTime().toString("ddMMyyyyHHmmSSS") + ".down.pdf");
+            File pdfOut = new File(normalize(pathout + new DateTime().toString("ddMMyyyyHHmmSSS") + ".down.pdf"));
             OutputStream os = new FileOutputStream(pdfOut);
             PdfStamper stamper = new PdfStamper(reader, os);
             AcroFields af = stamper.getAcroFields();
@@ -4986,7 +4987,7 @@ public class Pdf {
             String datetrans, String debranch, String daterefund) {
         try {
             PdfReader reader = new PdfReader(pdfingresso);
-            File pdfOut = new File(pathout + new DateTime().toString("ddMMyyyyHHmmSSS") + "2.down.pdf");
+            File pdfOut = new File(normalize(pathout + new DateTime().toString("ddMMyyyyHHmmSSS") + "2.down.pdf"));
             OutputStream os = new FileOutputStream(pdfOut);
             PdfStamper stamper = new PdfStamper(reader, os);
             AcroFields af = stamper.getAcroFields();
@@ -5059,14 +5060,12 @@ public class Pdf {
 
             if (total) {
                 pdfingresso = decodeBase64(getConf("path.refund.cz.tot"));
-//                pdfingresso = FileUtils.readFileToByteArray(new File("C:\\mnt\\CZ_refund_TOTAL.pdf"));
             } else {
-//                pdfingresso = FileUtils.readFileToByteArray(new File("C:\\mnt\\CZ_refund_PARTIAL.pdf"));
                 pdfingresso = decodeBase64(getConf("path.refund.cz.par"));
             }
 
             PdfReader reader = new PdfReader(pdfingresso);
-            File pdfOut = new File(pathout + new DateTime().toString("ddMMyyyyHHmmSSS") + "_r.down.pdf");
+            File pdfOut = new File(normalize(pathout + new DateTime().toString("ddMMyyyyHHmmSSS") + "_r.down.pdf"));
             OutputStream os = new FileOutputStream(pdfOut);
             PdfStamper stamper = new PdfStamper(reader, os);
             AcroFields af = stamper.getAcroFields();
@@ -5145,7 +5144,7 @@ public class Pdf {
     public static String scontrino_paymat(String pathout, byte[] pdfingresso, Scontrino_Pa sc) {
         try {
             PdfReader reader = new PdfReader(pdfingresso);
-            File pdfOut = new File(pathout + new DateTime().toString("ddMMyyyyHHmmSSS") + "1.down.pdf");
+            File pdfOut = new File(normalize(pathout + new DateTime().toString("ddMMyyyyHHmmSSS") + "1.down.pdf"));
             OutputStream os = new FileOutputStream(pdfOut);
             PdfStamper stamper = new PdfStamper(reader, os);
             AcroFields af = stamper.getAcroFields();
@@ -5187,7 +5186,7 @@ public class Pdf {
      */
     public static String printdeleted(File pdfing, boolean doubleimage, boolean printtop) {
         try {
-            File pdfout = new File(pdfing.getPath() + "rc.del.pdf");
+            File pdfout = new File(normalize(pdfing.getPath() + "rc.del.pdf"));
             OutputStream os;
             try (InputStream is = new FileInputStream(pdfing)) {
                 com.itextpdf.text.pdf.PdfReader reader = new com.itextpdf.text.pdf.PdfReader(is);
@@ -5234,8 +5233,8 @@ public class Pdf {
     public static String printdeleted(String pathout, byte[] pdfing, boolean doubleimage, boolean printtop) {
         try {
 
-            File pdfout = new File(pathout + new DateTime().toString("ddMMyyyyHHmmSSS") + "1rc.del.pdf");
-            File img1 = new File(pathout + new DateTime().toString("ddMMyyyyHHmmSSS") + "1rc.del.png");
+            File pdfout = new File(normalize(pathout + new DateTime().toString("ddMMyyyyHHmmSSS") + "1rc.del.pdf"));
+            File img1 = new File(normalize(pathout + new DateTime().toString("ddMMyyyyHHmmSSS") + "1rc.del.png"));
 
             writeByteArrayToFile(img1, decodeBase64(getConf("path.del.img")));
 
@@ -5324,7 +5323,7 @@ public class Pdf {
                 Font f5_normal = getFont(HELVETICA, WINANSI, 6f, NORMAL);
                 Font f5_bold = getFont(HELVETICA, WINANSI, 6f, BOLD);
 
-                File pdf = new File(pathtemp + generaId(50) + "TillTransactionList.pdf");
+                File pdf = new File(normalize(pathtemp + generaId(50) + "TillTransactionList.pdf"));
                 Document document = new Document(A4, 20, 20, 20, 20);
                 OutputStream ou = new FileOutputStream(pdf);
                 PdfWriter wr = getInstance(document, ou);

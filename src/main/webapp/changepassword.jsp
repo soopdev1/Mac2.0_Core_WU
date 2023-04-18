@@ -2,7 +2,8 @@
 <%@page import="rc.so.util.Engine"%>
 <%@page import="rc.so.util.Etichette"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%
+<%    
+    response.setHeader("Strict-Transport-Security", "max-age=31622400; includeSubDomains");
     String link_value = Engine.verifyUser(request);
     if (link_value != null) {
         Utility.redirect(request, response, link_value);

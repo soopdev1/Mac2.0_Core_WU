@@ -82,6 +82,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.decodeBase64;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.joda.time.DateTime;
 
 /**
@@ -167,9 +168,7 @@ public class NewReceipt_UK {
     public static final float[] columnWidths8 = new float[]{40f, 22f, 28f, 30f, 20f, 30f, 30f, 35f};
 
     private String formatSupportoPAG_uk(String su01) {
-        
-        
-        
+
         switch (su01) {
             case "01":
             case "-":
@@ -198,8 +197,7 @@ public class NewReceipt_UK {
 
         try {
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_UK_" + tra.getTipotr() + ".pdf";
-
-            File pdf = new File(pathout + outputfile);
+            File pdf = new File(normalize(pathout + outputfile));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -259,22 +257,21 @@ public class NewReceipt_UK {
             cell1 = new PdfPCell();
             cell1.setBorder(0);
             cell1.setPadding(0);
-            
+
             Figures myfig1;
-            if(tra.getTipotr().equals("B")){
+            if (tra.getTipotr().equals("B")) {
                 myfig1 = get_figures(fig, "01");
-            }else{
+            } else {
                 myfig1 = get_figures(fig, tra.getLocalfigures());
             }
-            
+
             cell1.addElement(new Phrase(
                     "USER: " + tra.getUser()
                     + "    " + myfig1.getDe_supporto().toUpperCase()
                     + "     " + formatType(tra.getTipotr()).toUpperCase(),
                     f4_bold));
             table.addCell(cell1);
-            
-            
+
             table.addCell(cellempty);
             table.addCell(cellempty);
             table.addCell(cellempty);

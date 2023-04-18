@@ -32,6 +32,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 import static org.apache.commons.codec.digest.DigestUtils.md5Hex;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -60,8 +61,8 @@ public class Paymat_new {
      */
     public ArrayList<Brand> infoBrandRicariche(String path, Paymat_conf pc, String value_requestId) {
         ArrayList<Brand> list = new ArrayList<>();
-        File xmlreq = new File(path + "Request_ibr_" + value_requestId + generaId(25) + ".xml");
-        File xmlresp = new File(path + "Response_ibr_" + value_requestId + generaId(25) + ".xml");
+        File xmlreq = new File(normalize(path + "Request_ibr_" + value_requestId + generaId(25) + ".xml"));
+        File xmlresp = new File(normalize(path + "Response_ibr_" + value_requestId + generaId(25) + ".xml"));
         try {
             SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
             SOAPConnection soapConnection = soapConnectionFactory.createConnection();
@@ -97,6 +98,10 @@ public class Paymat_new {
             soapResponse.writeTo(out);
             out.close();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            factory.setXIncludeAware(false);
             DocumentBuilder builder1 = factory.newDocumentBuilder();
             Document doc = builder1.parse(xmlresp);
             NodeList infoBrandRicaricheResponse = doc.getElementsByTagName("infoBrandRicaricheResponse");
@@ -170,8 +175,8 @@ public class Paymat_new {
      */
     public ArrayList<Taglio> infoTagliRicariche(String path, Paymat_conf pc, String value_requestId, String value_idBrand, String namebrand) {
         ArrayList<Taglio> list = new ArrayList<>();
-        File xmlreq = new File(path + "Request_itr_" + value_requestId + "_" + value_idBrand + ".xml");
-        File xmlresp = new File(path + "Response_itr_" + value_requestId + "_" + value_idBrand + ".xml");
+        File xmlreq = new File(normalize(path + "Request_itr_" + value_requestId + "_" + value_idBrand + ".xml"));
+        File xmlresp = new File(normalize(path + "Response_itr_" + value_requestId + "_" + value_idBrand + ".xml"));
         try {
             SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
             SOAPConnection soapConnection = soapConnectionFactory.createConnection();
@@ -211,6 +216,10 @@ public class Paymat_new {
             soapResponse.writeTo(out);
             out.close();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            factory.setXIncludeAware(false);
             DocumentBuilder builder1 = factory.newDocumentBuilder();
             Document doc = builder1.parse(xmlresp);
             NodeList infoBrandRicaricheResponse = doc.getElementsByTagName("infoTagliRicaricheResponse");
@@ -265,8 +274,7 @@ public class Paymat_new {
                 }
             }
             soapConnection.close();
-        } catch (IOException | UnsupportedOperationException | ParserConfigurationException | SOAPException | DOMException | SAXException ex) {
-            ex.printStackTrace();
+        } catch (Exception ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
             list = new ArrayList<>();
             Taglio ta = new Taglio();
@@ -293,8 +301,8 @@ public class Paymat_new {
      */
     public VerificaRicarica reserveRicaricaTelefonica(String path, Paymat_conf pc, String value_requestId, String value_idBrand,
             String value_idTerminale, String value_numeroTelefonico, String value_taglio, String value_importo) {
-        File xmlreq = new File(path + "Request_rrt_" + value_requestId + ".xml");
-        File xmlresp = new File(path + "Response_rrt_" + value_requestId + ".xml");
+        File xmlreq = new File(normalize(path + "Request_rrt_" + value_requestId + ".xml"));
+        File xmlresp = new File(normalize(path + "Response_rrt_" + value_requestId + ".xml"));
         try {
             SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
             SOAPConnection soapConnection = soapConnectionFactory.createConnection();
@@ -345,6 +353,10 @@ public class Paymat_new {
             out.close();
             soapConnection.close();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            factory.setXIncludeAware(false);
             DocumentBuilder builder1 = factory.newDocumentBuilder();
             Document doc = builder1.parse(xmlresp);
             NodeList reserveRicaricaTelefonicaResponse = doc.getElementsByTagName("reserveRicaricaTelefonicaResponse");
@@ -394,8 +406,8 @@ public class Paymat_new {
     public Ticket confirmRicaricaTelefonica(String path, Paymat_conf pc, String value_requestId, String value_idBrand, String value_reserveRequestId,
             String value_idTerminale, String value_numeroTelefonico, String value_taglio, String value_importo) {
 
-        File xmlreq = new File(path + "Request_crt_" + value_requestId + ".xml");
-        File xmlresp = new File(path + "Response_crt_" + value_requestId + ".xml");
+        File xmlreq = new File(normalize(path + "Request_crt_" + value_requestId + ".xml"));
+        File xmlresp = new File(normalize(path + "Response_crt_" + value_requestId + ".xml"));
 
         try {
             SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
@@ -452,6 +464,10 @@ public class Paymat_new {
             soapConnection.close();
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            factory.setXIncludeAware(false);
             DocumentBuilder builder1 = factory.newDocumentBuilder();
             Document doc = builder1.parse(xmlresp);
             NodeList confirmRicaricaTelefonicaResponse = doc.getElementsByTagName("confirmRicaricaTelefonicaResponse");
@@ -562,6 +578,10 @@ public class Paymat_new {
             soapConnection.close();
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            factory.setXIncludeAware(false);
             DocumentBuilder builder1 = factory.newDocumentBuilder();
             Document doc = builder1.parse(xmlresp);
             NodeList cancelRicaricaTelefonicaResponse = doc.getElementsByTagName("cancelRicaricaTelefonicaResponse");

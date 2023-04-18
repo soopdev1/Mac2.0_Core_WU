@@ -36,6 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import static org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL;
 import static org.apache.poi.ss.usermodel.BorderStyle.THICK;
 import static org.apache.poi.ss.usermodel.BorderStyle.THIN;
@@ -802,7 +803,7 @@ public class DailyChangeExcel {
         }
 
         try {
-            File out = new File(pathout + generaId(75) + ".xlsx");
+            File out = new File(normalize(pathout + generaId(75) + ".xlsx"));
             try (FileOutputStream fileOut = new FileOutputStream(out)) {
                 wb.write(fileOut);
             }
@@ -821,12 +822,12 @@ public class DailyChangeExcel {
      *
      * @param pathout
      * @param output
+     * @param array_unlockrate
      * @return
      */
     public static String create_cdc(String pathout, ArrayList<DailyChange_CG> output, ArrayList<String[]> array_unlockrate) {
 
         try {
-//            InputStream is = new FileInputStream(new File("C:\\Maccorp\\modificareport2022.xlsx"));
             InputStream is = new ByteArrayInputStream(decodeBase64(getConf("path.rep1cdc")));
             XSSFWorkbook wb = new XSSFWorkbook(is);
             XSSFCellStyle cellStylenum = (XSSFCellStyle) wb.createCellStyle();
@@ -1007,7 +1008,7 @@ public class DailyChangeExcel {
             }
 
             try {
-                File out = new File(pathout + generaId(75) + ".xlsx");
+                File out = new File(normalize(pathout + generaId(75) + ".xlsx"));
                 try (FileOutputStream fileOut = new FileOutputStream(out)) {
                     wb.write(fileOut);
                 }
@@ -1044,9 +1045,6 @@ public class DailyChangeExcel {
     public static String create(String pathout, ArrayList<DailyChange> output) {
 
         try {
-
-            //InputStream is = new FileInputStream(new File("C:\\Maccorp\\Report1 CDC T.xlsx"));
-//            InputStream is = new ByteArrayInputStream(Base64.decodeBase64(Engine.getConf("path.rep1")));
             InputStream is = new ByteArrayInputStream(decodeBase64(getConf("path.rep1_2021")));
             XSSFWorkbook wb = new XSSFWorkbook(is);
             // Sheet sheet = wb.createSheet("RC");
@@ -1544,7 +1542,7 @@ public class DailyChangeExcel {
             }
 
             try {
-                File out = new File(pathout + generaId(75) + ".xlsx");
+                File out = new File(normalize(pathout + generaId(75) + ".xlsx"));
                 try (FileOutputStream fileOut = new FileOutputStream(out)) {
                     wb.write(fileOut);
                 }

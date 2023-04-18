@@ -98,6 +98,7 @@ import static java.lang.String.valueOf;
 import static java.lang.Thread.currentThread;
 import java.util.ArrayList;
 import java.util.Iterator;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.commons.lang3.StringUtils;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 import static org.apache.commons.lang3.StringUtils.replace;
@@ -649,8 +650,8 @@ public class Client_es {
             }
 
             removeDuplicatesAL(cod_cliente);
-            if (cod_cliente.size() > 0) {
-                File f = new File(path + filiale.getCod() + "_" + replace(data, "/", "") + "_P5_eSol.txt");
+            if (!cod_cliente.isEmpty()) {
+                File f = new File(normalize(path + filiale.getCod() + "_" + replace(data, "/", "") + "_P5_eSol.txt"));
                 try (PrintWriter writer = new PrintWriter(f)) {
                     for (int i = 0; i < cod_cliente.size(); i++) {
                         String cc = cod_cliente.get(i);
@@ -690,7 +691,7 @@ public class Client_es {
         try {
 
 //            String conto_RVE = Utility.formatAL("RVE", contabilita_codici, 2);
-            File f = new File(path + filiale.getCod() + "_" + replace(data, "/", "") + "_P4_eSol.txt");
+            File f = new File(normalize(path + filiale.getCod() + "_" + replace(data, "/", "") + "_P4_eSol.txt"));
             int n_reg;
             try (PrintWriter writer = new PrintWriter(f)) {
                 n_reg = 1;
@@ -895,7 +896,7 @@ public class Client_es {
 
             boolean pr = false;
 
-            File f = new File(path + filiale.getCod() + "_" + replace(data, "/", "") + "_P3_eSol.txt");
+            File f = new File(normalize(path + filiale.getCod() + "_" + replace(data, "/", "") + "_P3_eSol.txt"));
             try (PrintWriter writer = new PrintWriter(f)) {
                 for (int i = 0; i < fatt_note.size(); i++) {
                     String valori[] = fatt_note.get(i);
@@ -983,7 +984,7 @@ public class Client_es {
             CustomerKind ck) {
         try {
 //            String conto_RVE = formatAL("RVE", contabilita_codici, 2);
-            File f = new File(path + filiale.getCod() + "_" + replace(data, "/", "") + "_P2_eSol.txt");
+            File f = new File(normalize(path + filiale.getCod() + "_" + replace(data, "/", "") + "_P2_eSol.txt"));
             int nreg;
             try (PrintWriter writer = new PrintWriter(f)) {
                 nreg = 1;
@@ -1477,7 +1478,7 @@ NC_category nc0 = getNC_category(listcategory, valori[0]);
 
         try {
 //            String conto_RVE = formatAL("RVE", contabilita_codici, 2);
-            File f = new File(path + filiale.getCod() + "_" + replace(data, "/", "") + "_P1_eSol.txt");
+            File f = new File(normalize(path + filiale.getCod() + "_" + replace(data, "/", "") + "_P1_eSol.txt"));
             int nreg;
             try (PrintWriter writer = new PrintWriter(f)) {
                 nreg = 1;

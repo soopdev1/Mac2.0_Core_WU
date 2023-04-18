@@ -124,6 +124,7 @@ import java.util.Enumeration;
 import java.util.List;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.codec.binary.Base64.decodeBase64;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import static org.joda.time.format.DateTimeFormat.forPattern;
 import org.joda.time.format.DateTimeFormatter;
 import static rc.so.util.Constant.patternyear;
@@ -4326,7 +4327,7 @@ public class ReportCentrale extends HttpServlet {
         String base64;
         String ext;
         if (result.size() > 0) {
-            base64 = excel_transactionnc_list(new File(path + cod), result);
+            base64 = excel_transactionnc_list(new File(normalize(path + cod)), result);
             ext = ".xlsx";
         } else {
             base64 = new Receipt().print_pdf_noresult(path + cod);
@@ -4427,7 +4428,7 @@ public class ReportCentrale extends HttpServlet {
         String base64;
         String ext;
         if (result.size() > 0) {
-            base64 = excel_transaction_listEVO(new File(path + cod), result,list_consensi_attivi);
+            base64 = excel_transaction_listEVO(new File(normalize(path + cod)), result,list_consensi_attivi);
             ext = ".xlsx";
         } else {
             base64 = new Receipt().print_pdf_noresult(path + cod);
@@ -4562,7 +4563,7 @@ public class ReportCentrale extends HttpServlet {
         String cod = generaId(75);
         String base64 = null;
         if (result.size() > 0) {
-            base64 = excel_reportpending(new File(path + cod), result);
+            base64 = excel_reportpending(new File(normalize(path + cod)), result);
         }
 
         if (base64 != null) {

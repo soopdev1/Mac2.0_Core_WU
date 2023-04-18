@@ -51,6 +51,7 @@ import static java.lang.Thread.currentThread;
 import java.util.ArrayList;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import static org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL;
@@ -674,7 +675,7 @@ public class TillTransactionListCurrency {
 
         //String outputfile = "TillTransactionListCurrency.pdf";
         try {
-            File pdf = new File(path + generaId(50) + "TillTransactionlistCurrency.xls");
+            File pdf = new File(normalize(path + generaId(50) + "TillTransactionlistCurrency.xls"));
             HSSFWorkbook workbook = new HSSFWorkbook();
             HSSFSheet sheet = workbook.createSheet("TillTransactionlistCurrency");
             //CREAZIONE FONT
@@ -1626,7 +1627,7 @@ public class TillTransactionListCurrency {
 
         //String outputfile = "TillTransactionListCurrency.pdf";
         try {
-            File pdf = new File(path + generaId(50) + "TillTransactionListCurrency.pdf");
+            File pdf = new File(normalize(path + generaId(50) + "TillTransactionListCurrency.pdf"));
             Document document = new Document(A4.rotate(), 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -2999,7 +3000,7 @@ public class TillTransactionListCurrency {
     public String receiptpdf_CACZ(String path, TillTransactionListCurrency_value siq, TillTransactionListCurrency_value ba, String datereport1, String datereport2) {
         try {
 
-            File pdf = new File(path + generaId(50) + "receiptexcel_CACZ.pdf");
+            File pdf = new File(normalize(path + generaId(50) + "receiptexcel_CACZ.pdf"));
             Document document = new Document(A4.rotate(), 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -3857,7 +3858,7 @@ public class TillTransactionListCurrency {
     public String receiptexcel_CACZ(String path, TillTransactionListCurrency_value siq, TillTransactionListCurrency_value ba, String datereport1, String datereport2) {
 
         try {
-            File pdf = new File(path + generaId(50) + "_receiptexcel_CACZ.xls");
+            File pdf = new File(normalize(path + generaId(50) + "_receiptexcel_CACZ.xls"));
             HSSFWorkbook workbook = new HSSFWorkbook();
             HSSFSheet sheet = workbook.createSheet("TillTransactionlistCurrency");
 

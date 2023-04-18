@@ -16,6 +16,11 @@
  * limitations under the License.
  * ========================================================== */
 
+function htmlEncode(str){
+    return String(str).replace(/[^\w. ]/gi, function(c){
+        return '&#'+c.charCodeAt(0)+';';
+    });
+}
 
 !function ($) {
 
@@ -40,7 +45,7 @@
 			this.$element = $(element)
 				.delegate('[data-dismiss="modal"]', 'click.dismiss.modal', $.proxy(this.hide, this));
 
-			this.options.remote && this.$element.find('.modal-body').load(this.options.remote, function () {
+			this.options.remote && this.$element.find('.modal-body').load(htmlEncode(this.options.remote), function () {
 				var e = $.Event('loaded');
 				that.$element.trigger(e);
 			});

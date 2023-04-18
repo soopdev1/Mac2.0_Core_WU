@@ -83,6 +83,7 @@ import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import static org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -235,9 +236,7 @@ public class Daily {
             vuoto.setLeading(8f);
             DateFormat dateFormat = new SimpleDateFormat("ddddMMyyyy");
             Date date = new Date();
-            new File(path).mkdirs();
-            File pdf = new File(path + "Daily" + "_" + dateFormat.format(date) + ".pdf");
-            //File pdf = new File(path + Utility.generaId(50) + "Daily.pdf");
+            File pdf = new File(normalize(path + "Daily" + "_" + dateFormat.format(date) + ".pdf"));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -2789,8 +2788,7 @@ public class Daily {
 
             DateFormat dateFormat = new SimpleDateFormat("ddddMMyyyy");
             Date date = new Date();
-            File pdf = new File(path + "Daily" + "_" + dateFormat.format(date) + ".xlsx");
-            //File pdf = new File(path + Utility.generaId(50) + "Daily.xls");
+            File pdf = new File(normalize(path + "Daily" + "_" + dateFormat.format(date) + ".xlsx"));
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = null;
 

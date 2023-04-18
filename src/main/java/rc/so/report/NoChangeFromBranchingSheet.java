@@ -60,6 +60,7 @@ import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 
 /**
  *
@@ -151,7 +152,7 @@ public class NoChangeFromBranchingSheet {
         }
 
         try {
-              File pdf = new File(path + generaId(50) + "NoChangeFromBranchingSheet.pdf");
+              File pdf = new File(normalize(path + generaId(50) + "NoChangeFromBranchingSheet.pdf"));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);

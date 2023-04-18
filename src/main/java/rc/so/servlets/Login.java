@@ -5,7 +5,6 @@ import rc.so.entity.Openclose;
 import rc.so.entity.Till;
 import rc.so.entity.Users;
 import static rc.so.util.Constant.patternsql;
-import rc.so.util.Engine;
 import static rc.so.util.Engine.getLastLink;
 import static rc.so.util.Engine.get_username;
 import static rc.so.util.Engine.insertLogin;
@@ -13,10 +12,8 @@ import static rc.so.util.Engine.insertTR;
 import static rc.so.util.Engine.list_all_users;
 import static rc.so.util.Engine.list_till_status;
 import static rc.so.util.HtmlEncoder.htmlMailResetPass;
-import rc.so.util.Utility;
 import static rc.so.util.Utility.checkLetters;
 import static rc.so.util.Utility.checkNumber;
-import static rc.so.util.Utility.convMd5;
 import static rc.so.util.Utility.generaId;
 import static rc.so.util.Utility.redirect;
 import static rc.so.util.Utility.sendMailHtml;
@@ -31,10 +28,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.codec.digest.DigestUtils;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
-import org.apache.commons.lang3.StringUtils;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 import static org.apache.commons.lang3.StringUtils.replace;
 import org.joda.time.DateTime;
@@ -192,7 +188,8 @@ public class Login extends HttpServlet {
                                     boolean es = dbm.setPasswordUser(usr, newp, "1", true);
                                     dbm.closeDB();
                                     if (es) {
-                                        se.setAttribute("us_pwd", convMd5(newp));
+                                        se.setAttribute("us_pwd", DigestUtils
+      .md5Hex(newp));
                                         redirect(request, response, "login.jsp?esito=OKR");
                                     }
                                 }
@@ -235,7 +232,8 @@ public class Login extends HttpServlet {
                                     boolean es = dbm.setPasswordUser(usr, newp, "1", true);
                                     dbm.closeDB();
                                     if (es) {
-                                        se.setAttribute("us_pwd", convMd5(newp));
+                                        se.setAttribute("us_pwd", DigestUtils
+      .md5Hex(newp));
                                         redirect(request, response, "changepassword.jsp?esito=OKR");
                                     } else {
                                         redirect(request, response, "changepassword.jsp?esito=KO7");
@@ -276,7 +274,7 @@ public class Login extends HttpServlet {
             String us = safeRequest(request, "us");
             ArrayList<Users> uslisList = list_all_users();
             Users u = get_username(us, uslisList);
-            try (PrintWriter out = response.getWriter()) {
+            try ( PrintWriter out = response.getWriter()) {
                 if (u == null) {
                     out.print("Username Not Found");
                 } else {
@@ -286,11 +284,11 @@ public class Login extends HttpServlet {
                         out.print("The email address associated with this user is not valid.<br>Please contact the system administrator.");
                     } else {
 //                String newpass = "9999999a";
-String newpass = randomNumeric(7) + randomAlphabetic(1);
-Db_Master dbm = new Db_Master();
-String filiale = dbm.getCodLocal(true)[0];
-boolean es = dbm.edit_Pswuser(filiale, u.getCod(), newpass, u.getUsername());
-dbm.closeDB();
+                        String newpass = randomNumeric(7) + randomAlphabetic(1);
+                        Db_Master dbm = new Db_Master();
+                        String filiale = dbm.getCodLocal(true)[0];
+                        boolean es = dbm.edit_Pswuser(filiale, u.getCod(), newpass, u.getUsername());
+                        dbm.closeDB();
                         if (es) {
                             String ogg = "Mac2.0 - Reset Password - BranchID " + filiale;
                             String txt = htmlMailResetPass();
@@ -302,7 +300,7 @@ dbm.closeDB();
                             } else {
                                 out.print("Impossibile inviare la mail, il server è temporaneamente non disponibile.<br>"
                                         + "La sua nuova password è la seguente: <b>" + newpass + "</b><br>"
-                                                + "<u>The password must be changed at the first access.</u>");
+                                        + "<u>The password must be changed at the first access.</u>");
                             }
                         } else {
                             out.print("Impossible to change the password. Please contact the system administrator.");
@@ -312,7 +310,7 @@ dbm.closeDB();
             }
 
         } catch (Exception e) {
-            insertTR("E", "SERVICE", "ERROR: "+e.getMessage());
+            insertTR("E", "SERVICE", "ERROR: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -342,6 +340,8 @@ dbm.closeDB();
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) {
         try {
             response.setContentType("text/html;charset=UTF-8");
+            response.setHeader("X-Frame-Options", "SAMEORIGIN");
+            response.setHeader("Content-Security-Policy", " frame-ancestors 'self'");
 ////            request.setCharacterEncoding("UTF-8");
             String type = safeRequest(request, "type");
             switch (type) {

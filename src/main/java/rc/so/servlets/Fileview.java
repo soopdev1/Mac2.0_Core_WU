@@ -181,6 +181,7 @@ import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.commons.lang3.StringUtils;
 import static org.apache.commons.lang3.StringUtils.replace;
 import org.joda.time.DateTime;
@@ -215,10 +216,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         String cod = generaId(75);
         if (value.equals("pdf")) {
-            base64 = pdf_users_list(new File(path + cod), result);
+            base64 = pdf_users_list(new File(normalize(path + cod)), result);
             ext = ".pdf";
         } else if (value.equals("excel")) {
-            base64 = excel_users_list(new File(path + cod), result);
+            base64 = excel_users_list(new File(normalize(path + cod)), result);
             ext = ".xlsx";
         }
 
@@ -260,10 +261,10 @@ public class Fileview extends HttpServlet {
         String cod = generaId(75);
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_figures_list(new File(path + cod), result, filiale);
+                base64 = pdf_figures_list(new File(normalize(path + cod)), result, filiale);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_figures_list(new File(path + cod), result, filiale);
+                base64 = excel_figures_list(new File(normalize(path + cod)), result, filiale);
                 ext = ".xlsx";
             }
         } else {
@@ -305,10 +306,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_currency_list(new File(path + cod), result);
+                base64 = pdf_currency_list(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_currency_list(new File(path + cod), result);
+                base64 = excel_currency_list(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -351,10 +352,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_safetill_list(new File(path + cod), result, filiale);
+                base64 = pdf_safetill_list(new File(normalize(path + cod)), result, filiale);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_safetill_list(new File(path + cod), result, filiale);
+                base64 = excel_safetill_list(new File(normalize(path + cod)), result, filiale);
                 ext = ".xlsx";
             }
         } else {
@@ -395,10 +396,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_bank_list(new File(path + cod), result);
+                base64 = pdf_bank_list(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_bank_list(new File(path + cod), result);
+                base64 = excel_bank_list(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -438,10 +439,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_fixcomm_list(new File(path + cod), result);
+                base64 = pdf_fixcomm_list(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_fixcomm_list(new File(path + cod), result);
+                base64 = excel_fixcomm_list(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -481,10 +482,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_kindfixcomm_list(new File(path + cod), result);
+                base64 = pdf_kindfixcomm_list(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_kindfixcomm_list(new File(path + cod), result);
+                base64 = excel_kindfixcomm_list(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -527,10 +528,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_raterange_list(new File(path + cod), result, filiale);
+                base64 = pdf_raterange_list(new File(normalize(path + cod)), result, filiale);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_raterange_list(new File(path + cod), result, filiale);
+                base64 = excel_raterange_list(new File(normalize(path + cod)), result, filiale);
                 ext = ".xlsx";
             }
         } else {
@@ -571,10 +572,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_lowcomm_list(new File(path + cod), result);
+                base64 = pdf_lowcomm_list(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_lowcomm_list(new File(path + cod), result);
+                base64 = excel_lowcomm_list(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -615,10 +616,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_doctype_list(new File(path + cod), result);
+                base64 = pdf_doctype_list(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_doctype_list(new File(path + cod), result);
+                base64 = excel_doctype_list(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -659,10 +660,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_nations_list(new File(path + cod), result);
+                base64 = pdf_nations_list(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_nations_list(new File(path + cod), result);
+                base64 = excel_nations_list(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -703,10 +704,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_district_list(new File(path + cod), result);
+                base64 = pdf_district_list(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_district_list(new File(path + cod), result);
+                base64 = excel_district_list(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -747,10 +748,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_city_list(new File(path + cod), result);
+                base64 = pdf_city_list(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_city_list(new File(path + cod), result);
+                base64 = excel_city_list(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -791,10 +792,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_intbook_list(new File(path + cod), result);
+                base64 = pdf_intbook_list(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_intbook_list(new File(path + cod), result);
+                base64 = excel_intbook_list(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -835,10 +836,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_agency_list(new File(path + cod), result);
+                base64 = pdf_agency_list(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_agency_list(new File(path + cod), result);
+                base64 = excel_agency_list(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -879,10 +880,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_blackm_list(new File(path + cod), result);
+                base64 = pdf_blackm_list(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_blackm_list(new File(path + cod), result);
+                base64 = excel_blackm_list(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -923,10 +924,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_vatcode_list(new File(path + cod), result);
+                base64 = pdf_vatcode_list(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_vatcode_list(new File(path + cod), result);
+                base64 = excel_vatcode_list(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -968,10 +969,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_company_list(new File(path + cod), result, resultagent);
+                base64 = pdf_company_list(new File(normalize(path + cod)), result, resultagent);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_company_list(new File(path + cod), result, resultagent);
+                base64 = excel_company_list(new File(normalize(path + cod)), result, resultagent);
                 ext = ".xlsx";
             }
         } else {
@@ -1025,7 +1026,7 @@ public class Fileview extends HttpServlet {
                 base64 = pdf_transactionList(path, result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_transaction_list(new File(path + cod), result);
+                base64 = excel_transaction_list(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -1088,10 +1089,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_transactionncList(new File(path + cod), result);
+                base64 = pdf_transactionncList(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_transactionnc_list(new File(path + cod), result);
+                base64 = excel_transactionnc_list(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -1141,10 +1142,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_kycList(new File(path + cod), result);
+                base64 = pdf_kycList(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_kycList(new File(path + cod), result);
+                base64 = excel_kycList(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -1187,10 +1188,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_nc_category_cat(new File(path + cod), result);
+                base64 = pdf_nc_category_cat(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = Excel.nc_category_cat(new File(path + cod), result);
+                base64 = Excel.nc_category_cat(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -1237,10 +1238,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_nc_viewbranch(new File(path + cod), result);
+                base64 = pdf_nc_viewbranch(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = Excel.nc_viewbranch(new File(path + cod), result);
+                base64 = Excel.nc_viewbranch(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -1281,10 +1282,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_es_paymat(new File(path + cod), result);
+                base64 = pdf_es_paymat(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = es_paymat(new File(path + cod), result);
+                base64 = es_paymat(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -1325,10 +1326,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_nc_category_cas(new File(path + cod), result);
+                base64 = pdf_nc_category_cas(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = Excel.nc_category_cas(new File(path + cod), result);
+                base64 = Excel.nc_category_cas(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -1373,10 +1374,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_it_List(new File(path + cod), result);
+                base64 = pdf_it_List(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_it_list(new File(path + cod), result);
+                base64 = excel_it_list(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -1426,10 +1427,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_et_List(new File(path + cod), result, typeop, nc_cat);
+                base64 = pdf_et_List(new File(normalize(path + cod)), result, typeop, nc_cat);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_et_list(new File(path + cod), result, typeop, nc_cat);
+                base64 = excel_et_list(new File(normalize(path + cod)), result, typeop, nc_cat);
                 ext = ".xlsx";
             }
         } else {
@@ -1482,10 +1483,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_webtrans_List(new File(path + cod), result, br, cu);
+                base64 = pdf_webtrans_List(new File(normalize(path + cod)), result, br, cu);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_webtrans_list(new File(path + cod), result, br, cu);
+                base64 = excel_webtrans_list(new File(normalize(path + cod)), result, br, cu);
                 ext = ".xlsx";
             }
         } else {
@@ -1527,10 +1528,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_nl_view(new File(path + cod), result);
+                base64 = pdf_nl_view(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_nl_view(new File(path + cod), result);
+                base64 = excel_nl_view(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -1578,10 +1579,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_oc_list(new File(path + cod), result, listTill);
+                base64 = pdf_oc_list(new File(normalize(path + cod)), result, listTill);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_oc_list(new File(path + cod), result, listTill);
+                base64 = excel_oc_list(new File(normalize(path + cod)), result, listTill);
                 ext = ".xlsx";
             }
         } else {
@@ -1622,10 +1623,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_branch_list(new File(path + cod), result);
+                base64 = pdf_branch_list(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_branch_list(new File(path + cod), result);
+                base64 = excel_branch_list(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -1666,10 +1667,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_kindtrans_list(new File(path + cod), result);
+                base64 = pdf_kindtrans_list(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_kindtrans_list(new File(path + cod), result);
+                base64 = excel_kindtrans_list(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -1711,10 +1712,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_creditcard_list(new File(path + cod), result, filiale);
+                base64 = pdf_creditcard_list(new File(normalize(path + cod)), result, filiale);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_creditcard_list(new File(path + cod), result, filiale);
+                base64 = excel_creditcard_list(new File(normalize(path + cod)), result, filiale);
                 ext = ".xlsx";
             }
         } else {
@@ -1815,10 +1816,10 @@ public class Fileview extends HttpServlet {
         String ext = "";
         if (result.size() > 0) {
             if (value.equals("pdf")) {
-                base64 = pdf_groupbr_list(new File(path + cod), result);
+                base64 = pdf_groupbr_list(new File(normalize(path + cod)), result);
                 ext = ".pdf";
             } else if (value.equals("excel")) {
-                base64 = excel_groupbr_list(new File(path + cod), result);
+                base64 = excel_groupbr_list(new File(normalize(path + cod)), result);
                 ext = ".xlsx";
             }
         } else {
@@ -1863,7 +1864,7 @@ public class Fileview extends HttpServlet {
         String cod = generaId(75);
         if (liout.size() > 0) {
             ext = ".xlsx";
-            base64 = excel_transaction_allnccat(new File(path + cod + ext), liout);
+            base64 = excel_transaction_allnccat(new File(normalize(path + cod + ext)), liout);
         } else {
             ext = ".pdf";
             base64 = new Receipt().print_pdf_noresult(path + cod + ext);
@@ -1981,7 +1982,7 @@ public class Fileview extends HttpServlet {
 
                     if (nc.getDocrico().startsWith("FILE[")) {
                         String pa1 = replace(nc.getDocrico(), "FILE[", "");
-                        File f = new File(pa1);
+                        File f = new File(normalize(pa1));
                         String headerKey = "Content-Disposition";
                         String headerValue = format("attachment; filename=\"%s\"", new Object[]{new DateTime().toString("ddMMyyyyHHmmssSSS") + ".pdf"});
                         response.setHeader(headerKey, headerValue);

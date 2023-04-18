@@ -69,6 +69,7 @@ import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.commons.lang3.StringUtils;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -200,7 +201,7 @@ public class Openclose_Error {
     public String receipt(String path, ArrayList<Openclose_Error_value> osplist, ArrayList<String> colonne, ArrayList<String> colonnedettaglio,
             ArrayList<String> colonnedettaglioNoChange, ArrayList<String> colonnedettaglioPOS, String data1, String data2, boolean iscentral) {
         try {
-            File pdf = new File(path + generaId(50) + "OpenCloseError.pdf");
+            File pdf = new File(normalize(path + generaId(50) + "OpenCloseError.pdf"));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -970,7 +971,7 @@ public class Openclose_Error {
     public String receiptExcel_NEW(String path, ArrayList<Openclose_Error_value> osplist,
             String data1, String data2, String localcurrency, boolean cashier, List<Openclose_Error_value> completecashier) {
         try {
-            File xlsx = new File(path + generaId(50) + "OpenCloseError_N.xlsx");
+            File xlsx = new File(normalize(path + generaId(50) + "OpenCloseError_N.xlsx"));
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = workbook.createSheet("OpenCloseError");
 
@@ -1608,7 +1609,7 @@ public class Openclose_Error {
             ArrayList<String> colonnedettaglioNoChange, ArrayList<String> colonnedettaglioPOS, String data1, String data2, boolean iscentral) {
         try {
 
-            File pdf = new File(path + generaId(50) + "OpenCloseError.xls");
+            File pdf = new File(normalize(path + generaId(50) + "OpenCloseError.xls"));
             HSSFWorkbook workbook = new HSSFWorkbook();
             HSSFSheet sheet = workbook.createSheet("OpenCloseError");
             //CREAZIONE FONT

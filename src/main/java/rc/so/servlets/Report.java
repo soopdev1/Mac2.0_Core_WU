@@ -3419,9 +3419,9 @@ public class Report extends HttpServlet {
 
         Db_Master dbm = new Db_Master();
 
-        String[] nc_cat1 = request.getParameterValues("nc_cat1");
+        String[] nc_cat1 = safeRequestMultiple(request, "nc_cat1");
         String list_nc_categ = "";
-        if (nc_cat1 == null) {
+        if (nc_cat1[0].equals("")) {
             ArrayList<NC_category> array_nc_caus = dbm.query_nc_category_bonus();
             for (int i = 0; i < array_nc_caus.size(); i++) {
                 list_nc_categ = list_nc_categ + array_nc_caus.get(i).getGruppo_nc() + ";";

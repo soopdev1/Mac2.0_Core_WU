@@ -70,6 +70,7 @@ import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.joda.time.DateTime;
 import static rc.so.util.Utility.safeRequest;
 import static rc.so.util.Utility.safeRequestMultiple;
@@ -1326,7 +1327,7 @@ public class Print extends HttpServlet {
         Ch_transaction_doc chd = db.get_tr_doc(cod);
         db.closeDB();
         if (chd != null) {
-            File txt = new File(pathtemp + generaId(50) + "_" + chd.getNomefile());
+            File txt = new File(normalize(pathtemp + generaId(50) + "_" + chd.getNomefile()));
             writeByteArrayToFile(txt, decodeBase64(chd.getContent()));
             if (txt.canRead()) {
                 boolean es = printFile(txt);
@@ -1353,7 +1354,7 @@ public class Print extends HttpServlet {
         Ch_transaction_doc chd = db.get_tr_doc(cod);
         db.closeDB();
         if (chd != null) {
-            File txt = new File(pathtemp + generaId(50) + "_" + chd.getNomefile());
+            File txt = new File(normalize(pathtemp + generaId(50) + "_" + chd.getNomefile()));
             writeByteArrayToFile(txt, decodeBase64(chd.getContent()));
             if (txt.canRead()) {
                 boolean es = printFile(txt);
@@ -1389,7 +1390,6 @@ public class Print extends HttpServlet {
         db.closeDB();
 
         byte[] pdfingresso = decodeBase64(model);
-//      byte[] pdfingresso = FileUtils.readFileToByteArray(new File("C:\\mnt\\mac\\Heavy Transaction.pdf"));
 
         String base64 = heavyUK(pathout, pdfingresso, tr, val, cl, br);
         if (base64 != null) {
@@ -1435,7 +1435,7 @@ public class Print extends HttpServlet {
             Db_Master db = new Db_Master();
             String pathtemp = db.getPath("temp");
             db.closeDB();
-            File txt = new File(pathtemp + generaId(50) + "_" + laststring);
+            File txt = new File(normalize(pathtemp + generaId(50) + "_" + laststring));
             writeByteArrayToFile(txt, decodeBase64(base64));
             if (txt.canRead()) {
 
@@ -1503,7 +1503,7 @@ public class Print extends HttpServlet {
             Db_Master db = new Db_Master();
             String pathtemp = db.getPath("temp");
             db.closeDB();
-            File txt = new File(pathtemp + generaId(50) + "_" + laststring);
+            File txt = new File(normalize(pathtemp + generaId(50) + "_" + laststring));
             writeByteArrayToFile(txt, decodeBase64(base64));
             if (txt.canRead()) {
                 if (safeRequest(request, "r") == null) {
@@ -1558,7 +1558,7 @@ public class Print extends HttpServlet {
             String pathtemp = db.getPath("temp");
             db.closeDB();
 
-            File txt = new File(pathtemp + generaId(50) + "_" + laststring);
+            File txt = new File(normalize(pathtemp + generaId(50) + "_" + laststring));
             writeByteArrayToFile(txt, decodeBase64(base64));
             if (txt.canRead()) {
 
@@ -1612,7 +1612,7 @@ public class Print extends HttpServlet {
 
         if (base64 != null) {
 
-            File txt = new File(pathtemp + generaId(50) + "_" + laststring);
+            File txt = new File(normalize(pathtemp + generaId(50) + "_" + laststring));
             writeByteArrayToFile(txt, decodeBase64(base64));
             if (txt.canRead()) {
 

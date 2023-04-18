@@ -28,6 +28,7 @@ import static java.lang.Thread.currentThread;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.commons.lang3.StringUtils;
 import static org.apache.commons.lang3.StringUtils.replace;
 
@@ -78,7 +79,6 @@ public class Client_at {
     }
 
     //ATLANTE
-
     /**
      *
      * @param path
@@ -95,9 +95,9 @@ public class Client_at {
             return null;
         }
         try {
-            File f = new File(path + filiale.getCod() + "_" + replace(data, "/", "") + "_P2A_eSol.txt");
+            File f = new File(normalize(path + filiale.getCod() + "_" + replace(data, "/", "") + "_P2A_eSol.txt"));
             AtomicInteger nreg;
-            try (PrintWriter writer = new PrintWriter(f)) {
+            try ( PrintWriter writer = new PrintWriter(f)) {
                 nreg = new AtomicInteger(1);
                 datifattura.forEach(cor1 -> {
                     String d1 = formatStringtoStringDate(cor1.getDatereg(), patternsqldate, patternnormdate_filter);
@@ -128,9 +128,11 @@ public class Client_at {
                             imposta.addAndGet(fd(details_N.getImporto()));
                             total2.addAndGet(fd(details_N.getImporto()));
                         }
-                    }); if (total.get() == 0) {
+                    });
+                    if (total.get() == 0) {
                         total.addAndGet(total2.get());
-                    }   String[] conti = {conto_esover.toString(), conto_cassa.toString()};
+                    }
+                    String[] conti = {conto_esover.toString(), conto_cassa.toString()};
                     if (total.get() < 0) {
                         writer.println(tag_RIG
                                 + separator + scontrino_AG_ATL + separator + anno + separator + d1
@@ -176,7 +178,6 @@ public class Client_at {
     }
 
     /////////
-
     /**
      *
      * @param path
@@ -196,9 +197,9 @@ public class Client_at {
         try {
 
 //            List<String> branchList_BT = branchList_BT();
-            File f = new File(path + filiale.getCod() + "_" + replace(data, "/", "") + "_P4A_eSol.txt");
+            File f = new File(normalize(path + filiale.getCod() + "_" + replace(data, "/", "") + "_P4A_eSol.txt"));
             AtomicInteger integ;
-            try (PrintWriter writer = new PrintWriter(f)) {
+            try ( PrintWriter writer = new PrintWriter(f)) {
                 integ = new AtomicInteger(1);
                 datifattura.forEach(incassiATL -> {
                     incassiATL.getDetails().forEach(detREG -> {
@@ -215,37 +216,41 @@ public class Client_at {
                                     valore[0] = importo.trim();
                                     valore[1] = "";
                                 }
-                            }   String[] conti = {detREG.getContoreg(), ""};
+                            }
+                            String[] conti = {detREG.getContoreg(), ""};
 //                        if (detREG.getContoreg().startsWith("010")) {
 //                            if (!branchList_BT.contains(filiale.getCod())) {
 //                                conti[0] = mastroCLienti;
 //                                conti[1] = detREG.getContoreg();
 //                            }
 //                        }
-writer.println(tag_GEN + separator + "TUR" + separator + anno + separator + d1 + separator + integ.get() + separator
-        + conti[0] + separator + incassiATL.getBranchid() + separator + conti[1] + separator
-        + valore[0] + separator + valore[1] + separator
-        + incassiATL.getBranchid() + separator + detREG.getDesc().toUpperCase());
+                            writer.println(tag_GEN + separator + "TUR" + separator + anno + separator + d1 + separator + integ.get() + separator
+                                    + conti[0] + separator + incassiATL.getBranchid() + separator + conti[1] + separator
+                                    + valore[0] + separator + valore[1] + separator
+                                    + incassiATL.getBranchid() + separator + detREG.getDesc().toUpperCase());
                         } else {
                             String[] conti = {detREG.getContoreg(), ""};
                             if (detREG.getContoreg().startsWith("010")) {
 //                            String contosenzaspazi = StringUtils.deleteWhitespace(detREG.getContoreg());
-boolean is_BT = detREG.getContoreg().startsWith("010 1 1") || detREG.getContoreg().startsWith("010 8 1");
-if (!is_BT) {
+                                boolean is_BT = detREG.getContoreg().startsWith("010 1 1") || detREG.getContoreg().startsWith("010 8 1");
+                                if (!is_BT) {
 //                            if (!branchList_BT.contains(filiale.getCod())) {
-conti[0] = mastroCLienti;
-conti[1] = detREG.getContoreg();
-}
-                            }   if (fd(detREG.getImporto()) < 0) {
+                                    conti[0] = mastroCLienti;
+                                    conti[1] = detREG.getContoreg();
+                                }
+                            }
+                            if (fd(detREG.getImporto()) < 0) {
                                 insertTR("W", "System", f.getName() + " - LINEA " + integ.get() + " INVERTO LE POSIZIONI E METTO IMPORTI POSITIVI");
-                            }   if (detREG.getSegnoreg().equals("D")) {
+                            }
+                            if (detREG.getSegnoreg().equals("D")) {
                                 String importo = replace(detREG.getImporto(), ".", ",");
                                 importo = importo.replace("-", "");
                                 String valore[] = {importo.trim(), ""};
                                 if (fd(detREG.getImporto()) < 0) {
                                     valore[0] = "";
                                     valore[1] = importo.trim();
-                                }   writer.println(tag_GEN + separator + "IAT" + separator + anno + separator
+                                }
+                                writer.println(tag_GEN + separator + "IAT" + separator + anno + separator
                                         + d1 + separator + integ.get() + separator
                                         + conti[0] + separator + incassiATL.getBranchid() + separator + conti[1] + separator
                                         + valore[0] + separator + valore[1] + separator
@@ -257,7 +262,8 @@ conti[1] = detREG.getContoreg();
                                 if (fd(detREG.getImporto()) < 0) {
                                     valore[0] = importo.trim();
                                     valore[1] = "";
-                                }   writer.println(tag_GEN + separator + "IAT" + separator + anno + separator + d1 + separator + integ.get() + separator
+                                }
+                                writer.println(tag_GEN + separator + "IAT" + separator + anno + separator + d1 + separator + integ.get() + separator
                                         + conti[0] + separator + incassiATL.getBranchid() + separator + conti[1] + separator
                                         + valore[0] + separator + valore[1] + separator
                                         + incassiATL.getBranchid() + separator + detREG.getDesc().toUpperCase());
@@ -277,7 +283,6 @@ conti[1] = detREG.getContoreg();
     }
 
     /////////
-
     /**
      *
      * @param path
@@ -298,8 +303,8 @@ conti[1] = detREG.getContoreg();
             boolean is_BT = is_BT1(datifattura, null);
 
 //            List<String> branchList_BT = branchList_BT();
-            File f = new File(path + filiale.getCod() + "_" + replace(data, "/", "") + "_P6_eSol.txt");
-            try (PrintWriter writer = new PrintWriter(f)) {
+            File f = new File(normalize(path + filiale.getCod() + "_" + replace(data, "/", "") + "_P6_eSol.txt"));
+            try ( PrintWriter writer = new PrintWriter(f)) {
                 String tiporiga = "30";
                 datifattura.forEach(df -> {
                     StringBuilder desc = new StringBuilder("");
@@ -315,14 +320,15 @@ conti[1] = detREG.getContoreg();
                             desc.append("Nota di credito Fiscale numero " + df.getNumreg() + " del "
                                     + formatStringtoStringDate(df.getDatereg(), patternsqldate, patternnormdate_filter));
                             starttipodoc.append("NC");
-                        }   Tipodoc tipodoc = new Tipodoc(starttipodoc.toString() + "710");
+                        }
+                        Tipodoc tipodoc = new Tipodoc(starttipodoc.toString() + "710");
                         if (df.getSezionale().equalsIgnoreCase("V02")) {
                             tipodoc.setId(starttipodoc.toString() + "TER");
                         } else {
-                            
+
                             if (df.getBranchid().equals("AMM") || is_BT) {
 //                        if (df.getBranchid().equals("AMM") || branchList_BT.contains(filiale.getCod())) {
-tipodoc.setId(starttipodoc.toString() + "BTR");
+                                tipodoc.setId(starttipodoc.toString() + "BTR");
                             } else {
                                 tipodoc.setId(starttipodoc.toString() + "FTV");
                             }
@@ -334,34 +340,34 @@ tipodoc.setId(starttipodoc.toString() + "BTR");
 //                    } else if (df.getSezionale().equalsIgnoreCase("V02")) {
 //                        tipodoc.setId(starttipodoc.toString() + "TER");
 //                    }
-String TES = tag_TES + separator
-        + tipodoc.getId() + separator
-        + formatStringtoStringDate(df.getDatereg(), patternsqldate, patternnormdate_filter) + separator
-        + df.getNumreg() + separator
-        + contocliente + separator + separator + separator + separator + separator + separator + separator + separator
-        + causaletestata + separator + separator + separator + separator + df.getBranchid() + separator
-        + df.getSezionale();
-writer.println(TES.toUpperCase());
-df.getDetails().forEach(det1 -> {
-    String RIG = tag_RIG + separator
-            + tipodoc.getId() + separator
-            + formatStringtoStringDate(df.getDatereg(), patternsqldate, patternnormdate_filter) + separator
-            + df.getNumreg() + separator + separator
-            + tiporiga + separator
-            + det1.getContoreg() + separator + replace(det1.getImporto(), ".", ",") + separator + det1.getIvareg() + separator + filiale.getCod() + separator + separator + separator + separator + desc.toString() + separator + separator + separator + separator;
-    if (!contocliente.equals(det1.getContoreg())) {
-        writer.println(RIG.toUpperCase());
-    }
+                        String TES = tag_TES + separator
+                                + tipodoc.getId() + separator
+                                + formatStringtoStringDate(df.getDatereg(), patternsqldate, patternnormdate_filter) + separator
+                                + df.getNumreg() + separator
+                                + contocliente + separator + separator + separator + separator + separator + separator + separator + separator
+                                + causaletestata + separator + separator + separator + separator + df.getBranchid() + separator
+                                + df.getSezionale();
+                        writer.println(TES.toUpperCase());
+                        df.getDetails().forEach(det1 -> {
+                            String RIG = tag_RIG + separator
+                                    + tipodoc.getId() + separator
+                                    + formatStringtoStringDate(df.getDatereg(), patternsqldate, patternnormdate_filter) + separator
+                                    + df.getNumreg() + separator + separator
+                                    + tiporiga + separator
+                                    + det1.getContoreg() + separator + replace(det1.getImporto(), ".", ",") + separator + det1.getIvareg() + separator + filiale.getCod() + separator + separator + separator + separator + desc.toString() + separator + separator + separator + separator;
+                            if (!contocliente.equals(det1.getContoreg())) {
+                                writer.println(RIG.toUpperCase());
+                            }
                         });
-df.getDetailsiva().forEach(det1 -> {
-    String iva_value = replace(roundDoubleandFormat(fd(det1.getIva()), 2), ".", ",");
-    String IVA = tag_IVA + separator
-            + tipodoc.getId() + separator
-            + formatStringtoStringDate(df.getDatereg(), patternsqldate, patternnormdate_filter) + separator
-            + df.getNumreg() + separator + separator + separator
-            + det1.getContoiva() + separator + separator + separator + separator + separator + separator + separator + separator
-            + det1.getCodeiva() + separator + replace(det1.getImponibile(), ".", ",") + separator + iva_value + separator;
-    writer.println(IVA.toUpperCase());
+                        df.getDetailsiva().forEach(det1 -> {
+                            String iva_value = replace(roundDoubleandFormat(fd(det1.getIva()), 2), ".", ",");
+                            String IVA = tag_IVA + separator
+                                    + tipodoc.getId() + separator
+                                    + formatStringtoStringDate(df.getDatereg(), patternsqldate, patternnormdate_filter) + separator
+                                    + df.getNumreg() + separator + separator + separator
+                                    + det1.getContoiva() + separator + separator + separator + separator + separator + separator + separator + separator
+                                    + det1.getCodeiva() + separator + replace(det1.getImponibile(), ".", ",") + separator + iva_value + separator;
+                            writer.println(IVA.toUpperCase());
                         });
                     } else {
                         insertTR("E", "System", df.getCod() + " RIGA CLIENTE NON DISPONIBILE");
@@ -378,7 +384,6 @@ df.getDetailsiva().forEach(det1 -> {
     }
 
     /////////
-
     /**
      *
      * @param path
@@ -400,8 +405,8 @@ df.getDetailsiva().forEach(det1 -> {
         }
 
         try {
-            File f = new File(path + filiale.getCod() + "_" + replace(data, "/", "") + "_P7_eSol.txt");
-            try (PrintWriter writer = new PrintWriter(f)) {
+            File f = new File(normalize(path + filiale.getCod() + "_" + replace(data, "/", "") + "_P7_eSol.txt"));
+            try ( PrintWriter writer = new PrintWriter(f)) {
                 daticlienti.forEach(df -> {
                     String s1 = tag_GEN + separator;
                     String s3 = df.getRagsoc1() + separator;
@@ -414,23 +419,23 @@ df.getDetailsiva().forEach(det1 -> {
                     String s10 = df.getZipcode() + separator;
                     String s11 = df.getDistrict() + separator;
 //              String s12 = separator;
-String[] s12_s13 = verificaClientNumber(df.getClientnumber());
-String s12 = s12_s13[0] + separator;
-String s13 = s12_s13[1] + separator;
+                    String[] s12_s13 = verificaClientNumber(df.getClientnumber());
+                    String s12 = s12_s13[0] + separator;
+                    String s13 = s12_s13[1] + separator;
 //                String s14 = df.getFatelet();
-String s14 = "2" + separator;
-String s15 = "0";
-if (!df.getCountry().equalsIgnoreCase("IT")) {
-    s10 = separator; //BLANK
-    s11 = separator; //BLANK
-    s12 = separator; //BLANK
-    s13 = separator; //BLANK
-    s14 = "0" + separator;
-    s15 = "1";
-}
+                    String s14 = "2" + separator;
+                    String s15 = "0";
+                    if (!df.getCountry().equalsIgnoreCase("IT")) {
+                        s10 = separator; //BLANK
+                        s11 = separator; //BLANK
+                        s12 = separator; //BLANK
+                        s13 = separator; //BLANK
+                        s14 = "0" + separator;
+                        s15 = "1";
+                    }
 
-String output = (s1 + s3 + s4 + s5 + s6 + s7 + s8 + s9 + s10 + s11 + s12 + s13 + s14 + s15).toUpperCase();
-writer.println(output);
+                    String output = (s1 + s3 + s4 + s5 + s6 + s7 + s8 + s9 + s10 + s11 + s12 + s13 + s14 + s15).toUpperCase();
+                    writer.println(output);
                 });
             }
             return f;
@@ -440,7 +445,6 @@ writer.println(output);
         return null;
     }
 
-    
 }
 
 class Tipodoc {

@@ -54,6 +54,7 @@ import static java.lang.Thread.currentThread;
 import java.util.ArrayList;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -378,7 +379,7 @@ public class TillTransactionList {
 
         //   String outputfile = "TillTransactionList.pdf";
         try {
-            File pdf = new File(path + generaId(50) + "TillTransactionList.pdf");
+            File pdf = new File(normalize(path + generaId(50) + "TillTransactionList.pdf"));
             Document document = new Document(A4.rotate(), 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -1509,7 +1510,7 @@ public class TillTransactionList {
 
         //   String outputfile = "TillTransactionList.pdf";
         try {
-            File pdf = new File(path + generaId(50) + "TillTransactionList.xls");
+            File pdf = new File(normalize(path + generaId(50) + "TillTransactionList.xls"));
             HSSFWorkbook workbook = new HSSFWorkbook();
             HSSFSheet sheet = workbook.createSheet("TillTransactionList");
             //CREAZIONE FONT
@@ -2346,7 +2347,7 @@ public class TillTransactionList {
     public String receiptexcel_newreport(String path, TillTransactionList_value siq, String datereport1, String datereport2, String intestazionePdf, int bbtl) {
 
         try {
-            File pdf = new File(path + generaId(50) + "ListTransactionPOS.xls");
+            File pdf = new File(normalize(path + generaId(50) + "ListTransactionPOS.xls"));
             HSSFWorkbook workbook = new HSSFWorkbook();
             HSSFSheet sheet = workbook.createSheet("ListTransactionPOS");
             //CREAZIONE FONT

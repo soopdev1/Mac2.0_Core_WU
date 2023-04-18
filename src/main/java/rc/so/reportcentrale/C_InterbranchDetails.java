@@ -66,6 +66,7 @@ import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -1143,7 +1144,7 @@ public class C_InterbranchDetails {
             boolean firstTime;
             boolean lastTime;
 
-            File pdffile = new File(path + generaId(50) + "C_InterbranchDetails.pdf");
+            File pdffile = new File(normalize(path + generaId(50) + "C_InterbranchDetails.pdf"));
             try (OutputStream ou = new FileOutputStream(pdffile)) {
                 Document document = new Document(A4.rotate(), 20, 20, 20, 20);
                 PdfWriter wr = getInstance(document, ou);
@@ -1176,7 +1177,7 @@ public class C_InterbranchDetails {
      */
     public String mainexcel(String path, C_Interbranch_value pdf, ArrayList<String> alcolonne, boolean showdifference) {
         try {
-            File pdffile = new File(path + generaId(50) + "C_InterbranchDetails.xls");
+            File pdffile = new File(normalize(path + generaId(50) + "C_InterbranchDetails.xls"));
             HSSFWorkbook workbook = new HSSFWorkbook();
             HSSFSheet sheet = workbook.createSheet("C_InterbranchDetails");
 

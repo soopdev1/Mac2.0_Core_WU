@@ -67,6 +67,7 @@ import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import static org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL;
@@ -926,7 +927,7 @@ public class C_FreeTax_Branch {
             boolean firstTime;
             boolean lastTime;
 
-            File pdffile = new File(path + generaId(50) + "C_FreeTax_Branch.pdf");
+            File pdffile = new File(normalize(path + generaId(50) + "C_FreeTax_Branch.pdf"));
             OutputStream ou = new FileOutputStream(pdffile);
             Document document = new Document(A4.rotate(), 20, 20, 20, 20);
             PdfWriter wr = getInstance(document, ou);
@@ -1473,7 +1474,7 @@ public class C_FreeTax_Branch {
             String data1, String data2,
             ArrayList<String> alcolonne, ArrayList<String> filiali, ArrayList<Branch> br) {
         try {
-            File pdffile = new File(path + generaId(50) + "C_VatRefund_Branch.xls");
+            File pdffile = new File(normalize(path + generaId(50) + "C_VatRefund_Branch.xls"));
             HSSFWorkbook workbook = new HSSFWorkbook();
             HSSFSheet sheet = workbook.createSheet("C_VatRefund_Branch");
 

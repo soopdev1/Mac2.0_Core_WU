@@ -102,6 +102,7 @@ import static javax.xml.parsers.DocumentBuilderFactory.newInstance;
 import javax.xml.parsers.ParserConfigurationException;
 import static org.apache.commons.codec.binary.Base64.encodeBase64String;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import static org.apache.commons.lang3.StringUtils.replace;
 import static org.apache.commons.lang3.StringUtils.substring;
 import org.apache.http.HttpResponse;
@@ -2597,6 +2598,10 @@ public class Engine {
             }
             if (!XML_DATA.equals("")) {
                 DocumentBuilderFactory factory = newInstance();
+                factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+                factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+                factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+                factory.setXIncludeAware(false);
                 DocumentBuilder builder1 = factory.newDocumentBuilder();
                 Document doc = builder1.parse(new ByteArrayInputStream(XML_DATA.getBytes()));
                 bl.setCodiceTransazione(getNodeValuefromName(doc, "CodiceTransazione", 0));
@@ -6285,7 +6290,7 @@ public class Engine {
                 base64 = firmato.getContent();
                 if (base64.startsWith("FILE[")) {
                     String pa1 = replace(base64, "FILE[", "");
-                    File f = new File(pa1);
+                    File f = new File(normalize(pa1));
                     try {
                         base64 = encodeBase64String(readFileToByteArray(f));
                     } catch (IOException ex) {

@@ -167,7 +167,6 @@ import static rc.so.util.Engine.getNC_category;
 import static rc.so.util.Engine.getNC_causal;
 import static rc.so.util.Engine.get_Branch;
 import static rc.so.util.Engine.get_Value_history_BB;
-import static rc.so.util.Utility.convMd5;
 import static rc.so.util.Utility.correggiValueJS;
 import static rc.so.util.Utility.fDate_get_last_modify_rate;
 import static rc.so.util.Utility.fd;
@@ -226,6 +225,7 @@ import static java.util.Locale.ITALY;
 import java.util.Properties;
 import static java.util.stream.Collectors.toList;
 import javax.servlet.ServletException;
+import org.apache.commons.codec.digest.DigestUtils;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
@@ -282,12 +282,12 @@ public class Db_Master {
     public Db_Master(boolean central) {
         if (central) {
             try {
-                
+
                 String drivername = rb.getString("db.driver");
                 String typedb = rb.getString("db.tipo");
                 String user = "maccorp";
                 String pwd = "M4cc0Rp";
-                
+
                 String host = getHostCentrale();
                 forName(drivername).newInstance();
                 Properties p = new Properties();
@@ -312,7 +312,7 @@ public class Db_Master {
                 this.c = null;
             }
         } else {
-            
+
             String drivername = rb.getString("db.driver");
             String typedb = rb.getString("db.tipo");
 //////////////////DATI CONNESSIONE//////////////////////////////////////
@@ -465,7 +465,7 @@ public class Db_Master {
         ArrayList<String[]> out = new ArrayList<>();
         try {
             String sql = "SELECT n.nazione,n.de_nazione,cf.codice_fiscale,cf.dd_costituzione,cf.dd_soppressione,cf.variazione_codice_fiscale FROM codici_fiscali_esteri cf, nazioni n where cf.denominazione=n.de_nazione GROUP BY cf.codice_fiscale ORDER BY n.de_nazione";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -487,7 +487,7 @@ public class Db_Master {
         try {
             String sql = "SELECT provincia,de_provincia,id_provincia FROM province group by provincia order by de_provincia";
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-            
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String[] o1 = {rs.getString(1), visualizzaStringaMySQL(rs.getString(2)), rs.getString(3)};
@@ -508,7 +508,7 @@ public class Db_Master {
         try {
             String sql = "SELECT provincia,de_provincia,id_provincia FROM province WHERE provincia = ? group by provincia order by de_provincia";
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-            
+
             ps.setString(1, cod);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -722,7 +722,7 @@ public class Db_Master {
         ArrayList<String[]> out = new ArrayList<>();
         try {
             String sql = "SELECT supporto,de_supporto,fg_tipo_incasso,buy_comm_soglia_causale,sell_comm_soglia_causale,commissione_acquisto,commissione_vendita FROM supporti WHERE buy = ? ORDER BY fg_sys_trans";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, "1");
             ResultSet rs = ps.executeQuery();
@@ -775,7 +775,7 @@ public class Db_Master {
         }
         return out;
     }
-    
+
     public ArrayList<String[]> unlockratejustify() {
         ArrayList<String[]> out = new ArrayList<>();
         try {
@@ -800,7 +800,7 @@ public class Db_Master {
         ArrayList<String[]> out = new ArrayList<>();
         try {
             String sql = "SELECT id_kind_commissione_fissa,de_kind_commissione_fissa,ip_kind_commissione_fissa,fg_blocco FROM kind_commissione_fissa WHERE filiale = ? ORDER BY de_kind_commissione_fissa";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, getCodLocal(true)[0]);
             ResultSet rs = ps.executeQuery();
@@ -824,7 +824,7 @@ public class Db_Master {
         try {
             String sql = "SELECT id_kind_commissione_fissa,de_kind_commissione_fissa,ip_kind_commissione_fissa,fg_blocco "
                     + "FROM kind_commissione_fissa WHERE filiale = ? AND fg_blocco = ? ORDER BY de_kind_commissione_fissa";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, getCodLocal(true)[0]);
             ps.setString(2, "0");
@@ -848,7 +848,7 @@ public class Db_Master {
         ArrayList<String[]> out = new ArrayList<>();
         try {
             String sql = "SELECT id_kind_commissione_fissa,de_kind_commissione_fissa,ip_kind_commissione_fissa,fg_blocco FROM kind_commissione_fissa WHERE filiale = ? ORDER BY de_kind_commissione_fissa";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, filiale);
             ResultSet rs = ps.executeQuery();
@@ -870,7 +870,7 @@ public class Db_Master {
         ArrayList<String[]> out = new ArrayList<>();
         try {
             String sql = "SELECT id_kind_commissione_fissa,de_kind_commissione_fissa,ip_kind_commissione_fissa FROM kind_commissione_fissa WHERE filiale = ? ORDER BY de_kind_commissione_fissa";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, getCodLocal(true)[0]);
             ResultSet rs = ps.executeQuery();
@@ -896,7 +896,7 @@ public class Db_Master {
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, filiale);
             ResultSet rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 String[] o1 = {leftPad(rs.getString(1), 3, "0"), visualizzaStringaMySQL(rs.getString(2)), rs.getString(3)};
                 out.add(o1);
@@ -1127,7 +1127,7 @@ public class Db_Master {
         ArrayList<String[]> out = new ArrayList<>();
         try {
             String sql = "SELECT gruppo_nc,de_gruppo_nc,fg_tipo_transazione_nc,ip_prezzo_nc,fg_assicurazione FROM nc_tipologia WHERE annullato = ? AND fg_tipo_transazione_nc = ? ORDER BY gruppo_nc";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, "0");
             ps.setString(2, "2");
@@ -1313,14 +1313,14 @@ public class Db_Master {
     public ArrayList<NC_category> query_nc_category_all(String gruppo_nc) {
         ArrayList<NC_category> out = new ArrayList<>();
         try {
-            
+
             String sql = "SELECT * FROM nc_tipologia WHERE gruppo_nc = '" + gruppo_nc + "' ORDER BY filiale,gruppo_nc";
             if (gruppo_nc == null) {
                 sql = "SELECT * FROM nc_tipologia ORDER BY filiale,gruppo_nc";
             }
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             while (rs.next()) {
                 NC_category nc1 = new NC_category();
                 nc1.setFiliale(rs.getString("filiale"));
@@ -1389,7 +1389,7 @@ public class Db_Master {
                 nc1.setInt_code(rs.getString("int_code"));
                 nc1.setInt_corrisp(rs.getString("int_corrisp"));
                 nc1.setInt_iva(rs.getString("int_iva"));
-                
+
                 out.add(nc1);
             }
         } catch (SQLException ex) {
@@ -1407,21 +1407,21 @@ public class Db_Master {
     public ArrayList<NC_causal> query_nc_causal_filial(String filiale, String status) {
         ArrayList<NC_causal> out = new ArrayList<>();
         try {
-            
+
             String sql = "SELECT * FROM nc_causali WHERE filiale = '" + filiale + "' ";
-            
+
             if (status == null || status.equals("...")) {
-                
+
             } else {
                 sql += " AND annullato = '" + status + "' ";
             }
             sql += "ORDER BY gruppo_nc";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             while (rs.next()) {
                 NC_causal nc1 = new NC_causal();
-                
+
                 nc1.setFiliale(rs.getString("filiale"));
                 nc1.setGruppo_nc(rs.getString("gruppo_nc"));
                 nc1.setCausale_nc(rs.getString("causale_nc"));
@@ -1442,7 +1442,7 @@ public class Db_Master {
                 nc1.setCodice_integr(rs.getString("codice_integr"));
                 nc1.setPaymat(rs.getString("paymat"));
                 nc1.setDocric(rs.getString("docric"));
-                
+
                 out.add(nc1);
             }
         } catch (SQLException ex) {
@@ -1459,17 +1459,17 @@ public class Db_Master {
     public ArrayList<NC_causal> query_nc_causal_all(String gruppo_nc) {
         ArrayList<NC_causal> out = new ArrayList<>();
         try {
-            
+
             String sql = "SELECT * FROM nc_causali WHERE gruppo_nc = '" + gruppo_nc + "' ORDER BY filiale,gruppo_nc";
             if (gruppo_nc == null) {
                 sql = "SELECT * FROM nc_causali ORDER BY filiale,gruppo_nc";
             }
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             while (rs.next()) {
                 NC_causal nc1 = new NC_causal();
-                
+
                 nc1.setFiliale(rs.getString("filiale"));
                 nc1.setGruppo_nc(rs.getString("gruppo_nc"));
                 nc1.setCausale_nc(rs.getString("causale_nc"));
@@ -1490,7 +1490,7 @@ public class Db_Master {
                 nc1.setCodice_integr(rs.getString("codice_integr"));
                 nc1.setPaymat(rs.getString("paymat"));
                 nc1.setDocric(rs.getString("docric"));
-                
+
                 out.add(nc1);
             }
         } catch (SQLException ex) {
@@ -1542,7 +1542,7 @@ public class Db_Master {
                 nc1.setInt_code(rs.getString("int_code"));
                 nc1.setInt_corrisp(rs.getString("int_corrisp"));
                 nc1.setInt_iva(rs.getString("int_iva"));
-                
+
                 out.add(nc1);
             }
         } catch (SQLException ex) {
@@ -1566,7 +1566,7 @@ public class Db_Master {
             ps.setString(2, "1");
             ps.setString(3, "0");
             ps.setString(4, fil);
-            
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 NC_category nc1 = new NC_category();
@@ -1590,7 +1590,7 @@ public class Db_Master {
                 nc1.setInt_code(rs.getString("int_code"));
                 nc1.setInt_corrisp(rs.getString("int_corrisp"));
                 nc1.setInt_iva(rs.getString("int_iva"));
-                
+
                 out.add(nc1);
             }
         } catch (SQLException ex) {
@@ -1644,7 +1644,7 @@ public class Db_Master {
                 nc1.setInt_code(rs.getString("int_code"));
                 nc1.setInt_corrisp(rs.getString("int_corrisp"));
                 nc1.setInt_iva(rs.getString("int_iva"));
-                
+
                 out.add(nc1);
             }
         } catch (SQLException ex) {
@@ -1661,7 +1661,7 @@ public class Db_Master {
     public ArrayList<NC_causal> query_nc_causal(String nc_cat) {
         ArrayList<NC_causal> out = new ArrayList<>();
         try {
-            
+
             PreparedStatement ps;
             String sql;
             if ((nc_cat.equals("")) || (nc_cat.equals("..."))) {
@@ -1674,11 +1674,11 @@ public class Db_Master {
                 ps.setString(1, getCodLocal(true)[0]);
                 ps.setString(2, nc_cat);
             }
-            
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 NC_causal nc1 = new NC_causal();
-                
+
                 nc1.setFiliale(rs.getString("filiale"));
                 nc1.setGruppo_nc(rs.getString("gruppo_nc"));
                 nc1.setCausale_nc(visualizzaStringaMySQL(rs.getString("causale_nc")));
@@ -1719,7 +1719,7 @@ public class Db_Master {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 NC_category nc1 = new NC_category();
-                
+
                 nc1.setFiliale(rs.getString("filiale"));
                 nc1.setGruppo_nc(rs.getString("gruppo_nc"));
                 nc1.setDe_gruppo_nc(visualizzaStringaMySQL(rs.getString("de_gruppo_nc")));
@@ -1740,7 +1740,7 @@ public class Db_Master {
                 nc1.setInt_corrisp(rs.getString("int_corrisp"));
                 nc1.setInt_iva(rs.getString("int_iva"));
                 nc1.setFg_registratore(rs.getString("fg_registratore"));
-                
+
                 return nc1;
             }
         } catch (SQLException ex) {
@@ -2208,34 +2208,34 @@ public class Db_Master {
                 cu.setDescrizione(visualizzaStringaMySQL(rs.getString("de_valuta")));
                 cu.setEnable_sellback(rs.getString("cambio_acquisto"));
                 cu.setChange_sell(rs.getString("cambio_vendita"));
-                
+
                 cu.setUic(rs.getString("codice_uic_divisa"));
                 cu.setMessage(rs.getString("de_messaggio"));
                 cu.setInternal_cur(rs.getString("fg_valuta_corrente"));
                 cu.setId(rs.getString("id"));
                 cu.setFilial(rs.getString("filiale"));
-                
+
                 cu.setBuy_std(rs.getString("buy_std"));
                 cu.setBuy_l1(rs.getString("buy_l1"));
                 cu.setBuy_l2(rs.getString("buy_l2"));
                 cu.setBuy_l3(rs.getString("buy_l3"));
                 cu.setBuy_best(rs.getString("buy_best"));
-                
+
                 cu.setSell_std(rs.getString("sell_std"));
                 cu.setSell_l1(rs.getString("sell_l1"));
                 cu.setSell_l2(rs.getString("sell_l2"));
                 cu.setSell_l3(rs.getString("sell_l3"));
                 cu.setSell_best(rs.getString("sell_best"));
-                
+
                 cu.setEnable_buy(rs.getString("enable_buy"));
                 cu.setEnable_sell(rs.getString("enable_sell"));
-                
+
                 cu.setCambio_bce(rs.getString("cambio_bce"));
                 cu.setBuy_std_type(rs.getString("buy_std_type"));
                 cu.setBuy_std_value(rs.getString("buy_std_value"));
                 cu.setSell_std_type(rs.getString("sell_std_type"));
                 cu.setSell_std_value(rs.getString("sell_std_value"));
-                
+
                 out.add(cu);
             }
         } catch (SQLException ex) {
@@ -2251,7 +2251,7 @@ public class Db_Master {
      */
     public ArrayList<Currency> list_figures(boolean localfirst) {
         ArrayList<Currency> out = new ArrayList<>();
-        
+
         String valuta = "";
         if (localfirst) {
             valuta = get_local_currency()[0];
@@ -2267,40 +2267,40 @@ public class Db_Master {
                 cu.setDescrizione(visualizzaStringaMySQL(rs.getString("de_valuta")));
                 cu.setEnable_sellback(rs.getString("cambio_acquisto"));
                 cu.setChange_sell(rs.getString("cambio_vendita"));
-                
+
                 cu.setUic(rs.getString("codice_uic_divisa"));
                 cu.setMessage(visualizzaStringaMySQL(rs.getString("de_messaggio")));
                 cu.setInternal_cur(rs.getString("fg_valuta_corrente"));
                 cu.setId(rs.getString("id"));
                 cu.setFilial(rs.getString("filiale"));
-                
+
                 cu.setBuy_std(rs.getString("buy_std"));
                 cu.setBuy_l1(rs.getString("buy_l1"));
                 cu.setBuy_l2(rs.getString("buy_l2"));
                 cu.setBuy_l3(rs.getString("buy_l3"));
                 cu.setBuy_best(rs.getString("buy_best"));
-                
+
                 cu.setSell_std(rs.getString("sell_std"));
                 cu.setSell_l1(rs.getString("sell_l1"));
                 cu.setSell_l2(rs.getString("sell_l2"));
                 cu.setSell_l3(rs.getString("sell_l3"));
                 cu.setSell_best(rs.getString("sell_best"));
-                
+
                 cu.setEnable_buy(rs.getString("enable_buy"));
                 cu.setEnable_sell(rs.getString("enable_sell"));
-                
+
                 cu.setCambio_bce(rs.getString("cambio_bce"));
                 cu.setBuy_std_type(rs.getString("buy_std_type"));
                 cu.setBuy_std_value(rs.getString("buy_std_value"));
                 cu.setSell_std_type(rs.getString("sell_std_type"));
                 cu.setSell_std_value(rs.getString("sell_std_value"));
-                
+
                 if (cu.getCode().equals(valuta)) {
                     out.add(0, cu);
                 } else {
                     out.add(cu);
                 }
-                
+
             }
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -2330,28 +2330,28 @@ public class Db_Master {
                 cu.setInternal_cur(rs.getString("fg_valuta_corrente"));
                 cu.setId(rs.getString("id"));
                 cu.setFilial(rs.getString("filiale"));
-                
+
                 cu.setBuy_std(rs.getString("buy_std"));
                 cu.setBuy_l1(rs.getString("buy_l1"));
                 cu.setBuy_l2(rs.getString("buy_l2"));
                 cu.setBuy_l3(rs.getString("buy_l3"));
                 cu.setBuy_best(rs.getString("buy_best"));
-                
+
                 cu.setSell_std(rs.getString("sell_std"));
                 cu.setSell_l1(rs.getString("sell_l1"));
                 cu.setSell_l2(rs.getString("sell_l2"));
                 cu.setSell_l3(rs.getString("sell_l3"));
                 cu.setSell_best(rs.getString("sell_best"));
-                
+
                 cu.setEnable_buy(rs.getString("enable_buy"));
                 cu.setEnable_sell(rs.getString("enable_sell"));
-                
+
                 cu.setCambio_bce(rs.getString("cambio_bce"));
                 cu.setBuy_std_type(rs.getString("buy_std_type"));
                 cu.setBuy_std_value(rs.getString("buy_std_value"));
                 cu.setSell_std_type(rs.getString("sell_std_type"));
                 cu.setSell_std_value(rs.getString("sell_std_value"));
-                
+
                 return cu;
             }
         } catch (SQLException ex) {
@@ -2384,28 +2384,28 @@ public class Db_Master {
                 cu.setInternal_cur(rs.getString("fg_valuta_corrente"));
                 cu.setId(rs.getString("id"));
                 cu.setFilial(rs.getString("filiale"));
-                
+
                 cu.setBuy_std(rs.getString("buy_std"));
                 cu.setBuy_l1(rs.getString("buy_l1"));
                 cu.setBuy_l2(rs.getString("buy_l2"));
                 cu.setBuy_l3(rs.getString("buy_l3"));
                 cu.setBuy_best(rs.getString("buy_best"));
-                
+
                 cu.setSell_std(rs.getString("sell_std"));
                 cu.setSell_l1(rs.getString("sell_l1"));
                 cu.setSell_l2(rs.getString("sell_l2"));
                 cu.setSell_l3(rs.getString("sell_l3"));
                 cu.setSell_best(rs.getString("sell_best"));
-                
+
                 cu.setEnable_buy(rs.getString("enable_buy"));
                 cu.setEnable_sell(rs.getString("enable_sell"));
-                
+
                 cu.setCambio_bce(rs.getString("cambio_bce"));
                 cu.setBuy_std_type(rs.getString("buy_std_type"));
                 cu.setBuy_std_value(rs.getString("buy_std_value"));
                 cu.setSell_std_type(rs.getString("sell_std_type"));
                 cu.setSell_std_value(rs.getString("sell_std_value"));
-                
+
                 return cu;
             }
         } catch (SQLException ex) {
@@ -2646,7 +2646,7 @@ public class Db_Master {
         ArrayList<CustomerKind> out = new ArrayList<>();
         try {
             String sql = "SELECT * FROM tipologiaclienti ORDER BY de_tipologia_clienti DESC";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -2686,7 +2686,7 @@ public class Db_Master {
         ArrayList<CustomerKind> out = new ArrayList<>();
         try {
             String sql = "SELECT * FROM tipologiaclienti WHERE fg_annullato = ? ORDER BY de_tipologia_clienti DESC";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, "0");
             ResultSet rs = ps.executeQuery();
@@ -2727,7 +2727,7 @@ public class Db_Master {
     public CustomerKind get_customerKind(String cod) {
         try {
             String sql = "SELECT * FROM tipologiaclienti WHERE tipologia_clienti = ? ORDER BY de_tipologia_clienti DESC";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, cod);
             ResultSet rs = ps.executeQuery();
@@ -2746,7 +2746,7 @@ public class Db_Master {
                 ck.setFg_annullato(rs.getString("fg_annullato"));
                 ck.setFg_uploadobbl(rs.getString("fg_uploadobbl"));
                 ck.setTaxfree(rs.getString("taxfree"));
-                
+
                 ck.setTipofat(rs.getString("tipofat"));
                 ck.setVatcode(rs.getString("vatcode"));
                 ck.setIp_soglia_bollo(rs.getString("ip_soglia_bollo"));
@@ -2754,7 +2754,7 @@ public class Db_Master {
                 ck.setDescr_bollo(rs.getString("descr_bollo"));
                 ck.setResident(rs.getString("resid"));
                 ck.setTaxfree(rs.getString("taxfree"));
-                
+
                 return ck;
             }
         } catch (SQLException ex) {
@@ -2901,7 +2901,7 @@ public class Db_Master {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Agency ag = new Agency();
-                
+
                 ag.setAgenzia(rs.getString("agenzia"));
                 ag.setDe_agenzia(visualizzaStringaMySQL(rs.getString("de_agenzia")));
                 ag.setIndirizzo(visualizzaStringaMySQL(rs.getString("indirizzo")));
@@ -2911,7 +2911,7 @@ public class Db_Master {
                 ag.setFax(rs.getString("fax"));
                 ag.setEmail(rs.getString("email"));
                 ag.setFg_annullato(rs.getString("fg_annullato"));
-                
+
                 out.add(ag);
             }
         } catch (SQLException ex) {
@@ -2933,7 +2933,7 @@ public class Db_Master {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 Agency ag = new Agency();
-                
+
                 ag.setAgenzia(rs.getString("agenzia"));
                 ag.setDe_agenzia(visualizzaStringaMySQL(rs.getString("de_agenzia")));
                 ag.setIndirizzo(visualizzaStringaMySQL(rs.getString("indirizzo")));
@@ -2943,7 +2943,7 @@ public class Db_Master {
                 ag.setFax(rs.getString("fax"));
                 ag.setEmail(rs.getString("email"));
                 ag.setFg_annullato(rs.getString("fg_annullato"));
-                
+
                 return ag;
             }
         } catch (SQLException ex) {
@@ -3088,7 +3088,7 @@ public class Db_Master {
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, cod);
             ps.setString(2, filiale);
-            
+
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 Figures fi = new Figures();
@@ -3153,7 +3153,7 @@ public class Db_Master {
                 ba.setDt_start(rs.getString("dt_start"));
                 ba.setMax_ass(rs.getString("max_ass"));
                 ba.setTarget(rs.getString("target"));
-                
+
                 ba.setBrgr_01(rs.getString("brgr_01"));
                 ba.setBrgr_02(rs.getString("brgr_02"));
                 ba.setBrgr_03(rs.getString("brgr_03"));
@@ -3165,7 +3165,7 @@ public class Db_Master {
                 ba.setBrgr_09(rs.getString("brgr_09"));
                 ba.setBrgr_10(rs.getString("brgr_10"));
                 ba.setListagruppi();
-                
+
                 out.add(ba);
             }
         } catch (SQLException ex) {
@@ -3180,7 +3180,7 @@ public class Db_Master {
      * @return
      */
     public Branch get_branch(String cod) {
-        
+
         try {
             String sql = "SELECT * FROM branch WHERE cod = ?";
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
@@ -3244,7 +3244,7 @@ public class Db_Master {
     public Office get_national_office() {
         try {
             String sql = "SELECT * FROM office ";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -3291,7 +3291,7 @@ public class Db_Master {
         try {
             String sql = "SELECT filiale,ndg,ragione_sociale,paese_estero_residenza,cab_comune,citta,provincia,cap,codice_fiscale,fg_annullato,indirizzo "
                     + "FROM anagrafica_ru WHERE tipo_anagrafica = ? ORDER BY ragione_sociale";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, "G");
             ResultSet rs = ps.executeQuery();
@@ -3324,7 +3324,7 @@ public class Db_Master {
     public Company get_Company(String cod) {
         try {
             String sql = "SELECT indirizzo,filiale,ndg,ragione_sociale,paese_estero_residenza,cab_comune,citta,provincia,cap,codice_fiscale,fg_annullato FROM anagrafica_ru WHERE tipo_anagrafica = ? AND ndg = ? ORDER BY ragione_sociale";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, "G");
             ps.setString(2, cod);
@@ -3359,7 +3359,7 @@ public class Db_Master {
         ArrayList<Company> out = new ArrayList<>();
         try {
             String sql = "SELECT numero_documento,filiale,ndg,cognome,nome,paese_estero_residenza,cab_comune,citta,provincia,indirizzo,cap,codice_fiscale,dt_nascita,comune_nascita,tipo_documento,dt_rilascio,autorita_rilascio,sesso,dt_scadenza,cod_provincia_nascita,luogo_rilascio_documento,filepath,dt_car,fg_annullato FROM anagrafica_ru WHERE tipo_anagrafica = ? AND ndg_rappresentante = ? AND fg_annullato = ? ORDER BY cognome,nome";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, "F");
             ps.setString(2, co_cod);
@@ -3370,25 +3370,25 @@ public class Db_Master {
                 co.setFiliale(rs.getString("filiale"));
                 co.setNdg(rs.getString("ndg"));
                 co.setNdg_rappresentante(co_cod);
-                
+
                 co.setCognome(visualizzaStringaMySQL(rs.getString("cognome")));
                 co.setNome(visualizzaStringaMySQL(rs.getString("nome")));
                 co.setPaese_estero_residenza(rs.getString("paese_estero_residenza"));
-                
+
                 co.setCab_comune(rs.getString("cab_comune"));
                 co.setCitta(visualizzaStringaMySQL(rs.getString("citta")));
                 co.setProvincia(rs.getString("provincia"));
                 co.setIndirizzo(visualizzaStringaMySQL(rs.getString("indirizzo")));
                 co.setCap(rs.getString("cap"));
                 co.setCodice_fiscale(rs.getString("codice_fiscale"));
-                
+
                 co.setDt_nascita(rs.getString("dt_nascita"));
                 co.setComune_nascita(visualizzaStringaMySQL(rs.getString("comune_nascita")));
                 co.setTipo_documento(rs.getString("tipo_documento"));
                 co.setDt_rilascio(rs.getString("dt_rilascio"));
                 co.setAutorita_rilascio(visualizzaStringaMySQL(rs.getString("autorita_rilascio")));
                 co.setSesso(rs.getString("sesso"));
-                
+
                 co.setNumero_documento(rs.getString("numero_documento"));
                 co.setDt_scadenza(rs.getString("dt_scadenza"));
                 co.setCod_provincia_nascita(rs.getString("cod_provincia_nascita"));
@@ -3414,7 +3414,7 @@ public class Db_Master {
             String sql = "SELECT ndg_rappresentante,numero_documento,filiale,ndg,cognome,nome,paese_estero_residenza,cab_comune,citta,provincia,indirizzo,"
                     + "cap,codice_fiscale,dt_nascita,comune_nascita,tipo_documento,dt_rilascio,autorita_rilascio,sesso,dt_scadenza,cod_provincia_nascita,"
                     + "luogo_rilascio_documento,filepath,dt_car,fg_annullato FROM anagrafica_ru WHERE tipo_anagrafica = ? AND fg_annullato = ? ORDER BY cognome,nome";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, "F");
             ps.setString(2, "0");
@@ -3462,7 +3462,7 @@ public class Db_Master {
     public Company get_Agent(String co_cod) {
         try {
             String sql = "SELECT ndg_rappresentante,numero_documento,filiale,ndg_rappresentante,cognome,nome,paese_estero_residenza,cab_comune,citta,provincia,indirizzo,cap,codice_fiscale,dt_nascita,comune_nascita,tipo_documento,dt_rilascio,autorita_rilascio,sesso,dt_scadenza,cod_provincia_nascita,luogo_rilascio_documento,filepath,dt_car,fg_annullato FROM anagrafica_ru WHERE tipo_anagrafica = ? AND ndg = ? ORDER BY cognome,nome";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, "F");
             ps.setString(2, co_cod);
@@ -3472,25 +3472,25 @@ public class Db_Master {
                 co.setFiliale(rs.getString("filiale"));
                 co.setNdg(co_cod);
                 co.setNdg_rappresentante(rs.getString("ndg_rappresentante"));
-                
+
                 co.setCognome(visualizzaStringaMySQL(rs.getString("cognome")));
                 co.setNome(visualizzaStringaMySQL(rs.getString("nome")));
                 co.setPaese_estero_residenza(rs.getString("paese_estero_residenza"));
-                
+
                 co.setCab_comune(rs.getString("cab_comune"));
                 co.setCitta(rs.getString("citta"));
                 co.setProvincia(rs.getString("provincia"));
                 co.setIndirizzo(visualizzaStringaMySQL(rs.getString("indirizzo")));
                 co.setCap(rs.getString("cap"));
                 co.setCodice_fiscale(rs.getString("codice_fiscale"));
-                
+
                 co.setDt_nascita(rs.getString("dt_nascita"));
                 co.setComune_nascita(rs.getString("comune_nascita"));
                 co.setTipo_documento(rs.getString("tipo_documento"));
                 co.setDt_rilascio(rs.getString("dt_rilascio"));
                 co.setAutorita_rilascio(rs.getString("autorita_rilascio"));
                 co.setSesso(rs.getString("sesso"));
-                
+
                 co.setNumero_documento(rs.getString("numero_documento"));
                 co.setDt_scadenza(rs.getString("dt_scadenza"));
                 co.setCod_provincia_nascita(rs.getString("cod_provincia_nascita"));
@@ -3498,7 +3498,7 @@ public class Db_Master {
                 co.setFilepath(rs.getString("filepath"));
                 co.setDt_car(rs.getString("dt_car"));
                 co.setFg_annullato(rs.getString("fg_annullato"));
-                
+
                 return co;
             }
         } catch (SQLException ex) {
@@ -3631,7 +3631,7 @@ public class Db_Master {
         ArrayList<Currency> out = new ArrayList<>();
         try {
             String sql = "SELECT * FROM valute WHERE filiale = ? ORDER BY valuta";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, filiale);
             ResultSet rs = ps.executeQuery();
@@ -3641,34 +3641,34 @@ public class Db_Master {
                 cu.setDescrizione(visualizzaStringaMySQL(rs.getString("de_valuta")));
                 cu.setEnable_sellback(rs.getString("cambio_acquisto"));
                 cu.setChange_sell(rs.getString("cambio_vendita"));
-                
+
                 cu.setUic(rs.getString("codice_uic_divisa"));
                 cu.setMessage(rs.getString("de_messaggio"));
                 cu.setInternal_cur(rs.getString("fg_valuta_corrente"));
                 cu.setId(rs.getString("id"));
                 cu.setFilial(rs.getString("filiale"));
-                
+
                 cu.setBuy_std(rs.getString("buy_std"));
                 cu.setBuy_l1(rs.getString("buy_l1"));
                 cu.setBuy_l2(rs.getString("buy_l2"));
                 cu.setBuy_l3(rs.getString("buy_l3"));
                 cu.setBuy_best(rs.getString("buy_best"));
-                
+
                 cu.setSell_std(rs.getString("sell_std"));
                 cu.setSell_l1(rs.getString("sell_l1"));
                 cu.setSell_l2(rs.getString("sell_l2"));
                 cu.setSell_l3(rs.getString("sell_l3"));
                 cu.setSell_best(rs.getString("sell_best"));
-                
+
                 cu.setEnable_buy(rs.getString("enable_buy"));
                 cu.setEnable_sell(rs.getString("enable_sell"));
-                
+
                 cu.setCambio_bce(rs.getString("cambio_bce"));
                 cu.setBuy_std_type(rs.getString("buy_std_type"));
                 cu.setBuy_std_value(rs.getString("buy_std_value"));
                 cu.setSell_std_type(rs.getString("sell_std_type"));
                 cu.setSell_std_value(rs.getString("sell_std_value"));
-                
+
                 out.add(cu);
             }
         } catch (SQLException ex) {
@@ -3696,7 +3696,7 @@ public class Db_Master {
                 return out;
             }
             String sql = "SELECT * FROM valute WHERE " + field + " = ? AND filiale = ? ORDER BY valuta";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, "1");
             ps.setString(2, filiale);
@@ -3712,22 +3712,22 @@ public class Db_Master {
                 cu.setInternal_cur(rs.getString("fg_valuta_corrente"));
                 cu.setId(rs.getString("id"));
                 cu.setFilial(rs.getString("filiale"));
-                
+
                 cu.setBuy_std(rs.getString("buy_std"));
                 cu.setBuy_l1(rs.getString("buy_l1"));
                 cu.setBuy_l2(rs.getString("buy_l2"));
                 cu.setBuy_l3(rs.getString("buy_l3"));
                 cu.setBuy_best(rs.getString("buy_best"));
-                
+
                 cu.setSell_std(rs.getString("sell_std"));
                 cu.setSell_l1(rs.getString("sell_l1"));
                 cu.setSell_l2(rs.getString("sell_l2"));
                 cu.setSell_l3(rs.getString("sell_l3"));
                 cu.setSell_best(rs.getString("sell_best"));
-                
+
                 cu.setEnable_buy(rs.getString("enable_buy"));
                 cu.setEnable_sell(rs.getString("enable_sell"));
-                
+
                 cu.setCambio_bce(rs.getString("cambio_bce"));
                 cu.setBuy_std_type(rs.getString("buy_std_type"));
                 cu.setBuy_std_value(rs.getString("buy_std_value"));
@@ -3782,15 +3782,15 @@ public class Db_Master {
                 d_liv2 = fd(cu.getSell_l2());
                 d_liv3 = fd(cu.getSell_l3());
                 d_best = fd(cu.getSell_best());
-                
+
                 String typesell = cu.getSell_std_type();
                 if (typesell.equals("0")) {
                     tot_st = d_rifbce * (100.0D + d_standard) / 100.0D;
-                    
+
                 } else {
                     tot_st = fd(cu.getSell_std_value());
                 }
-                
+
             } else {
                 return new ArrayList<>();
             }
@@ -3798,13 +3798,13 @@ public class Db_Master {
             double tot_liv2 = d_rifbce * (100.0D + d_liv2) / 100.0D;
             double tot_liv3 = d_rifbce * (100.0D + d_liv3) / 100.0D;
             double tot_best = d_rifbce * (100.0D + d_best) / 100.0D;
-            
+
             String[] out1 = {roundDoubleandFormat(tot_st, 8), "Std: " + formatMysqltoDisplay(roundDoubleandFormat(tot_st, 8)), cur, uic};
             String[] out2 = {roundDoubleandFormat(tot_liv1, 8), "Lev1: " + formatMysqltoDisplay(roundDoubleandFormat(tot_liv1, 8)), cur, uic};
             String[] out3 = {roundDoubleandFormat(tot_liv2, 8), "Lev2: " + formatMysqltoDisplay(roundDoubleandFormat(tot_liv2, 8)), cur, uic};
             String[] out4 = {roundDoubleandFormat(tot_liv3, 8), "Lev3: " + formatMysqltoDisplay(roundDoubleandFormat(tot_liv3, 8)), cur, uic};
             String[] out5 = {roundDoubleandFormat(tot_best, 8), "Best: " + formatMysqltoDisplay(roundDoubleandFormat(tot_best, 8)), cur, uic};
-            
+
             out.add(out1);
             out.add(out2);
             out.add(out3);
@@ -3829,7 +3829,7 @@ public class Db_Master {
             ps.setString(2, "0");
             ps.setString(3, "0");
             ResultSet rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 Company co = new Company();
                 co.setNdg(rs.getString("ag.ndg"));
@@ -3879,7 +3879,7 @@ public class Db_Master {
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, "0");
             ps.setString(2, kind);
-            
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String[] o1 = {rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)};
@@ -3901,7 +3901,7 @@ public class Db_Master {
             String sql = "SELECT supporto,minimo,massimo,buy_value,sell_value FROM rate_range WHERE fg_blocco = ? ORDER BY supporto,cast(minimo AS decimal (10,0))";
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, "0");
-            
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String[] o1 = {rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)};
@@ -3923,12 +3923,12 @@ public class Db_Master {
     public String[] get_rate_range(String kind, String min, String filiale) {
         try {
             String sql = "SELECT buy_value,sell_value,fg_blocco,massimo FROM rate_range WHERE supporto = ? AND minimo = ? AND filiale = ? order by supporto,cast(minimo AS decimal (10,0))";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, kind);
             ps.setString(2, min);
             ps.setString(3, filiale);
-            
+
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return new String[]{rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4)};
@@ -3951,7 +3951,7 @@ public class Db_Master {
             ps.setString(1, "0");
             ps.setString(2, getCodLocal(true)[0]);
             ResultSet rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 String[] o1 = {rs.getString(1), rs.getString(2)};
                 out.add(o1);
@@ -4198,20 +4198,20 @@ public class Db_Master {
         ArrayList<Till> out = new ArrayList<>();
         ArrayList<Till> all = list_ALLtill(filiale);
         try {
-            
+
             Statement st = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-            
+
             String sql = "SELECT f.filiale,f.cod,f.data,f.id,f.user,f.fg_tipo,f.till FROM (SELECT till,"
                     + " MAX(data) AS maxd FROM oc_lista WHERE filiale = '" + filiale + "' GROUP BY till) AS x INNER JOIN oc_lista AS f ON f.till = x.till"
                     + " AND f.data = x.maxd AND f.filiale = '" + filiale + "' ";
-            
+
             if (type != null) {
                 sql = sql + " AND f.fg_tipo = '" + type + "'";
             }
             if (user != null && !user.equals("")) {
                 sql = sql + " AND f.user = '" + user + "'";
             }
-            
+
             sql = sql + " ORDER BY f.till";
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
@@ -4237,13 +4237,13 @@ public class Db_Master {
         ArrayList<Till> out = new ArrayList<>();
         ArrayList<Till> all = list_ALLtill();
         try {
-            
+
             Statement st = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-            
+
             String sql = "SELECT f.filiale,f.cod,f.data,f.id,f.user,f.fg_tipo,f.till FROM (SELECT till,"
                     + " MAX(data) AS maxd FROM oc_lista WHERE data<'" + data2 + ":59' GROUP BY till) AS x INNER JOIN oc_lista AS f ON f.till = x.till"
                     + " AND f.data = x.maxd AND f.filiale = '" + filiale + "' ";
-            
+
             sql = sql + " ORDER BY f.till";
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
@@ -4305,19 +4305,19 @@ public class Db_Master {
         String fil = getCodLocal(true)[0];
         ArrayList<Till> all = list_ALLtill(fil);
         try {
-            
+
             Statement st = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             String sql = "SELECT f.filiale,f.cod,f.data,f.id,f.user,f.fg_tipo,f.till FROM (SELECT till,"
                     + " MAX(data) AS maxd FROM oc_lista WHERE filiale = '" + fil + "' GROUP BY till) AS x INNER JOIN oc_lista AS f ON f.till = x.till"
                     + " AND f.data = x.maxd AND f.filiale = '" + fil + "' ";
-            
+
             if (type != null) {
                 sql = sql + " AND f.fg_tipo = '" + type + "'";
             }
             if (user != null && !user.equals("")) {
                 sql = sql + " AND f.user = '" + user + "'";
             }
-            
+
             sql = sql + " ORDER BY f.till";
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
@@ -4353,7 +4353,7 @@ public class Db_Master {
             if (user != null && !user.equals("")) {
                 sql = sql + " AND f.user = '" + user + "'";
             }
-            
+
             sql = sql + " ORDER BY f.till";
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
@@ -4391,7 +4391,7 @@ public class Db_Master {
                 Till t = new Till(rs.getString(1), rs.getString(2), rs.getString(3),
                         format("%015d", new Object[]{rs.getInt(4)}), rs.getString(5), rs.getString(6), rs.getString(7),
                         formatDescTill(all, rs.getString(7)), isSafeTill(all, rs.getString(7)));
-                
+
                 if (!t.isSafe()) {
                     return t;
                 }
@@ -4435,7 +4435,7 @@ public class Db_Master {
             String sql = "SELECT cod_oc,kind,valuta,value_op,num_kind_op,value_cl,num_kind_cl,filiale FROM oc_change where cod_oc = ?";
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, cod_oc);
-            
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String[] o1 = {rs.getString(1).trim(), rs.getString(2).trim(), rs.getString(3).trim(),
@@ -4444,7 +4444,7 @@ public class Db_Master {
                 out.add(o1);
             }
         } catch (SQLException ex) {
-            
+
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return out;
@@ -4462,7 +4462,7 @@ public class Db_Master {
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, cod_oc);
             ps.setString(2, "S");
-            
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String[] o1 = {rs.getString(1).trim(), rs.getString(2).trim(), rs.getString(3).trim(),
@@ -4471,7 +4471,7 @@ public class Db_Master {
                 out.add(o1);
             }
         } catch (SQLException ex) {
-            
+
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return out;
@@ -4493,7 +4493,7 @@ public class Db_Master {
                 String[] o1 = {rs.getString(1).trim(), rs.getString(2).trim(), rs.getString(3).trim(),
                     roundDoubleandFormat(fd(rs.getString(4).trim()), 2), rs.getString(5).trim()};
                 out.add(o1);
-                
+
             }
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -4516,7 +4516,7 @@ public class Db_Master {
                 String[] o1 = {rs.getString(1).trim(), rs.getString(2).trim(), rs.getString(3).trim(),
                     roundDoubleandFormat(fd(rs.getString(4).trim()), 2), rs.getString(5).trim()};
                 out.add(o1);
-                
+
             }
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -4534,7 +4534,7 @@ public class Db_Master {
         try {
             String sql = "SELECT cod_oc,kind,valuta,value_op,num_kind_op FROM real_oc_change where data >= DATE(NOW()) - INTERVAL 75 DAY "
                     + "AND cod_oc in (SELECT cod FROM oc_lista where user = ?) ORDER BY cod_oc desc,valuta,data;";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, user);
             ResultSet rs = ps.executeQuery();
@@ -4562,7 +4562,7 @@ public class Db_Master {
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, cod_oc);
             ResultSet rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 String[] o1 = {rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6)};
                 out.add(o1);
@@ -4587,7 +4587,7 @@ public class Db_Master {
             ps.setString(1, cod_oc);
             ps.setString(2, "S");
             ResultSet rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 String[] o1 = {rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6)};
                 out.add(o1);
@@ -4677,11 +4677,11 @@ public class Db_Master {
             String sql = "SELECT cod,tipo,valuta,kind,gruppo_nc,carta_credito,note,total_diff,rate,data,"
                     + "quantity_user,total_user,quantity_system,total_system"
                     + " FROM oc_errors WHERE cod = ? ORDER BY tipo,valuta,kind,gruppo_nc,carta_credito";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, cod_oc);
             ResultSet rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 String[] o1 = {rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
                     rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10),
@@ -4834,7 +4834,7 @@ public class Db_Master {
     public ArrayList<String[]> list_bank_pos_enabled() {
         ArrayList<String[]> out = new ArrayList<>();
         try {
-            
+
             if (is_IT) {
                 String sql = "SELECT cod,de_bank,conto,bank_account FROM bank WHERE fg_annullato = ? AND (bank_account = ? OR cod in (select distinct(carta_credito) "
                         + "from carte_credito)) ORDER BY de_bank";
@@ -4857,7 +4857,7 @@ public class Db_Master {
                     out.add(o1);
                 }
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -4869,7 +4869,7 @@ public class Db_Master {
      * @return
      */
     public ArrayList<Branch> list_branch_completeAFTER311217() {
-        
+
         ArrayList<Branch> out = new ArrayList<>();
         try {
             String sql = "SELECT * FROM branch WHERE fg_annullato='0' OR (fg_annullato='1' AND STR_TO_DATE(da_annull, '%Y-%m-%d')>'2017-12-31') ORDER BY de_branch";
@@ -4914,7 +4914,7 @@ public class Db_Master {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return out;
-        
+
     }
 
     /**
@@ -4985,21 +4985,21 @@ public class Db_Master {
                 d1 = "";
             }
             d1 = d1.trim() + " 00:00:00";
-            
+
             if (d2 == null || d2.equals("...")) {
                 d2 = "";
             }
             d2 = d2.trim() + " 23:59:59";
-            
+
             d1 = formatStringtoStringDate(d1, patternnormdate, patternsqldate);
             d2 = formatStringtoStringDate(d2, patternnormdate, patternsqldate);
-            
+
             String sql = "SELECT cod,id,filiale,gruppo_nc,causale_nc,valuta,supporto,pos,user,till,data,total,commissione,netto,prezzo,quantita,fg_inout,ricevuta,mtcn,del_fg,del_dt,del_user,del_motiv,fg_tipo_transazione_nc,fg_dogana,ass_idcode,ass_startdate,ass_enddate,cl_cognome,cl_nome,cl_indirizzo,cl_citta,cl_nazione,cl_cap,cl_provincia,cl_email,cl_telefono,note,ti_diritti,ti_ticket_fee,id_open_till,posnum,percentiva,bonus,ch_transaction FROM nc_transaction WHERE data >= '" + d1 + "' AND data <= '" + d2 + "' ";
-            
+
             if (branch != null && !branch.equals("") && !branch.equals("...")) {
                 sql = sql + "AND filiale = '" + branch + "'";
             }
-            
+
             Iterable<String> ite = onPattern(";").split(list_nc_cat);
             Iterator it = ite.iterator();
             String nccatwhere = "";
@@ -5012,9 +5012,9 @@ public class Db_Master {
             if (nccatwhere.length() > 3) {
                 sql = sql + " AND (" + nccatwhere.substring(0, nccatwhere.length() - 3).trim() + ")";
             }
-            
+
             sql = sql + " ORDER BY data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
                 NC_transaction nc = new NC_transaction(
@@ -5114,7 +5114,7 @@ public class Db_Master {
      */
     public NC_transaction get_NC_transaction(String cod) {
         try {
-            
+
             String sql = "SELECT * FROM nc_transaction WHERE cod = ?";
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, cod);
@@ -5172,13 +5172,13 @@ public class Db_Master {
             ps.execute();
             String dtoper = getNow();
             String dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
-            
+
             if (!filiale.equals("000")) {
-                
+
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
                         generaId(50), "000", dt_val, "0",
                         "PS", ps.toString(), "service", dtoper));
-                
+
             }
             return true;
         } catch (SQLException ex) {
@@ -5195,16 +5195,16 @@ public class Db_Master {
      */
     public boolean insert_transaction_change(Ch_transaction nct, String table) {
         try {
-            
+
             String ins = "INSERT INTO " + table + " (SELECT ?,LPAD((CAST(id AS DECIMAL(10))+1),15, '0'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? "
                     + "FROM " + table + " WHERE filiale = ? ORDER BY CAST(id AS DECIMAL(10,2)) DESC LIMIT 1)";
-            
+
             boolean newv = false;
             if (isFirstValueFILIALE(table, "id", nct.getFiliale())) {
                 ins = "INSERT INTO " + table + " VALUES (?,'000000000000001',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                 newv = true;
             }
-            
+
             PreparedStatement ps = this.c.prepareStatement(ins, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, nct.getCod());
             ps.setString(2, nct.getFiliale());
@@ -5258,7 +5258,7 @@ public class Db_Master {
             ps.execute();
             String dtoper = getNow();
             String dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
-            
+
             if (!filiale.equals("000")) {
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
                         generaId(50), "000", dt_val, "0",
@@ -5313,9 +5313,9 @@ public class Db_Master {
                 ps.execute();
                 String dtoper = getNow();
                 String dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
-                
+
                 if (!filiale.equals("000")) {
-                    
+
                     insert_aggiornamenti_mod(new Aggiornamenti_mod(
                             generaId(50), "000", dt_val, "0",
                             "PS", ps.toString(), "service", dtoper));
@@ -5584,7 +5584,7 @@ public class Db_Master {
         ArrayList<Ch_transaction> out = new ArrayList<>();
         try {
             String sel = "SELECT * FROM ch_transaction ch WHERE data >= ? AND data <= ? ";
-            
+
             if (d1 == null || d1.equals("...")) {
                 d1 = "";
             }
@@ -5593,15 +5593,15 @@ public class Db_Master {
                 d2 = "";
             }
             d2 = d2.trim() + " 23:59:59";
-            
+
             d1 = formatStringtoStringDate(d1, patternnormdate, patternsqldate);
             d2 = formatStringtoStringDate(d2, patternnormdate, patternsqldate);
-            
+
             PreparedStatement ps = this.c.prepareStatement(sel, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, d1);
             ps.setString(2, d2);
             ResultSet rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 Ch_transaction ch = new Ch_transaction();
                 ch.setCod(rs.getString("cod"));
@@ -5675,7 +5675,7 @@ public class Db_Master {
             ps.setString(5, cod);
             int x = ps.executeUpdate();
             if (x > 0) {
-                
+
                 String dtoper = getNow();
                 String dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
                 if (!filiale.equals("000")) {
@@ -6009,7 +6009,7 @@ public class Db_Master {
         try {
             String sql = "SELECT f.filiale,f.till,f.fg_tipo FROM (SELECT till, MAX(data) AS maxd FROM oc_lista GROUP BY till) "
                     + "AS x INNER JOIN oc_lista AS f ON f.till = x.till AND f.data = x.maxd AND f.filiale = '" + getCodLocal(true)[0] + "' ORDER BY f.till";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -6094,7 +6094,7 @@ public class Db_Master {
     public boolean insert_new_Till(String filiale, String de_till, String fg_tipo, String username, String dtoper) {
         try {
             String ins = "INSERT INTO till (SELECT ?,LPAD((CAST(cod AS DECIMAL(10))+1), 3, '0'),?,?,? FROM till WHERE filiale = ? order by CAST(cod AS DECIMAL(10,2)) desc LIMIT 1)";
-            
+
             PreparedStatement ps = this.c.prepareStatement(ins, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, filiale);
             ps.setString(2, de_till);
@@ -6189,12 +6189,12 @@ public class Db_Master {
             ps.setString(1, di_cod);
             ps.setString(2, descr);
             ps.setString(3, id);
-            
+
             boolean es = ps.executeUpdate() > 0;
             if (es) {
                 insertValue_agg(ps, null, null, null, username);
             }
-            
+
             return es;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -6249,12 +6249,12 @@ public class Db_Master {
             ps.setString(3, alpha_code);
             ps.setString(4, filiale);
             ps.setString(5, na_cod);
-            
+
             boolean es = ps.executeUpdate() > 0;
             if (es) {
                 insertValue_agg(ps, null, null, null, username);
             }
-            
+
             return es;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -6350,7 +6350,7 @@ public class Db_Master {
         }
         return false;
     }
-    
+
     public boolean insert_new_unlockratejust(String filiale, String descr, String username) {
         try {
             String id = "01";
@@ -6407,7 +6407,7 @@ public class Db_Master {
         }
         return false;
     }
-    
+
     public boolean update_unrate(String filiale, String id, String descr, String status, String username) {
         try {
             String ins = "UPDATE unlockrate_justify SET de_unlockrate_justify = ?, fg_blocco = ? WHERE filiale = ? AND id_unlockrate_justify = ?";
@@ -6523,13 +6523,13 @@ public class Db_Master {
             ps.setString(6, sell);
             ps.setString(7, "0");
             ps.execute();
-            
+
             if (!filiale.equals("000")) {
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
                         generaId(50), filiale, dtval, "0",
                         "PS", ps.toString(), username, dt));
             }
-            
+
             return "0";
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -6559,7 +6559,7 @@ public class Db_Master {
             String sell, String status, String min_old, String username, String dtval, String dt) {
         try {
             String ins = "UPDATE commissione_fissa SET minimo = ?, massimo = ?, commissione_buy = ?, commissione_sell = ?, fg_blocco = ? WHERE filiale = ? AND supporto = ? AND minimo = ?";
-            
+
             PreparedStatement ps = this.c.prepareStatement(ins, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, min);
             ps.setString(2, max);
@@ -6570,7 +6570,7 @@ public class Db_Master {
             ps.setString(7, kind);
             ps.setString(8, min_old);
             ps.executeUpdate();
-            
+
             if (!filiale.equals("000")) {
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
                         generaId(50), filiale, dtval, "0",
@@ -6738,9 +6738,9 @@ public class Db_Master {
             ps.setString(8, ag.getFg_annullato());
             ps.setString(9, ag.getFiliale());
             ps.setString(10, ag.getAgenzia());
-            
+
             insertValue_agg(ps, null, null, null, username);
-            
+
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -6788,12 +6788,12 @@ public class Db_Master {
             ps.setString(1, descr);
             ps.setString(2, filiale);
             ps.setString(3, id);
-            
+
             boolean es = ps.executeUpdate() > 0;
             if (es) {
                 insertValue_agg(ps, null, null, null, username);
             }
-            
+
             return es;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -6861,7 +6861,7 @@ public class Db_Master {
             }
             return es;
         } catch (SQLException ex) {
-            
+
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return false;
@@ -6923,7 +6923,7 @@ public class Db_Master {
             String ins = "UPDATE supporti SET  de_supporto = ?,fg_sys_trans = ?,commissione_acquisto = ?,commissione_vendita = ?,commissione_fissa = ?,"
                     + "fix_buy_commission = ?,fix_sell_commission = ?,fg_tipo_incasso = ?,buy_comm_soglia_causale = ?,sell_comm_soglia_causale = ?,"
                     + "buy_back_commission = ?,sell_back_commission = ?,buy = ?,sell = ?,fg_annullato = ?, residenti = ? , fg_uploadobbl = ? , upl_thr = ? WHERE filiale = ? AND supporto = ?";
-            
+
             PreparedStatement ps = this.c.prepareStatement(ins, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, fi.getDe_supporto());
             ps.setString(2, fi.getFg_sys_trans());
@@ -6945,13 +6945,13 @@ public class Db_Master {
             ps.setString(18, fi.getUpload_thr());
             ps.setString(19, fi.getFiliale());
             ps.setString(20, fi.getSupporto());
-            
+
             if (!fi.getFiliale().equals("000")) {
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
                         generaId(50), fi.getFiliale(), fi.getDt_val(), "0",
                         "PS", ps.toString(), username, dtoper));
             }
-            
+
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -6970,7 +6970,7 @@ public class Db_Master {
             String upd = "UPDATE valute SET buy_std_type = ?,buy_std = ?,buy_std_value = ?,buy_l1 = ?,buy_l2 = ?,"
                     + "buy_l3 = ?,buy_best = ?,sell_std_type = ?,sell_std = ?,sell_std_value = ?,sell_l1 = ?,sell_l2 = ?,sell_l3 = ?,sell_best = ? "
                     + "WHERE filiale = ? AND valuta = ?";
-            
+
             PreparedStatement ps = this.c.prepareStatement(upd, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, cu.getBuy_std_type());
             ps.setString(2, cu.getBuy_std());
@@ -7025,7 +7025,7 @@ public class Db_Master {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return false;
-        
+
     }
 
     /**
@@ -7040,7 +7040,7 @@ public class Db_Master {
                     + "cambio_acquisto = ?,cambio_vendita = ?,cambio_bce = ?,de_messaggio = ?,"
                     + "fg_valuta_corrente = ?,enable_buy = ?,enable_sell = ? "
                     + "WHERE filiale = ? AND valuta = ?";
-            
+
             PreparedStatement ps = this.c.prepareStatement(upd, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, cu.getUic());
             ps.setString(2, cu.getDescrizione());
@@ -7068,7 +7068,7 @@ public class Db_Master {
             } else {
                 return ps.executeUpdate() > 0;
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -7088,7 +7088,7 @@ public class Db_Master {
                     + "fg_valuta_corrente = ?,enable_buy = ?,enable_sell = ?,buy_std_type = ?,buy_std = ?,buy_std_value = ?,buy_l1 = ?,buy_l2 = ?,"
                     + "buy_l3 = ?,buy_best = ?,sell_std_type = ?,sell_std = ?,sell_std_value = ?,sell_l1 = ?,sell_l2 = ?,sell_l3 = ?,sell_best = ? "
                     + "WHERE filiale = ? AND valuta = ?";
-            
+
             PreparedStatement ps = this.c.prepareStatement(upd, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, cu.getUic());
             ps.setString(2, cu.getDescrizione());
@@ -7117,7 +7117,7 @@ public class Db_Master {
             ps.setString(25, cu.getCode());
             String psstring = ps.toString();
             String dtoper = new DateTime().toString(patternsqldate);
-            
+
             if (cu.getEditce().equals("1")) {
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
                         generaId(50), cu.getFilial(), cu.getDt_val(), "0",
@@ -7131,7 +7131,7 @@ public class Db_Master {
             } else {
                 return ps.executeUpdate() > 0;
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -7159,7 +7159,7 @@ public class Db_Master {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
     }
-    
+
     private void insertValue_agg_NOCENTRAL(PreparedStatement ps, String statement, String filiali,
             String dt_val, String username) {
         String ty;
@@ -7182,16 +7182,16 @@ public class Db_Master {
                 }
             }
         }
-        
+
         Iterable<String> parameters = on(comma).split(filiali);
         Iterator<String> it = parameters.iterator();
         String dtoper = new DateTime().toString(patternsqldate);
         if (dt_val == null) {
             dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
         }
-        
+
         while (it.hasNext()) {
-            
+
             String value = it.next().trim();
             if (!value.equals("")) {
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
@@ -7200,7 +7200,7 @@ public class Db_Master {
             }
         }
     }
-    
+
     private void insertValue_agg(PreparedStatement ps, String statement, String filiali,
             String dt_val, String username) {
         String ty;
@@ -7251,7 +7251,7 @@ public class Db_Master {
             ps.setString(1, cu.getFilial());
             ps.setString(2, cu.getCode());
             String psstring = ps.toString();
-            
+
             if (cu.getEditce().equals("1")) {
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
                         generaId(50), cu.getFilial(), cu.getDt_val(), "0",
@@ -7262,7 +7262,7 @@ public class Db_Master {
             } else {
                 ps.execute();
             }
-            
+
             String ins = "INSERT INTO supporti_valuta (filiale,valuta,supporto,annullato) VALUES (?,?,?,?)";
             for (int i = 0; i < list_kind_value.size(); i++) {
                 if (list_kind_value.get(i)[1].equals("1")) {
@@ -7272,7 +7272,7 @@ public class Db_Master {
                     ps2.setString(3, (list_kind_value.get(i))[0]);
                     ps2.setString(4, "0");
                     String psstring2 = ps2.toString();
-                    
+
                     if (cu.getEditce().equals("1")) {
                         insert_aggiornamenti_mod(new Aggiornamenti_mod(
                                 generaId(50), cu.getFilial(), cu.getDt_val(), "0",
@@ -7319,7 +7319,7 @@ public class Db_Master {
                 ps2.setString(2, cu.getCode());
                 ps2.setString(3, list_sizecut.get(i).getIp_taglio_MOD());
                 ps2.setString(4, list_sizecut.get(i).getFg_stato());
-                
+
                 String psstring2 = ps2.toString();
                 if (cu.getEditce().equals("1")) {
                     insert_aggiornamenti_mod(new Aggiornamenti_mod(
@@ -7458,13 +7458,13 @@ public class Db_Master {
             ps.setString(7, filiale);
             ps.setString(8, oldcod);
             boolean es = ps.executeUpdate() > 0;
-            
+
             if (es) {
                 insertValue_agg(ps, null, null, null, username);
             }
             return es;
         } catch (SQLException ex) {
-            
+
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return false;
@@ -7549,7 +7549,7 @@ public class Db_Master {
             ps.setString(26, br.getFg_pad());
             ps.setString(27, br.getDt_start());
             ps.setString(28, br.getMax_ass());
-            
+
             ps.setString(29, br.getBrgr_01());
             ps.setString(30, br.getBrgr_02());
             ps.setString(31, br.getBrgr_03());
@@ -7561,7 +7561,7 @@ public class Db_Master {
             ps.setString(37, br.getBrgr_09());
             ps.setString(38, br.getBrgr_10());
             ps.setString(39, br.getTarget());
-            
+
             ps.execute();
             insertValue_agg(ps, null, null, null, username);
             return true;
@@ -7611,7 +7611,7 @@ public class Db_Master {
             ps.setString(24, br.getFg_pad());
             ps.setString(25, br.getDt_start());
             ps.setString(26, br.getMax_ass());
-            
+
             ps.setString(27, br.getBrgr_01());
             ps.setString(28, br.getBrgr_02());
             ps.setString(29, br.getBrgr_03());
@@ -7623,7 +7623,7 @@ public class Db_Master {
             ps.setString(35, br.getBrgr_09());
             ps.setString(36, br.getBrgr_10());
             ps.setString(37, br.getTarget());
-            
+
             ps.setString(38, br.getFiliale());
             ps.setString(39, br.getCod());
             boolean es = ps.executeUpdate() > 0;
@@ -7647,11 +7647,11 @@ public class Db_Master {
     public boolean insert_new_Blacklist(BlacklistM bl, String username) {
         try {
             String ins = "INSERT INTO blacklist (SELECT LPAD(code+1, 3, '0'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? FROM blacklist ORDER BY cast(code AS decimal (10,0)) DESC LIMIT 1)";
-            
+
             if (isFirstValue("blacklist", "code")) {
                 ins = "INSERT INTO blacklist VALUES ('001',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             }
-            
+
             PreparedStatement ps = this.c.prepareStatement(ins, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, bl.getCognome());
             ps.setString(2, bl.getNome());
@@ -7679,9 +7679,9 @@ public class Db_Master {
             ps.setString(24, bl.getFg_annullato());
             ps.setString(25, bl.getTimestamp());
             ps.execute();
-            
+
             insertValue_agg_NOCENTRAL(ps, null, null, null, username);
-            
+
             return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -7702,7 +7702,7 @@ public class Db_Master {
                     + "indirizzo = ?, cap = ?, provincia = ?, citta_nascita = ?, provincia_nascita = ?, nazione_nascita = ?, "
                     + "dt_nascita = ?, tipo_documento = ?, numero_documento = ?, dt_rilascio_documento = ?, dt_scadenza_documento = ?, "
                     + "rilasciato_da_documento = ?, luogo_rilascio_documento = ?, email = ?, telefono = ?, text = ? , fg_annullato = ? WHERE code = ?";
-            
+
             PreparedStatement ps = this.c.prepareStatement(upd, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, bl.getCognome());
             ps.setString(2, bl.getNome());
@@ -7728,13 +7728,13 @@ public class Db_Master {
             ps.setString(22, bl.getText());
             ps.setString(23, bl.getFg_annullato());
             ps.setString(24, bl.getCode());
-            
+
             boolean es = ps.executeUpdate() > 0;
-            
+
             if (es) {
                 insertValue_agg_NOCENTRAL(ps, null, null, null, username);
             }
-            
+
             return es;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -7753,14 +7753,14 @@ public class Db_Master {
             String upd = "UPDATE office SET de_office = ?, add_city = ?, add_cap = ?, add_via = ?, vat = ?, reg_impr = ?, rea = ?, "
                     + "changetype = ?, decimalround = ?, scadenza_bb = ?, url_bl = ?, minutes = ?, kyc_mesi = ?, kyc_soglia = ? , "
                     + "risk_days = ? , risk_ntr = ? , risk_soglia = ? WHERE cod = ?";
-            
+
             String upd2 = "UPDATE office SET txt_ricev_1 = \"" + o.n_getTxt_ricev_1() + "\" WHERE cod = '" + o.getCod() + "'";
             String upd3 = "UPDATE office SET txt_ricev_2 = \"" + o.n_getTxt_ricev_2() + "\" WHERE cod = '" + o.getCod() + "'";
             String upd4 = "UPDATE office SET txt_ricev_bb = \"" + o.n_getTxt_ricev_bb() + "\" WHERE cod = '" + o.getCod() + "'";
             String upd5 = "UPDATE office SET txt_alert_threshold_1 = \"" + o.n_getTxt_alert_threshold_1() + "\" WHERE cod = '" + o.getCod() + "'";
             String upd6 = "UPDATE office SET txt_alert_threshold_2 = \"" + o.n_getTxt_alert_threshold_2() + "\" WHERE cod = '" + o.getCod() + "'";
             String upd7 = "UPDATE office SET txt_nopep = \"" + o.n_getTxt_nopep() + "\" WHERE cod = '" + o.getCod() + "'";
-            
+
             PreparedStatement ps = this.c.prepareStatement(upd, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, o.getDe_office());
             ps.setString(2, o.getAdd_city());
@@ -7787,11 +7787,11 @@ public class Db_Master {
             boolean es5 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeUpdate(upd5) > 0;
             boolean es6 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeUpdate(upd6) > 0;
             boolean es7 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeUpdate(upd7) > 0;
-            
+
             if (es) {
                 insertValue_agg_NOCENTRAL(ps, null, null, null, username);
                 sleeping(1000);
-                
+
                 if (es2) {
                     insertValue_agg_NOCENTRAL(null, upd2, null, null, username);
                 }
@@ -7878,7 +7878,7 @@ public class Db_Master {
             String sell, String status, String min_old, String username, String dtval, String dt) {
         try {
             String ins = "UPDATE rate_range SET minimo = ?, massimo = ?, buy_value = ?, sell_value = ?, fg_blocco = ? WHERE filiale = ? AND supporto = ? AND minimo = ?";
-            
+
             PreparedStatement ps = this.c.prepareStatement(ins, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, min);
             ps.setString(2, max);
@@ -7889,13 +7889,13 @@ public class Db_Master {
             ps.setString(7, kind);
             ps.setString(8, min_old);
             boolean es = ps.executeUpdate() > 0;
-            
+
             if (!filiale.equals("000")) {
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
                         generaId(50), filiale, dtval, "0",
                         "PS", ps.toString(), username, dt));
             }
-            
+
             return es;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -7941,9 +7941,9 @@ public class Db_Master {
             ps.setString(2, descr);
             ps.setString(3, type);
             ps.execute();
-            
+
             insertValue_agg_NOCENTRAL(ps, null, null, null, username);
-            
+
             return "0";
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -7969,11 +7969,11 @@ public class Db_Master {
             PreparedStatement ps = this.c.prepareStatement(ins, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, descr);
             ps.setString(2, cod);
-            
+
             boolean es = ps.executeUpdate() > 0;
-            
+
             insertValue_agg_NOCENTRAL(ps, null, null, null, username);
-            
+
             return es;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -7996,11 +7996,11 @@ public class Db_Master {
             PreparedStatement ps = this.c.prepareStatement(ins, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, descr);
             ps.setString(2, cod);
-            
+
             boolean es = ps.executeUpdate() > 0;
-            
+
             insertValue_agg_NOCENTRAL(ps, null, null, null, username);
-            
+
             return es;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -8019,7 +8019,7 @@ public class Db_Master {
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, "0");
             ps.setString(2, "0000");
-            
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Users us = new Users();
@@ -8054,7 +8054,7 @@ public class Db_Master {
             String sql = "SELECT * FROM users WHERE fg_stato <> ? ORDER BY CAST(cod AS decimal (10,0))";
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, "0");
-            
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Users us = new Users();
@@ -8123,7 +8123,7 @@ public class Db_Master {
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, cod);
             ResultSet rs = ps.executeQuery();
-            
+
             if (rs.next()) {
                 Users us = new Users();
                 us.setFiliale(rs.getString(1));
@@ -8185,9 +8185,9 @@ public class Db_Master {
             ps.setString(8, us.getConto());
             ps.setString(9, us.getEmail());
             ps.setString(10, us.getFg_tipo());
-            
+
             ps.execute();
-            
+
             insertValue_agg(ps, null, null, null, username);
             return "0";
         } catch (SQLException ex) {
@@ -8265,14 +8265,15 @@ public class Db_Master {
             String ins = "UPDATE users SET fg_stato = ? , pwd = ? , dt_mod_pwd = ? WHERE cod = ?";
             PreparedStatement ps = this.c.prepareStatement(ins, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, "2");
-            ps.setString(2, convMd5(newpass));
+            ps.setString(2, DigestUtils
+                    .md5Hex(newpass));
             ps.setString(3, getMillis(3));
             ps.setString(4, us_cod);
             boolean es = ps.executeUpdate() > 0;
             if (es) {
                 insertValue_agg(ps, null, null, null, username);
             }
-            
+
             return es;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -8369,9 +8370,9 @@ public class Db_Master {
             ps.setString(6, nl.getDt_updatestart());
             ps.setString(7, nl.getDt_upload());
             ps.execute();
-            
+
             insertValue_agg_NOCENTRAL(ps, null, null, null, user);
-            
+
             return true;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -8393,9 +8394,9 @@ public class Db_Master {
             ps.setString(2, nl.getUser());
             ps.setString(3, nl.getStatus());
             ps.setString(4, nl.getDt_read());
-            
+
             insertValue_agg_NOCENTRAL(ps, null, null, null, user);
-            
+
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -8411,7 +8412,7 @@ public class Db_Master {
     public Newsletters get_newsletters(String cod) {
         try {
             String sql = "SELECT n.cod,n.titolo,n.descr,n.fileout,ns.status,ns.dt_read,n.dt_upload FROM newsletter_status ns,newsletter n WHERE n.cod = ns.cod AND n.cod = ?";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, cod);
             ResultSet rs = ps.executeQuery();
@@ -8441,7 +8442,7 @@ public class Db_Master {
     public Newsletters get_newsletters(String cod, String user) {
         try {
             String sql = "SELECT n.cod,n.titolo,n.descr,n.fileout,ns.status,ns.dt_read,n.dt_upload FROM newsletter_status ns,newsletter n WHERE n.cod = ns.cod AND n.cod = ? AND ns.user = ?";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, cod);
             ps.setString(2, user);
@@ -8570,7 +8571,7 @@ public class Db_Master {
                 ps.setString(1, user);
                 ps.setString(2, status);
             }
-            
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Newsletters nw = new Newsletters();
@@ -8605,9 +8606,9 @@ public class Db_Master {
             ps.setString(2, dt_read);
             ps.setString(3, cod);
             ps.setString(4, user);
-            
+
             insertValue_agg(ps, null, null, null, user);
-            
+
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -8674,13 +8675,13 @@ public class Db_Master {
             ps.setString(16, nc.getInt_code());
             ps.setString(17, nc.getFg_registratore());
             ps.execute();
-            
+
             if (!nc.getFiliale().equals("000")) {
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
                         generaId(50), nc.getFiliale(), dt_val, "0",
                         "PS", ps.toString(), username, dt));
             }
-            
+
             return "0";
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -8727,9 +8728,9 @@ public class Db_Master {
             ps.setString(16, nc.getFg_registratore());
             ps.setString(17, nc.getFiliale());
             ps.setString(18, nc.getGruppo_nc());
-            
+
             boolean es = ps.executeUpdate() > 0;
-            
+
             if (nc.getAnnullato().equals("1")) {
                 String upd = "UPDATE nc_causali SET annullato = ? where gruppo_nc = ?";
                 PreparedStatement psd = this.c.prepareStatement(upd, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
@@ -8742,44 +8743,44 @@ public class Db_Master {
                             "PS", psd.toString(), username, dt));
                 }
             }
-            
+
             try {
-                
+
                 String de1 = "DELETE FROM department_nc WHERE gruppo_nc = ?";
                 PreparedStatement psde1 = this.c.prepareStatement(de1, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
                 psde1.setString(1, nc.getGruppo_nc());
                 psde1.execute();
-                
+
                 sleeping(100);
-                
+
                 String ins1 = "INSERT INTO department_nc VALUES (?,?)";
                 PreparedStatement psins1 = this.c.prepareStatement(ins1, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
                 psins1.setString(1, nc.getDepartment());
                 psins1.setString(2, nc.getGruppo_nc());
                 psins1.execute();
-                
+
                 if (!nc.getFiliale().equals("000")) {
-                    
+
                     insert_aggiornamenti_mod(new Aggiornamenti_mod(
                             generaId(50), nc.getFiliale(), dt_val, "0",
                             "PS", psde1.toString(), username, new DateTime().minusMinutes(3).toString(patternsqldate)));
                     insert_aggiornamenti_mod(new Aggiornamenti_mod(
                             generaId(50), nc.getFiliale(), dt_val, "0",
                             "PS", psins1.toString(), username, new DateTime().plusMinutes(3).toString(patternsqldate)));
-                    
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            
+
             if (!nc.getFiliale().equals("000")) {
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
                         generaId(50), nc.getFiliale(), dt_val, "0",
                         "PS", ps.toString(), username, dt));
             }
-            
+
             return es;
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -8825,17 +8826,17 @@ public class Db_Master {
                 ps.setString(19, nc.getPaymat());
                 ps.setString(20, nc.getDocric());
                 ps.execute();
-                
+
                 if (!nc.getFiliale().equals("000")) {
                     insert_aggiornamenti_mod(new Aggiornamenti_mod(
                             generaId(50), nc.getFiliale(), dt_val, "0",
                             "PS", ps.toString(), username, dt));
                 }
-                
+
                 return id;
             }
         } catch (SQLException ex) {
-            
+
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return null;
@@ -8876,15 +8877,15 @@ public class Db_Master {
             ps.setString(19, nc.getGruppo_nc());
             ps.setString(20, nc.getCausale_nc());
             ps.executeUpdate();
-            
+
             if (!nc.getFiliale().equals("000")) {
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
                         generaId(50), nc.getFiliale(), dt_val, "0",
                         "PS", ps.toString(), username, dt));
             }
-            
+
             return true;
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -8902,8 +8903,9 @@ public class Db_Master {
             String sql = "SELECT cod,username,pwd,de_nome,de_cognome,conto,email,fg_tipo,fg_stato FROM users WHERE username = ? AND pwd = ?";
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, user);
-            
-            ps.setString(2, convMd5(psw));
+
+            ps.setString(2, DigestUtils
+                    .md5Hex(psw));
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 Users us = new Users();
@@ -8940,7 +8942,7 @@ public class Db_Master {
                     String[] out = {cod, cod};
                     return out;
                 }
-                
+
                 String sql2 = "SELECT de_branch FROM branch WHERE cod = ?";
                 PreparedStatement ps2 = this.c.prepareStatement(sql2, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
                 ps2.setString(1, cod);
@@ -8949,9 +8951,9 @@ public class Db_Master {
                     String[] out = {cod, visualizzaStringaMySQL(rs2.getString(1))};
                     return out;
                 }
-                
+
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -8971,7 +8973,8 @@ public class Db_Master {
             if (change) {
                 String upd = "UPDATE users SET pwd = ? , fg_stato = ? , dt_mod_pwd = ? WHERE cod = ?";
                 PreparedStatement ps = this.c.prepareStatement(upd, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-                ps.setString(1, convMd5(psw));
+                ps.setString(1, DigestUtils
+                        .md5Hex(psw));
                 ps.setString(2, status);
                 ps.setString(3, getMillis(3));
                 ps.setString(4, cod);
@@ -8981,7 +8984,8 @@ public class Db_Master {
             } else {
                 String upd = "UPDATE users SET pwd = ? , fg_stato = ? WHERE cod = ?";
                 PreparedStatement ps = this.c.prepareStatement(upd, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-                ps.setString(1, convMd5(psw));
+                ps.setString(1, DigestUtils
+                        .md5Hex(psw));
                 ps.setString(2, status);
                 ps.setString(3, cod);
                 int x = ps.executeUpdate();
@@ -9147,7 +9151,7 @@ public class Db_Master {
      * @return
      */
     public String isBlockedOperation() {
-        
+
         try {
             String sql = "SELECT user FROM block_it_et WHERE data = curdate() AND status = ?";
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
@@ -9168,7 +9172,7 @@ public class Db_Master {
      * @return
      */
     public boolean isBlockedOperationUser(String us) {
-        
+
         try {
             String sql = "SELECT user FROM block_it_et WHERE data = curdate() AND user = ? AND status = ?";
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
@@ -9195,7 +9199,7 @@ public class Db_Master {
             ps.setString(2, status);
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
-            
+
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return false;
@@ -9261,7 +9265,7 @@ public class Db_Master {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return true;
-        
+
     }
 
     /**
@@ -9284,7 +9288,7 @@ public class Db_Master {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return true;
-        
+
     }
 
     /**
@@ -9294,7 +9298,7 @@ public class Db_Master {
      */
     public boolean insert_IT_change(IT_change it) {
         try {
-            
+
             String ins = "INSERT INTO it_change (SELECT ?,LPAD(id+1, 15, '0'),?,?,?,?,?,?,?,?,?,?,? "
                     + "FROM it_change WHERE filiale='" + it.getFiliale() + "' ORDER BY id DESC LIMIT 1)";
             if (isFirstValueFILIALE("it_change", "id", it.getFiliale())) {
@@ -9441,7 +9445,7 @@ public class Db_Master {
             ps.setString(6, it.getIp_quantity());
             ps.setString(7, it.getIp_total());
             ps.setString(8, it.getDt_it());
-            
+
             String dtoper = getNow();
             String dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
@@ -9463,9 +9467,9 @@ public class Db_Master {
      */
     public String getField_real_oc_change(Real_oc_change roc, String field, String returnv) {
         try {
-            
+
             String sql = "SELECT " + field + " FROM real_oc_change WHERE filiale = ? AND cod_oc = ? AND valuta = ? AND kind = ?";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, roc.getFiliale());
             ps.setString(2, roc.getCod_oc());
@@ -9476,7 +9480,7 @@ public class Db_Master {
             if (rs.next()) {
                 return rs.getString(1);
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -9492,7 +9496,7 @@ public class Db_Master {
      */
     public String getField_real_oc_pos(Real_oc_pos rop, String field, String returnv) {
         try {
-            
+
             String sql = "SELECT " + field + " FROM real_oc_pos WHERE filiale = ? AND cod_oc = ? AND valuta = ? AND kind = ? AND carta_credito = ?";
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, rop.getFiliale());
@@ -9519,9 +9523,9 @@ public class Db_Master {
         try {
             String sql = "SELECT data FROM real_oc_change WHERE filiale = '" + roc.getFiliale() + "' AND cod_oc = '" + roc.getCod_oc() + "'"
                     + " AND valuta = '" + roc.getValuta() + "' AND kind = '" + roc.getKind() + "'";
-            
+
             if (this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql).next()) {
-                
+
                 try {
                     String del3 = "DELETE FROM real_oc_change_temp WHERE filiale = '" + roc.getFiliale() + "' AND cod_oc = '" + roc.getCod_oc() + "'";
                     this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).execute(del3);
@@ -9550,7 +9554,7 @@ public class Db_Master {
                 } catch (SQLException ex) {
                     insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
                 }
-                
+
                 String upd = "UPDATE real_oc_change SET value_op = '" + roc.getValue_op() + "', num_kind_op = '" + roc.getNum_kind_op() + "', data = '" + roc.getData() + "'"
                         + " WHERE filiale = '" + roc.getFiliale() + "' AND cod_oc = '" + roc.getCod_oc() + "' AND valuta = '" + roc.getValuta() + "' AND kind = '" + roc.getKind() + "'";
                 int x = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeUpdate(upd);
@@ -9605,7 +9609,7 @@ public class Db_Master {
             ps.setString(4, roc.getKind());
             ps.setString(5, roc.getIp_taglio());
             if (ps.executeQuery().next()) {
-                
+
                 String del3 = "DELETE FROM real_oc_change_tg_temp WHERE filiale = ? AND cod_oc = ?";
                 PreparedStatement ps03 = this.c.prepareStatement(del3, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
                 ps03.setString(1, roc.getFiliale());
@@ -9733,7 +9737,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "ST", d2, "service", dtoper));
             }
-            
+
             this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeUpdate(d3);
             dtoper = getNow();
             dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
@@ -9742,7 +9746,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "ST", d3, "service", dtoper));
             }
-            
+
             String del1 = "DELETE FROM real_oc_change WHERE filiale = '" + filiale + "' AND (cod_oc = '" + idfrom + "' OR cod_oc = '" + idto + "')";
             this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeUpdate(del1);
             dtoper = getNow();
@@ -9752,7 +9756,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "ST", del1, "service", dtoper));
             }
-            
+
             String del2 = "DELETE FROM real_oc_change_tg WHERE filiale = '" + filiale + "' AND (cod_oc = '" + idfrom + "' OR cod_oc = '" + idto + "')";
             this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeUpdate(del2);
             dtoper = getNow();
@@ -9801,7 +9805,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "PS", ps6.toString(), "service", dtoper));
             }
-            
+
             String ins3 = "INSERT INTO real_oc_change_tg (SELECT * FROM real_oc_change_tg_temp WHERE filiale = ? AND cod_oc = ? )";
             PreparedStatement ps7 = this.c.prepareStatement(ins3, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps7.setString(1, filiale);
@@ -9824,7 +9828,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "ST", del3, "service", dtoper));
             }
-            
+
             String del4 = "DELETE FROM real_oc_change_tg_temp WHERE filiale = '" + filiale + "' AND (cod_oc = '" + idfrom + "' OR cod_oc = '" + idto + "')";
             c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeUpdate(del4);
             dtoper = getNow();
@@ -9834,7 +9838,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "ST", del4, "service", dtoper));
             }
-            
+
             return true;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -9854,7 +9858,7 @@ public class Db_Master {
             Statement stmt = c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             stmt.executeUpdate("delete from real_oc_change_temp WHERE filiale = '" + filiale
                     + "' AND (cod_oc = '" + idfrom + "' OR cod_oc = '" + idto + "')");
-            
+
             String dtoper = getNow();
             String dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
             if (!filiale.equals("000")) {
@@ -9969,9 +9973,9 @@ public class Db_Master {
             ps.setString(1, roc.getFiliale());
             ps.setString(2, roc.getCod_oc());
             ps.setString(3, roc.getGruppo_nc());
-            
+
             if (ps.executeQuery().next()) {
-                
+
                 String del3 = "DELETE FROM real_oc_nochange_temp WHERE filiale = ? AND cod_oc = ?";
                 PreparedStatement ps03 = this.c.prepareStatement(del3, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
                 ps03.setString(1, roc.getFiliale());
@@ -9984,7 +9988,7 @@ public class Db_Master {
                             generaId(50), "000", dt_val, "0",
                             "PS", ps03.toString(), "service", dtoper));
                 }
-                
+
                 String ins = "INSERT INTO real_oc_nochange_temp (SELECT * FROM real_oc_nochange WHERE filiale = ? AND cod_oc = ?)";
                 PreparedStatement ps1 = this.c.prepareStatement(ins, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
                 ps1.setString(1, roc.getFiliale());
@@ -9997,7 +10001,7 @@ public class Db_Master {
                             generaId(50), "000", dt_val, "0",
                             "PS", ps1.toString(), "service", dtoper));
                 }
-                
+
                 String upd = "UPDATE real_oc_nochange SET quantity = ?, data = ? WHERE filiale = ? AND cod_oc = ? AND gruppo_nc = ?";
                 PreparedStatement ps2 = this.c.prepareStatement(upd, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
                 ps2.setString(1, roc.getQuantity());
@@ -10016,7 +10020,7 @@ public class Db_Master {
                     }
                 }
                 return x > 0;
-                
+
             } else {
                 String ins = "INSERT INTO real_oc_nochange VALUES (?,?,?,?,?)";
                 PreparedStatement ps2 = this.c.prepareStatement(ins, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
@@ -10086,7 +10090,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "ST", d1, "service", dtoper));
             }
-            
+
             this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeUpdate(d2);
             dtoper = getNow();
             dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
@@ -10095,7 +10099,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "ST", d2, "service", dtoper));
             }
-            
+
             String del1 = "DELETE FROM real_oc_nochange WHERE filiale = '" + filiale + "' AND (cod_oc = '" + idfrom + "' OR cod_oc = '" + idto + "')";
             this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeUpdate(del1);
             dtoper = getNow();
@@ -10105,7 +10109,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "ST", del1, "service", dtoper));
             }
-            
+
             String ins = "INSERT INTO real_oc_nochange (SELECT * FROM real_oc_nochange_temp WHERE filiale = ? AND cod_oc = ?)";
             PreparedStatement ps4 = this.c.prepareStatement(ins, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps4.setString(1, filiale);
@@ -10118,7 +10122,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "PS", ps4.toString(), "service", dtoper));
             }
-            
+
             String ins2 = "INSERT INTO real_oc_nochange (SELECT * FROM real_oc_nochange_temp WHERE filiale = ? AND cod_oc = ?)";
             PreparedStatement ps6 = this.c.prepareStatement(ins2, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps6.setString(1, filiale);
@@ -10131,7 +10135,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "PS", ps6.toString(), "service", dtoper));
             }
-            
+
             String del3 = "DELETE FROM real_oc_nochange_temp WHERE filiale = '" + filiale + "' AND (cod_oc = '" + idfrom + "' OR cod_oc = '" + idto + "')";
             this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeUpdate(del3);
             dtoper = getNow();
@@ -10141,7 +10145,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "ST", del3, "service", dtoper));
             }
-            
+
             return true;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -10168,30 +10172,30 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "ST", d1, "service", dtoper));
             }
-            
+
             c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeUpdate(d2);
-            
+
             if (!filiale.equals("000")) {
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
                         generaId(50), "000", dt_val, "0",
                         "ST", d2, "service", dtoper));
             }
-            
+
             String ins = "INSERT INTO real_oc_nochange (SELECT * FROM real_oc_nochange_temp WHERE filiale = ? AND cod_oc = ?)";
             PreparedStatement ps4 = this.c.prepareStatement(ins, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps4.setString(1, filiale);
             ps4.setString(2, idfrom);
             ps4.execute();
-            
+
             if (!filiale.equals("000")) {
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
                         generaId(50), "000", dt_val, "0",
                         "PS", ps4.toString(), "service", dtoper));
             }
-            
+
             String del3 = "DELETE FROM real_oc_nochange_temp WHERE filiale = '" + filiale + "' AND cod_oc = '" + idfrom + "'";
             c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeUpdate(del3);
-            
+
             if (!filiale.equals("000")) {
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
                         generaId(50), "000", dt_val, "0",
@@ -10236,7 +10240,7 @@ public class Db_Master {
             ps.setString(17, it.getId_in());
             ps.setString(18, it.getCod_in());
             ps.setString(19, it.getAuto());
-            
+
             ps.execute();
             String dtoper = getNow();
             String dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
@@ -10302,7 +10306,7 @@ public class Db_Master {
             ps.setString(3, it.getNc_causal());
             ps.setString(4, it.getIp_quantity());
             ps.setString(5, it.getDt_it());
-            
+
             String dtoper = getNow();
             String dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
@@ -10336,13 +10340,13 @@ public class Db_Master {
             ps.setString(9, it.getIp_buyvalue());
             ps.setString(10, it.getIp_spread());
             ps.setString(11, it.getDt_it());
-            
+
             String dtoper = getNow();
             String dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
                     generaId(50), coddest, dt_val, "0",
                     "PS", ps.toString(), "service", dtoper));
-            
+
             return true;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -10368,7 +10372,7 @@ public class Db_Master {
             String dtoper = getNow();
             String dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
             if (!filiale.equals("000")) {
-                
+
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
                         generaId(50), "000", dt_val, "0",
                         "PS", ps.toString(), "service", dtoper));
@@ -10400,7 +10404,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "ST", d1, "service", dtoper));
             }
-            
+
             c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeUpdate(d2);
             dtoper = getNow();
             dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
@@ -10409,7 +10413,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "ST", d2, "service", dtoper));
             }
-            
+
             c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeUpdate(d3);
             dtoper = getNow();
             dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
@@ -10418,7 +10422,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "ST", d3, "service", dtoper));
             }
-            
+
             String del1 = "DELETE FROM real_oc_change WHERE filiale = '" + cod + "' AND cod_oc = '" + idfrom + "'";
             c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeUpdate(del1);
             dtoper = getNow();
@@ -10428,7 +10432,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "ST", del1, "service", dtoper));
             }
-            
+
             String del2 = "DELETE FROM real_oc_change_tg WHERE filiale = '" + cod + "' AND cod_oc = '" + idfrom + "'";
             c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeUpdate(del2);
             dtoper = getNow();
@@ -10438,7 +10442,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "ST", del2, "service", dtoper));
             }
-            
+
             String ins = "INSERT INTO real_oc_change (SELECT * FROM real_oc_change_temp WHERE filiale = ? AND cod_oc = ?)";
             PreparedStatement ps4 = this.c.prepareStatement(ins, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps4.setString(1, filiale);
@@ -10451,7 +10455,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "PS", ps4.toString(), "service", dtoper));
             }
-            
+
             String ins1 = "INSERT INTO real_oc_change_tg (SELECT * FROM real_oc_change_tg_temp WHERE filiale = ? AND cod_oc = ?)";
             PreparedStatement ps5 = this.c.prepareStatement(ins1, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps5.setString(1, filiale);
@@ -10464,7 +10468,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "PS", ps5.toString(), "service", dtoper));
             }
-            
+
             String del3 = "DELETE FROM real_oc_change_temp WHERE filiale = '" + cod + "' AND cod_oc = '" + idfrom + "'";
             c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeUpdate(del3);
             dtoper = getNow();
@@ -10474,7 +10478,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "ST", del3, "service", dtoper));
             }
-            
+
             String del4 = "DELETE FROM real_oc_change_tg_temp WHERE filiale = '" + cod + "' AND cod_oc = '" + idfrom + "'";
             c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeUpdate(del4);
             dtoper = getNow();
@@ -10524,13 +10528,13 @@ public class Db_Master {
                 et.setId_in(rs.getString(18));
                 et.setCod_in(rs.getString(19));
                 et.setAuto(rs.getString(20));
-                
+
                 if (et.getCod().startsWith("ETN")) {
                     et.setType("NC");
                 } else {
                     et.setType("CH");
                 }
-                
+
                 return et;
             }
         } catch (SQLException ex) {
@@ -10556,7 +10560,7 @@ public class Db_Master {
                 et.setFiliale(rs.getString(1));
                 et.setCod(rs.getString(2));
                 et.setNc_causal(rs.getString(3));
-                
+
                 et.setIp_quantity(rs.getString(4));
                 et.setDt_it(rs.getString(5));
                 list.add(et);
@@ -10676,7 +10680,7 @@ public class Db_Master {
                 ps.setString(2, stato);
                 ps.setString(3, type);
             }
-            
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ET_change et = new ET_change();
@@ -10765,15 +10769,15 @@ public class Db_Master {
             ps.execute();
             String dtoper = getNow();
             String dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
-            
+
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
                     generaId(50), "000", dt_val, "0",
                     "PS", ps.toString(), "service", dtoper));
-            
+
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
                     generaId(50), et.getCod_dest(), dt_val, "0",
                     "PS", ps.toString(), "service", dtoper));
-            
+
             return true;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -10905,12 +10909,12 @@ public class Db_Master {
             ps.setString(7, co.getPaese_estero_residenza());
             ps.setString(8, co.getFg_annullato());
             ps.setString(9, co.getNdg());
-            
+
             boolean es = ps.executeUpdate() > 0;
             if (es) {
                 insertValue_agg(ps, null, null, null, username);
             }
-            
+
             return es;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -10933,7 +10937,7 @@ public class Db_Master {
             if (x > 0) {
                 insertValue_agg(ps, null, null, null, "service");
             }
-            
+
             return x > 0;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -10956,7 +10960,7 @@ public class Db_Master {
             if (x > 0) {
                 insertValue_agg(ps, null, null, null, "service");
             }
-            
+
             return x > 0;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -10998,7 +11002,7 @@ public class Db_Master {
             if (es) {
                 insertValue_agg(ps, null, null, null, username);
             }
-            
+
             return es;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -11208,7 +11212,7 @@ public class Db_Master {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
     }
-    
+
     public void updateConf(String id, String value) {
         try {
             String ins = "UPDATE conf SET des = ? WHERE id = ?";
@@ -11263,7 +11267,7 @@ public class Db_Master {
             d2 = d2.trim() + " 23:59:59";
             d1 = formatStringtoStringDate(d1, patternnormdate, patternsqldate);
             d2 = formatStringtoStringDate(d2, patternnormdate, patternsqldate);
-            
+
             switch (typeop) {
                 case "CH":
                     sel = "SELECT * FROM it_change i, it_change_valori v WHERE i.cod=v.cod AND dt_it >= '" + d1 + "' AND dt_it <= '" + d2 + "'";
@@ -11274,13 +11278,13 @@ public class Db_Master {
                 default:
                     return out;
             }
-            
+
             if (branch != null && !branch.equals("") && !branch.equals("...")) {
                 sel = sel + " AND i.filiale = '" + branch + "'";
             }
-            
+
             sel = sel + " GROUP BY i.cod ORDER BY dt_it";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sel);
             while (rs.next()) {
                 IT_change it = new IT_change();
@@ -11314,7 +11318,7 @@ public class Db_Master {
             String sql = "SELECT * FROM it_change WHERE cod = ?";
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, cod);
-            
+
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 IT_change it = new IT_change();
@@ -11430,13 +11434,13 @@ public class Db_Master {
      */
     public ArrayList<ET_change> query_et_pending() {
         ArrayList<ET_change> out = new ArrayList<>();
-        
+
         try {
-            
+
             String sel = "SELECT * FROM et_frombranch WHERE fg_stato='0'";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sel);
-            
+
             while (rs.next()) {
                 ET_change et = new ET_change();
                 et.setCod(rs.getString(1));
@@ -11455,7 +11459,7 @@ public class Db_Master {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return out;
-        
+
     }
 
     /**
@@ -11479,7 +11483,7 @@ public class Db_Master {
             d2 = d2.trim() + " 23:59:59";
             d1 = formatStringtoStringDate(d1, patternnormdate, patternsqldate);
             d2 = formatStringtoStringDate(d2, patternnormdate, patternsqldate);
-            
+
             String sel = "";
             switch (typeop) {
                 case "CH":
@@ -11492,15 +11496,15 @@ public class Db_Master {
                 default:
                     break;
             }
-            
+
             if (branch != null && !branch.equals("") && !branch.equals("...")) {
                 sel = sel + " AND i.filiale = '" + branch + "'";
             }
-            
+
             sel = sel + " GROUP BY i.cod ORDER BY dt_it";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sel);
-            
+
             while (rs.next()) {
                 ET_change et = new ET_change();
                 et.setCod(rs.getString(1));
@@ -11670,10 +11674,10 @@ public class Db_Master {
     public Openclose query_oc(String cod_oc) {
         try {
             String sql = "SELECT * FROM oc_lista WHERE cod = ?";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, cod_oc);
-            
+
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 Openclose oc = new Openclose(rs.getString(1), rs.getString(2), leftPad(rs.getString(3), 15, "0"),
@@ -11702,32 +11706,32 @@ public class Db_Master {
     public ArrayList<Openclose> query_oc(String till, String d1, String d2, String branch) {
         ArrayList<Openclose> out = new ArrayList<>();
         try {
-            
+
             if (d1 == null || d1.equals("...")) {
                 d1 = "";
             }
             d1 = d1.trim() + " 00:00:00";
-            
+
             if (d2 == null || d2.equals("...")) {
                 d2 = "";
             }
             d2 = d2.trim() + " 23:59:59";
-            
+
             d1 = formatStringtoStringDate(d1, patternnormdate, patternsqldate);
             d2 = formatStringtoStringDate(d2, patternnormdate, patternsqldate);
-            
+
             String sql = "SELECT * FROM oc_lista WHERE data >= '" + d1 + "' AND data <= '" + d2 + "' ";
-            
+
             if (branch != null && !branch.equals("") && !branch.equals("...")) {
                 sql = sql + " AND filiale = '" + branch + "'";
             }
-            
+
             if (till != null && !till.equals("") && !till.equals("...")) {
                 sql = sql + " AND till = '" + till + "'";
             }
-            
+
             sql = sql + " ORDER BY data,id DESC";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
                 out.add(new Openclose(rs.getString(1), rs.getString(2), leftPad(rs.getString(3), 15, "0"),
@@ -11748,7 +11752,7 @@ public class Db_Master {
         try {
             String ins = "INSERT INTO oc_lista (SELECT ?,?,LPAD((CAST(id AS DECIMAL(10))+1), 15, '0'),?,?,?,?,?,?,?,?,?,? "
                     + "FROM oc_lista WHERE filiale = '" + oc.getFiliale() + "' order by CAST(id AS DECIMAL(10,2)) desc LIMIT 1)";
-            
+
             if (isFirstValueFILIALE("oc_lista", "id", oc.getFiliale())) {
                 ins = "INSERT INTO oc_lista VALUES (?,?,'000000000000001',?,?,?,?,?,?,?,?,?,?)";
             }
@@ -11922,12 +11926,12 @@ public class Db_Master {
             ps.setString(9, oc.getTotal_diff());
             ps.setString(10, oc.getData());
             ps.setString(11, oc.getRate());
-            
+
             ps.setString(12, oc.getQuantity_user());
             ps.setString(13, oc.getIp_value_op());
             ps.setString(14, oc.getQuantity_system());
             ps.setString(15, oc.getIp_value_sys());
-            
+
             ps.execute();
             String dtoper = getNow();
             String dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
@@ -11957,7 +11961,7 @@ public class Db_Master {
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
                     generaId(50), "000", dt_val, "0",
                     "PS", ps1.toString(), "service", dtoper));
-            
+
             String sql2 = "INSERT INTO real_oc_change_tg (SELECT filiale,cod_oc,valuta,kind,ip_taglio,ip_quantity,ip_value,data FROM oc_change_tg WHERE cod_oc = ?)";
             PreparedStatement ps2 = this.c.prepareStatement(sql2, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps2.setString(1, cod_oc);
@@ -11967,7 +11971,7 @@ public class Db_Master {
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
                     generaId(50), "000", dt_val, "0",
                     "PS", ps2.toString(), "service", dtoper));
-            
+
             String sql3 = "INSERT INTO real_oc_nochange (SELECT  filiale,cod_oc,gruppo_nc,quantity_user,data FROM oc_nochange WHERE cod_oc = ?)";
             PreparedStatement ps3 = this.c.prepareStatement(sql3, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps3.setString(1, cod_oc);
@@ -12000,16 +12004,16 @@ public class Db_Master {
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
                     generaId(50), "000", dt_val, "0",
                     "PS", ps1.toString(), "service", dtoper));
-            
+
             String sql2 = "DELETE FROM real_oc_change_tg WHERE cod_oc = ?";
             PreparedStatement ps2 = this.c.prepareStatement(sql2, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps2.setString(1, cod_oc);
             ps2.execute();
-            
+
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
                     generaId(50), "000", dt_val, "0",
                     "PS", ps2.toString(), "service", dtoper));
-            
+
             String sql3 = "DELETE FROM real_oc_nochange WHERE cod_oc = ?";
             PreparedStatement ps3 = this.c.prepareStatement(sql3, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps3.setString(1, cod_oc);
@@ -12017,7 +12021,7 @@ public class Db_Master {
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
                     generaId(50), "000", dt_val, "0",
                     "PS", ps3.toString(), "service", dtoper));
-            
+
             String sql4 = "DELETE FROM real_oc_pos WHERE cod_oc = ?";
             PreparedStatement ps4 = this.c.prepareStatement(sql4, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps4.setString(1, cod_oc);
@@ -12025,7 +12029,7 @@ public class Db_Master {
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
                     generaId(50), "000", dt_val, "0",
                     "PS", ps4.toString(), "service", dtoper));
-            
+
             return true;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -12096,32 +12100,32 @@ public class Db_Master {
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
                     generaId(50), "000", dt_val, "0",
                     "ST", "DELETE FROM oc_lista WHERE cod='" + cod + "'", "service", dtoper));
-            
+
             this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).execute("DELETE FROM oc_change WHERE cod_oc='" + cod + "'");
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
                     generaId(50), "000", dt_val, "0",
                     "ST", "DELETE FROM oc_change WHERE cod_oc='" + cod + "'", "service", dtoper));
-            
+
             this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).execute("DELETE FROM oc_change_tg WHERE cod_oc='" + cod + "'");
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
                     generaId(50), "000", dt_val, "0",
                     "ST", "DELETE FROM oc_change_tg WHERE cod_oc='" + cod + "'", "service", dtoper));
-            
+
             this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).execute("DELETE FROM oc_nochange WHERE cod_oc='" + cod + "'");
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
                     generaId(50), "000", dt_val, "0",
                     "ST", "DELETE FROM oc_nochange WHERE cod_oc='" + cod + "'", "service", dtoper));
-            
+
             this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).execute("DELETE FROM oc_errors WHERE cod='" + cod + "'");
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
                     generaId(50), "000", dt_val, "0",
                     "ST", "DELETE FROM oc_errors WHERE cod='" + cod + "'", "service", dtoper));
-            
+
             this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).execute("DELETE FROM oc_pos WHERE cod_oc='" + cod + "'");
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
                     generaId(50), "000", dt_val, "0",
                     "ST", "DELETE FROM oc_pos WHERE cod_oc='" + cod + "'", "service", dtoper));
-            
+
             return true;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -12218,7 +12222,7 @@ public class Db_Master {
             if (valuta != null) {
                 sql = sql + " AND currency = '" + valuta + "'";
             }
-            
+
             if (d1 == null || d1.equals("...")) {
                 d1 = "";
             }
@@ -12332,7 +12336,7 @@ public class Db_Master {
         }
         return false;
     }
-    
+
     private ArrayList<String[]> query_prenot_listtotal(String filiale, String valuta) {
         ArrayList<String[]> list = new ArrayList<>();
         try {
@@ -12347,7 +12351,7 @@ public class Db_Master {
         }
         return list;
     }
-    
+
     private ArrayList<String[]> query_prenot_listvalue() {
         ArrayList<String[]> list = new ArrayList<>();
         try {
@@ -12362,7 +12366,7 @@ public class Db_Master {
         }
         return list;
     }
-    
+
     private ArrayList<String[]> search_curr_till(String cod, String filiale) {
         ArrayList<Till> array_till = list_till_status(null, filiale);
         Currency cu = getCurrency(cod);
@@ -12424,14 +12428,14 @@ public class Db_Master {
      * @return
      */
     public double search_(String currency, String filiale) {
-        
+
         ArrayList<String[]> list = search_curr_till(currency, filiale);
         double total = 0.00;
         for (int i = 0; i < list.size(); i++) {
             double d = fd(list.get(i)[4]);
             total = total + d;
         }
-        
+
         return total;
     }
 
@@ -12492,7 +12496,7 @@ public class Db_Master {
                 ref.setDt_refund(rs.getString(11));
                 ref.setIdopentill_refund(rs.getString(12));
                 ref.setTimestamp(rs.getString(13));
-                
+
                 return ref;
             }
         } catch (SQLException ex) {
@@ -12528,18 +12532,18 @@ public class Db_Master {
                 int x = ps.executeUpdate();
                 String dtoper = getNow();
                 String dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
-                
+
                 if (filiale.equals(ref.getBranch_cod())) {
                     insert_aggiornamenti_mod(new Aggiornamenti_mod(
                             generaId(50), "000", dt_val, "0",
                             "PS", ps.toString(), ref.getUser_refund(), dtoper));
-                    
+
                 } else {
                     insert_aggiornamenti_mod(new Aggiornamenti_mod(
                             generaId(50), ref.getBranch_cod(), dt_val, "0",
                             "PS", ps.toString(), ref.getUser_refund(), dtoper));
                 }
-                
+
                 return x > 0;
             } else {
                 String ins = "INSERT INTO ch_transaction_refund VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -12564,7 +12568,7 @@ public class Db_Master {
                     insert_aggiornamenti_mod(new Aggiornamenti_mod(
                             generaId(50), "000", dt_val, "0",
                             "PS", ps.toString(), ref.getUser_refund(), dtoper));
-                    
+
                 } else {
                     insert_aggiornamenti_mod(new Aggiornamenti_mod(
                             generaId(50), ref.getBranch_cod(), dt_val, "0",
@@ -12594,7 +12598,7 @@ public class Db_Master {
             int x = ps.executeUpdate();
             String dtoper = getNow();
             String dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
-            
+
             if (filiale.equals(filialetrans)) {
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
                         generaId(50), "000", dt_val, "0",
@@ -12604,7 +12608,7 @@ public class Db_Master {
                         generaId(50), filialetrans, dt_val, "0",
                         "PS", ps.toString(), "service", dtoper));
             }
-            
+
             return x > 0;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -12625,7 +12629,7 @@ public class Db_Master {
      */
     public boolean execute_transaction_refund(String idref, String val, String idopentill, String codusagetta, String timestamp, String user_refund, String status) {
         try {
-            
+
             String upd = "UPDATE ch_transaction_refund "
                     + "SET value = ?, idopentill_refund = ?, cod_usaegetta = ?, dt_refund = ?, user_refund = ?, status = ? WHERE cod = ?";
             PreparedStatement ps = this.c.prepareStatement(upd, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
@@ -12744,12 +12748,12 @@ public class Db_Master {
         for (int i = 0; i < num; i++) {
             try {
                 String cod = randomAlphabetic(3).toUpperCase() + randomNumeric(7);
-                
+
                 String sql = "INSERT INTO codici_sblocco (codice) VALUES ('" + cod + "')";
                 this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).execute(sql);
-                
+
                 insertValue_agg_NOCENTRAL(null, sql, null, null, username);
-                
+
                 li.add(cod);
             } catch (SQLException ex) {
                 if (ex.getMessage().contains("Duplicate")) {
@@ -12759,7 +12763,7 @@ public class Db_Master {
                 }
             }
         }
-        
+
         String out = "";
         for (int i = 0; i < li.size(); i++) {
             out = out + li.get(i) + ";";
@@ -12969,7 +12973,7 @@ public class Db_Master {
                     return bl;
                 }
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -13251,7 +13255,7 @@ public class Db_Master {
                 bl.setPerc_sell(rs.getString("perc_sell"));
                 bl.setTimestamp(rs.getString("timestamp"));
                 bl.setPep(rs.getString("pep"));
-                
+
                 return bl;
             } else {
                 sql = "SELECT * FROM anagrafica_ru where codice_fiscale = ? limit 1";
@@ -13310,7 +13314,7 @@ public class Db_Master {
                     return li;
                 }
             }
-            
+
             String sql = "SELECT * FROM ch_transaction_valori WHERE cod_tr = ?";
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, cod_tr);
@@ -13457,7 +13461,7 @@ public class Db_Master {
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, codtr);
             ps.setString(2, tipodoc);
-            
+
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 Ch_transaction_doc ctd = new Ch_transaction_doc(rs.getString(1), rs.getString(2), rs.getString(3),
@@ -13681,13 +13685,13 @@ public class Db_Master {
             if (stato == null) {
                 sql = "SELECT * FROM selectdoctrans order by place";
                 ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-                
+
             } else {
                 sql = "SELECT * FROM selectdoctrans WHERE fg_stato = ? order by place";
                 ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
                 ps.setString(1, stato);
             }
-            
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Document d1 = new Document(
@@ -13735,16 +13739,16 @@ public class Db_Master {
         ArrayList<Rate_history> li = new ArrayList<>();
         try {
             String sql = "SELECT * FROM rate_history WHERE filiale = ? AND valuta = ? ";
-            
+
             if (d1 != null) {
                 sql = sql + " AND dt_mod >= '" + d1 + " 00:00:00' ";
             }
             if (d2 != null) {
                 sql = sql + " AND dt_mod <= '" + d2 + " 23:59:59' ";
             }
-            
+
             sql = sql + " GROUP BY valuta,modify ORDER BY filiale,dt_mod DESC";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, filiale);
             ps.setString(2, valuta);
@@ -13781,7 +13785,7 @@ public class Db_Master {
             ps.execute();
             String dtoper = getNow();
             String dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
-            
+
             if (filiale.equals("000")) {
                 insertValue_agg_NOCENTRAL(ps, null, listbranch, dt_val, rh.getUser());
             } else {
@@ -13789,7 +13793,7 @@ public class Db_Master {
                         generaId(50), "000", dt_val, "0",
                         "PS", ps.toString(), "service", dtoper));
             }
-            
+
             return true;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -13920,13 +13924,13 @@ public class Db_Master {
             ps.setString(3, vat.getAliquota());
             ps.setString(4, vat.getFg_annullato());
             ps.setString(5, vat.getId());
-            
+
             boolean es = ps.executeUpdate() > 0;
-            
+
             if (es) {
                 insertValue_agg(ps, null, null, null, username);
             }
-            
+
             return es;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -14124,33 +14128,33 @@ public class Db_Master {
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
                     generaId(50), "000", dt_val, "0",
                     "ST", "DELETE FROM ch_transaction WHERE cod = '" + cod_tr + "'", "service", dtoper));
-            
+
             this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).execute("DELETE FROM ch_transaction_doc WHERE codtr = '" + cod_tr + "'");
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
                     generaId(50), "000", dt_val, "0",
                     "ST", "DELETE FROM ch_transaction_doc WHERE codtr = '" + cod_tr + "'", "service", dtoper));
-            
+
             this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).execute("DELETE FROM ch_transaction_file WHERE cod_tr = '" + cod_tr + "'");
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
                     generaId(50), "000", dt_val, "0",
                     "ST", "DELETE FROM ch_transaction_file WHERE cod_tr = '" + cod_tr + "'", "service", dtoper));
-            
+
             this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).execute("DELETE FROM ch_transaction_refund WHERE cod_tr = '" + cod_tr + "'");
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
                     generaId(50), "000", dt_val, "0",
                     "ST", "DELETE FROM ch_transaction_refund WHERE cod_tr = '" + cod_tr + "'", "service", dtoper));
-            
+
             this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).execute("DELETE FROM ch_transaction_valori WHERE cod_tr = '" + cod_tr + "'");
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
                     generaId(50), "000", dt_val, "0",
                     "ST", "DELETE FROM ch_transaction_valori WHERE cod_tr = '" + cod_tr + "'", "service", dtoper));
-            
+
             return true;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return false;
-        
+
     }
 
     /**
@@ -14175,7 +14179,7 @@ public class Db_Master {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return false;
-        
+
     }
 
     /**
@@ -14202,7 +14206,7 @@ public class Db_Master {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return false;
-        
+
     }
 
     /**
@@ -14223,7 +14227,7 @@ public class Db_Master {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return li;
-        
+
     }
 
     /**
@@ -14245,7 +14249,7 @@ public class Db_Master {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return null;
-        
+
     }
 
     /**
@@ -14311,11 +14315,11 @@ public class Db_Master {
                 insertTR("E", "service", new Exception().getStackTrace()[0].getMethodName() + ": " + esito.getResultCode() + " - " + esito.getResultDesc());
             }
         }
-        
+
         sort(total);
-        
+
         return total;
-        
+
     }
 
     //REPORT
@@ -14370,9 +14374,9 @@ public class Db_Master {
             if (datad2 != null) {
                 sql = sql + "AND data <= '" + datad2 + " 23:59:59' ";
             }
-            
+
             sql = sql + " ORDER BY data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
                 Openclose oc = new Openclose(rs.getString(1), rs.getString(2), leftPad(rs.getString(3), 15, "0"),
@@ -14453,7 +14457,7 @@ public class Db_Master {
     public ArrayList<Openclose_Anal_value> list_Openclose_Anal_value(Openclose oc) {
         ArrayList<Openclose_Anal_value> out = new ArrayList<>();
         try {
-            
+
             String sql = "SELECT * FROM oc_change where cod_oc='" + oc.getCod() + "'";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
@@ -14464,12 +14468,12 @@ public class Db_Master {
                 osp.setImporto(rs.getString("value_op"));
                 out.add(osp);
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return out;
-        
+
     }
 
     /**
@@ -14524,7 +14528,7 @@ public class Db_Master {
         ArrayList<Openclose> out = new ArrayList<>();
         try {
             String sql = "SELECT * FROM oc_lista where filiale='" + filiale + "' AND errors ='Y' ";
-            
+
             if (datad1 != null) {
                 sql = sql + "AND data >= '" + datad1 + " 00:00:00' ";
             }
@@ -14532,7 +14536,7 @@ public class Db_Master {
                 sql = sql + "AND data <= '" + datad2 + " 23:59:59' ";
             }
             sql = sql + " ORDER BY data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
                 Openclose oc = new Openclose(rs.getString(1), rs.getString(2), leftPad(rs.getString(3), 15, "0"),
@@ -14562,19 +14566,19 @@ public class Db_Master {
             Openclose oc,
             ArrayList<String[]> list_oc_errors, ArrayList<Branch> allbr, String soglia) {
         ArrayList<Openclose_Error_value> out = new ArrayList<>();
-        
+
         String oper = get_national_office().getChangetype();
         boolean dividi = oper.equals("/");
         ArrayList<String[]> list_cc = credit_card_enabled();
         ArrayList<String[]> ba = list_bankAccount();
         ArrayList<NC_category> li = query_nc_category("");
         double finalbalance = 0.00;
-        
+
         ArrayList<Openclose_Error_value> temp = new ArrayList<>();
-        
+
         for (int i = 0; i < list_oc_errors.size(); i++) {
             String[] value = list_oc_errors.get(i);
-            
+
             switch (value[1]) {
                 case "CH": {
                     Openclose_Error_value osp = new Openclose_Error_value();
@@ -14709,21 +14713,21 @@ public class Db_Master {
      * @return
      */
     public ArrayList<RegisterBuyMonthly_value> list_RegisterBuyMonthly_value(String filiale, String datad1, String datad2) {
-        
+
         ArrayList<CustomerKind> list_customerKind = list_customerKind();
         String oper = get_national_office().getChangetype();
         boolean dividi = oper.equals("/");
-        
+
         ArrayList<RegisterBuyMonthly_value> out = new ArrayList<>();
-        
+
         ArrayList<String> listvalue = new ArrayList<>();
         ArrayList<String[]> list_valuta = new ArrayList<>();
         ArrayList<String[]> list_frombranch = new ArrayList<>();
         ArrayList<String[]> list_frombank = new ArrayList<>();
-        
+
         try {
             String sql = "SELECT cod,tipocliente FROM ch_transaction WHERE tipotr='B' AND del_fg ='0' AND filiale = '" + filiale + "' ";
-            
+
             if (datad1 != null) {
                 sql = sql + "AND data >= '" + datad1 + " 00:00:00' ";
             }
@@ -14731,9 +14735,9 @@ public class Db_Master {
                 sql = sql + "AND data <= '" + datad2 + " 23:59:59' ";
             }
             sql = sql + " ORDER BY data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             while (rs.next()) {
                 String sql2 = "SELECT total,valuta,quantita FROM ch_transaction_valori WHERE cod_tr='" + rs.getString("cod") + "'";
                 ResultSet rs2 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql2);
@@ -14746,9 +14750,9 @@ public class Db_Master {
                     listvalue.add(rs2.getString("valuta"));
                 }
             }
-            
+
             String sql3 = "SELECT cod,fg_brba FROM et_change where fg_annullato='0' AND fg_tofrom='F' AND filiale = '" + filiale + "' ";
-            
+
             if (datad1 != null) {
                 sql3 = sql3 + "AND dt_it >= '" + datad1 + " 00:00:00' ";
             }
@@ -14756,9 +14760,9 @@ public class Db_Master {
                 sql3 = sql3 + "AND dt_it <= '" + datad2 + " 23:59:59' ";
             }
             sql3 = sql3 + " ORDER BY dt_it";
-            
+
             ResultSet rs3 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql3);
-            
+
             while (rs3.next()) {
                 String sql4 = "SELECT ip_total,currency,ip_quantity FROM et_change_valori  where cod='" + rs3.getString("cod") + "'";
                 ResultSet rs4 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql4);
@@ -14774,15 +14778,15 @@ public class Db_Master {
                     listvalue.add(rs4.getString("currency"));
                 }
             }
-            
+
             removeDuplicatesAL(listvalue);
-            
+
             for (String va  : listvalue) {
                 double res_1 = 0.0;
                 double res_2 = 0.0;
                 double notres_1 = 0.0;
                 double notres_2 = 0.0;
-                
+
                 for (int i = 0; i < list_valuta.size(); i++) {
                     if (list_valuta.get(i)[1].equals(va)) {
                         if (list_valuta.get(i)[0].equals("1")) { //resident
@@ -14794,18 +14798,18 @@ public class Db_Master {
                         }
                     }
                 }
-                
+
                 double branch_1 = 0.0;
                 double branch_2 = 0.0;
                 double bank_1 = 0.0;
                 double bank_2 = 0.0;
                 for (int i = 0; i < list_frombranch.size(); i++) {
-                    
+
                     if (list_frombranch.get(i)[0].equals(va)) {
                         branch_1 = branch_1 + fd(list_frombranch.get(i)[1]);
                         branch_2 = branch_2 + fd(list_frombranch.get(i)[2]);
                     }
-                    
+
                 }
                 for (int i = 0; i < list_frombank.size(); i++) {
                     if (list_frombank.get(i)[0].equals(va)) {
@@ -14813,7 +14817,7 @@ public class Db_Master {
                         bank_2 = bank_2 + fd(list_frombank.get(i)[2]);
                     }
                 }
-                
+
                 RegisterBuyMonthly_value rbmv1 = new RegisterBuyMonthly_value();
                 rbmv1.setTipocliente("Client Resident");
                 rbmv1.setValuta(va);
@@ -14825,7 +14829,7 @@ public class Db_Master {
                 rbmv1.setControvalore((roundDoubleandFormat(res_2, 2) + ""));
                 rbmv1.setSaldovaluta((roundDoubleandFormat(res_1, 2) + ""));
                 out.add(rbmv1);
-                
+
                 rbmv1 = new RegisterBuyMonthly_value();
                 rbmv1.setTipocliente("Client Non-Resident");
                 rbmv1.setValuta(va);
@@ -14853,9 +14857,9 @@ public class Db_Master {
      * @return
      */
     public ArrayList<RegisterMonthly_value> list_RegisterMonthly_value(String filiale, String datad1, String datad2) {
-        
+
         ArrayList<RegisterMonthly_value> out = new ArrayList<>();
-        
+
         ArrayList<RegisterSellMonthly_value> sell = list_RegisterSellMonthly_value(filiale, datad1, datad2);
         ArrayList<RegisterBuyMonthly_value> buy = list_RegisterBuyMonthly_value(filiale, datad1, datad2);
         ArrayList<String> listvalue = new ArrayList<>();
@@ -14867,27 +14871,27 @@ public class Db_Master {
         }
         removeDuplicatesAL(listvalue);
         for (int i = 0; i < listvalue.size(); i++) {
-            
+
             String valuta = listvalue.get(i);
-            
+
             double res_Acqdaclienti = 0.0;
             double res_Venditaaclienti = 0.0;
             double res_Trasfdadip = 0.0;
             double res_Trasfadip = 0.0;
             double res_Trasfdabanche = 0.0;
             double res_Trasfabanche = 0.0;
-            
+
             double Acqdaclienti = 0.0;
             double Venditaaclienti = 0.0;
             double Trasfdadip = 0.0;
             double Trasfadip = 0.0;
             double Trasfdabanche = 0.0;
             double Trasfabanche = 0.0;
-            
+
             for (int j = 0; j < sell.size(); j++) {
                 RegisterSellMonthly_value sel1 = sell.get(j);
                 if (sel1.getValuta().equalsIgnoreCase(valuta)) {
-                    
+
                     if (sel1.getTipocliente().equalsIgnoreCase("Client Resident")) {
                         res_Venditaaclienti = res_Venditaaclienti + fd((sel1.getVenditaclienti()));
                         res_Trasfadip = res_Trasfadip + fd((sel1.getTrasfadip1()));
@@ -14897,11 +14901,11 @@ public class Db_Master {
                         Trasfadip = Trasfadip + fd((sel1.getTrasfadip1()));
                         Trasfabanche = Trasfabanche + fd((sel1.getTrasfabache1()));
                     }
-                    
+
                 }
-                
+
             }
-            
+
             for (int j = 0; j < buy.size(); j++) {
                 RegisterBuyMonthly_value buy1 = buy.get(j);
                 if (buy1.getValuta().equalsIgnoreCase(valuta)) {
@@ -14915,12 +14919,12 @@ public class Db_Master {
                         Trasfdabanche = Trasfdabanche + fd((buy1.getTrasfdaban1()));
                     }
                 }
-                
+
             }
-            
+
             double unico_Controvalore = res_Acqdaclienti - res_Venditaaclienti + res_Trasfdadip - res_Trasfadip + res_Trasfdabanche - res_Trasfabanche
                     + Acqdaclienti - Venditaaclienti;
-            
+
             RegisterMonthly_value rmres = new RegisterMonthly_value();
             rmres.setTipocliente("Client Resident");
             rmres.setValuta(valuta);
@@ -14932,7 +14936,7 @@ public class Db_Master {
             rmres.setTrasfabanche((roundDoubleandFormat(res_Trasfabanche, 2) + ""));
             rmres.setControvalore((roundDoubleandFormat(unico_Controvalore, 2) + ""));
             out.add(rmres);
-            
+
             RegisterMonthly_value rm = new RegisterMonthly_value();
             rm.setTipocliente("Client Non-Resident");
             rm.setValuta(valuta);
@@ -14956,21 +14960,21 @@ public class Db_Master {
      * @return
      */
     public ArrayList<RegisterSellMonthly_value> list_RegisterSellMonthly_value(String filiale, String datad1, String datad2) {
-        
+
         ArrayList<CustomerKind> list_customerKind = list_customerKind();
         String oper = get_national_office().getChangetype();
         boolean dividi = oper.equals("/");
-        
+
         ArrayList<RegisterSellMonthly_value> out = new ArrayList<>();
-        
+
         ArrayList<String> listvalue = new ArrayList<>();
         ArrayList<String[]> list_valuta = new ArrayList<>();
         ArrayList<String[]> list_frombranch = new ArrayList<>();
         ArrayList<String[]> list_frombank = new ArrayList<>();
-        
+
         try {
             String sql = "SELECT cod,tipocliente FROM ch_transaction WHERE tipotr='S' AND del_fg ='0' AND filiale = '" + filiale + "' ";
-            
+
             if (datad1 != null) {
                 sql = sql + "AND data >= '" + datad1 + " 00:00:00' ";
             }
@@ -14991,9 +14995,9 @@ public class Db_Master {
                     listvalue.add(rs2.getString("valuta"));
                 }
             }
-            
+
             String sql3 = "SELECT cod,fg_brba FROM et_change where fg_annullato='0' AND fg_tofrom='T' AND filiale = '" + filiale + "' ";
-            
+
             if (datad1 != null) {
                 sql3 = sql3 + "AND dt_it >= '" + datad1 + " 00:00:00' ";
             }
@@ -15001,9 +15005,9 @@ public class Db_Master {
                 sql3 = sql3 + "AND dt_it <= '" + datad2 + " 23:59:59' ";
             }
             sql3 = sql3 + " ORDER BY dt_it";
-            
+
             ResultSet rs3 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql3);
-            
+
             while (rs3.next()) {
                 String sql4 = "SELECT currency,ip_total,ip_quantity FROM et_change_valori  where cod='" + rs3.getString("cod") + "'";
                 ResultSet rs4 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql4);
@@ -15018,9 +15022,9 @@ public class Db_Master {
                     listvalue.add(rs4.getString("currency"));
                 }
             }
-            
+
             removeDuplicatesAL(listvalue);
-            
+
             for (String va  : listvalue) {
                 double res_1 = 0.0;
                 double res_2 = 0.0;
@@ -15042,12 +15046,12 @@ public class Db_Master {
                 double bank_1 = 0.0;
                 double bank_2 = 0.0;
                 for (int i = 0; i < list_frombranch.size(); i++) {
-                    
+
                     if (list_frombranch.get(i)[0].equals(va)) {
                         branch_1 = branch_1 + fd(list_frombranch.get(i)[1]);
                         branch_2 = branch_2 + fd(list_frombranch.get(i)[2]);
                     }
-                    
+
                 }
                 for (int i = 0; i < list_frombank.size(); i++) {
                     if (list_frombank.get(i)[0].equals(va)) {
@@ -15098,7 +15102,7 @@ public class Db_Master {
         }
         removeDuplicatesAL(listvalue);
         for (int j = 0; j < listvalue.size(); j++) {
-            
+
             String va  = listvalue.get(j);
             double am_notes = 0.0;
             double am_notesrate = 0.0;
@@ -15121,15 +15125,15 @@ public class Db_Master {
                     am_total = am_total + fd(val.getIp_total());
                 }
             }
-            
+
             double am_percent = 0.00;
-            
+
             if (am_total > 0) {
                 am_percent = roundDouble(((am_spread / am_total) * 100), 2);
             }
-            
+
             bsi1.setAuto(et.getAuto());
-            
+
             bsi1.setCurrency(va);
             ArrayList<String> data = new ArrayList<>();
             data.add(va);
@@ -15159,9 +15163,9 @@ public class Db_Master {
             listvalue.add(etc.get(i).getValuta());
         }
         removeDuplicatesAL(listvalue);
-        
+
         for (int j = 0; j < listvalue.size(); j++) {
-            
+
             String va  = listvalue.get(j);
             double am_notes = 0.0;
             double am_notesrate = 0.0;
@@ -15184,7 +15188,7 @@ public class Db_Master {
                     am_total = am_total + fd(val.getIp_total());
                 }
             }
-            
+
             bsi1.setAuto(et.getAuto());
             bsi1.setCurrency(va);
             ArrayList<String> data = new ArrayList<>();
@@ -15197,7 +15201,7 @@ public class Db_Master {
             bsi1.setDati_string(data);
             out.add(bsi1);
         }
-        
+
         return out;
     }
 
@@ -15208,7 +15212,7 @@ public class Db_Master {
      */
     public ArrayList<NoChangeFromBranchingSheet_value> list_FromBranchingSheet_valueNC(ET_change et) {
         ArrayList<NoChangeFromBranchingSheet_value> out = new ArrayList<>();
-        
+
         ArrayList<NC_category> nc_cat = query_nc_category_filial(et.getFiliale(), null);
         ArrayList<ET_change> etc = get_ET_nochange_value(et.getCod());
         for (int i = 0; i < etc.size(); i++) {
@@ -15257,33 +15261,33 @@ public class Db_Master {
     public ArrayList<ET_change> list_ET_change_report(String data1, String data2, ArrayList<String> branch, String typeft, String typedest) {
         ArrayList<ET_change> out = new ArrayList<>();
         try {
-            
+
             String sql = "SELECT * FROM et_change WHERE fg_annullato='0' ";
-            
+
             String filwhere = "";
-            
+
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "filiale='" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             if (data1 != null) {
                 sql = sql + "AND dt_it >= '" + data1 + " 00:00:00' ";
             }
-            
+
             if (data2 != null) {
                 sql = sql + "AND dt_it <= '" + data2 + " 23:59:59' ";
             }
-            
+
             if (!typeft.equals("ALL")) {
                 sql = sql + "AND fg_tofrom = '" + typeft + "' ";
             }
-            
+
             if (!typedest.equals("ALL")) {
-                
+
                 switch (typedest) {
                     case "BA":
                         sql = sql + " AND cod_dest IN (SELECT cod FROM bank where fg_annullato = '0' AND cod NOT IN"
@@ -15299,9 +15303,9 @@ public class Db_Master {
                     default:
                         break;
                 }
-                
+
             }
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
                 ET_change et = new ET_change();
@@ -15327,7 +15331,7 @@ public class Db_Master {
                 et.setAuto(rs.getString(20));
                 out.add(et);
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -15351,13 +15355,13 @@ public class Db_Master {
             String ba_pos, String chnc) {
         ArrayList<ET_change> out = new ArrayList<>();
         try {
-            
+
             if (filiale == null || filiale.equals("")) {
                 filiale = getCodLocal(true)[0];
             }
-            
+
             String sql = "";
-            
+
             if (dest != null) {
                 if (branch) {
                     sql = "SELECT * FROM et_change where fg_brba='BR' and fg_annullato='0' AND filiale = '" + filiale + "' and cod_dest='" + dest + "' ";
@@ -15367,9 +15371,9 @@ public class Db_Master {
             } else if (branch) {
                 sql = "SELECT * FROM et_change where fg_brba='BR' and fg_annullato='0' AND filiale = '" + filiale + "'";
             } else if (bank) {
-                
+
                 if (ba_pos.toLowerCase().contains("pos")) {
-                    
+
                     if (is_CZ || is_UK) {
                         sql = "SELECT * FROM et_change where fg_brba='BA' and fg_annullato='0' AND filiale = '" + filiale
                                 + "' AND (cod_dest IN (SELECT DISTINCT(cod) FROM bank where fg_annullato = '0' AND bank_account = 'Y') "
@@ -15387,18 +15391,18 @@ public class Db_Master {
                             + " (select distinct(carta_credito) from carte_credito WHERE fg_annullato = '0'))";
                 }
             }
-            
+
             if (type != null) {
                 sql = sql + "AND fg_tofrom = '" + type + "' ";
             }
-            
+
             if (data1 != null) {
                 sql = sql + "AND dt_it >= '" + data1 + " 00:00:00' ";
             }
             if (data2 != null) {
                 sql = sql + "AND dt_it <= '" + data2 + " 23:59:59' ";
             }
-            
+
             if (chnc.equals("CH")) {
                 sql = sql + "AND cod IN (SELECT distinct(cod) FROM et_change_valori)";
             } else if (chnc.equals("NC")) {
@@ -15447,7 +15451,7 @@ public class Db_Master {
         ArrayList<InternalTransferList_value> out = new ArrayList<>();
         try {
             String sql = "SELECT * FROM it_change where filiale='" + filiale + "' ";
-            
+
             if (datad1 != null) {
                 sql = sql + "AND dt_it >= '" + datad1 + " 00:00:00' ";
             }
@@ -15455,14 +15459,14 @@ public class Db_Master {
                 sql = sql + "AND dt_it <= '" + datad2 + " 23:59:59' ";
             }
             sql = sql + " ORDER BY dt_it";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             while (rs.next()) {
-                
+
                 String sql2 = "SELECT * FROM it_change_valori where cod = '" + rs.getString("cod") + "'";
                 ResultSet rs2 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql2);
-                
+
                 ArrayList<String> listValue = new ArrayList<>();
                 while (rs2.next()) {
                     listValue.add(rs2.getString("currency"));
@@ -15473,7 +15477,7 @@ public class Db_Master {
                     String va  = listValue.get(i);
                     double tot_note = 0.00;
                     double tot_etc = 0.00;
-                    
+
                     while (rs2.next()) {
                         if (rs2.getString("currency").equalsIgnoreCase(va)) {
                             if (rs2.getString("kind").equals("01")) {
@@ -15493,23 +15497,23 @@ public class Db_Master {
                     data.add((roundDoubleandFormat(tot_note, 2) + ""));
                     data.add((roundDoubleandFormat(tot_etc, 2) + ""));
                     data.add(rs.getString("user"));
-                    
+
                     if (rs.getString("fg_annullato").equals("0")) {
                         data.add("-");
                     } else {
                         data.add(formatStringtoStringDate(rs.getString("del_dt"), patternsqldate, patternnormdate) + " - " + rs.getString("del_user"));
                     }
-                    
+
                     bsi1.setDati_string(data);
                     out.add(bsi1);
                 }
-                
+
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
-        
+
         return out;
     }
 
@@ -15522,19 +15526,19 @@ public class Db_Master {
      * @return
      */
     public ArrayList<NoChangeTransactionList_value> list_NoChangeTransactionList_value(String filiale, String datad1, String datad2, String list_nc_cat) {
-        
+
         ArrayList<NoChangeTransactionList_value> out = new ArrayList<>();
         try {
             String sql = "SELECT data,gruppo_nc,causale_nc,till,data,id,note,fg_tipo_transazione_nc,ricevuta,quantita,total,user,fg_inout,del_fg,cod "
                     + "FROM nc_transaction where filiale = '" + filiale + "' ";
-            
+
             if (datad1 != null) {
                 sql = sql + "AND data >= '" + datad1 + " 00:00:00' ";
             }
             if (datad2 != null) {
                 sql = sql + "AND data <= '" + datad2 + " 23:59:59' ";
             }
-            
+
             Iterable<String> ite = onPattern(";").split(list_nc_cat);
             Iterator it = ite.iterator();
             String nccatwhere = "";
@@ -15547,12 +15551,12 @@ public class Db_Master {
             if (nccatwhere.length() > 3) {
                 sql = sql + " AND (" + nccatwhere.substring(0, nccatwhere.length() - 3).trim() + ")";
             }
-            
+
             sql = sql + " ORDER BY data";
-            
+
             ArrayList<NC_category> nc_cat = query_nc_category_filial(filiale, null);
             ArrayList<NC_causal> nc_caus = query_nc_causal_filial(filiale, null);
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
                 NoChangeTransactionList_value nctl = new NoChangeTransactionList_value();
@@ -15571,10 +15575,10 @@ public class Db_Master {
                 } else {
                     nctl.setKindTrans("NOT FOUND");
                 }
-                
+
                 nctl.setIdop(rs.getString("id"));
                 nctl.setNote(rs.getString("note"));
-                
+
                 switch (rs.getString("fg_tipo_transazione_nc")) {
                     case "1":
                         nctl.setQuantity("1");
@@ -15586,15 +15590,15 @@ public class Db_Master {
                         nctl.setQuantity(formatMysqltoDisplay(roundDoubleandFormat(fd(rs.getString("quantita")), 0)));
                         break;
                 }
-                
+
                 nctl.setTotal(formatMysqltoDisplay(rs.getString("total")));
                 nctl.setUser(rs.getString("user"));
                 nctl.setInout(rs.getString("fg_inout"));
                 nctl.setAnnullato(rs.getString("del_fg"));
                 out.add(nctl);
-                
+
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -15611,9 +15615,9 @@ public class Db_Master {
      */
     public ArrayList<TaxFree_value> list_TaxFree_value(String filiale, String datad1, String datad2, String list_nc_cat) {
         ArrayList<TaxFree_value> out = new ArrayList<>();
-        
+
         try {
-            
+
             String sql = "SELECT SUBSTRING(data, 1,10) as raf,total,quantita,fg_dogana,gruppo_nc,ricevuta FROM nc_transaction"
                     + " WHERE filiale = '" + filiale + "' AND del_fg='0' ";
             ArrayList<String> cat = new ArrayList<>();
@@ -15621,7 +15625,7 @@ public class Db_Master {
             Iterator it = ite.iterator();
             String nccatwhere = "";
             while (it.hasNext()) {
-                
+
                 String nccat = it.next().toString().trim();
                 if (!nccat.equals("") && !nccat.equals("...")) {
                     nccatwhere = nccatwhere + " gruppo_nc ='" + nccat + "' OR ";
@@ -15639,22 +15643,22 @@ public class Db_Master {
             }
             sql = sql + " ORDER BY gruppo_nc,data";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             ArrayList<String> dateValue = new ArrayList<>();
-            
+
             while (rs.next()) {
                 dateValue.add(rs.getString("raf"));
             }
             rs.beforeFirst();
-            
+
             removeDuplicatesAL(dateValue);
-            
+
             ArrayList<NC_category> def = query_nc_category_enabled("3");
             for (int i = 0; i < dateValue.size(); i++) {
                 String date = dateValue.get(i);
                 TaxFree_value tf = new TaxFree_value();
                 ArrayList<String[]> listcategory = new ArrayList<>();
-                
+
                 for (int j = 0; j < cat.size(); j++) {
                     NC_category nc1 = getNC_category(def, cat.get(j));
                     double totrimb = 0.0;
@@ -15705,12 +15709,12 @@ public class Db_Master {
         ArrayList<NoChangeTransactionListForUser_value> out = new ArrayList<>();
         try {
             String sql = "SELECT data,gruppo_nc,causale_nc,till,data,id,note,fg_tipo_transazione_nc,ricevuta,quantita,total,user,fg_inout,del_fg FROM nc_transaction WHERE filiale = '" + filiale + "' ";
-            
+
             Iterable<String> ite = onPattern(";").split(list_nc_cat);
             Iterator it = ite.iterator();
             String nccatwhere = "";
             while (it.hasNext()) {
-                
+
                 String nccat = it.next().toString().trim();
                 if (!nccat.equals("") && !nccat.equals("...")) {
                     nccatwhere = nccatwhere + "gruppo_nc ='" + nccat + "' OR ";
@@ -15726,11 +15730,11 @@ public class Db_Master {
                 sql = sql + "AND data <= '" + datad2 + " 23:59:59' ";
             }
             sql = sql + " ORDER BY gruppo_nc,data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             ArrayList<NC_category> nc_cat = query_nc_category_filial(filiale, null);
             ArrayList<NC_causal> nc_caus = query_nc_causal_filial(filiale, null);
-            
+
             while (rs.next()) {
                 NoChangeTransactionListForUser_value nctl = new NoChangeTransactionListForUser_value();
                 nctl.setTill(rs.getString("till"));
@@ -15747,7 +15751,7 @@ public class Db_Master {
                 } else {
                     nctl.setKindTrans("NOT FOUND");
                 }
-                
+
                 nctl.setNote(rs.getString("note"));
                 switch (rs.getString("fg_tipo_transazione_nc")) {
                     case "1":
@@ -15760,16 +15764,16 @@ public class Db_Master {
                         nctl.setQuantity(formatMysqltoDisplay(roundDoubleandFormat(fd(rs.getString("quantita")), 0)));
                         break;
                 }
-                
+
                 nctl.setTotal(formatMysqltoDisplay(rs.getString("total")));
                 nctl.setUser(rs.getString("user"));
-                
+
                 nctl.setInout(rs.getString("fg_inout"));
                 nctl.setAnnullato(rs.getString("del_fg"));
                 out.add(nctl);
-                
+
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -15794,7 +15798,7 @@ public class Db_Master {
             Iterator it = ite.iterator();
             String nccatwhere = "";
             while (it.hasNext()) {
-                
+
                 String nccat = it.next().toString().trim();
                 if (!nccat.equals("") && !nccat.equals("...")) {
                     nccatwhere = nccatwhere + "gruppo_nc ='" + nccat + "' OR ";
@@ -15812,9 +15816,9 @@ public class Db_Master {
             sql = sql + " ORDER BY gruppo_nc,data";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             ArrayList<NC_causal> nc_caus = query_nc_causal_filial(filiale, null);
-            
+
             while (rs.next()) {
-                
+
                 InsuranceTransactionList_value itl = new InsuranceTransactionList_value();
                 itl.setTill(rs.getString("till"));
                 itl.setDateTime(formatStringtoStringDate(rs.getString("data"), patternsqldate, patternnormdate));
@@ -15827,23 +15831,23 @@ public class Db_Master {
                 itl.setUser(rs.getString("user"));
                 itl.setInout(rs.getString("fg_inout"));
                 itl.setAnnullato(rs.getString("del_fg"));
-                
+
                 itl.setInsuranceNumber(rs.getString("ass_idcode"));
                 itl.setDescr1(rs.getString("cl_cognome") + " " + rs.getString("cl_nome"));
                 itl.setDescr2(rs.getString("cl_indirizzo"));
                 itl.setDescr3(rs.getString("cl_cap") + " " + rs.getString("cl_citta") + " " + rs.getString("cl_provincia"));
                 itl.setStartDate(rs.getString("ass_startdate"));
                 itl.setEndDate(rs.getString("ass_enddate"));
-                
+
                 itl.setTotal(formatMysqltoDisplay(rs.getString("total")));
-                
+
                 out.add(itl);
             }
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return out;
-        
+
     }
 
     /**
@@ -15858,7 +15862,7 @@ public class Db_Master {
         ArrayList<WesternUnionService_value> out = new ArrayList<>();
         try {
             String sql = "SELECT causale_nc,till,data,total,netto,commissione,user,fg_inout,del_fg,gruppo_nc FROM nc_transaction WHERE filiale = '" + filiale + "' ";
-            
+
             Iterable<String> ite = onPattern(";").split(list_nc_cat);
             Iterator it = ite.iterator();
             String nccatwhere = "";
@@ -15878,20 +15882,20 @@ public class Db_Master {
                 sql = sql + "AND data <= '" + datad2 + " 23:59:59' ";
             }
             sql = sql + " ORDER BY gruppo_nc,data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             ArrayList<NC_causal> nc_caus = query_nc_causal_filial(filiale, null);
-            
+
             while (rs.next()) {
-                
+
                 NC_causal nc2 = getNC_causal(nc_caus, rs.getString("causale_nc"), rs.getString("gruppo_nc"));
-                
+
                 WesternUnionService_value wu = new WesternUnionService_value();
                 wu.setTill(rs.getString("till"));
                 wu.setDateTime(formatStringtoStringDate(rs.getString("data"), patternsqldate, patternnormdate));
                 wu.setNoControl("");
                 wu.setNoInvoice("");
-                
+
                 if (nc2.getNc_de().equals("01")) {
                     //receive
                     wu.setNetInOutSend("0.00");
@@ -15907,15 +15911,15 @@ public class Db_Master {
                     wu.setReceive("0.00");
                     wu.setCoomWUSend((rs.getString("commissione")));
                 }
-                
+
                 wu.setUser(rs.getString("user"));
                 wu.setInout(rs.getString("fg_inout"));
                 wu.setAnnullato(rs.getString("del_fg"));
-                
+
                 out.add(wu);
-                
+
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -15933,7 +15937,7 @@ public class Db_Master {
     public ArrayList<C_ChangeInternetBookingForBranches_value> list_C_ChangeInternetBookingForBranches_value(String fil, String datad1, String datad2, ArrayList<Branch> libr) {
         ArrayList<C_ChangeInternetBookingForBranches_value> out = new ArrayList<>();
         try {
-            
+
             String sql = "SELECT * FROM internetbooking_ch ib, ch_transaction tr1 "
                     + "WHERE ib.cod=tr1.cod AND tr1.del_fg='0' AND tr1.tipotr='S' and tr1.intbook = '1' "
                     + "AND tr1.filiale = '" + fil + "' AND tr1.data >= '" + datad1 + " 00:00:00' AND tr1.data <= '" + datad2 + " 23:59:59' "
@@ -15962,7 +15966,7 @@ public class Db_Master {
                     cibfb.setTotalSpread(val.get(i).getSpread());
                     cibfb.setTotalComFix(val.get(i).getTot_com());
                     cibfb.setKindClient(Engine.get_customerKind(ck, rs.getString("tr1.tipocliente")).getDe_tipologia_clienti());
-                    
+
                     cibfb.setCode(rs.getString("ib.codiceprenotazione"));
                     cibfb.setDescription(formatAL(rs.getString("ib.canale"), ib, 1));
                     out.add(cibfb);
@@ -16000,7 +16004,7 @@ public class Db_Master {
             ArrayList<String[]> history_BB = history_BB();
             ArrayList<NC_category> listcat = list_nc_category_enabled();
             ArrayList<NC_causal> listcaus = list_nc_causal_enabled_freetax();
-            
+
             String sqlet = "SELECT * FROM et_change e, et_change_valori ev WHERE ev.cod=e.cod and e.filiale='" + b1.getCod() + "' ";
             if (datad1 != null) {
                 sqlet = sqlet + "AND e.dt_it >= '" + datad1 + " 00:00:00' ";
@@ -16008,17 +16012,17 @@ public class Db_Master {
             if (datad2 != null) {
                 sqlet = sqlet + "AND e.dt_it <= '" + datad2 + " 23:59:59' ";
             }
-            
+
             if (!deleted) {
                 sqlet = sqlet + "AND e.fg_annullato = '0' ";
             }
-            
+
             sqlet = sqlet + " ORDER BY e.dt_it";
-            
+
             ResultSet rset = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sqlet);
-            
+
             while (rset.next()) {
-                
+
                 DailyChange_CG d1 = new DailyChange_CG();
                 DateTime dt_it = getDT(rset.getString("e.dt_it"), patternsqldate);
                 Users g = Engine.get_user(rset.getString("e.user"), list_users);
@@ -16031,7 +16035,7 @@ public class Db_Master {
                 } else {
                     d1.setDELETE("");
                 }
-                
+
                 d1.setAREA(formatAL(b1.getBrgr_01(), list_group, 1));
                 d1.setCITTA(formatAL(b1.getBrgr_04(), list_group, 1));
                 d1.setUBICAZIONE(formatAL(b1.getBrgr_02(), list_group, 1));
@@ -16057,9 +16061,9 @@ public class Db_Master {
                 d1.setCONTROVALORE((rset.getString("ev.ip_total")));
                 d1.setCOMMVARIABILE("");
                 d1.setCOMMFISSA("");
-                
+
                 String SPREADBANK = "";
-                
+
                 if (rset.getString("e.fg_brba").equals("BR")) {
 //                    SPREADBRANCH = (rset.getString("ev.ip_spread"));
                 } else {
@@ -16077,13 +16081,13 @@ public class Db_Master {
 //                }
 
                 d1.setSPREADBANK(SPREADBANK);
-                
+
                 d1.setSPREADVEND("");
-                
+
                 double totgm = fd(rset.getString("ev.ip_spread"));
-                
+
                 if (rset.getString("e.fg_brba").equals("BR")) {
-                    
+
                     if (is_IT) {
                         if (newpread) {
                             d1.setTOTGM("0.00");
@@ -16100,7 +16104,7 @@ public class Db_Master {
                 } else {
                     d1.setTOTGM((roundDoubleandFormat(totgm, 2)));
                 }
-                
+
                 d1.setPERCCOMM("");
                 d1.setPERCSPREADVENDITA("");
                 d1.setVENDITABUYBACK("");
@@ -16108,12 +16112,12 @@ public class Db_Master {
                 d1.setCODICEINTERNETBOOKING("");
                 d1.setMOTIVOPERRIDUZIONEDELLACOMM("");
                 d1.setMOTIVOPERRIDUZIONEDELLACOMMFISSA("");
-                
+
                 d1.setCODICESBLOCCO("");
                 out.add(d1);
-                
+
             }
-            
+
             String sql = "SELECT * FROM ch_transaction tr1, ch_transaction_valori tr2 WHERE tr1.cod=tr2.cod_tr AND tr1.filiale = '" + b1.getCod() + "' ";
             if (datad1 != null) {
                 sql = sql + "AND tr1.data >= '" + datad1 + " 00:00:00' ";
@@ -16121,23 +16125,23 @@ public class Db_Master {
             if (datad2 != null) {
                 sql = sql + "AND tr1.data <= '" + datad2 + " 23:59:59' ";
             }
-            
+
             if (!deleted) {
                 sql = sql + "AND tr1.del_fg <= '0' ";
             }
-            
+
             sql = sql + " ORDER BY tr1.data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             while (rs.next()) {
                 DailyChange_CG d1 = new DailyChange_CG();
-                
+
                 DateTime dt_tr = getDT(rs.getString("tr1.data"), patternsqldate);
                 Users g = Engine.get_user(rs.getString("tr1.user"), list_users);
                 Figures f = Engine.get_figures(fig, rs.getString("tr2.supporto"));
                 Figures p = Engine.get_figures(fig, rs.getString("tr1.localfigures"));
-                
+
                 d1.setCDC(b1.getCod());
                 d1.setSPORTELLO(b1.getDe_branch().toUpperCase());
                 d1.setID(rs.getString("tr1.id"));
@@ -16146,7 +16150,7 @@ public class Db_Master {
                 } else {
                     d1.setDELETE("");
                 }
-                
+
                 d1.setAREA(formatAL(b1.getBrgr_01(), list_group, 1));
                 d1.setCITTA(formatAL(b1.getBrgr_04(), list_group, 1));
                 d1.setUBICAZIONE(formatAL(b1.getBrgr_02(), list_group, 1));
@@ -16158,19 +16162,19 @@ public class Db_Master {
                 d1.setCODUSER(g.getCod());
                 d1.setUSERNOME(g.getDe_nome().toUpperCase());
                 d1.setUSERCOGNOME(g.getDe_cognome().toUpperCase());
-                
+
                 if (rs.getString("tr1.tipotr").equals("B")) {
                     d1.setMETODOPAGAMENTO(f.getDe_supporto());
                 } else {
                     d1.setMETODOPAGAMENTO(p.getDe_supporto());
                 }
-                
+
                 Client c0 = query_Client_transaction(rs.getString("tr1.cod"), rs.getString("tr1.cl_cod"));
                 d1.setRESIDENZACLIENTE(formatALN(c0.getNazione(), nazioni, 1));
                 d1.setNAZIONALITACLIENTE(formatALN(c0.getNazione_nascita(), nazioni, 1));
-                
+
                 d1.setCOMMENTI(rs.getString("tr1.note"));
-                
+
                 d1.setACQUISTOVENDITA(
                         formatType_new(rs.getString("tr1.tipotr"),
                                 rs.getString("tr1.intbook"),
@@ -16178,47 +16182,47 @@ public class Db_Master {
                                 rs.getString("tr1.intbook_1_tf"),
                                 rs.getString("tr1.intbook_2_tf"),
                                 rs.getString("tr1.intbook_3_tf"), listcat, listcaus));
-                
+
                 d1.setTIPOLOGIAACQOVEND(f.getDe_supporto());
-                
+
                 d1.setVALUTA(rs.getString("tr2.valuta"));
                 d1.setQUANTITA((rs.getString("tr2.quantita")));
                 d1.setTASSODICAMBIO((rs.getString("tr2.rate")));
                 d1.setCONTROVALORE((rs.getString("tr2.total")));
                 d1.setCOMMVARIABILE((rs.getString("tr2.com_perc_tot")));
                 d1.setCOMMFISSA((rs.getString("tr2.fx_com")));
-                
+
                 String SPREADBRANCH = "", SPREADBANK = "";
                 d1.setSPREADBRANCH(SPREADBRANCH);
                 d1.setSPREADBANK(SPREADBANK);
                 d1.setSPREADVEND((rs.getString("tr2.spread")));
-                
+
                 double totgm = fd(rs.getString("tr2.spread"))
                         + fd(rs.getString("tr2.tot_com"))
                         + parseDoubleR(rs.getString("tr2.roundvalue"));
-                
+
                 if (is_CZ) {
                     double rv = parseDoubleR_CZ(rs.getString("tr2.roundvalue"), rs.getString("tr1.tipotr").equals("B"));
                     totgm = fd(rs.getString("tr2.spread"))
                             + fd(rs.getString("tr2.tot_com"))
                             + rv;
                 }
-                
+
                 d1.setTOTGM((roundDoubleandFormat(totgm, 2)));
-                
+
                 d1.setPERCCOMM(rs.getString("tr2.com_perc"));
                 double perc_spread = 0.0;
                 if (totgm != 0.0) {
                     perc_spread = fd(rs.getString("tr2.spread")) * 100.0 / totgm;
                 }
-                
+
                 d1.setPERCSPREADVENDITA((roundDoubleandFormat(perc_spread, 2)));
-                
+
                 String bb_status = "N";
                 String sb_status = "N";
-                
+
                 if (rs.getString("tr1.tipotr").equals("S")) {
-                    
+
                     if (rs.getString("tr1.bb").equals("1") || rs.getString("tr1.bb").equals("2")) {
                         if (rs.getString("tr2.bb").equals("Y") || rs.getString("tr2.bb").equals("F")) {
                             bb_status = rs.getString("tr2.bb");
@@ -16229,7 +16233,7 @@ public class Db_Master {
                             sb_status = rs.getString("tr2.bb");
                         }
                     }
-                    
+
                     switch (bb_status) {
                         case "Y":
                             d1.setVENDITABUYBACK(get_Value_history_BB(history_BB, dt_tr, f));
@@ -16243,7 +16247,7 @@ public class Db_Master {
                     }
                     d1.setVENDITASELLBACK("");
                 } else {
-                    
+
                     if (rs.getString("tr1.bb").equals("1")) {
                         if (rs.getString("tr2.bb").equals("Y") || rs.getString("tr2.bb").equals("F")) {
                             bb_status = rs.getString("tr2.bb");
@@ -16254,7 +16258,7 @@ public class Db_Master {
                             sb_status = rs.getString("tr2.bb");
                         }
                     }
-                    
+
                     switch (sb_status) {
                         case "Y":
                             d1.setVENDITASELLBACK(get_Value_history_BB(history_BB, dt_tr, f));
@@ -16268,7 +16272,7 @@ public class Db_Master {
                     }
                     d1.setVENDITABUYBACK("");
                 }
-                
+
                 if (rs.getString("tr1.intbook").equals("1")) {
                     String[] ib = internetbooking_ch(rs.getString("tr1.cod"));
                     if (ib != null) {
@@ -16283,7 +16287,7 @@ public class Db_Master {
                     d1.setMOTIVOPERRIDUZIONEDELLACOMM(formatAL(rs.getString("tr2.low_com_ju"), array_undermincommjustify, 1));
                     d1.setMOTIVOPERRIDUZIONEDELLACOMMFISSA(formatAL(rs.getString("tr2.kind_fix_comm"), array_kindcommissionefissa, 1));
                 }
-                
+
                 Codici_sblocco cs1 = getCod_tr(rs.getString("tr1.cod"), "01");
                 String cs = "";
                 if (cs1 != null) {
@@ -16296,16 +16300,16 @@ public class Db_Master {
 
 //                String loy = Engine.query_LOY_transaction(rs.getString("tr1.cod"), null, "000");
                 String loy = query_LOY_transaction(rs.getString("tr1.cod"));
-                
+
                 if (loy == null) {
                     loy = "";
                 }
                 d1.setLOYALTYCODE(loy);
-                
+
                 out.add(d1);
-                
+
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -16320,12 +16324,12 @@ public class Db_Master {
      * @return
      */
     public TillTransactionList_value list_SanctionAttempts(String[] fil, String datad1, String datad2) {
-        
+
         try {
-            
+
             String sql = "SELECT * FROM ch_transaction tr1, ch_transaction_valori tr2 "
                     + " WHERE tr1.cod=tr2.cod_tr AND tr1.filiale = '" + fil[0] + "' AND del_motiv='TRANSACTION NOT SAVED - INTERNATIONAL SANCTIONS YES' ";
-            
+
             if (datad1 != null) {
                 sql = sql + "AND tr1.data >= '" + datad1 + " 00:00:00' ";
             }
@@ -16334,20 +16338,20 @@ public class Db_Master {
             }
             sql = sql + " ORDER BY tr1.data";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             ArrayList<Figures> fig = list_all_figures();
             ArrayList<CustomerKind> list_customerKind = list_customerKind();
             ArrayList<TillTransactionList_value> dati = new ArrayList<>();
             List<String> listmodify = list_transaction_modify_ch();
-            
+
             while (rs.next()) {
                 TillTransactionList_value rm = new TillTransactionList_value();
-                
+
                 rm.setType(formatTilltr(rs.getString("tr1.del_fg"), rs.getString("tr1.bb"),
                         rs.getString("tr1.fa_number"), rs.getString("tr2.supporto"),
                         rs.getString("tr2.bb"), listmodify.contains(rs.getString("tr1.cod")), this,
                         rs.getString("tr1.refund"), rs.getString("tr1.cod")));
-                
+
                 rm.setTill(rs.getString("tr1.till"));
                 rm.setUser(rs.getString("tr1.user"));
                 rm.setNotr(rs.getString("tr1.id"));
@@ -16367,7 +16371,7 @@ public class Db_Master {
                     lfig = "01";
                 }
                 rm.setFig(lfig);
-                
+
                 if (rs.getString("tr2.supporto").equals("04")) {
                     rm.setPos(rs.getString("tr2.pos"));
                 } else {
@@ -16389,7 +16393,7 @@ public class Db_Master {
                 pdf.setId_filiale(fil[0]);
                 pdf.setDe_filiale(fil[1]);
                 pdf.setDati(dati);
-                
+
                 double setTransvalueresidentbuy = 0.0;
                 double setTransvaluenonresidentbuy = 0.0;
                 double setTransvalueresidentsell = 0.0;
@@ -16398,24 +16402,24 @@ public class Db_Master {
                 double setCommisionvaluenonresidentbuy = 0.0;
                 double setCommisionvaluetresidentsell = 0.0;
                 double setCommisionvaluenonresidentsell = 0.0;
-                
+
                 int setTransactionnumberresidentbuy = 0;
                 int setTransactionnumbernonresidentbuy = 0;
                 int setTransactionnumberresidentsell = 0;
                 int setTransactionnumbernonresidentsell = 0;
-                
+
                 double setInternetbookingamountyes = 0.0;
                 int setInternetbookingnumberyes = 0;
                 double setInternetbookingamountno = 0.0;
                 int setInternetbookingnumberno = 0;
-                
+
                 double setPosbuyamount = 0.0;
                 int setPosbuynumber = 0;
                 double setPossellamount = 0.0;
                 int setPossellnumber = 0;
                 double setBanksellamount = 0.0;
                 int setBanksellnumber = 0;
-                
+
                 for (int i = 0; i < dati.size(); i++) {
                     TillTransactionList_value rm = dati.get(i);
                     if (rm.getResidentnonresident().equals("Resident") && rm.getKind().toUpperCase().startsWith("BUY") && !rm.getType().contains("D")) {
@@ -16428,7 +16432,7 @@ public class Db_Master {
                         setCommisionvaluenonresidentbuy = setCommisionvaluenonresidentbuy + fd(rm.getComfree()) + parseDoubleR(rm.getRound());
                         setTransactionnumbernonresidentbuy++;
                     }
-                    
+
                     if (rm.getResidentnonresident().equals("Resident") && rm.getKind().toUpperCase().startsWith("SELL") && !rm.getType().contains("D")) {
                         setTransvalueresidentsell = setTransvalueresidentsell + fd(rm.getAmount());
                         setCommisionvaluetresidentsell = setCommisionvaluetresidentsell + fd(rm.getComfree()) + parseDoubleR(rm.getRound());
@@ -16439,7 +16443,7 @@ public class Db_Master {
                         setCommisionvaluenonresidentsell = setCommisionvaluenonresidentsell + fd(rm.getComfree()) + parseDoubleR(rm.getRound());
                         setTransactionnumbernonresidentsell++;
                     }
-                    
+
                     boolean ca = false;
                     if (rm.getKind().toUpperCase().startsWith("SELL") && !rm.getType().contains("D")) {
                         if (!rm.getInternetbooking().equals("0")) {
@@ -16454,7 +16458,7 @@ public class Db_Master {
                         setPosbuynumber++;
                         ca = true;
                     }
-                    
+
                     if (!rm.getPos().equals("-") && !rm.getType().contains("D")) {
                         if (rm.getKind().toUpperCase().startsWith("SELL")) {
                             if (rm.getFig().equals("06") || rm.getFig().equals("07")) {
@@ -16472,7 +16476,7 @@ public class Db_Master {
                         }
                     }
                 }
-                
+
                 pdf.setTransvalueresidentbuy(roundDoubleandFormat(setTransvalueresidentbuy, 2));
                 pdf.setTransvaluenonresidentbuy(roundDoubleandFormat(setTransvaluenonresidentbuy, 2));
                 pdf.setTransvalueresidentsell(roundDoubleandFormat(setTransvalueresidentsell, 2));
@@ -16493,12 +16497,12 @@ public class Db_Master {
                 pdf.setPosbuynumber(roundDoubleandFormat(setPosbuynumber, 0) + "");
                 pdf.setPossellamount(roundDoubleandFormat(setPossellamount, 2));
                 pdf.setPossellnumber(roundDoubleandFormat(setPossellnumber, 0) + "");
-                
+
                 pdf.setBankbuyamount("0.00");
                 pdf.setBankbuynumber("0");
                 pdf.setBanksellamount(roundDoubleandFormat(setBanksellamount, 2));
                 pdf.setBanksellnumber(roundDoubleandFormat(setBanksellnumber, 0) + "");
-                
+
                 return pdf;
             }
         } catch (SQLException ex) {
@@ -16516,10 +16520,10 @@ public class Db_Master {
      */
     public TillTransactionListCurrency_value list_TillTransactionList_TOBANK_CACZ(String[] fil, String datad1, String datad2) {
         try {
-            
+
             String sql = "select * from et_change tr1, et_change_valori tr2 where tr1.fg_brba='BA'"
                     + " AND tr1.fg_tofrom='T' AND  tr1.cod=tr2.cod AND tr2.kind='04' AND tr1.filiale='" + fil[0] + "' ";
-            
+
             if (datad1 != null) {
                 sql = sql + "AND tr1.dt_it >= '" + datad1 + " 00:00:00' ";
             }
@@ -16527,9 +16531,9 @@ public class Db_Master {
                 sql = sql + "AND tr1.dt_it <= '" + datad2 + " 23:59:59' ";
             }
             sql = sql + " ORDER BY tr2.currency,tr1.dt_it";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             ArrayList<TillTransactionListCurrency_value> dati = new ArrayList<>();
             while (rs.next()) {
                 TillTransactionListCurrency_value rm = new TillTransactionListCurrency_value();
@@ -16554,7 +16558,7 @@ public class Db_Master {
                 rm.setInternetbooking("");
                 dati.add(rm);
             }
-            
+
             if (dati.size() > 0) {
                 TillTransactionListCurrency_value pdf = new TillTransactionListCurrency_value();
                 pdf.setId_filiale(fil[0]);
@@ -16577,10 +16581,10 @@ public class Db_Master {
      */
     public TillTransactionListCurrency_value list_TillTransactionList_value_CACZ(String[] fil, String datad1, String datad2) {
         try {
-            
+
             String sql = "SELECT * FROM ch_transaction tr1, ch_transaction_valori tr2 "
                     + " WHERE tr1.cod=tr2.cod_tr AND tr1.filiale = '" + fil[0] + "' AND tr2.supporto='04' ";
-            
+
             if (datad1 != null) {
                 sql = sql + "AND tr1.data >= '" + datad1 + " 00:00:00' ";
             }
@@ -16588,9 +16592,9 @@ public class Db_Master {
                 sql = sql + "AND tr1.data <= '" + datad2 + " 23:59:59' ";
             }
             sql = sql + " ORDER BY tr2.valuta,tr1.data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             ArrayList<Figures> fig = list_all_figures();
             List<String> listmodify = list_transaction_modify_ch();
             ArrayList<TillTransactionListCurrency_value> dati = new ArrayList<>();
@@ -16620,7 +16624,7 @@ public class Db_Master {
                 rm.setInternetbooking(rs.getString("tr1.intbook"));
                 dati.add(rm);
             }
-            
+
             if (dati.size() > 0) {
                 TillTransactionListCurrency_value pdf = new TillTransactionListCurrency_value();
                 pdf.setId_filiale(fil[0]);
@@ -16642,9 +16646,9 @@ public class Db_Master {
      * @return
      */
     public TillTransactionList_value list_TillTransactionList_value(String[] fil, String datad1, String datad2) {
-        
+
         try {
-            
+
             String sql = "SELECT * FROM ch_transaction tr1, ch_transaction_valori tr2 "
                     + " WHERE tr1.cod=tr2.cod_tr AND tr1.filiale = '" + fil[0] + "' ";
 //                    + " WHERE tr1.cod=tr2.cod_tr AND tr1.cod = cl.codtr AND tr1.filiale = '" + fil[0] + "' ";
@@ -16657,20 +16661,20 @@ public class Db_Master {
             }
             sql = sql + " ORDER BY tr1.data";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             ArrayList<Figures> fig = list_all_figures();
             ArrayList<CustomerKind> list_customerKind = list_customerKind();
             ArrayList<TillTransactionList_value> dati = new ArrayList<>();
             List<String> listmodify = list_transaction_modify_ch();
             while (rs.next()) {
                 TillTransactionList_value rm = new TillTransactionList_value();
-                
+
                 rm.setType(formatTilltr(rs.getString("tr1.del_fg"), rs.getString("tr1.bb"),
                         rs.getString("tr1.fa_number"), rs.getString("tr2.supporto"),
                         rs.getString("tr2.bb"), listmodify.contains(rs.getString("tr1.cod")),
                         this,
                         rs.getString("tr1.refund"), rs.getString("tr1.cod")));
-                
+
                 rm.setTill(rs.getString("tr1.till"));
                 rm.setUser(rs.getString("tr1.user"));
                 rm.setNotr(rs.getString("tr1.id"));
@@ -16690,7 +16694,7 @@ public class Db_Master {
                     lfig = "01";
                 }
                 rm.setFig(lfig);
-                
+
                 if (rs.getString("tr2.supporto").equals("04")) {
                     rm.setPos(rs.getString("tr2.pos"));
                 } else {
@@ -16702,7 +16706,7 @@ public class Db_Master {
                 if (is_CZ) {
                     rm.setRound(rs.getString("tr2.roundvalue"));
                 }
-                
+
                 if (Engine.get_customerKind(list_customerKind, rs.getString("tr1.tipocliente")).getFg_nazionalita().equals("1")) {
                     rm.setResidentnonresident("Resident");
                 } else {
@@ -16716,7 +16720,7 @@ public class Db_Master {
                 pdf.setId_filiale(fil[0]);
                 pdf.setDe_filiale(fil[1]);
                 pdf.setDati(dati);
-                
+
                 double setTransvalueresidentbuy = 0.0;
                 double setTransvaluenonresidentbuy = 0.0;
                 double setTransvalueresidentsell = 0.0;
@@ -16725,24 +16729,24 @@ public class Db_Master {
                 double setCommisionvaluenonresidentbuy = 0.0;
                 double setCommisionvaluetresidentsell = 0.0;
                 double setCommisionvaluenonresidentsell = 0.0;
-                
+
                 int setTransactionnumberresidentbuy = 0;
                 int setTransactionnumbernonresidentbuy = 0;
                 int setTransactionnumberresidentsell = 0;
                 int setTransactionnumbernonresidentsell = 0;
-                
+
                 double setInternetbookingamountyes = 0.0;
                 int setInternetbookingnumberyes = 0;
                 double setInternetbookingamountno = 0.0;
                 int setInternetbookingnumberno = 0;
-                
+
                 double setPosbuyamount = 0.0;
                 int setPosbuynumber = 0;
                 double setPossellamount = 0.0;
                 int setPossellnumber = 0;
                 double setBanksellamount = 0.0;
                 int setBanksellnumber = 0;
-                
+
                 for (int i = 0; i < dati.size(); i++) {
                     TillTransactionList_value rm = dati.get(i);
                     if (rm.getResidentnonresident().equals("Resident") && rm.getKind().toUpperCase().startsWith("BUY") && !rm.getType().contains("D")) {
@@ -16755,7 +16759,7 @@ public class Db_Master {
                         setCommisionvaluenonresidentbuy = setCommisionvaluenonresidentbuy + fd(rm.getComfree()) + parseDoubleR(rm.getRound());
                         setTransactionnumbernonresidentbuy++;
                     }
-                    
+
                     if (rm.getResidentnonresident().equals("Resident") && rm.getKind().toUpperCase().startsWith("SELL") && !rm.getType().contains("D")) {
                         setTransvalueresidentsell = setTransvalueresidentsell + fd(rm.getAmount());
                         setCommisionvaluetresidentsell = setCommisionvaluetresidentsell + fd(rm.getComfree()) + parseDoubleR(rm.getRound());
@@ -16766,7 +16770,7 @@ public class Db_Master {
                         setCommisionvaluenonresidentsell = setCommisionvaluenonresidentsell + fd(rm.getComfree()) + parseDoubleR(rm.getRound());
                         setTransactionnumbernonresidentsell++;
                     }
-                    
+
                     boolean ca = false;
                     if (rm.getKind().toUpperCase().startsWith("SELL") && !rm.getType().contains("D")) {
                         if (!rm.getInternetbooking().equals("0")) {
@@ -16777,14 +16781,14 @@ public class Db_Master {
                             setInternetbookingnumberno++;
                         }
                     } else if (rm.getKind().toUpperCase().contains("CASH ADVANCE") && !rm.getType().contains("D")) {
-                        
+
                         setPosbuyamount = setPosbuyamount + fd(rm.getTotal());
 //                        setPosbuyamount = setPosbuyamount + fd(rm.getAmount());
 
                         setPosbuynumber++;
                         ca = true;
                     }
-                    
+
                     if (!rm.getPos().equals("-") && !rm.getType().contains("D")) {
                         if (rm.getKind().toUpperCase().startsWith("SELL")) {
                             if (rm.getFig().equals("06") || rm.getFig().equals("07")) {
@@ -16802,7 +16806,7 @@ public class Db_Master {
                         }
                     }
                 }
-                
+
                 pdf.setTransvalueresidentbuy(roundDoubleandFormat(setTransvalueresidentbuy, 2));
                 pdf.setTransvaluenonresidentbuy(roundDoubleandFormat(setTransvaluenonresidentbuy, 2));
                 pdf.setTransvalueresidentsell(roundDoubleandFormat(setTransvalueresidentsell, 2));
@@ -16819,17 +16823,17 @@ public class Db_Master {
                 pdf.setInternetbookingnumberyes(roundDoubleandFormat(setInternetbookingnumberyes, 0));
                 pdf.setInternetbookingamountno(roundDoubleandFormat(setInternetbookingamountno, 2) + "");
                 pdf.setInternetbookingnumberno(roundDoubleandFormat(setInternetbookingnumberno, 0) + "");
-                
+
                 pdf.setPosbuyamount(roundDoubleandFormat(setPosbuyamount, 2));
                 pdf.setPosbuynumber(roundDoubleandFormat(setPosbuynumber, 0) + "");
                 pdf.setPossellamount(roundDoubleandFormat(setPossellamount, 2));
                 pdf.setPossellnumber(roundDoubleandFormat(setPossellnumber, 0) + "");
-                
+
                 pdf.setBankbuyamount("0.00");
                 pdf.setBankbuynumber("0");
                 pdf.setBanksellamount(roundDoubleandFormat(setBanksellamount, 2));
                 pdf.setBanksellnumber(roundDoubleandFormat(setBanksellnumber, 0) + "");
-                
+
                 return pdf;
             }
         } catch (SQLException ex) {
@@ -16857,10 +16861,10 @@ public class Db_Master {
             while (rs0.next()) {
                 lo = lo - fd(rs0.getString("value"));
             }
-            
+
             String sql = "SELECT * FROM ch_transaction tr1 WHERE tr1.del_fg='0' AND tr1.filiale = '" + fil[0] + "' "
                     + "AND tr1.data >= '" + datad1 + "' AND tr1.data <= '" + datad2 + "' ";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
                 if (rs.getString("tr1.tipotr").equals("B")) {
@@ -16894,7 +16898,7 @@ public class Db_Master {
             String sql1 = "SELECT supporto,fg_inout,total FROM nc_transaction WHERE del_fg='0' AND filiale = '" + fil[0] + "' "
                     + "AND data >= '" + datad1 + "' "
                     + "AND data <= '" + datad2 + "' ";
-            
+
             ResultSet rs1 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql1);
             while (rs1.next()) {
                 String supporto = rs1.getString("supporto");
@@ -16967,15 +16971,15 @@ public class Db_Master {
      * @return
      */
     public Daily_value list_Daily_value(String[] fil, String datad1, String datad2, boolean now, boolean contuk) {
-        
+
         if (datad1 != null && datad2 != null) {
-            
+
             try {
-                
+
                 String valutalocale = get_local_currency()[0];
-                
+
                 Daily_value d = new Daily_value();
-                
+
                 double setPurchTotal = 0.0;
                 double setPurchComm = 0.0;
                 double setPurchGrossTot;
@@ -16991,19 +16995,19 @@ public class Db_Master {
                 double setCashAdGrossTot;
                 double setCashAdSpread = 0.0;
                 double setCashAdProfit;
-                
+
                 double refund = 0.0;
                 double refundshow = 0.0;
 
                 //refund
                 String sql0 = "SELECT value FROM ch_transaction_refund where status = '1' and method = 'BR' and branch_cod = '" + fil[0] + "'";
-                
+
                 sql0 = sql0 + "AND dt_refund >= '" + datad1 + ":00' ";
-                
+
                 sql0 = sql0 + "AND dt_refund <= '" + datad2 + ":59' ";
-                
+
                 sql0 = sql0 + " ORDER BY dt_refund";
-                
+
                 ResultSet rs0 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql0);
                 while (rs0.next()) {
                     refund = refund + fd(rs0.getString("value"));
@@ -17012,37 +17016,37 @@ public class Db_Master {
 
                 //TRANSACTION
                 String sql = "SELECT * FROM ch_transaction tr1 WHERE tr1.del_fg='0' AND tr1.filiale = '" + fil[0] + "' ";
-                
+
                 sql = sql + "AND tr1.data >= '" + datad1 + ":00' ";
-                
+
                 sql = sql + "AND tr1.data <= '" + datad2 + ":59' ";
-                
+
                 sql = sql + " ORDER BY tr1.data";
-                
+
                 ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-                
+
                 int setNoTransPurch = 0;
                 int setNoTransCC = 0;
                 int setNoTransSales = 0;
                 int setTotal = 0;
                 int setTotPos = 0;
                 int setTotAcc = 0;
-                
+
                 double poamount = 0.00;
-                
+
                 ArrayList<String[]> cc = credit_card_enabled();
-                
+
                 ArrayList<String[]> bc = list_bankAccount();
-                
+
                 ArrayList<DailyCOP> dclist = new ArrayList<>();
-                
+
                 for (int x = 0; x < cc.size(); x++) {
                     DailyCOP dc = new DailyCOP(cc.get(x)[1], cc.get(x)[0]);
                     dclist.add(dc);
                 }
-                
+
                 ArrayList<DailyBank> listdb = new ArrayList<>();
-                
+
                 for (int x = 0; x < bc.size(); x++) {
                     DailyBank dc = new DailyBank(bc.get(x)[1], bc.get(x)[0]);
                     listdb.add(dc);
@@ -17052,9 +17056,9 @@ public class Db_Master {
                     setTotal++;
                     if (rs.getString("tr1.tipotr").equals("B")) {
                         setNoTransPurch++;
-                        
+
                         ResultSet rsval = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery("SELECT * FROM ch_transaction_valori WHERE cod_tr = '" + rs.getString("cod") + "'");
-                        
+
                         while (rsval.next()) {
                             switch (rsval.getString("supporto")) {
                                 case "04": {
@@ -17071,7 +17075,7 @@ public class Db_Master {
                                     DailyCOP dc = get_obj(dclist, rsval.getString("pos"));
                                     if (dc != null) {
                                         double start = fd(dc.getCashAdNtrans());
-                                        
+
                                         start++;
                                         dc.setCashAdNtrans(roundDoubleandFormat(start, 0));
                                         double d1 = fd(dc.getCashAdAmount());
@@ -17132,7 +17136,7 @@ public class Db_Master {
                                     break;
                             }
                         }
-                        
+
                     } else {
                         setNoTransSales++;
                         setSalesTotal = setSalesTotal + fd(rs.getString("tr1.pay"));
@@ -17143,7 +17147,7 @@ public class Db_Master {
                         setSalesComm = setSalesComm + fd(rs.getString("tr1.commission")) + fd(rs.getString("tr1.round"));
                         ij++;
                         setSalesSpread = setSalesSpread + fd(rs.getString("tr1.spread_total"));
-                        
+
                         if (rs.getString("tr1.localfigures").equals("06")) {//CREDIT CARD
                             DailyCOP dc = get_obj(dclist, rs.getString("tr1.pos"));
                             if (dc != null) {
@@ -17170,7 +17174,7 @@ public class Db_Master {
                             }
                             setTotPos++;
                         } else if (rs.getString("localfigures").equals("08")) {
-                            
+
                             DailyBank dc = get_obj(listdb, rs.getString("tr1.pos"));
                             if (dc != null) {
                                 double start = fd(dc.getNtrans());
@@ -17181,21 +17185,21 @@ public class Db_Master {
                                 dc.setAmount(roundDoubleandFormat(d1, 2));
                                 poamount = poamount + fd(rs.getString("tr1.pay"));
                             }
-                            
+
                             setTotAcc++;
                         }
-                        
+
                         ResultSet rsval = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery("SELECT * FROM ch_transaction_valori WHERE cod_tr = '" + rs.getString("cod") + "'");
                         while (rsval.next()) {
                             if (rsval.getString("supporto").equals("04")) {//CASH ADVANCE
                                 setCashAdNetTot = setCashAdNetTot + fd(rsval.getString("total"));
-                                
+
                                 if (is_CZ) {
                                     setCashAdComm = setCashAdComm + fd(rsval.getString("tot_com")) + parseDoubleR_CZ(rsval.getString("roundvalue"), true);
                                 } else {
                                     setCashAdComm = setCashAdComm + fd(rsval.getString("tot_com")) + fd(rsval.getString("roundvalue"));
                                 }
-                                
+
                                 DailyCOP dc = get_obj(dclist, rsval.getString("pos"));
                                 if (dc != null) {
                                     double start = fd(dc.getCashAdNtrans());
@@ -17205,50 +17209,50 @@ public class Db_Master {
                                     d1 = d1 + fd(rsval.getString("total"));
                                     dc.setCashAdAmount(roundDoubleandFormat(d1, 2));
                                 }
-                                
+
                             }
-                            
+
                         }
                     }
-                    
+
                 }
-                
+
                 setPurchGrossTot = setPurchTotal + setPurchComm;
                 //setSalesGrossTot = setSalesTotal - setSalesComm;
                 setCashAdGrossTot = setCashAdNetTot + setCashAdComm;
-                
+
                 setPurchProfit = setPurchComm + setPurchSpread;
                 setSalesProfit = setSalesComm + setSalesSpread;
                 setCashAdProfit = setCashAdComm + setCashAdSpread;
 
                 //NO CHANGE
                 String sql1 = "SELECT causale_nc,supporto,total,pos,fg_inout,quantita,gruppo_nc FROM nc_transaction WHERE del_fg='0' AND filiale = '" + fil[0] + "' ";
-                
+
                 if (is_UK) {
                     sql1 = sql1 + "AND gruppo_nc <> 'DEPOS' ";
                 }
 
 //                String sql1 = "SELECT * FROM nc_transaction WHERE del_fg='0' AND filiale = '" + fil[0] + "' ";
                 sql1 = sql1 + "AND data >= '" + datad1 + ":00' ";
-                
+
                 sql1 = sql1 + "AND data <= '" + datad2 + ":59' ";
-                
+
                 sql1 = sql1 + " ORDER BY data";
-                
+
                 ArrayList<NC_causal> nc_caus = query_nc_causal_filial(fil[0], null);
-                
+
                 ResultSet rs1 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql1);
                 double totalnotesnochange = 0.00;
-                
+
                 ArrayList<String[]> listkind = nc_kind_order();
 
                 //ArrayList<String[]> list_nc_descr = list_nc_descr();
                 ArrayList<DailyKind> dklist = new ArrayList<>();
                 ArrayList<DailyKind> dkATL = new ArrayList<>();
-                
+
                 for (int i = 0; i < listkind.size(); i++) {
                     rs1.beforeFirst();
-                    
+
                     String kind = listkind.get(i)[0];
                     int setToNrTran = 0;
                     double setToTotal = 0.00;
@@ -17270,7 +17274,7 @@ public class Db_Master {
                             String supporto = rs1.getString("supporto");
                             if (kindrs.equals("8")) {
                                 if (rs1.getString("fg_inout").equals("1") || rs1.getString("fg_inout").equals("3")) {
-                                    
+
                                     setFromNrTran = setFromNrTran + parseIntR(rs1.getString("quantita"));
                                     setFromTotal = setFromTotal + fd(rs1.getString("total"));
                                     switch (supporto) {
@@ -17338,9 +17342,9 @@ public class Db_Master {
                                     }
                                 }
                             } else {
-                                
+
                                 if (rs1.getString("fg_inout").equals("1") || rs1.getString("fg_inout").equals("3")) {
-                                    
+
                                     setFromNrTran++;
                                     setFromTotal = setFromTotal + fd(rs1.getString("total"));
                                     switch (supporto) {
@@ -17394,7 +17398,7 @@ public class Db_Master {
                                             break;
                                     }
                                 } else {
-                                    
+
                                     if (!nc2.getNc_de().equals("14")) { //solo gli acquisti non vengono considerati
                                         setToNrTran++;
                                         setToTotal = setToTotal + fd(rs1.getString("total"));
@@ -17411,14 +17415,14 @@ public class Db_Master {
                                 }
                             }
                         }
-                        
+
                     }
-                    
+
                     DailyKind dk = new DailyKind();
                     dk.setKind(listkind.get(i)[1]);
-                    
+
                     dk.setTo(true);
-                    
+
                     if (kind.equals("3") || kind.equals("8")) {
                         dk.setFrom(false);
                     } else {
@@ -17436,7 +17440,7 @@ public class Db_Master {
                     dk.setFromB(roundDoubleandFormat(setFromB, 2));
                     dk.setEtichetta1(listkind.get(i)[2]);
                     dk.setEtichetta2(listkind.get(i)[3]);
-                    
+
                     if (kind.equals("8")) {
                         dkATL.add(dk);
                     } else {
@@ -17444,10 +17448,10 @@ public class Db_Master {
                         totalnotesnochange = totalnotesnochange + setToLocalCurr + setFromLocalCurr;
                     }
                 }
-                
+
                 d.setDati(dklist);
                 d.setDatiatl(dkATL);
-                
+
                 double setBaPurchTotal = 0.00;
                 double setBaPurchSpread = 0.00;
                 double setBaPurchCreditCard = 0.00;
@@ -17467,22 +17471,22 @@ public class Db_Master {
 
                 //EXTERNAL TRANSFER
                 String sql2 = "SELECT * FROM et_change WHERE fg_annullato = '0' AND filiale = '" + fil[0] + "' ";
-                
+
                 if (contuk) {
                     sql2 = sql2 + "AND cod_dest <> '000' ";
                 }
-                
+
                 sql2 = sql2 + "AND dt_it >= '" + datad1 + ":00' ";
-                
+
                 sql2 = sql2 + "AND dt_it <= '" + datad2 + ":59' ";
-                
+
                 sql2 = sql2 + " ORDER BY dt_it";
                 ResultSet rs2 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql2);
-                
+
                 while (rs2.next()) {
-                    
+
                     ResultSet rs2val = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery("SELECT * FROM et_change_valori WHERE cod = '" + rs2.getString("cod") + "'");
-                    
+
                     if (rs2.getString("fg_tofrom").equals("T")) { //sales
 
                         if (rs2.getString("fg_brba").equals("BA")) { //BANK
@@ -17511,20 +17515,20 @@ public class Db_Master {
                         } else {//BRANCH
                             while (rs2val.next()) {
                                 setBraSalesSpread = setBraSalesSpread + fd(rs2val.getString("ip_spread"));
-                                
+
                                 if (rs2val.getString("currency").equals(valutalocale) && rs2val.getString("kind").equals("01")) {
                                     setBraSalesLocalCurr = setBraSalesLocalCurr + fd(rs2val.getString("ip_total"));
                                 } else {
                                     setBraSalesTotal = setBraSalesTotal + fd(rs2val.getString("ip_total"));
                                 }
                             }
-                            
+
                         }
                     } else if (rs2.getString("fg_brba").equals("BA")) { //BANK
                         while (rs2val.next()) {
-                            
+
                             setBaPurchSpread = setBaPurchSpread + fd(rs2val.getString("ip_spread"));
-                            
+
                             switch (rs2val.getString("kind")) {
                                 case "01":
                                     if (rs2val.getString("currency").equals(valutalocale)) {
@@ -17544,7 +17548,7 @@ public class Db_Master {
                                     setBaPurchTransfOther = setBaPurchTransfOther + fd(rs2val.getString("ip_total"));
                                     break;
                             }
-                            
+
                         }
                     } else {//BRANCH
                         while (rs2val.next()) {
@@ -17555,30 +17559,30 @@ public class Db_Master {
                                 setBraPurchTotal = setBraPurchTotal + fd(rs2val.getString("ip_total"));
                             }
                         }
-                        
+
                     }
                 }
-                
+
                 d.setPurchTotal(roundDoubleandFormat(setPurchTotal, 2));
                 d.setPurchComm(roundDoubleandFormat(setPurchComm, 2));
                 d.setPurchGrossTot(roundDoubleandFormat(setPurchGrossTot, 2));
                 d.setPurchSpread(roundDoubleandFormat(setPurchSpread, 2));
                 d.setPurchProfit(roundDoubleandFormat(setPurchProfit, 2));
-                
+
                 d.setSalesTotal(roundDoubleandFormat(setSalesTotal, 2));
                 d.setSalesComm(roundDoubleandFormat(setSalesComm, 2));
                 d.setSalesGrossTot(roundDoubleandFormat(setSalesGrossTot, 2));
                 d.setSalesSpread(roundDoubleandFormat(setSalesSpread, 2));
                 d.setSalesProfit(roundDoubleandFormat(setSalesProfit, 2));
-                
+
                 d.setCashAdNetTot(roundDoubleandFormat(setCashAdNetTot, 2));
                 d.setCashAdComm(roundDoubleandFormat(setCashAdComm, 2));
                 d.setCashAdGrossTot(roundDoubleandFormat(setCashAdGrossTot, 2));
                 d.setCashAdSpread(roundDoubleandFormat(setCashAdSpread, 2));
                 d.setCashAdProfit(roundDoubleandFormat(setCashAdProfit, 2));
-                
+
                 d.setDatiCOP(dclist);
-                
+
                 d.setBaPurchTotal(roundDoubleandFormat(setBaPurchTotal, 2));
                 d.setBaPurchSpread(roundDoubleandFormat(setBaPurchSpread, 2));
                 d.setBaPurchCreditCard(roundDoubleandFormat(setBaPurchCreditCard, 2));
@@ -17589,28 +17593,28 @@ public class Db_Master {
                 d.setBaSalesCreditCard(roundDoubleandFormat(setBaSalesCreditCard, 2));
                 d.setBaSalesTransfNotes(roundDoubleandFormat(setBaSalesTransfNotes, 2));
                 d.setBaSalesTransfOther(roundDoubleandFormat(setBaSalesTransfOther, 2));
-                
+
                 d.setBraPurchTotal(roundDoubleandFormat(setBraPurchTotal, 2));
                 d.setBraPurchLocalCurr(roundDoubleandFormat(setBraPurchLocalCurr, 2));
                 d.setBraSalesTotal(roundDoubleandFormat(setBraSalesTotal, 2));
-                
+
                 if (newpread) {
                     setBraSalesSpread = 0.0;
                     setBraPurchSpread = 0.0;
                 }
-                
+
                 d.setBraSalesSpread(roundDoubleandFormat(setBraSalesSpread, 2));
                 d.setBraPurchSpread(roundDoubleandFormat(setBraPurchSpread, 2));
-                
+
                 d.setBraSalesLocalCurr(roundDoubleandFormat(setBraSalesLocalCurr, 2));
                 d.setRefund(roundDoubleandFormat(refundshow, 2));
-                
+
                 double setGroffTurnover = setPurchTotal + setSalesTotal + setCashAdNetTot;
                 double setGrossProfit = setPurchComm + setSalesComm + setCashAdComm + setSalesSpread + setBaSalesSpread + setBraSalesSpread;
                 if (newpread) {
                     setGrossProfit = setPurchProfit + setCashAdProfit + setSalesProfit + setBaSalesSpread + setBaPurchSpread;
                 }
-                
+
                 double setLastCashOnPrem = 0.0;
                 double setFx = 0.0;
                 ArrayList<Office_sp> li = list_query_officesp2(fil[0], subDays(datad1.substring(0, 10), patternsql, 1));
@@ -17634,19 +17638,19 @@ public class Db_Master {
                     Office_sp o = list_query_last_officesp(fil[0], datad2);
                     if (o != null) {
                         double[] d1 = list_dettagliotransazioni(fil, o.getData(), datad2, valutalocale);
-                        
+
                         System.out.println("rc.so.db.Db_Master.list_Daily_value() " + o.getData());
                         System.out.println("rc.so.db.Db_Master.list_Daily_value() " + datad2);
                         System.out.println("rc.so.db.Db_Master.list_Daily_value() " + d1[1]);
                         System.out.println("rc.so.db.Db_Master.list_Daily_value() " + fd(o.getTotal_fx()));
-                        
+
                         setFx = fd(o.getTotal_fx()) + d1[1];
                     }
                 }
-                
+
                 String oper = get_national_office().getChangetype();
                 boolean dividi = oper.equals("/");
-                
+
                 double setCashOnPremFromTrans
                         = setSalesTotal
                         - setPurchTotal
@@ -17672,7 +17676,7 @@ public class Db_Master {
                         setFxClosureErrorDeclared = setFxClosureErrorDeclared + getControvalore(fxerr, fd(rs10.getString("rate")), dividi);
                     }
                 }
-                
+
                 double setCashOnPrem = setCashOnPremFromTrans + setCashOnPremError;
                 d.setGroffTurnover(roundDoubleandFormat(setGroffTurnover, 2));
                 d.setGrossProfit(roundDoubleandFormat(setGrossProfit, 2));
@@ -17680,27 +17684,27 @@ public class Db_Master {
                 d.setCashOnPrem(roundDoubleandFormat(setCashOnPrem, 2));
                 d.setFx(roundDoubleandFormat(setFx, 2));
                 d.setCashOnPremFromTrans(roundDoubleandFormat(setCashOnPremFromTrans, 2));
-                
+
                 if (setCashOnPremError == 0) {
                     d.setCashOnPremError(roundDoubleandFormat(setCashOnPremError, 2).replaceAll("-", ""));
                 } else {
                     d.setCashOnPremError(roundDoubleandFormat(setCashOnPremError, 2));
                 }
-                
+
                 d.setFxClosureErrorDeclared(roundDoubleandFormat(setFxClosureErrorDeclared, 2));
                 d.setNoTransPurch(valueOf(setNoTransPurch));
                 d.setNoTransCC(valueOf(setNoTransCC));
                 d.setNoTransSales(valueOf(setNoTransSales));
-                
+
                 d.setTotal(valueOf(setNoTransPurch + setNoTransCC + setNoTransSales));
-                
+
                 d.setTotPos(valueOf(setTotPos));
                 d.setTotAcc(valueOf(setTotAcc));
                 d.setDatiBank(listdb);
                 d.setId_filiale(fil[0]);
                 d.setDe_filiale(fil[1]);
                 d.setData(formatStringtoStringDate(datad1.substring(0, 10), patternsql, patternnormdate_filter));
-                
+
                 return d;
             } catch (SQLException | NumberFormatException ex) {
                 ex.printStackTrace();
@@ -17729,11 +17733,11 @@ public class Db_Master {
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "tr1.filiale = '" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             if (datad1 != null) {
                 sql = sql + "AND tr1.data >= '" + datad1 + " 00:00:00' ";
             }
@@ -17741,15 +17745,15 @@ public class Db_Master {
                 sql = sql + "AND tr1.data <= '" + datad2 + " 23:59:59' ";
             }
             sql = sql + " ORDER BY tr1.tipotr DESC,tr1.data ASC";
-            
+
             ArrayList<String> giàinseriti = new ArrayList<>();
-            
+
             ArrayList<TillTransactionListBB_value> dati = new ArrayList<>();
             ArrayList<CustomerKind> list_customerKind = list_customerKind();
             ArrayList<Figures> fig = list_all_figures();
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             ResultSet rsALL = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sqlALL);
-            
+
             LinkedList<String> fidcode = new LinkedList<>();
             LinkedList<Ch_transaction> codb = new LinkedList<>();
             while (rsALL.next()) {
@@ -17800,7 +17804,7 @@ public class Db_Master {
                 ch.setCn_number(rsALL.getString("tr1.cn_number"));
                 codb.add(ch);
             }
-            
+
             while (rs.next()) {
                 boolean isbuy = rs.getString("tr1.tipotr").equals("B");
                 String cod = rs.getString("tr1.cod");
@@ -17869,7 +17873,7 @@ public class Db_Master {
                         dati.add(rm);
                     }
                 }
-                
+
                 if (havebuy && codbuy != null) {
                     ArrayList<Ch_transaction_value> buy_value = query_transaction_value(codbuy.getCod());
                     for (int y = 0; y < buy_value.size(); y++) {
@@ -17888,7 +17892,7 @@ public class Db_Master {
                         rm.setRate(buy_value.get(y).getRate());
                         rm.setTotal(buy_value.get(y).getTotal());
                         rm.setPerc(buy_value.get(y).getCom_perc());
-                        
+
                         rm.setComfree(buy_value.get(y).getTot_com());
                         rm.setPayinpayout(buy_value.get(y).getNet());
                         rm.setCustomer(" ");
@@ -17897,7 +17901,7 @@ public class Db_Master {
                         if (is_CZ) {
                             rm.setRound(buy_value.get(y).getRoundvalue());
                         }
-                        
+
                         if (buy_value.get(y).getSupporto().equals("04")) {
                             rm.setPos(buy_value.get(y).getPos());
                         } else {
@@ -17916,9 +17920,9 @@ public class Db_Master {
                         rm.setFig(lfig);
                         dati.add(rm);
                     }
-                    
+
                 }
-                
+
                 TillTransactionListBB_value rm = new TillTransactionListBB_value();
                 rm.setId_filiale("");
                 rm.setDe_filiale("");
@@ -17943,15 +17947,15 @@ public class Db_Master {
                 rm.setResidentnonresident("");
                 rm.setFig("");
                 dati.add(rm);
-                
+
             }
-            
+
             if (dati.size() > 0) {
                 TillTransactionListBB_value pdf = new TillTransactionListBB_value();
                 pdf.setId_filiale(branch.get(0));
                 pdf.setDe_filiale(formatBankBranchReport(branch.get(0), "BR", null, Engine.list_branch_enabled()));
                 pdf.setDati(dati);
-                
+
                 double setTransvalueresidentbuy = 0.0;
                 double setTransvaluenonresidentbuy = 0.0;
                 double setTransvalueresidentsell = 0.0;
@@ -17960,26 +17964,26 @@ public class Db_Master {
                 double setCommisionvaluenonresidentbuy = 0.0;
                 double setCommisionvaluetresidentsell = 0.0;
                 double setCommisionvaluenonresidentsell = 0.0;
-                
+
                 int setTransactionnumberresidentbuy = 0;
                 int setTransactionnumbernonresidentbuy = 0;
                 int setTransactionnumberresidentsell = 0;
                 int setTransactionnumbernonresidentsell = 0;
-                
+
                 double setInternetbookingamountyes = 0.0;
                 int setInternetbookingnumberyes = 0;
                 double setInternetbookingamountno = 0.0;
                 int setInternetbookingnumberno = 0;
-                
+
                 double setPosbuyamount = 0.0;
                 int setPosbuynumber = 0;
                 double setPossellamount = 0.0;
                 int setPossellnumber = 0;
                 double setBanksellamount = 0.0;
                 int setBanksellnumber = 0;
-                
+
                 for (int i = 0; i < dati.size(); i++) {
-                    
+
                     TillTransactionListBB_value rm = dati.get(i);
                     if (rm.getResidentnonresident().equals("Resident") && rm.getKind().toUpperCase().startsWith("BUY")) {
                         setTransvalueresidentbuy = setTransvalueresidentbuy + fd(rm.getTotal());
@@ -17991,7 +17995,7 @@ public class Db_Master {
                         setCommisionvaluenonresidentbuy = setCommisionvaluenonresidentbuy + fd(rm.getComfree());
                         setTransactionnumbernonresidentbuy++;
                     }
-                    
+
                     if (rm.getResidentnonresident().equals("Resident") && rm.getKind().toUpperCase().startsWith("SELL")) {
                         setTransvalueresidentsell = setTransvalueresidentsell + fd(rm.getAmount());
                         setCommisionvaluetresidentsell = setCommisionvaluetresidentsell + fd(rm.getComfree());
@@ -18002,7 +18006,7 @@ public class Db_Master {
                         setCommisionvaluenonresidentsell = setCommisionvaluenonresidentsell + fd(rm.getComfree());
                         setTransactionnumbernonresidentsell++;
                     }
-                    
+
                     boolean ca = false;
                     if (rm.getKind().toUpperCase().startsWith("SELL") && !rm.getType().contains("D")) {
                         if (!rm.getInternetbooking().equals("0")) {
@@ -18017,7 +18021,7 @@ public class Db_Master {
                         setPosbuynumber++;
                         ca = true;
                     }
-                    
+
                     if (!rm.getPos().equals("-") && !rm.getType().contains("D")) {
                         if (rm.getKind().toUpperCase().startsWith("SELL")) {
                             if (rm.getFig().equals("06") || rm.getFig().equals("07")) {
@@ -18034,7 +18038,7 @@ public class Db_Master {
                             }
                         }
                     }
-                    
+
                 }
                 pdf.setTransvalueresidentbuy(roundDoubleandFormat(setTransvalueresidentbuy, 2));
                 pdf.setTransvaluenonresidentbuy(roundDoubleandFormat(setTransvaluenonresidentbuy, 2));
@@ -18056,20 +18060,20 @@ public class Db_Master {
                 pdf.setPosbuynumber(roundDoubleandFormat(setPosbuynumber, 0) + "");
                 pdf.setPossellamount(roundDoubleandFormat(setPossellamount, 2));
                 pdf.setPossellnumber(roundDoubleandFormat(setPossellnumber, 0) + "");
-                
+
                 pdf.setBankbuyamount("0.00");
                 pdf.setBankbuynumber("0");
                 pdf.setBanksellamount(roundDoubleandFormat(setBanksellamount, 2));
                 pdf.setBanksellnumber(roundDoubleandFormat(setBanksellnumber, 0) + "");
-                
+
                 return pdf;
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return null;
-        
+
     }
 
     /**
@@ -18083,22 +18087,22 @@ public class Db_Master {
      */
     public TillTransactionList_value list_BBTransactionList_value(ArrayList<String> branch, String datad1, String datad2,
             String tipo, ArrayList<Branch> allb) {
-        
+
         try {
             String sql = "SELECT * FROM ch_transaction tr1, ch_transaction_valori tr2"
                     + " WHERE tr1.cod=tr2.cod_tr AND tr1.del_fg='0'"
                     //+ " AND tr1.bb <> '0' AND tr2.bb='Y' ";
                     + " AND (tr1.bb = '1' OR tr1.bb = '2') AND (tr2.bb='Y' OR tr2.bb='F') ";
-            
+
             String filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "tr1.filiale = '" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             if (datad1 != null) {
                 sql = sql + "AND tr1.data >= '" + datad1 + " 00:00:00' ";
             }
@@ -18110,12 +18114,12 @@ public class Db_Master {
             } else {
                 sql = sql + " ORDER BY tr1.tipotr DESC,tr1.data ASC";
             }
-            
+
             ArrayList<TillTransactionList_value> dati = new ArrayList<>();
             ArrayList<CustomerKind> list_customerKind = list_customerKind();
             ArrayList<Figures> fig = list_all_figures();
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             while (rs.next()) {
                 TillTransactionList_value rm = new TillTransactionList_value();
                 rm.setId_filiale(rs.getString("tr1.filiale"));
@@ -18139,7 +18143,7 @@ public class Db_Master {
                 if (is_CZ) {
                     rm.setRound(rs.getString("tr2.roundvalue"));
                 }
-                
+
                 if (rs.getString("tr2.supporto").equals("04")) {
                     rm.setPos(rs.getString("tr2.pos"));
                 } else {
@@ -18151,26 +18155,26 @@ public class Db_Master {
                 } else {
                     rm.setResidentnonresident("Non Resident");
                 }
-                
+
                 String lfig = rs.getString("tr1.localfigures");
                 if (rs.getString("tr1.localfigures").equals("-")) {
                     lfig = "01";
                 }
                 rm.setFig(lfig);
-                
+
                 if (tipo == null) {
                     dati.add(rm);
                 } else if (rs.getString("tr1.tipotr").equals(tipo)) {
                     dati.add(rm);
                 }
             }
-            
+
             if (dati.size() > 0) {
                 TillTransactionList_value pdf = new TillTransactionList_value();
                 pdf.setId_filiale(branch.get(0));
                 pdf.setDe_filiale(formatBankBranchReport(branch.get(0), "BR", null, Engine.list_branch_enabled()));
                 pdf.setDati(dati);
-                
+
                 double setTransvalueresidentbuy = 0.0;
                 double setTransvaluenonresidentbuy = 0.0;
                 double setTransvalueresidentsell = 0.0;
@@ -18179,26 +18183,26 @@ public class Db_Master {
                 double setCommisionvaluenonresidentbuy = 0.0;
                 double setCommisionvaluetresidentsell = 0.0;
                 double setCommisionvaluenonresidentsell = 0.0;
-                
+
                 int setTransactionnumberresidentbuy = 0;
                 int setTransactionnumbernonresidentbuy = 0;
                 int setTransactionnumberresidentsell = 0;
                 int setTransactionnumbernonresidentsell = 0;
-                
+
                 double setInternetbookingamountyes = 0.0;
                 int setInternetbookingnumberyes = 0;
                 double setInternetbookingamountno = 0.0;
                 int setInternetbookingnumberno = 0;
-                
+
                 double setPosbuyamount = 0.0;
                 int setPosbuynumber = 0;
                 double setPossellamount = 0.0;
                 int setPossellnumber = 0;
                 double setBanksellamount = 0.0;
                 int setBanksellnumber = 0;
-                
+
                 for (int i = 0; i < dati.size(); i++) {
-                    
+
                     TillTransactionList_value rm = dati.get(i);
                     if (rm.getResidentnonresident().equals("Resident") && rm.getKind().toUpperCase().startsWith("BUY")) {
                         setTransvalueresidentbuy = setTransvalueresidentbuy + fd(rm.getTotal());
@@ -18210,7 +18214,7 @@ public class Db_Master {
                         setCommisionvaluenonresidentbuy = setCommisionvaluenonresidentbuy + fd(rm.getComfree());
                         setTransactionnumbernonresidentbuy++;
                     }
-                    
+
                     if (rm.getResidentnonresident().equals("Resident") && rm.getKind().toUpperCase().startsWith("SELL")) {
                         setTransvalueresidentsell = setTransvalueresidentsell + fd(rm.getAmount());
                         setCommisionvaluetresidentsell = setCommisionvaluetresidentsell + fd(rm.getComfree());
@@ -18221,7 +18225,7 @@ public class Db_Master {
                         setCommisionvaluenonresidentsell = setCommisionvaluenonresidentsell + fd(rm.getComfree());
                         setTransactionnumbernonresidentsell++;
                     }
-                    
+
                     boolean ca = false;
                     if (rm.getKind().toUpperCase().startsWith("SELL") && !rm.getType().contains("D")) {
                         if (!rm.getInternetbooking().equals("0")) {
@@ -18236,7 +18240,7 @@ public class Db_Master {
                         setPosbuynumber++;
                         ca = true;
                     }
-                    
+
                     if (!rm.getPos().equals("-") && !rm.getType().contains("D")) {
                         if (rm.getKind().toUpperCase().startsWith("SELL")) {
                             if (rm.getFig().equals("06") || rm.getFig().equals("07")) {
@@ -18253,7 +18257,7 @@ public class Db_Master {
                             }
                         }
                     }
-                    
+
                 }
                 pdf.setTransvalueresidentbuy(roundDoubleandFormat(setTransvalueresidentbuy, 2));
                 pdf.setTransvaluenonresidentbuy(roundDoubleandFormat(setTransvaluenonresidentbuy, 2));
@@ -18275,12 +18279,12 @@ public class Db_Master {
                 pdf.setPosbuynumber(roundDoubleandFormat(setPosbuynumber, 0) + "");
                 pdf.setPossellamount(roundDoubleandFormat(setPossellamount, 2));
                 pdf.setPossellnumber(roundDoubleandFormat(setPossellnumber, 0) + "");
-                
+
                 pdf.setBankbuyamount("0.00");
                 pdf.setBankbuynumber("0");
                 pdf.setBanksellamount(roundDoubleandFormat(setBanksellamount, 2));
                 pdf.setBanksellnumber(roundDoubleandFormat(setBanksellnumber, 0) + "");
-                
+
                 return pdf;
             }
         } catch (SQLException ex) {
@@ -18311,14 +18315,14 @@ public class Db_Master {
         pdf.setPosbuynumber("0");
         pdf.setPossellamount("0.00");
         pdf.setPossellnumber("0");
-        
+
         pdf.setBankbuyamount("0.00");
         pdf.setBankbuynumber("0");
         pdf.setBanksellamount("0.00");
         pdf.setBanksellnumber("0");
-        
+
         return pdf;
-        
+
     }
 
     /**
@@ -18329,7 +18333,7 @@ public class Db_Master {
      * @return
      */
     public TillTransactionList_value list_DeleteTransactionList_value(String[] fil, String datad1, String datad2) {
-        
+
         try {
             String sql = "SELECT * FROM ch_transaction tr1, ch_transaction_valori tr2"
                     + " WHERE tr1.cod=tr2.cod_tr "
@@ -18347,7 +18351,7 @@ public class Db_Master {
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             List<String> listmodify = list_transaction_modify_ch();
             ArrayList<String[]> listacc = credit_card_enabled();
-            
+
             while (rs.next()) {
                 TillTransactionList_value rm = new TillTransactionList_value();
                 rm.setType(formatTilltr(rs.getString("tr1.del_fg"),
@@ -18384,13 +18388,13 @@ public class Db_Master {
                 rm.setInternetbooking(rs.getString("tr1.intbook"));
                 dati.add(rm);
             }
-            
+
             if (dati.size() > 0) {
                 TillTransactionList_value pdf = new TillTransactionList_value();
                 pdf.setId_filiale(fil[0]);
                 pdf.setDe_filiale(fil[1]);
                 pdf.setDati(dati);
-                
+
                 double setTransvalueresidentbuy = 0.0;
                 double setTransvaluenonresidentbuy = 0.0;
                 double setTransvalueresidentsell = 0.0;
@@ -18399,17 +18403,17 @@ public class Db_Master {
                 double setCommisionvaluenonresidentbuy = 0.0;
                 double setCommisionvaluetresidentsell = 0.0;
                 double setCommisionvaluenonresidentsell = 0.0;
-                
+
                 int setTransactionnumberresidentbuy = 0;
                 int setTransactionnumbernonresidentbuy = 0;
                 int setTransactionnumberresidentsell = 0;
                 int setTransactionnumbernonresidentsell = 0;
-                
+
                 double setInternetbookingamountyes = 0.0;
                 int setInternetbookingnumberyes = 0;
                 double setInternetbookingamountno = 0.0;
                 int setInternetbookingnumberno = 0;
-                
+
                 double setPosbuyamount = 0.0;
                 int setPosbuynumber = 0;
                 double setPossellamount = 0.0;
@@ -18428,7 +18432,7 @@ public class Db_Master {
                         setCommisionvaluenonresidentbuy = setCommisionvaluenonresidentbuy + fd(rm.getComfree()) + parseDoubleR(rm.getRound());
                         setTransactionnumbernonresidentbuy++;
                     }
-                    
+
                     if (rm.getResidentnonresident().equals("Resident") && rm.getKind().toUpperCase().startsWith("SELL")) {
                         setTransvalueresidentsell = setTransvalueresidentsell + fd(rm.getAmount());
                         setCommisionvaluetresidentsell = setCommisionvaluetresidentsell + fd(rm.getComfree()) + parseDoubleR(rm.getRound());
@@ -18463,7 +18467,7 @@ public class Db_Master {
                         }
                     }
                 }
-                
+
                 pdf.setTransvalueresidentbuy(roundDoubleandFormat(setTransvalueresidentbuy, 2));
                 pdf.setTransvaluenonresidentbuy(roundDoubleandFormat(setTransvaluenonresidentbuy, 2));
                 pdf.setTransvalueresidentsell(roundDoubleandFormat(setTransvalueresidentsell, 2));
@@ -18484,14 +18488,14 @@ public class Db_Master {
                 pdf.setPosbuynumber(roundDoubleandFormat(setPosbuynumber, 0) + "");
                 pdf.setPossellamount(roundDoubleandFormat(setPossellamount, 2));
                 pdf.setPossellnumber(roundDoubleandFormat(setPossellnumber, 0) + "");
-                
+
                 pdf.setBankbuyamount("0.00");
                 pdf.setBankbuynumber("0");
                 pdf.setBanksellamount(roundDoubleandFormat(setBanksellamount, 2));
                 pdf.setBanksellnumber(roundDoubleandFormat(setBanksellnumber, 0) + "");
-                
+
                 return pdf;
-                
+
             }
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -18511,7 +18515,7 @@ public class Db_Master {
         try {
             String sql = "SELECT * FROM ch_transaction tr1, ch_transaction_valori tr2"
                     + " WHERE tr1.cod=tr2.cod_tr AND tr1.del_fg='0' AND tr1.filiale = '" + fil[0] + "' ";
-            
+
             if (datad1 != null) {
                 sql = sql + "AND tr1.data >= '" + datad1 + " 00:00:00' ";
             }
@@ -18539,10 +18543,10 @@ public class Db_Master {
                     if (rs.getString("tr1.cl_cod").equals(coduser)) {
                         Client c0 = query_Client_transaction(rs.getString("tr1.cod"), rs.getString("tr1.cl_cod"));
                         rm.setClinetname(c0.getCognome() + " " + c0.getNome());
-                        
+
                         rm.setAddress(c0.getIndirizzo() + " " + c0.getCap() + " " + formatAL_city(c0.getCitta(), city)
                                 + " " + c0.getProvincia() + " " + formatAL(c0.getNazione(), nazioni, 1));
-                        
+
                         String sesso = "";
                         if (c0.getSesso().equalsIgnoreCase("F")) {
                             sesso = "Female";
@@ -18551,17 +18555,17 @@ public class Db_Master {
                         } else if (c0.getSesso().equalsIgnoreCase("O")) {
                             sesso = "Other";
                         }
-                        
+
                         rm.setBirthplaceday(c0.getCitta_nascita() + " " + formatAL(c0.getNazione_nascita(), nazioni, 1) + " " + c0.getDt_nascita() + " " + sesso);
-                        
+
                         rm.setTaxcode(c0.getCodfisc());
                         rm.setDocumentnumber(c0.getTipo_documento() + " Nr. " + c0.getNumero_documento());
-                        
+
                         String document = "Date "
                                 + c0.getDt_rilascio_documento() + " - "
                                 + c0.getDt_scadenza_documento() + " "
                                 + c0.getRilasciato_da_documento() + " - " + c0.getLuogo_rilascio_documento();
-                        
+
                         if (!is_IT) {
                             try {
                                 if (c0.getRepceca() != null) {
@@ -18570,21 +18574,21 @@ public class Db_Master {
                             } catch (Exception e) {
                             }
                         }
-                        
+
                         rm.setDocumentdataente(document);
-                        
+
                         if (!first) {
                             first = true;
                         }
                         TransactionforHeavyTransactionList trans = new TransactionforHeavyTransactionList();
                         trans.setDate(rs.getString("tr1.id") + " " + formatStringtoStringDate(rs.getString("tr1.data"), patternsqldate, patternnormdate));
-                        
+
                         if (Engine.get_customerKind(list_customerKind, rs.getString("tr1.tipocliente")).getFg_nazionalita().equals("1")) {
                             trans.setRs("RS");
                         } else {
                             trans.setRs("NR");
                         }
-                        
+
                         trans.setBuysell(formatType(rs.getString("tr1.tipotr")));
                         trans.setB(rs.getString("tr2.supporto"));
                         trans.setCurrency(rs.getString("tr2.valuta"));
@@ -18597,9 +18601,9 @@ public class Db_Master {
                         trans.setClientpep(c0.getPep());
                         trans.setMoneysource("");
                         trans.setTransactionreason("");
-                        
+
                         translist.add(trans);
-                        
+
                     }
                 }
                 rm.setTransactionlist(translist);
@@ -18608,11 +18612,11 @@ public class Db_Master {
                 out.add(rm);
                 rs.beforeFirst();
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
-        
+
         return out;
     }
 
@@ -18625,10 +18629,10 @@ public class Db_Master {
      */
     public TillTransactionListCurrency_value list_TillTransactionListCurrency_value(String[] fil, String datad1, String datad2) {
         try {
-            
+
             String sql = "SELECT * FROM ch_transaction tr1, ch_transaction_valori tr2 "
                     + " WHERE tr1.cod=tr2.cod_tr AND tr1.filiale = '" + fil[0] + "' ";
-            
+
             if (datad1 != null) {
                 sql = sql + "AND tr1.data >= '" + datad1 + " 00:00:00' ";
             }
@@ -18636,9 +18640,9 @@ public class Db_Master {
                 sql = sql + "AND tr1.data <= '" + datad2 + " 23:59:59' ";
             }
             sql = sql + " ORDER BY tr2.valuta,tr1.data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             ArrayList<Figures> fig = list_all_figures();
             ArrayList<CustomerKind> list_customerKind = list_customerKind();
             ArrayList<TillTransactionListCurrency_value> dati = new ArrayList<>();
@@ -18677,18 +18681,18 @@ public class Db_Master {
                 } else {
                     rm.setResidentnonresident("Non Resident");
                 }
-                
+
                 rm.setInternetbooking(rs.getString("tr1.intbook"));
-                
+
                 dati.add(rm);
             }
             if (dati.size() > 0) {
-                
+
                 TillTransactionListCurrency_value pdf = new TillTransactionListCurrency_value();
                 pdf.setId_filiale(fil[0]);
                 pdf.setDe_filiale(fil[1]);
                 pdf.setDati(dati);
-                
+
                 double setTransvalueresidentbuy = 0.0;
                 double setTransvaluenonresidentbuy = 0.0;
                 double setTransvalueresidentsell = 0.0;
@@ -18697,26 +18701,26 @@ public class Db_Master {
                 double setCommisionvaluenonresidentbuy = 0.0;
                 double setCommisionvaluetresidentsell = 0.0;
                 double setCommisionvaluenonresidentsell = 0.0;
-                
+
                 int setTransactionnumberresidentbuy = 0;
                 int setTransactionnumbernonresidentbuy = 0;
                 int setTransactionnumberresidentsell = 0;
                 int setTransactionnumbernonresidentsell = 0;
-                
+
                 double setInternetbookingamountyes = 0.0;
                 int setInternetbookingnumberyes = 0;
                 double setInternetbookingamountno = 0.0;
                 int setInternetbookingnumberno = 0;
-                
+
                 double setPosbuyamount = 0.0;
                 int setPosbuynumber = 0;
                 double setPossellamount = 0.0;
                 int setPossellnumber = 0;
                 double setBanksellamount = 0.0;
                 int setBanksellnumber = 0;
-                
+
                 for (int i = 0; i < dati.size(); i++) {
-                    
+
                     TillTransactionListCurrency_value rm = dati.get(i);
                     if (rm.getResidentnonresident().equals("Resident") && rm.getKind().toUpperCase().startsWith("BUY") && !rm.getType().contains("D")) {
                         setTransvalueresidentbuy = setTransvalueresidentbuy + fd(rm.getTotal());
@@ -18728,7 +18732,7 @@ public class Db_Master {
                         setCommisionvaluenonresidentbuy = setCommisionvaluenonresidentbuy + fd(rm.getComfree());
                         setTransactionnumbernonresidentbuy++;
                     }
-                    
+
                     if (rm.getResidentnonresident().equals("Resident") && rm.getKind().toUpperCase().startsWith("SELL") && !rm.getType().contains("D")) {
                         setTransvalueresidentsell = setTransvalueresidentsell + fd(rm.getAmount());
                         setCommisionvaluetresidentsell = setCommisionvaluetresidentsell + fd(rm.getComfree());
@@ -18750,7 +18754,7 @@ public class Db_Master {
                     }
                     if (!rm.getPos().equals("-") && !rm.getType().contains("D")) {
                         if (rm.getKind().toUpperCase().startsWith("SELL")) {
-                            
+
                             if (rm.getKind().toUpperCase().contains("BANK")) {
                                 setBanksellamount = setPossellamount + fd(rm.getAmount());
                                 setBanksellnumber++;
@@ -18758,14 +18762,14 @@ public class Db_Master {
                                 setPossellamount = setPossellamount + fd(rm.getAmount());
                                 setPossellnumber++;
                             }
-                            
+
                         } else {
                             setPosbuyamount = setPosbuyamount + fd(rm.getTotal());
                             setPosbuynumber++;
                         }
                     }
                 }
-                
+
                 pdf.setTransvalueresidentbuy(roundDoubleandFormat(setTransvalueresidentbuy, 2));
                 pdf.setTransvaluenonresidentbuy(roundDoubleandFormat(setTransvaluenonresidentbuy, 2));
                 pdf.setTransvalueresidentsell(roundDoubleandFormat(setTransvalueresidentsell, 2));
@@ -18786,12 +18790,12 @@ public class Db_Master {
                 pdf.setPosbuynumber(roundDoubleandFormat(setPosbuynumber, 0) + "");
                 pdf.setPossellamount(roundDoubleandFormat(setPossellamount, 2));
                 pdf.setPossellnumber(roundDoubleandFormat(setPossellnumber, 0) + "");
-                
+
                 pdf.setBankbuyamount("0.00");
                 pdf.setBankbuynumber("0");
                 pdf.setBanksellamount(roundDoubleandFormat(setBanksellamount, 2));
                 pdf.setBanksellnumber(roundDoubleandFormat(setBanksellnumber, 0) + "");
-                
+
                 return pdf;
             }
         } catch (SQLException ex) {
@@ -18811,9 +18815,9 @@ public class Db_Master {
     public ArrayList<NoChangeCategoryTransactionList_value> list_NoChangeCategoryTransactionList_value(String filiale, String datad1, String datad2, String list_nc_cat) {
         ArrayList<NoChangeCategoryTransactionList_value> out = new ArrayList<>();
         try {
-            
+
             String sql = "SELECT * FROM nc_transaction WHERE filiale = '" + filiale + "' ";
-            
+
             Iterable<String> ite = onPattern(";").split(list_nc_cat);
             Iterator it = ite.iterator();
             String nccatwhere = "";
@@ -18833,7 +18837,7 @@ public class Db_Master {
                 sql = sql + "AND data <= '" + datad2 + " 23:59:59' ";
             }
             sql = sql + " ORDER BY gruppo_nc,data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             ArrayList<NC_category> nc_cat = query_nc_category_filial(filiale, null);
             ArrayList<NC_causal> nc_caus = query_nc_causal_filial(filiale, null);
@@ -18858,9 +18862,9 @@ public class Db_Master {
                 } else {
                     nctl.setKindTrans("NOT FOUND");
                 }
-                
+
                 nctl.setNote(rs.getString("note"));
-                
+
                 switch (rs.getString("fg_tipo_transazione_nc")) {
                     case "1":
                         nctl.setQuantity("1");
@@ -18872,7 +18876,7 @@ public class Db_Master {
                         nctl.setQuantity(formatMysqltoDisplay(roundDoubleandFormat(fd(rs.getString("quantita")), 0)));
                         break;
                 }
-                
+
                 if (rs.getString("fg_tipo_transazione_nc").equals("3")) {
                     if (rs.getString("fg_dogana").equals("00")) {
                         nctl.setDetails("Customs");
@@ -18880,15 +18884,15 @@ public class Db_Master {
                         nctl.setDetails("No Customs");
                     }
                 }
-                
+
                 nctl.setTotal(formatMysqltoDisplay(rs.getString("total")));
                 nctl.setUser(rs.getString("user"));
                 nctl.setInout(rs.getString("fg_inout"));
                 nctl.setAnnullato(rs.getString("del_fg"));
                 nctl.setDetails("");
-                
+
                 nctl.setFee("");
-                
+
                 if (rs.getString("fg_tipo_transazione_nc").equals("1")) {
                     nctl.setFee(formatMysqltoDisplay(rs.getString("commissione")));
                 } else if (rs.getString("fg_tipo_transazione_nc").equals("21")) {
@@ -18904,10 +18908,10 @@ public class Db_Master {
                         nctl.setFee(formatMysqltoDisplay(comm));
                     }
                 }
-                
+
                 out.add(nctl);
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -18941,7 +18945,7 @@ public class Db_Master {
             }
             sql = sql + " ORDER BY f.till";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             while (rs.next()) {
                 Till t = new Till(rs.getString(1), rs.getString(2), rs.getString(3),
                         format("%015d", new Object[]{rs.getInt(4)}), rs.getString(5), rs.getString(6), rs.getString(7),
@@ -18976,21 +18980,21 @@ public class Db_Master {
                 ps03.setString(1, roc.getFiliale());
                 ps03.setString(2, roc.getCod_oc());
                 ps03.execute();
-                
+
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
                         generaId(50), "000", dt_val, "0",
                         "PS", ps03.toString(), "service", dtoper));
-                
+
                 String ins = "INSERT INTO real_oc_pos_temp (SELECT * FROM real_oc_pos WHERE filiale = ? AND cod_oc = ?)";
                 PreparedStatement ps1 = this.c.prepareStatement(ins, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
                 ps1.setString(1, roc.getFiliale());
                 ps1.setString(2, roc.getCod_oc());
                 ps1.execute();
-                
+
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
                         generaId(50), "000", dt_val, "0",
                         "PS", ps1.toString(), "service", dtoper));
-                
+
                 String upd = "UPDATE real_oc_pos SET ip_quantity = ?, ip_value = ?, data = ? "
                         + "WHERE filiale = ? AND cod_oc = ? AND carta_credito = ? AND kind = ? AND valuta = ?";
                 PreparedStatement ps2 = this.c.prepareStatement(upd, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
@@ -19052,7 +19056,7 @@ public class Db_Master {
             double am_07 = 0.0;
             double am_08 = 0.0;
             double am_total = 0.0;
-            
+
             ToBankingSheet_value bsi1 = new ToBankingSheet_value();
             for (int i = 0; i < etc.size(); i++) {
                 ET_change val = etc.get(i);
@@ -19076,7 +19080,7 @@ public class Db_Master {
                     am_total = am_total + fd(val.getIp_total());
                 }
             }
-            
+
             bsi1.setCurrency(va);
             ArrayList<String> data = new ArrayList<>();
             data.add(va);
@@ -19098,16 +19102,16 @@ public class Db_Master {
      */
     public ArrayList<ToBankingSheet_value> list_ToBankingSheet_value(ET_change et) {
         ArrayList<ToBankingSheet_value> out = new ArrayList<>();
-        
+
         ArrayList<ET_change> etc = get_ET_change_value(et.getCod());
         ArrayList<String> listvalue = new ArrayList<>();
         for (int i = 0; i < etc.size(); i++) {
             listvalue.add(etc.get(i).getValuta());
         }
         removeDuplicatesAL(listvalue);
-        
+
         for (int j = 0; j < listvalue.size(); j++) {
-            
+
             String va  = listvalue.get(j);
             double am_notes = 0.0;
             double am_notesrate = 0.0;
@@ -19115,7 +19119,7 @@ public class Db_Master {
             double am_etcrate = 0.0;
             double am_total = 0.0;
             double am_spread = 0.0;
-            
+
             for (int i = 0; i < etc.size(); i++) {
                 ET_change val = etc.get(i);
                 if (val.getValuta().equalsIgnoreCase(va)) {
@@ -19130,7 +19134,7 @@ public class Db_Master {
                     am_total = am_total + fd(val.getIp_total());
                 }
             }
-            
+
             double am_percent = (am_spread / am_total) * 100;
             ToBankingSheet_value bsi1 = new ToBankingSheet_value();
             bsi1.setCurrency(va);
@@ -19145,9 +19149,9 @@ public class Db_Master {
             data.add(roundDoubleandFormat(am_percent, 2));
             bsi1.setDati_string(data);
             out.add(bsi1);
-            
+
         }
-        
+
         return out;
     }
 
@@ -19164,9 +19168,9 @@ public class Db_Master {
     public ArrayList<StockReport_value> list_StockReport_value(String[] filiale, String datad1, String datad2, String list_nc_cat, String d3, String d4) {
         ArrayList<StockReport_value> out = new ArrayList<>();
         try {
-            
+
             ArrayList<String> listNCcat = parseString(list_nc_cat, ";");
-            
+
             String sql = "SELECT f.filiale,f.cod,f.data,f.id,f.user,f.fg_tipo,f.till FROM (SELECT till,"
                     + " MAX(data) AS maxd FROM oc_lista WHERE data <= '" + datad1 + " 00:00:00' AND filiale = '" + filiale[0] + "' GROUP BY till) AS x INNER JOIN oc_lista AS f ON f.till = x.till"
                     + " AND f.data = x.maxd AND f.filiale = '" + filiale[0] + "' AND f.data <= '" + datad1 + " 00:00:00'";
@@ -19176,7 +19180,7 @@ public class Db_Master {
             while (rs.next()) {
                 String codopen = rs.getString("cod");
                 ArrayList<String[]> list_oc_nochange = list_oc_nochange(codopen);
-                
+
                 for (int i = 0; i < list_oc_nochange.size(); i++) {
                     String[] val = list_oc_nochange.get(i);
                     listamappepresenti.add(val[1]);
@@ -19185,33 +19189,33 @@ public class Db_Master {
                 }
             }
             removeDuplicatesAL(listamappepresenti);
-            
+
             String sql3 = "SELECT * FROM oc_lista WHERE errors = 'Y' AND filiale = '" + filiale[0] + "' AND cod in (SELECT cod from oc_errors WHERE tipo='NC') ";
-            
+
             if (datad1 != null) {
                 sql3 = sql3 + "AND data >= '" + datad1 + " 00:00:00' ";
             }
             if (datad2 != null) {
                 sql3 = sql3 + "AND data <= '" + datad2 + " 23:59:59' ";
             }
-            
+
             ResultSet rs3 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql3);
 
             // external
             String sql2 = "SELECT * FROM et_change where cod in (select cod from et_nochange_valori) AND filiale='" + filiale[0] + "' ";
-            
+
             if (datad1 != null) {
                 sql2 = sql2 + "AND dt_it >= '" + datad1 + " 00:00:00' ";
             }
             if (datad2 != null) {
                 sql2 = sql2 + "AND dt_it <= '" + datad2 + " 23:59:59' ";
             }
-            
+
             ResultSet rs22 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql2);
 
             //TRANSAZIONI NO CHANGE
             String sql1 = "SELECT prezzo,data,gruppo_nc,causale_nc,till,data,id,note,fg_tipo_transazione_nc,ricevuta,quantita,total,user,fg_inout,del_fg FROM nc_transaction where filiale = '" + filiale[0] + "' ";
-            
+
             if (datad1 != null) {
                 sql1 = sql1 + "AND data >= '" + datad1 + " 00:00:00' ";
             }
@@ -19219,12 +19223,12 @@ public class Db_Master {
                 sql1 = sql1 + "AND data <= '" + datad2 + " 23:59:59' ";
             }
             sql1 = sql1 + " ORDER BY data";
-            
+
             ArrayList<NC_category> nc_cat = query_nc_category_filial(filiale[0], null);
             ArrayList<NC_causal> nc_caus = query_nc_causal_filial(filiale[0], null);
             ResultSet rs2 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql1);
             for (int i = 0; i < listNCcat.size(); i++) {
-                
+
                 String cat = listNCcat.get(i);
                 double initvalue = 0.00;
                 if (listamappepresenti.contains(cat)) {
@@ -19242,14 +19246,14 @@ public class Db_Master {
                 nctl.setDataA(d4);
                 nctl.setInitialStock(formatMysqltoDisplay(initvalue + ""));
                 NC_category nc1 = getNC_category(nc_cat, cat);
-                
+
                 if (nc1 != null) {
                     nctl.setCategoryTrans(cat + " " + formatALNC_category(cat, nc_cat));
                 } else {
                     nctl.setCategoryTrans("NOT FOUND");
                 }
                 ArrayList<StockReport_value> dati = new ArrayList<>();
-                
+
                 if (rs2.next()) {
                     rs2.beforeFirst();
                     while (rs2.next()) {
@@ -19264,13 +19268,13 @@ public class Db_Master {
                             } else {
                                 val.setKindTrans("NOT FOUND");
                             }
-                            
+
                             if (rs2.getString("fg_inout").equals("1") || rs2.getString("fg_inout").equals("3")) {
                                 val.setQuantity("-" + formatMysqltoDisplay(rs2.getString("quantita")));
                             } else {
                                 val.setQuantity(formatMysqltoDisplay(rs2.getString("quantita")));
                             }
-                            
+
                             val.setPrice(formatMysqltoDisplay(rs2.getString("prezzo")));
                             val.setTotal(formatMysqltoDisplay(rs2.getString("total")));
                             val.setUser(rs2.getString("user"));
@@ -19281,7 +19285,7 @@ public class Db_Master {
                     }
                 }
                 rs2.beforeFirst();
-                
+
                 if (rs22.next()) {
                     rs22.beforeFirst();
                     while (rs22.next()) {
@@ -19295,15 +19299,15 @@ public class Db_Master {
                                     val.setDateTime(formatStringtoStringDate(rs22.getString("dt_it"), patternsqldate, patternnormdate));
                                     val.setCategoryTrans(nctl.getCategoryTrans());
                                     val.setKindTrans("EXT. TRANSFER " + value1.format_tofrom_brba(rs22.getString("fg_tofrom"), rs22.getString("fg_brba")) + " " + rs22.getString("cod_dest"));
-                                    
+
                                     if (rs22.getString("fg_tofrom").equals("T")) {
                                         val.setQuantity("-" + formatMysqltoDisplay(value1.getIp_quantity()));
                                     } else {
                                         val.setQuantity(formatMysqltoDisplay(value1.getIp_quantity()));
                                     }
-                                    
+
                                     val.setPrice(formatMysqltoDisplay(nc1.getIp_prezzo_nc()));
-                                    
+
                                     String tot1 = formatMysqltoDisplay(roundDoubleandFormat((fd(nc1.getIp_prezzo_nc()) * fd(value1.getIp_quantity())), 2));
                                     if (rs22.getString("fg_tofrom").equals("T")) {
                                         val.setTotal("-" + tot1);
@@ -19316,39 +19320,39 @@ public class Db_Master {
                                     } else {
                                         val.setInout("2");
                                     }
-                                    
+
                                     val.setAnnullato(rs22.getString("fg_annullato"));
                                     dati.add(val);
                                 }
                             }
                         }
                     }
-                    
+
                 }
                 rs22.beforeFirst();
-                
+
                 if (rs3.next()) {
                     rs3.beforeFirst();
                     while (rs3.next()) {
-                        
+
                         ArrayList<String[]> list_oc_err = list_oc_errors(rs3.getString("cod"));
                         for (int l = 0; l < list_oc_err.size(); l++) {
                             if (list_oc_err.get(l)[4].equals(cat)) {
                                 if (nc1 != null) {
-                                    
+
                                     StockReport_value val = new StockReport_value();
                                     val.setTill(rs3.getString("till"));
                                     val.setDateTime(formatStringtoStringDate(rs3.getString("data"), patternsqldate, patternnormdate));
                                     val.setCategoryTrans(nctl.getCategoryTrans());
                                     val.setKindTrans(formatType_r(rs3.getString("fg_tipo")) + " ERROR");
-                                    
+
                                     String qv = (list_oc_err.get(l)[7]);
-                                    
+
                                     if (fd(list_oc_err.get(l)[10]) < fd(list_oc_err.get(l)[12])) {
                                         qv = "-" + qv;
                                     }
                                     val.setQuantity(formatMysqltoDisplay(qv));
-                                    
+
                                     val.setPrice(formatMysqltoDisplay(nc1.getIp_prezzo_nc()));
                                     String tot1 = formatMysqltoDisplay(roundDoubleandFormat((fd(nc1.getIp_prezzo_nc()) * fd(qv)), 2));
                                     val.setTotal(tot1);
@@ -19358,7 +19362,7 @@ public class Db_Master {
                                     } else {
                                         val.setInout("2");
                                     }
-                                    
+
                                     val.setAnnullato("0");
                                     dati.add(val);
                                 }
@@ -19385,16 +19389,16 @@ public class Db_Master {
      * @return
      */
     public ArrayList<StockInquiry_value> list_StockInquiry_value(String[] filiale, String datad1, String tipo) {
-        
+
         ArrayList<StockInquiry_value> out = new ArrayList<>();
         try {
             if (datad1 == null) {
                 datad1 = new DateTime().toString(patternsql_f);
             }
-            
+
             ArrayList<String[]> va  = new ArrayList<>();
             ArrayList<String[]> va_dati = new ArrayList<>();
-            
+
             String sql = "SELECT f.cod,f.data,f.id,f.user,f.fg_tipo,f.till "
                     + "FROM (SELECT till, MAX(data) AS maxd FROM oc_lista WHERE data<'" + datad1 + "' AND filiale='" + filiale[0] + "' GROUP BY till) "
                     + "AS x INNER JOIN oc_lista AS f ON f.till = x.till AND f.data = x.maxd "
@@ -19414,10 +19418,10 @@ public class Db_Master {
                     String[] val = {rs2.getString("cod_value"), rs2.getString("till"),
                         rs2.getString("kind"), rs2.getString("total")};
                     va_dati.add(val);
-                    
+
                 }
             }
-            
+
             removeDuplicatesALAr(va);
             for (int i = 0; i < va.size(); i++) {
                 String[] da = va.get(i);
@@ -19427,11 +19431,11 @@ public class Db_Master {
                 pdf.setDe_filiale(filiale[1]);
                 pdf.setCurrency(da[0]);
                 pdf.setTill(da[1]);
-                
+
                 double my01 = 0.00;
                 double my02 = 0.00;
                 double my03 = 0.00;
-                
+
                 for (int k = 0; k < va_dati.size(); k++) {
                     String[] da1 = va_dati.get(k);
                     if (da1[0].equals(da[0]) && da1[1].equals(da[1])) {
@@ -19454,20 +19458,20 @@ public class Db_Master {
                 mydata.add(roundDoubleandFormat(my02, 2));
                 mydata.add(roundDoubleandFormat(my03, 2));
                 pdf.setDati_string(mydata);
-                
+
                 if (my01 > 0 || my02 > 0 || my03 > 0) {
                     out.add(pdf);
                 }
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
-        
+
         if (out.size() > 0) {
             out = (ArrayList<StockInquiry_value>) out.stream().sorted().collect(toList());
         }
-        
+
         return out;
     }
 
@@ -19497,10 +19501,10 @@ public class Db_Master {
                 mindata = getMinTimestamp(mindata, rs.getString(2));
                 rs_1.add(new TotalStockReport_Res_fase1(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6)));
             }
-            
+
             String sql3 = "SELECT quantity,cod_value,codiceopenclose,codtr,till FROM stock_report "
                     + "where filiale='" + filiale[0] + "' AND data>='" + mindata + "' AND tipo='NC' ";
-            
+
             sql3 += " AND data <= '" + datad1 + ":59'"; //NUOVA CONDIZIONE 11/11
 
             if (listNCcat.size() > 0) {
@@ -19517,13 +19521,13 @@ public class Db_Master {
             while (rs3.next()) {
                 rs_3.add(new TotalStockReport_Res_fase2(rs3.getString(1), rs3.getString(2), rs3.getString(3), rs3.getString(4), rs3.getString(5)));
             }
-            
+
             listNCcat.forEach(nccat -> {
-                
+
                 ArrayList<TotalStockReport_value> par = new ArrayList<>();
                 NC_category nc1 = getNC_category(list_allcat, nccat);
                 AtomicDouble t1 = new AtomicDouble(0.0);
-                
+
                 rs_1.forEach(result1 -> {
                     TotalStockReport_value tsr = new TotalStockReport_value();
                     tsr.setTill(result1.getF_till() + " " + formatAL_Till(result1.getF_till(), list_Till));
@@ -19533,10 +19537,10 @@ public class Db_Master {
                         tsr.setCategoryTrans("NOT FOUND");
                     }
                     AtomicDouble qu = new AtomicDouble(0.0);
-                    
+
                     String cod = result1.getF_cod();
                     String ti1 = result1.getF_till();
-                    
+
                     List<TotalStockReport_Res_fase2> rs_3_concat = rs_3.stream()
                             .filter(result2
                                     -> result2.getCod_value().equalsIgnoreCase(nccat)
@@ -19544,29 +19548,29 @@ public class Db_Master {
                             || cod.equals(result2.getCodtr()))
                             && ti1.equals(result2.getTill()))
                             .collect(toList());
-                    
+
                     rs_3_concat.forEach(result2 -> {
                         qu.addAndGet(fd(result2.getQuantity()));
                     });
-                    
+
                     t1.addAndGet(qu.get());
-                    
+
                     tsr.setStock(formatMysqltoDisplay(roundDoubleandFormat(qu.get(), 0)));
                     par.add(tsr);
-                    
+
                 });
-                
+
                 if (t1.get() > 0) {
                     out.addAll(par);
                 }
             });
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return out;
     }
-    
+
     private String getMinTimestamp(String data1, String data2) {
         try {
             if (data1.length() == 21) {
@@ -19580,7 +19584,7 @@ public class Db_Master {
                 return data2;
             }
         } catch (Exception ex) {
-            
+
         }
         return data1;
     }
@@ -19601,14 +19605,14 @@ public class Db_Master {
                 datad1 = new DateTime().toString(patternsql_f);
             }
             ArrayList<Till> list_Till = list_ALLtill(filiale[0]);
-            
+
             String sql = "SELECT f.cod,f.data,f.id,f.user,f.fg_tipo,f.till "
                     + "FROM (SELECT till, MAX(data) AS maxd FROM oc_lista WHERE data<'" + datad1 + ":59' AND filiale = '" + filiale[0] + "' GROUP BY till) "
                     + "AS x INNER JOIN oc_lista AS f ON f.till = x.till AND f.data = x.maxd AND f.filiale = '" + filiale[0] + "' AND f.data<'" + datad1 + ":59'";
-            
+
             String sql3 = "SELECT quantity,cod_value,codiceopenclose,codtr,till FROM stock_report "
                     + "where filiale='" + filiale[0] + "' AND data<'" + datad1 + ":59' AND tipo='NC' ";
-            
+
             if (listNCcat.size() > 0) {
                 String filwhere = "";
                 for (int i = 0; i < listNCcat.size(); i++) {
@@ -19618,27 +19622,27 @@ public class Db_Master {
                     sql3 = sql3 + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
                 }
             }
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             ResultSet rs3 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql3);
-            
+
             List<TotalStockReport_Res_fase1> rs_1 = new ArrayList<>();
             while (rs.next()) {
                 rs_1.add(new TotalStockReport_Res_fase1(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6)));
             }
-            
+
             List<TotalStockReport_Res_fase2> rs_3 = new ArrayList<>();
-            
+
             while (rs3.next()) {
                 rs_3.add(new TotalStockReport_Res_fase2(rs3.getString(1), rs3.getString(2), rs3.getString(3), rs3.getString(4), rs3.getString(5)));
             }
-            
+
             listNCcat.forEach(nccat -> {
-                
+
                 ArrayList<TotalStockReport_value> par = new ArrayList<>();
                 NC_category nc1 = getNC_category(list_allcat, nccat);
                 AtomicDouble t1 = new AtomicDouble(0.0);
-                
+
                 rs_1.forEach(result1 -> {
                     TotalStockReport_value tsr = new TotalStockReport_value();
                     tsr.setTill(result1.getF_till() + " " + formatAL_Till(result1.getF_till(), list_Till));
@@ -19648,32 +19652,32 @@ public class Db_Master {
                         tsr.setCategoryTrans("NOT FOUND");
                     }
                     AtomicDouble qu = new AtomicDouble(0.0);
-                    
+
                     String cod = result1.getF_cod();
                     String ti1 = result1.getF_till();
-                    
+
                     List<TotalStockReport_Res_fase2> rs_3_concat = rs_3.stream()
                             .filter(result2
                                     -> result2.getCod_value().equalsIgnoreCase(nccat)
                             && (cod.equals(result2.getCodiceopenclose())
                             || cod.equals(result2.getCodtr()))
                             && ti1.equals(result2.getTill())).collect(toList());
-                    
+
                     rs_3_concat.forEach(result2 -> {
                         qu.addAndGet(fd(result2.getQuantity()));
                     });
-                    
+
                     t1.addAndGet(qu.get());
-                    
+
                     tsr.setStock(formatMysqltoDisplay(roundDoubleandFormat(qu.get(), 0)));
                     par.add(tsr);
-                    
+
                 });
-                
+
                 if (t1.get() > 0) {
                     out.addAll(par);
                 }
-                
+
             });
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -19697,24 +19701,24 @@ public class Db_Master {
                 datad1 = new DateTime().toString(patternsql_f);
             }
             ArrayList<Till> list_Till = list_ALLtill(filiale[0]);
-            
+
             String sql = "SELECT f.cod,f.data,f.id,f.user,f.fg_tipo,f.till "
                     + "FROM (SELECT till, MAX(data) AS maxd FROM oc_lista WHERE data<'" + datad1 + ":59' AND filiale = '" + filiale[0] + "' GROUP BY till) "
                     + "AS x INNER JOIN oc_lista AS f ON f.till = x.till AND f.data = x.maxd AND f.filiale = '" + filiale[0] + "' AND f.data<'" + datad1 + ":59' ORDER BY f.till";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             for (int i = 0; i < listNCcat.size(); i++) {
                 String nccat = listNCcat.get(i);
                 NC_category nc1 = getNC_category(list_allcat, nccat);
-                
+
                 double t1 = 0.0;
-                
+
                 ArrayList<TotalStockReport_value> par = new ArrayList<>();
                 while (rs.next()) {
                     String sql2 = "SELECT quantity FROM stock_report where filiale='" + filiale[0] + "' "
                             + "AND data<'" + datad1 + ":59' AND tipo='NC' AND cod_value='" + nccat + "' "
                             + "AND (codiceopenclose = '" + rs.getString("f.cod") + "' OR codtr ='" + rs.getString("f.cod") + "') AND till='" + rs.getString("f.till") + "' ORDER BY data DESC";
-                    
+
                     TotalStockReport_value tsr = new TotalStockReport_value();
                     tsr.setTill(rs.getString("f.till") + " " + formatAL_Till(rs.getString("f.till"), list_Till));
                     if (nc1 != null) {
@@ -19723,7 +19727,7 @@ public class Db_Master {
                         tsr.setCategoryTrans("NOT FOUND");
                     }
                     ResultSet rs2 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql2);
-                    
+
                     double qu = 0.00;
                     while (rs2.next()) {
                         qu = qu + fd(rs2.getString("quantity"));
@@ -19738,14 +19742,14 @@ public class Db_Master {
 //                    }
                     par.add(tsr);
                 }
-                
+
                 if (t1 > 0) {
                     out.addAll(par);
                 }
-                
+
                 rs.beforeFirst();
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -19765,7 +19769,7 @@ public class Db_Master {
             if (datad1 == null) {
                 datad1 = new DateTime().toString(patternsql_f);
             }
-            
+
             DateTimeFormatter sqldate = forPattern(patternsql_f);
             List<Currency> licur;
             Db_Master db1 = new Db_Master(true);
@@ -19778,7 +19782,7 @@ public class Db_Master {
                     licur = list_figures_query_edit(filiale[0]);
                 }
             }
-            
+
             boolean dividi = get_national_office().getChangetype().equals("/");
             String loccur = get_local_currency()[0];
             String sql = "SELECT f.cod,f.data,f.id,f.user,f.fg_tipo,f.till "
@@ -19792,11 +19796,11 @@ public class Db_Master {
                         + "AND data<'" + datad1 + "' AND tipo='" + tipo + "' "
                         + "AND (codiceopenclose = '" + rs.getString("f.cod") + "' OR codtr = '" + rs.getString("f.cod") + "') "
                         + "AND till='" + rs.getString("f.till") + "' ORDER BY cod_value";
-                
+
                 ResultSet rs2 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql2);
                 while (rs2.next()) {
                     String sp1 = rs2.getString("cod_value");
-                    
+
                     if (sp1.equalsIgnoreCase(loccur)) {
                         listval.add(rs2.getString("cod_value"));
                         String[] dat = {
@@ -19808,12 +19812,12 @@ public class Db_Master {
                         };
                         listdati.add(dat);
                     } else if (licur.stream().filter(c1 -> c1.getCode().equals(sp1)).findAny().orElse(null) != null) {
-                        
+
                         listval.add(rs2.getString("cod_value"));
-                        
+
                         double rateattuale = fd(licur.stream().filter(c1 -> c1.getCode()
                                 .equals(sp1)).findAny().get().getCambio_bce());
-                        
+
                         double cv = getControvalore(fd(rs2.getString("total")), rateattuale, dividi);
                         String[] dat = {
                             rs2.getString("cod_value"),
@@ -19823,9 +19827,9 @@ public class Db_Master {
                             roundDoubleandFormat(cv, 2)
                         };
                         listdati.add(dat);
-                        
+
                     }
-                    
+
                 }
             }
             removeDuplicatesAL(listval);
@@ -19833,14 +19837,14 @@ public class Db_Master {
                 ArrayList<String> data = new ArrayList<>();
                 BranchStockInquiry_value bsi1 = new BranchStockInquiry_value();
                 String valuta = listval.get(i);
-                
+
                 bsi1.setCurrency(valuta);
                 double v1 = 0.00;
                 double v2 = 0.00;
                 double v3 = 0.00;
                 double v4 = 0.00;
                 double v5 = 0.00;
-                
+
                 for (int j = 0; j < listdati.size(); j++) {
                     String[] va  = listdati.get(j);
                     if (valuta.equals(va[0])) {
@@ -19867,12 +19871,12 @@ public class Db_Master {
                 data.add(roundDoubleandFormat(v4, 8));
                 data.add(roundDoubleandFormat(v5, 2));
                 bsi1.setDati_string(data);
-                
+
                 if (v1 > 0 || v2 > 0 || v3 > 0) {
                     out.add(bsi1);
                 }
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -19925,10 +19929,10 @@ public class Db_Master {
                 osp01.setQta(rs.getString(4));
                 osp01.setMedioacq(rs.getString(5));
                 osp01.setControvalore(rs.getString(6));
-                
+
                 out.add(osp01);
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -19950,9 +19954,9 @@ public class Db_Master {
         DateTime inizioanno = new DateTime().withDayOfYear(1).withMillisOfDay(0);
         DateTime today = new DateTime().withMillisOfDay(0);
         List<BCE> present = new ArrayList<>();
-        
+
         try {
-            
+
             String sql = "SELECT * FROM stock WHERE filiale = '" + filiale[0] + "' AND total <>'0.00' "
                     + "AND tipostock = 'CH' AND (kind ='01' OR kind = '02' OR kind = '03') "
                     + "AND codice NOT IN (SELECT codice FROM stock WHERE cod_value='" + loccur + "' AND kind ='01') "
@@ -19960,14 +19964,14 @@ public class Db_Master {
 //            System.out.println("rc.so.db.Db_Master.list_StockPrice_value() " + sql);
 
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             String dateactual = getNowDT().toString(patternnormdate_filter);
-            
+
             while (rs.next()) {
                 StockPrice_value sp1 = new StockPrice_value();
-                
+
                 sp1.setDateactual(dateactual + " (Actual)");
-                
+
                 sp1.setCurrency(rs.getString("cod_value"));
                 sp1.setDe_currency(formatALCurrency(rs.getString("cod_value"), licur));
                 sp1.setSupportocod(rs.getString("kind"));
@@ -19981,9 +19985,9 @@ public class Db_Master {
 
                 //RICORDARSI DI FAR ENTRARE I FROM BANK con il BCE
                 if (newpread) {
-                    
+
                     if (licur.stream().filter(c1 -> c1.getCode().equals(sp1.getCurrency())).findAny().get() != null) {
-                        
+
                         double rateattuale = fd(licur.stream().filter(c1
                                 -> c1.getCode().equals(sp1.getCurrency())).findAny().get().getCambio_bce());
                         String valuta = rs.getString("cod_value");
@@ -19994,26 +19998,26 @@ public class Db_Master {
 //                        }
                         boolean annoprecedente = dt.isBefore(inizioanno);
                         double oldrate = 1.00;
-                        
+
                         if (!valuta.equals(loccur)) {
-                            
+
                             if (annoprecedente) {
                                 DateTime data_riferimento = inizioanno.minusDays(1);
                                 oldrate = fd(Engine.get_BCE(data_riferimento, valuta));
                             } else {
-                                
+
                                 boolean checkET = rs.getString("tipo").equals("ET");
                                 if (checkET) {
                                     checkET = is_ET_FROMBRANCH(rs.getString("idoperation"));
                                 }
-                                
+
                                 if (checkET) {
                                     oldrate = fd(roundDoubleandFormat(fd(rs.getString("rate")), 8));
                                     sp1.setBcanconote1("Ext. Transfert BR");
                                 } else {
 //                                sp1.setBcanconote1(Engine.formatTypeTransaction_stockprice(rs.getString("tipo")));
                                     boolean ratefromlist = false;
-                                    
+
                                     if (dt.withMillisOfDay(0).equals(today)) {
                                         oldrate = rateattuale;
                                         present.add(new BCE(datarif, valuta, rateattuale));
@@ -20021,7 +20025,7 @@ public class Db_Master {
                                         if (!present.isEmpty()) {
                                             ratefromlist = present.stream().filter(c1 -> c1.getData().equalsIgnoreCase(datarif) && c1.getValuta().equalsIgnoreCase(valuta)).findAny().orElse(null) != null;
                                         }
-                                        
+
                                         if (ratefromlist) {
                                             oldrate = present.stream().filter(c1 -> c1.getData().equalsIgnoreCase(datarif) && c1.getValuta().equalsIgnoreCase(valuta)).findAny().get().getRif_bce();
                                         } else {
@@ -20039,16 +20043,16 @@ public class Db_Master {
                                             if (oldrate == 0) {
                                                 oldrate = fd(rs.getString("rate"));
                                             }
-                                            
+
                                             present.add(new BCE(datarif, valuta, oldrate));
-                                            
+
                                         }
                                     }
-                                    
+
                                 }
                             }
                         }
-                        
+
                         double oldcv = getControvalore(fd(rs.getString("total")), oldrate, dividi);
                         double actualcv = getControvalore(fd(rs.getString("total")), rateattuale, dividi);
 
@@ -20063,22 +20067,22 @@ public class Db_Master {
 //                        }
                     }
                 }
-                
+
                 if (fd(rs.getString("total")) > 0) {
                     if (rs.getString("cod_value").equals(loccur) && rs.getString("kind").equals("01")) {
-                        
+
                     } else {
                         out.add(sp1);
                     }
                 }
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return out;
     }
-    
+
     public boolean is_ET_FROMBRANCH(String cod) {
         try {
             String sql = "SELECT cod FROM et_change WHERE cod='" + cod + "' AND fg_tofrom = 'F' AND fg_brba = 'BR'";
@@ -20088,7 +20092,7 @@ public class Db_Master {
             e.printStackTrace();
         }
         return false;
-        
+
     }
 
     /**
@@ -20104,9 +20108,9 @@ public class Db_Master {
 //        out.setId_filiale(filiale[0]);
 //        out.setDe_filiale(filiale[1]);
         out.setPeriodo(datareport);
-        
+
         ArrayList<NC_category> nc_cat = query_nc_category_filial(branch.get(0), null);
-        
+
         ArrayList<String> listNCcateg = parseString(list_nc_categ, ";");
         ArrayList<String> alcolonne = new ArrayList<>();
         alcolonne.add("User");
@@ -20120,18 +20124,18 @@ public class Db_Master {
         }
         out.setAlcolonne(alcolonne);
         try {
-            
+
             String sql = "SELECT data,gruppo_nc,causale_nc,till,data,id,note,fg_tipo_transazione_nc,ricevuta,quantita,total,user,fg_inout,del_fg FROM nc_transaction where del_fg='0' AND bonus = '1'  ";
-            
+
             String filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "filiale = '" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             Iterable<String> ite = onPattern(";").split(list_nc_categ);
             Iterator it = ite.iterator();
             String nccatwhere = "";
@@ -20144,18 +20148,18 @@ public class Db_Master {
             if (nccatwhere.length() > 3) {
                 sql = sql + " AND (" + nccatwhere.substring(0, nccatwhere.length() - 3).trim() + ")";
             }
-            
+
             if (datad1 != null) {
                 sql = sql + "AND data like'" + datad1 + "%' ";
             }
-            
+
             sql = sql + " ORDER BY user,data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             ArrayList<NoChangeBonus_value> dati = new ArrayList<>();
-            
+
             ArrayList<String> lista_User = new ArrayList<>();
-            
+
             while (rs.next()) {
                 lista_User.add(rs.getString("user"));
             }
@@ -20183,7 +20187,7 @@ public class Db_Master {
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
-        
+
         return out;
     }
 
@@ -20197,7 +20201,7 @@ public class Db_Master {
     public ArrayList<NoChangeInternalTransferList_value> list_InternalTransferList_valueNC(String filiale, String datad1, String datad2) {
         ArrayList<NoChangeInternalTransferList_value> out = new ArrayList<>();
         try {
-            
+
             String sql = "SELECT * FROM it_change where filiale='" + filiale + "' ";
             if (datad1 != null) {
                 sql = sql + "AND dt_it >= '" + datad1 + " 00:00:00' ";
@@ -20206,7 +20210,7 @@ public class Db_Master {
                 sql = sql + "AND dt_it <= '" + datad2 + " 23:59:59' ";
             }
             sql = sql + " ORDER BY dt_it";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             ArrayList<NC_category> nc_cat = query_nc_category_filial(filiale, null);
             while (rs.next()) {
@@ -20231,7 +20235,7 @@ public class Db_Master {
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
-        
+
         return out;
     }
 
@@ -20335,7 +20339,7 @@ public class Db_Master {
         try {
             String sql = "SELECT cod,id,filiale,total,cl_cod,tipocliente FROM ch_transaction WHERE tipotr = ? "
                     + "and data >= date_sub(curtime(),interval ? day) AND bb = ? AND id = ? AND filiale = ?  AND del_fg = ?";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, "B");
             ps.setString(2, get_national_office().getScadenza_bb());
@@ -20343,9 +20347,9 @@ public class Db_Master {
             ps.setString(4, id);
             ps.setString(5, filiale);
             ps.setString(6, "0");
-            
+
             ResultSet rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 String[] o1 = {rs.getString(1),
                     leftPad(rs.getString(2), 15, "0"),
@@ -20356,7 +20360,7 @@ public class Db_Master {
         } catch (SQLException | NumberFormatException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
-        
+
         return out;
     }
 
@@ -20371,7 +20375,7 @@ public class Db_Master {
         try {
             String sql = "SELECT cod,id,filiale,total,cl_cod,tipocliente FROM ch_transaction WHERE tipotr = ? "
                     + "and data >= date_sub(curtime(),interval ? day) AND bb = ? AND id = ? AND filiale = ? AND del_fg = ?";
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, "S");
             ps.setString(2, get_national_office().getScadenza_bb());
@@ -20390,7 +20394,7 @@ public class Db_Master {
         } catch (SQLException | NumberFormatException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
-        
+
         return out;
     }
 
@@ -20407,7 +20411,7 @@ public class Db_Master {
             ps.setString(2, get_national_office().getScadenza_bb());
             ps.setString(3, "1");
             ps.setString(4, "0");
-            
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String[] o1 = {rs.getString(1),
@@ -20501,19 +20505,19 @@ public class Db_Master {
             String weekly = new DateTime().minusDays(7).toString(patternsql);
             String monthly = new DateTime().minusDays(30).toString(patternsql);
             DateTimeFormatter formatter = forPattern(patternsql);
-            
+
             DateTime weeklyLIMIT = formatter.parseDateTime(weekly);
             DateTime monthlyLIMIT = formatter.parseDateTime(monthly);
-            
+
             while (rs.next()) {
                 String date = rs.getString("data").substring(0, 10);
                 boolean buy = rs.getString("tipotr").equals("B");
                 DateTime dt = formatter.parseDateTime(date);
-                
+
                 if (date.equals(today)) {
                     op_giorn++;
                 }
-                
+
                 if (dt.isAfter(weeklyLIMIT) || dt.isEqual(weeklyLIMIT)) {
                     op_sett++;
                     if (buy) {
@@ -20522,7 +20526,7 @@ public class Db_Master {
                         vol_weekly = vol_weekly + fd(rs.getString("pay"));
                     }
                 }
-                
+
                 if (dt.isAfter(monthlyLIMIT) || dt.isEqual(monthlyLIMIT)) {
                     op_mensili++;
                     if (buy) {
@@ -20531,14 +20535,14 @@ public class Db_Master {
                         vol_mensile = vol_mensile + fd(rs.getString("pay"));
                     }
                 }
-                
+
                 if (buy) {
                     vol_trimest = vol_trimest + fd(rs.getString("total"));
                 } else {
                     vol_trimest = vol_trimest + fd(rs.getString("pay"));
                 }
             }
-            
+
             if (tra != null) {
                 op_giorn++;
                 op_sett++;
@@ -20548,14 +20552,14 @@ public class Db_Master {
                     vol_weekly = vol_weekly + fd(tra.getTotal());
                     vol_mensile = vol_mensile + fd(tra.getTotal());
                     vol_trimest = vol_trimest + fd(tra.getTotal());
-                    
+
                 } else {
                     vol_weekly = vol_weekly + fd(tra.getPay());
                     vol_mensile = vol_mensile + fd(tra.getPay());
                     vol_trimest = vol_trimest + fd(tra.getPay());
                 }
             }
-            
+
             output = new Kyc_parameter(op_giorn, op_sett, op_mensili, vol_weekly, vol_mensile, vol_trimest);
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -20572,14 +20576,14 @@ public class Db_Master {
      */
     public boolean checkSogliaValueofTransaction_client(Client cl, Office of, Ch_transaction it) {
         try {
-            
+
             String sql = "SELECT tipotr,total,pay,commission,round FROM ch_transaction where del_fg = ? AND cl_cod = ? AND data > DATE_SUB(curdate(), INTERVAL ? DAY)";
 //                    + "AND data >= DATE_SUB(curdate(), INTERVAL ? MONTH)";
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, "0");
             ps.setString(2, cl.getCode());
             ps.setInt(3, parseIntR(of.getKyc_mesi()));
-            
+
             double total = 0.00;
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -20674,7 +20678,7 @@ public class Db_Master {
                 }
                 osp.setQuantity(formatMysqltoDisplay(rs.getString("ip_quantity_op")));
                 osp.setAmount(formatMysqltoDisplay(rs.getString("ip_value_op")));
-                
+
                 out.add(osp);
             }
         } catch (SQLException ex) {
@@ -20719,7 +20723,7 @@ public class Db_Master {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Agency ag = new Agency();
-                
+
                 ag.setAgenzia(rs.getString("agenzia"));
                 ag.setDe_agenzia(rs.getString("de_agenzia"));
                 ag.setIndirizzo(visualizzaStringaMySQL(rs.getString("indirizzo")));
@@ -20729,7 +20733,7 @@ public class Db_Master {
                 ag.setFax(rs.getString("fax"));
                 ag.setEmail(rs.getString("email"));
                 ag.setFg_annullato(rs.getString("fg_annullato"));
-                
+
                 out.add(ag);
             }
         } catch (SQLException ex) {
@@ -20745,7 +20749,7 @@ public class Db_Master {
      */
     public double weekly_transaction(String cod_cl) {
         double tot = 0.0;
-        
+
         if (cod_cl == null || cod_cl.equals("---")) {
             return tot;
         }
@@ -20761,7 +20765,7 @@ public class Db_Master {
                     tot = tot + fd(rs.getString("pay"));
                 }
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -20792,7 +20796,7 @@ public class Db_Master {
                     tot = tot + fd(rs.getString("pay"));
                 }
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -20812,7 +20816,7 @@ public class Db_Master {
             ps.setString(1, cod_cl);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                
+
                 String valore;
                 if (rs.getString("tipotr").equals("B")) {
                     valore = "<tr><td>" + rs.getString("filiale") + "</td>"
@@ -20825,7 +20829,7 @@ public class Db_Master {
                             + "<td>" + formatType(rs.getString("tipotr")) + "</td>"
                             + "<td>" + formatMysqltoDisplay(rs.getString("pay")) + "</td></tr>";
                 }
-                
+
                 out.add(valore);
             }
         } catch (SQLException ex) {
@@ -20849,7 +20853,7 @@ public class Db_Master {
             ps.setString(2, filiale);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                
+
                 String valore;
                 if (rs.getString("tipotr").equals("B")) {
                     valore = "<tr><td>" + rs.getString("filiale") + "</td>"
@@ -20862,7 +20866,7 @@ public class Db_Master {
                             + "<td>" + formatType(rs.getString("tipotr")) + "</td>"
                             + "<td>" + formatMysqltoDisplay(rs.getString("pay")) + "</td></tr>";
                 }
-                
+
                 out.add(valore);
             }
         } catch (SQLException ex) {
@@ -21005,7 +21009,7 @@ public class Db_Master {
             ps.setString(3, kind);
             ps.setString(4, cod_openclose);
             ResultSet rs = ps.executeQuery();
-            
+
             if (rs.next()) {
                 Stock_report sr = new Stock_report(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
                         rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9),
@@ -21044,14 +21048,14 @@ public class Db_Master {
             ArrayList<NC_causal> ca = list_nc_causal_enabled();
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
-                
+
                 String su = rs.getString("tr.supporto");
                 if (su.equals("...")) {
                     su = "01";
                 }
-                
+
                 Figures fi1 = Engine.get_figures(fi, su);
-                
+
                 NC_causal cau = getNC_causal(ca, rs.getString("tr.causale_nc"), rs.getString("tr.gruppo_nc"));
                 Users u_tr = Engine.get_user(rs.getString("tr.user"), us);
                 Users u_re = Engine.get_user(rs.getString("re.user"), us);
@@ -21092,13 +21096,13 @@ public class Db_Master {
             if (data1 != null) {
                 sql = sql + "AND re.date >= '" + data1 + " 00:00:00' ";
             }
-            
+
             if (data2 != null) {
                 sql = sql + "AND re.date <= '" + data2 + " 23:59:59' ";
             }
-            
+
             sql = sql + " ORDER BY re.user,re.date";
-            
+
             ArrayList<Users> us = list_all_users();
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
@@ -21120,7 +21124,7 @@ public class Db_Master {
                 ar.setNote(rs.getString("tr.del_motiv"));
                 out.add(ar);
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -21141,17 +21145,17 @@ public class Db_Master {
             String sql = "SELECT * FROM ch_transaction_refund r,ch_transaction t WHERE r.status='1' AND r.cod_tr = t.cod ";
             sql = sql + "AND r.dt_refund >= '" + data1 + " 00:00:00' ";
             sql = sql + "AND r.dt_refund <= '" + data2 + " 23:59:59' ";
-            
+
             String filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "t.filiale = '" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
             sql = sql + " ORDER BY t.filiale,r.dt_refund";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
                 C_CustomerCareRefund_value ar = new C_CustomerCareRefund_value();
@@ -21171,7 +21175,7 @@ public class Db_Master {
                 ar.setNote("");
                 out.add(ar);
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -21190,7 +21194,7 @@ public class Db_Master {
         ArrayList<C_WesternUnion_value> out = new ArrayList<>();
         try {
             String sql = "SELECT * FROM nc_transaction WHERE del_fg = '0' ";
-            
+
             Iterable<String> ite = onPattern(";").split(list_nc_cat);
             Iterator it = ite.iterator();
             String nccatwhere = "";
@@ -21200,28 +21204,28 @@ public class Db_Master {
                     nccatwhere = nccatwhere + "gruppo_nc ='" + nccat + "' OR ";
                 }
             }
-            
+
             if (nccatwhere.length() > 3) {
                 sql = sql + " AND (" + nccatwhere.substring(0, nccatwhere.length() - 3).trim() + ") ";
             }
-            
+
             String filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "filiale = '" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             if (data1 != null) {
                 sql = sql + "AND data >= '" + data1 + " 00:00:00' ";
             }
-            
+
             if (data2 != null) {
                 sql = sql + "AND data <= '" + data2 + " 23:59:59' ";
             }
-            
+
             sql = sql + " ORDER BY data";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             ArrayList<String> datelist = new ArrayList<>();
@@ -21230,17 +21234,17 @@ public class Db_Master {
             }
             rs.beforeFirst();
             removeDuplicatesAL(datelist);
-            
+
             for (int i = 0; i < datelist.size(); i++) {
                 String datavalue = datelist.get(i);
                 C_WesternUnion_value wu = new C_WesternUnion_value();
                 wu.setData(formatStringtoStringDate(datavalue, patternsql, patternnormdate_filter));
-                
+
                 double setToSend = 0.0;
                 double setToReceive = 0.0;
                 int setnTransSend = 0;
                 int setnTransReceive = 0;
-                
+
                 while (rs.next()) {
                     if (rs.getString("data").startsWith(datavalue)) {
                         if (rs.getString("fg_inout").equals("2")) {
@@ -21250,23 +21254,23 @@ public class Db_Master {
                             setToSend = setToSend + fd(rs.getString("total").replace("-", "").trim());
                             setnTransSend++;
                         }
-                        
+
                     }
                 }
-                
+
                 double setTotal = setToSend - setToReceive;
-                
+
                 rs.beforeFirst();
                 wu.setToSend(roundDoubleandFormat(setToSend, 2) + "");
                 wu.setnTransSend(setnTransSend + "");
                 wu.setToReceive(roundDoubleandFormat(setToReceive, 2) + "");
                 wu.setnTransReceive(setnTransReceive + "");
                 wu.setTotal(roundDoubleandFormat(setTotal, 2) + "");
-                
+
                 out.add(wu);
-                
+
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -21377,19 +21381,19 @@ public class Db_Master {
      * @return
      */
     public ArrayList<C_ChangeVolumeAffairCashAdvance_value> getC_ChangeVolumeAffairCashAdvance(String data1, String data2, String filiale, ArrayList<Branch> allb) {
-        
+
         ArrayList<C_ChangeVolumeAffairCashAdvance_value> out = new ArrayList<>();
         try {
             String sql = "SELECT * FROM ch_transaction WHERE del_fg = '0' AND filiale = '" + filiale + "' ";
-            
+
             if (data1 != null) {
                 sql = sql + "AND data >= '" + data1 + " 00:00:00' ";
             }
-            
+
             if (data2 != null) {
                 sql = sql + "AND data <= '" + data2 + " 23:59:59' ";
             }
-            
+
             sql = sql + " ORDER BY data";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             ArrayList<String> datelist = new ArrayList<>();
@@ -21398,7 +21402,7 @@ public class Db_Master {
             }
             rs.beforeFirst();
             removeDuplicatesAL(datelist);
-            
+
             for (int i = 0; i < datelist.size(); i++) {
                 String datavalue = datelist.get(i);
                 C_ChangeVolumeAffairCashAdvance_value cva = new C_ChangeVolumeAffairCashAdvance_value();
@@ -21445,7 +21449,7 @@ public class Db_Master {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return out;
-        
+
     }
 
     /**
@@ -21458,21 +21462,21 @@ public class Db_Master {
      */
     public ArrayList<C_ChangeMovimentDetailForBranches_value> list_C_ChangeMovimentDetailForBranches_value(String data1,
             String data2, ArrayList<String> branch, ArrayList<Branch> allb) {
-        
+
         ArrayList<C_ChangeMovimentDetailForBranches_value> out = new ArrayList<>();
         try {
-            
+
             String sql = "SELECT * FROM ch_transaction where del_fg<>'2' ";
-            
+
             String filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "filiale = '" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " and (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             if (data1 != null) {
                 sql = sql + "AND data >= '" + data1 + " 00:00:00' ";
             }
@@ -21484,7 +21488,7 @@ public class Db_Master {
             ArrayList<CustomerKind> cklist = list_customerKind();
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
-                
+
                 Ch_transaction ch = new Ch_transaction();
                 ch.setCod(rs.getString("cod"));
                 ch.setId(leftPad(rs.getString("id"), 15, "0"));
@@ -21529,9 +21533,9 @@ public class Db_Master {
                 ch.setRefund(rs.getString("refund"));
                 ch.setFa_number(rs.getString("fa_number"));
                 ch.setCn_number(rs.getString("cn_number"));
-                
+
                 ArrayList<Ch_transaction_value> values = query_transaction_value(ch.getCod());
-                
+
                 for (int j = 0; j < values.size(); j++) {
                     Ch_transaction_value val = values.get(j);
                     C_ChangeMovimentDetailForBranches_value cmdfb = new C_ChangeMovimentDetailForBranches_value();
@@ -21561,7 +21565,7 @@ public class Db_Master {
                     } else {
                         cmdfb.setIntBook(ch.getIntbook());
                     }
-                    
+
                     out.add(cmdfb);
                 }
             }
@@ -21580,14 +21584,14 @@ public class Db_Master {
      * @return
      */
     public ArrayList<C_ChangeMovimentForBranches_value> list_C_ChangeMovimentForBranches_value(String data1, String data2, String filiale, ArrayList<Branch> allb) {
-        
+
         ArrayList<String[]> listvalue = new ArrayList<>();
         ArrayList<Ch_transaction_value> values = new ArrayList<>();
         ArrayList<C_ChangeMovimentForBranches_value> out = new ArrayList<>();
-        
+
         try {
             String sql = "SELECT * FROM ch_transaction WHERE filiale = '" + filiale + "' AND del_fg ='0' ";
-            
+
             if (data1 != null) {
                 sql = sql + "AND data >= '" + data1 + " 00:00:00' ";
             }
@@ -21634,9 +21638,9 @@ public class Db_Master {
                     listvalue.add(v2);
                 }
             }
-            
+
             removeDuplicatesALAr(listvalue);
-            
+
             for (String[] va  : listvalue) {
                 C_ChangeMovimentForBranches_value cmfb = new C_ChangeMovimentForBranches_value();
                 cmfb.setCurrency(va[0]);
@@ -21691,16 +21695,16 @@ public class Db_Master {
 //        try {
 
         boolean dividi = get_national_office().getChangetype().equals("/");
-        
+
         ArrayList<String> listvalue = new ArrayList<>();
         ArrayList<String[]> list_valuta = new ArrayList<>();
         ArrayList<String[]> list_branch = new ArrayList<>();
         ArrayList<String[]> list_bank = new ArrayList<>();
         ArrayList<String[]> list_ocerr = new ArrayList<>();
-        
+
         try {
             String sql = "SELECT * FROM ch_transaction WHERE filiale = '" + filiale + "' AND del_fg ='0' ";
-            
+
             if (data1 != null) {
                 sql = sql + "AND data >= '" + data1 + " 00:00:00' ";
             }
@@ -21720,9 +21724,9 @@ public class Db_Master {
                 }
             }
             rs.beforeFirst();
-            
+
             String sql3 = "SELECT * FROM et_change where filiale = '" + filiale + "' AND fg_annullato='0' ";
-            
+
             if (data1 != null) {
                 sql3 = sql3 + "AND dt_it >= '" + data1 + " 00:00:00' ";
             }
@@ -21730,9 +21734,9 @@ public class Db_Master {
                 sql3 = sql3 + "AND dt_it <= '" + data2 + " 23:59:59' ";
             }
             sql3 = sql3 + " ORDER BY dt_it";
-            
+
             ResultSet rs3 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql3);
-            
+
             while (rs3.next()) {
                 String sql4 = "SELECT * FROM et_change_valori  WHERE cod='" + rs3.getString("cod") + "'";
                 ResultSet rs4 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql4);
@@ -21747,7 +21751,7 @@ public class Db_Master {
                     listvalue.add(rs4.getString("currency"));
                 }
             }
-            
+
             String sql5 = "SELECT * FROM oc_errors where tipo='CH' AND cod in (SELECT cod FROM oc_lista WHERE filiale = '" + filiale + "' AND fg_tipo='C' and filiale='000') ";
             if (data1 != null) {
                 sql5 = sql5 + "AND data >= '" + data1 + " 00:00:00' ";
@@ -21756,7 +21760,7 @@ public class Db_Master {
                 sql5 = sql5 + "AND data <= '" + data2 + " 23:59:59' ";
             }
             sql5 = sql5 + " ORDER BY data";
-            
+
             ResultSet rs5 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql5);
             while (rs5.next()) {
                 String controv = formatDoubleforMysql(getValueDiff("1", "0.00", rs5.getString("total_diff"), rs5.getString("rate"), dividi));
@@ -21764,9 +21768,9 @@ public class Db_Master {
                 list_ocerr.add(li);
                 listvalue.add(rs5.getString("valuta"));
             }
-            
+
             removeDuplicatesAL(listvalue);
-            
+
             for (String va  : listvalue) {
                 double setFromBranch_qty = 0.0;
                 double setFromBranch_amount = 0.0;
@@ -21789,10 +21793,10 @@ public class Db_Master {
                 for (int j = 0; j < list_ocerr.size(); j++) {
                     String[] li = list_ocerr.get(j);
                     if (li[0].equals(va)) {
-                        
+
                         setOpenCloseError_qty = setOpenCloseError_qty + roundDouble(fd(li[1]), 2);
                         setOpenCloseError_amount = setOpenCloseError_amount + roundDouble(fd(li[2]), 2);
-                        
+
                     }
                 }
                 for (int j = 0; j < list_bank.size(); j++) {
@@ -21860,12 +21864,12 @@ public class Db_Master {
                 ac.setTotAmountOut(roundDoubleandFormat(setTotAmountOut, 2) + "");
                 out.add(ac);
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return out;
-        
+
     }
 
     /**
@@ -21879,9 +21883,9 @@ public class Db_Master {
     public ArrayList<C_NoChangeMovimentForBranches_value> list_C_NoChangeMovimentForBranches_value(String data1, String data2, String filiale, ArrayList<Branch> allb) {
         ArrayList<C_NoChangeMovimentForBranches_value> out = new ArrayList<>();
         try {
-            
+
             String sql = "SELECT * FROM nc_transaction where filiale = '" + filiale + "' ";
-            
+
             if (data1 != null) {
                 sql = sql + "AND data >= '" + data1 + " 00:00:00' ";
             }
@@ -21899,7 +21903,7 @@ public class Db_Master {
             ArrayList<NC_category> nc_cat = query_nc_category_filial(getCodLocal(true)[0], null);
             ArrayList<NC_causal> nc_caus = query_nc_causal_filial(getCodLocal(true)[0], null);
             ArrayList<String[]> nc_kin = nc_kind();
-            
+
             for (int i = 0; i < causlist.size(); i++) {
                 String caus = causlist.get(i);
                 NC_causal nc1 = getNC_causal(nc_caus, caus, null);
@@ -21909,13 +21913,13 @@ public class Db_Master {
                 if (nc1 != null) {
                     NC_category nc0 = getNC_category(nc_cat, nc1.getGruppo_nc());
                     C_NoChangeMovimentForBranches_value ncmfb = new C_NoChangeMovimentForBranches_value();
-                    
+
                     ncmfb.setCategory(nc0.getDe_gruppo_nc());
                     ncmfb.setCausal(nc1.getDe_causale_nc());
                     ncmfb.setDe_filiale(formatBankBranchReport(filiale, "BR", null, allb));
                     ncmfb.setId_filiale(filiale);
                     ncmfb.setKind(formatAL(nc0.getFg_tipo_transazione_nc(), nc_kin, 1));
-                    
+
                     while (rs.next()) {
                         if (rs.getString("causale_nc").equals(caus)) {
                             setnTrans++;
@@ -21923,16 +21927,16 @@ public class Db_Master {
                             setTotal = setTotal + fd(rs.getString("total"));
                         }
                     }
-                    
+
                     ncmfb.setQt(roundDoubleandFormat(setQt, 2) + "");
                     ncmfb.setnTrans(setnTrans + "");
                     ncmfb.setTotal(roundDoubleandFormat(setTotal, 2) + "");
-                    
+
                     out.add(ncmfb);
                     rs.beforeFirst();
                 }
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -21951,15 +21955,15 @@ public class Db_Master {
         ArrayList<C_ChangeVolumeAffair_value> out = new ArrayList<>();
         try {
             String sql = "SELECT * FROM ch_transaction WHERE del_fg = '0' AND filiale = '" + filiale + "' ";
-            
+
             if (data1 != null) {
                 sql = sql + "AND data >= '" + data1 + " 00:00:00' ";
             }
-            
+
             if (data2 != null) {
                 sql = sql + "AND data <= '" + data2 + " 23:59:59' ";
             }
-            
+
             sql = sql + " ORDER BY data";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             ArrayList<String> datelist = new ArrayList<>();
@@ -22073,7 +22077,7 @@ public class Db_Master {
     public void delete_trans_stockreport(String codtr, String codiceopenclose) {
         try {
             this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).execute("DELETE FROM stock_report WHERE codtr = '" + codtr + "' AND codiceopenclose = '" + codiceopenclose + "'");
-            
+
             String dtoper = getNow();
             String dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
             insert_aggiornamenti_mod(new Aggiornamenti_mod(
@@ -22185,11 +22189,11 @@ public class Db_Master {
      */
     public ArrayList<C_Interbranch_value> list_C_InterbranchDetails_value(String data1, String data2, ArrayList<String> branch, String curr, ArrayList<String> state, String diff) {
         ArrayList<C_Interbranch_value> out = new ArrayList<>();
-        
+
         try {
             ArrayList<C_Interbranch_value> ing = list_C_Interbranch_value(data1, data2, branch, curr, state, diff);
             String local = get_local_currency()[0];
-            
+
             for (int i = 0; i < ing.size(); i++) {
                 C_Interbranch_value in = ing.get(i);
                 ArrayList<C_InterbranchDetails_value> list = new ArrayList<>();
@@ -22202,7 +22206,7 @@ public class Db_Master {
                             rs1.getString("ip_quantity"), rs1.getString("ip_rate"), rs1.getString("ip_total")};
                         to.add(valori);
                     }
-                    
+
                 }
                 if (!in.getCodefrom().equals("-")) {
                     ResultSet rs1 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery("SELECT * FROM et_change_valori where cod = '" + in.getCodefrom() + "'");
@@ -22212,7 +22216,7 @@ public class Db_Master {
                         fr.add(valori);
                     }
                 }
-                
+
                 for (int j = 0; j < to.size(); j++) {
                     String[] valori = to.get(j);
                     C_InterbranchDetails_value details = new C_InterbranchDetails_value();
@@ -22222,9 +22226,9 @@ public class Db_Master {
                     details.setQty(valori[3]);
                     details.setRate(valori[4]);
                     details.setTotal(roundDoubleandFormat(fd(valori[5]), 2));
-                    
+
                     String currencyfrom = "-", kindfrom = "-", nofrom = "-", qtyfrom = "-", ratefrom = "-", totalfrom = "-";
-                    
+
                     for (int k = 0; k < fr.size(); k++) {
                         String[] valfr = fr.get(k);
                         if (valori[0].equals(valfr[0]) && valori[1].equals(valfr[1])) {
@@ -22238,14 +22242,14 @@ public class Db_Master {
                             break;
                         }
                     }
-                    
+
                     details.setCurrencyfrom(currencyfrom);
                     details.setKindfrom(kindfrom);
                     details.setNofrom(nofrom);
                     details.setQtyfrom(qtyfrom);
                     details.setRatefrom(ratefrom);
                     details.setTotalfrom(totalfrom);
-                    
+
                     switch (curr) {
                         case "...":
                             list.add(details);
@@ -22263,9 +22267,9 @@ public class Db_Master {
                         default:
                             break;
                     }
-                    
+
                 }
-                
+
                 for (int j = 0; j < fr.size(); j++) {
                     String[] valori = fr.get(j);
                     C_InterbranchDetails_value details = new C_InterbranchDetails_value();
@@ -22281,7 +22285,7 @@ public class Db_Master {
                     details.setQtyfrom(valori[3]);
                     details.setRatefrom(valori[4]);
                     details.setTotalfrom(valueOf(roundDouble(fd(valori[5]), 2)));
-                    
+
                     switch (curr) {
                         case "...":
                             list.add(details);
@@ -22299,13 +22303,13 @@ public class Db_Master {
                         default:
                             break;
                     }
-                    
+
                     list.add(details);
                 }
                 in.setDati(list);
                 out.add(in);
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -22323,77 +22327,77 @@ public class Db_Master {
     public ArrayList<C_TransactionRegisterSummary_value> list_C_TransactionRegisterSummary_value(String data1, String data2, ArrayList<String> branch,
             ArrayList<Branch> allb) {
         ArrayList<C_TransactionRegisterSummary_value> out = new ArrayList<>();
-        
+
         for (int i = 0; i < branch.size(); i++) {
             String[] fi = {branch.get(i), branch.get(i)};
             Daily_value dv = list_Daily_value(fi, data1 + " 00:00", data2 + " 23:59", false, false);
             ArrayList<DailyCOP> dc1 = dv.getDatiCOP();
             ArrayList<DailyKind> dk1 = dv.getDati();
-            
+
             C_TransactionRegisterSummary_value ncmfb = new C_TransactionRegisterSummary_value();
             ncmfb.setId_filiale(branch.get(i));
             ncmfb.setDe_filiale(formatBankBranchReport(branch.get(i), "BR", null, allb));
-            
+
             ncmfb.setPurchnum(dv.getNoTransPurch());
             ncmfb.setPurchtot(dv.getPurchTotal());
             ncmfb.setPurchcomm(dv.getPurchComm());
             ncmfb.setSalesnum(dv.getNoTransSales());
             ncmfb.setSalestotal(dv.getSalesTotal());
             ncmfb.setSalescomm(dv.getSalesComm());
-            
+
             double setCashnum = 0;
             for (int o = 0; o < dc1.size(); o++) {
                 setCashnum = setCashnum + fd(dc1.get(o).getCashAdNtrans());
             }
-            
+
             ncmfb.setCashnum(roundDoubleandFormat(setCashnum, 0));
             ncmfb.setCashtot(dv.getCashAdNetTot());
             ncmfb.setCashcomm(dv.getCashAdComm());
-            
+
             for (int o = 0; o < dk1.size(); o++) {
-                
+
                 DailyKind dkk = dk1.get(o);
-                
+
                 if (dkk.getKind().equalsIgnoreCase("Western Union")) {
                     ncmfb.setWusnum(dkk.getFromNrTran());
                     ncmfb.setWustot(dkk.getFromTotal());
                     ncmfb.setWurnum(dkk.getToNrTran());
                     ncmfb.setWurtot(dkk.getToTotal());
                 } else if (dkk.getKind().equalsIgnoreCase("Stock Transaction")) {
-                    
+
                     ncmfb.setStockbuynum(dkk.getFromNrTran());
                     ncmfb.setStockbuytot(dkk.getFromTotal());
                     ncmfb.setStocksellnum(dkk.getToNrTran());
                     ncmfb.setStockselltot(dkk.getToTotal());
-                    
+
                 } else if (dkk.getKind().equalsIgnoreCase("VAT Refund")) {
-                    
+
                     ncmfb.setVatrefnum(dkk.getToNrTran());
                     ncmfb.setVatrefundtot(dkk.getToTotal());
-                    
+
                 } else if (dkk.getKind().equalsIgnoreCase("Other No stock transaction")) {
-                    
+
                     ncmfb.setOnsinum(dkk.getFromNrTran());
                     ncmfb.setOnsitot(dkk.getFromTotal());
                     ncmfb.setOnsonum(dkk.getToNrTran());
                     ncmfb.setOnsotot(dkk.getToTotal());
-                    
+
                 } else if (dkk.getKind().equalsIgnoreCase("Tickets")) {
-                    
+
                     ncmfb.setTikinnum(dkk.getFromNrTran());
                     ncmfb.setTikintot(dkk.getFromTotal());
                     ncmfb.setTikounum(dkk.getToNrTran());
                     ncmfb.setTikoutot(dkk.getToTotal());
-                    
+
                 } else if (dkk.getKind().equalsIgnoreCase("Insurance")) {
-                    
+
                     ncmfb.setInsinnum(dkk.getFromNrTran());
                     ncmfb.setInsintot(dkk.getFromTotal());
                     ncmfb.setInsounum(dkk.getToNrTran());
                     ncmfb.setInsoutot(dkk.getToTotal());
-                    
+
                 }
-                
+
             }
             out.add(ncmfb);
         }
@@ -22410,10 +22414,10 @@ public class Db_Master {
     public ArrayList<C_CloseBranch_value> list_C_CloseBranch_value(String datainiz, ArrayList<String> branch, ArrayList<Branch> allb) {
         ArrayList<C_CloseBranch_value> out = new ArrayList<>();
         try {
-            
+
             for (int i = 0; i < branch.size(); i++) {
                 String fil = branch.get(i);
-                
+
                 String datachi = null;
                 String sqlclosure = "SELECT data FROM oc_lista WHERE till='000' AND fg_tipo='C' AND filiale ='" + fil + "' AND data LIKE '" + datainiz
                         + "%' ORDER BY data DESC LIMIT 1";
@@ -22436,7 +22440,7 @@ public class Db_Master {
                         alcolonne.add("Fx");
                         alcolonne.add("Pos");
                         alcolonne.add("Bank account");
-                        
+
                         C_CloseBranch_value cb = new C_CloseBranch_value();
                         cb.setCodBranch(fil);
                         cb.setDescrBranch(formatBankBranchReport(fil, "BR", null, allb));
@@ -22446,7 +22450,7 @@ public class Db_Master {
                         cb.setCashadvance(dv.getCashAdNetTot());
                         cb.setCashonprem(dv.getCashOnPrem());
                         cb.setFx(dv.getFx());
-                        
+
                         double dc1v = 0.00;
                         for (int x = 0; x < dv.getDatiCOP().size(); x++) {
                             dc1v = dc1v
@@ -22497,43 +22501,43 @@ public class Db_Master {
     public ArrayList<C_CashierDetails_value> list_C_CashierDetails_value(String d3, String d4, String data1, String data2, ArrayList<String> branch) {
         ArrayList<C_CashierDetails_value> out = new ArrayList<>();
         try {
-            
+
             String oper = get_national_office().getChangetype();
-            
+
             String sql = "SELECT * FROM ch_transaction where del_fg<>'2' ";
-            
+
             String filwhere = "";
-            
+
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "filiale='" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             if (data1 != null) {
                 sql = sql + "AND data >= '" + data1 + " 00:00:00' ";
             }
-            
+
             if (data2 != null) {
                 sql = sql + "AND data <= '" + data2 + " 23:59:59' ";
             }
-            
+
             sql = sql + " order by user,data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             ArrayList<String> usl = new ArrayList<>();
             while (rs.next()) {
                 usl.add(rs.getString("user"));
             }
-            
+
             String sql1 = "SELECT * FROM oc_lista where errors ='Y' ";
-            
+
             if (filwhere.length() > 3) {
                 sql1 = sql1 + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             if (data1 != null) {
                 sql1 = sql1 + "AND data >= '" + data1 + " 00:00:00' ";
             }
@@ -22545,14 +22549,14 @@ public class Db_Master {
             while (rs1.next()) {
                 usl.add(rs1.getString("user"));
             }
-            
+
             rs.beforeFirst();
             rs1.beforeFirst();
-            
+
             removeDuplicatesAL(usl);
-            
+
             ArrayList<Users> lius = list_all_users();
-            
+
             for (int i = 0; i < usl.size(); i++) {
                 String cl = usl.get(i);
                 Users cls = Engine.get_user(cl, lius);
@@ -22565,7 +22569,7 @@ public class Db_Master {
                 ccv.setDataDa(d3);
                 ccv.setDataA(d4);
                 ccv.setUser(visualizzaStringaMySQL(cls.getCod() + " - " + cls.getDe_cognome() + " " + cls.getDe_nome()));
-                
+
                 while (rs.next()) {
                     if (rs.getString("user").equals(cl)) {
                         Ch_transaction ch = new Ch_transaction();
@@ -22618,9 +22622,9 @@ public class Db_Master {
                             } else {
                                 ch.setCl_cod("");
                             }
-                            
+
                         }
-                        
+
                         ch.setDel_fg(rs.getString("del_fg"));
                         ch.setDel_dt(formatStringtoStringDate(rs.getString("del_dt"), patternsqldate, patternnormdate));
                         ch.setDel_user(rs.getString("del_user"));
@@ -22634,10 +22638,10 @@ public class Db_Master {
                     }
                 }
                 rs.beforeFirst();
-                
+
                 while (rs1.next()) {
                     if (rs1.getString("user").equals(cl)) {
-                        
+
                         Openclose oc = new Openclose(rs1.getString(1), rs1.getString(2), leftPad(rs1.getString(3), 15, "0"),
                                 rs1.getString(4), rs1.getString(5), rs1.getString(6),
                                 formatStringtoStringDate(rs1.getString(7), patternsqldate, patternnormdate),
@@ -22647,7 +22651,7 @@ public class Db_Master {
                         oc.setForeign_tr(rs1.getString("foreign_tr"));
                         oc.setLocal_tr(rs1.getString("local_tr"));
                         oc.setStock_tr(rs1.getString("stock_tr"));
-                        
+
                         double setTotErr = 0.00;
                         ArrayList<String[]> err_value = list_oc_errors(rs1.getString("cod"));
                         for (int y = 0; y < err_value.size(); y++) {
@@ -22662,19 +22666,19 @@ public class Db_Master {
                                 }
                             }
                         }
-                        
+
                         oc.setTotal_diff(roundDoubleandFormat(setTotErr, 2) + "");
                         datiopenclose.add(oc);
                     }
                 }
-                
+
                 rs1.beforeFirst();
-                
+
                 ccv.setDatitran(datitran);
                 ccv.setDatierr(datiopenclose);
                 out.add(ccv);
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -22695,46 +22699,46 @@ public class Db_Master {
             ArrayList<String[]> fasce) {
         ArrayList<C_CashierPerformance_value> out = new ArrayList<>();
         try {
-            
+
             String oper = get_national_office().getChangetype();
             String sql = "SELECT * FROM ch_transaction where del_fg<>'2' ";
-            
+
             String filwhere = "";
-            
+
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "filiale='" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             if (data1 != null) {
                 sql = sql + "AND data >= '" + data1 + " 00:00:00' ";
             }
-            
+
             if (data2 != null) {
                 sql = sql + "AND data <= '" + data2 + " 23:59:59' ";
             }
-            
+
             if (!bss.equals("BS")) {
                 sql = sql + "AND tipotr = '" + bss + "' ";
             }
-            
+
             sql = sql + " order by user,data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             ArrayList<String> usl = new ArrayList<>();
             while (rs.next()) {
                 usl.add(rs.getString("user"));
             }
-            
+
             String sql1 = "SELECT * FROM oc_lista where errors ='Y' ";
-            
+
             if (filwhere.length() > 3) {
                 sql1 = sql1 + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             if (data1 != null) {
                 sql1 = sql1 + "AND data >= '" + data1 + " 00:00:00' ";
             }
@@ -22746,14 +22750,14 @@ public class Db_Master {
             while (rs1.next()) {
                 usl.add(rs1.getString("user"));
             }
-            
+
             rs.beforeFirst();
             rs1.beforeFirst();
             removeDuplicatesAL(usl);
-            
+
             ArrayList<Users> lius = list_all_users();
             ArrayList<Figures> lifi = list_all_figures();
-            
+
             for (int i = 0; i < usl.size(); i++) {
                 String cl = usl.get(i);
                 Users cls = Engine.get_user(cl, lius);
@@ -22773,10 +22777,10 @@ public class Db_Master {
                 } else {
                     val.add(0);
                 }
-                
+
                 double setVolume = 0.00;
                 double setComFix = 0.00;
-                
+
                 while (rs.next()) {
                     if (rs.getString("user").equals(cl)) {
                         if (rs.getString("del_fg").equals("1")) {
@@ -22789,7 +22793,7 @@ public class Db_Master {
                             setVolume = setVolume + fd(rs.getString("total"));
                             setComFix = setComFix + fd(rs.getString("commission"));
                             ResultSet rs2 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery("SELECT * FROM ch_transaction_valori WHERE cod_tr = '" + rs.getString("cod") + "'");
-                            
+
                             double fullvalue = 0.00;
                             double comvalue = 0.00;
                             int rowvalue = 0;
@@ -22808,7 +22812,7 @@ public class Db_Master {
                                 fullvalue = fullvalue / rowvalue;
                                 comvalue = comvalue / rowvalue;
                             }
-                            
+
                             if (comvalue == 0.0) {
                                 set0++;
                             } else if (comvalue == fullvalue) {
@@ -22834,17 +22838,17 @@ public class Db_Master {
                                 }
                             }
                         }
-                        
+
                     }
                 }
-                
+
                 data.add(set0 + "");
                 for (int x = 0; x < val.size(); x++) {
                     data.add(valueOf(val.get(x)));
                 }
-                
+
                 rs.beforeFirst();
-                
+
                 int setErr = 0;
                 double setTotErr = 0.00;
                 while (rs1.next()) {
@@ -22863,9 +22867,9 @@ public class Db_Master {
                         }
                     }
                 }
-                
+
                 rs1.beforeFirst();
-                
+
                 cp.setFull(setFull + "");
                 cp.setnTrans(setnTrans + "");
                 cp.setNff(setNff + "");
@@ -22875,11 +22879,11 @@ public class Db_Master {
                 cp.setErr(setErr + "");
                 cp.setTotErr(roundDoubleandFormat(setTotErr, 2) + "");
                 cp.setDati2(data);
-                
+
                 out.add(cp);
-                
+
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -22899,28 +22903,28 @@ public class Db_Master {
             String sql = "SELECT f.filiale,f.cod,f.data,f.id,f.user,f.fg_tipo,f.till FROM (SELECT till,"
                     + " MAX(data) AS maxd FROM oc_lista WHERE data like '" + data1 + "%'  AND filiale = '" + filiale + "' GROUP BY till) AS x INNER JOIN oc_lista AS f ON f.till = x.till"
                     + " AND f.data = x.maxd AND f.data like '" + data1 + "%' AND f.filiale = '" + filiale + "' AND f.fg_tipo = 'C' ORDER BY f.till";
-            
+
             List<String> tagli = getfigures_sizecuts_enabled(curr, filiale).stream().map(t1 -> t1.getIp_taglio()).collect(toList());
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             for (int i = 0; i < tagli.size(); i++) {
-                
+
                 String tg = tagli.get(i);
                 C_SizeAndQuantity_value saq = new C_SizeAndQuantity_value();
-                
+
                 saq.setCurrency(curr);
                 saq.setKind("01");
                 saq.setSize(tg);
-                
+
                 double setQty = 0;
                 double setTotal = 0.00;
-                
+
                 while (rs.next()) {
-                    
+
                     String sql1 = "SELECT ip_taglio,ip_quantity,ip_value FROM oc_change_tg WHERE valuta = '" + curr
                             + "' AND cod_oc = '" + rs.getString("f.cod") + "' ORDER BY cod_oc ASC,valuta ASC,CAST(ip_taglio AS DECIMAL(12,2)) DESC";
                     ResultSet rs1 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql1);
-                    
+
                     while (rs1.next()) {
                         if (rs1.getString(1).equals(tg)) {
                             setQty = setQty + fd(rs1.getString(2));
@@ -22929,12 +22933,12 @@ public class Db_Master {
                     }
                 }
                 rs.beforeFirst();
-                
+
                 saq.setQty(roundDoubleandFormat(setQty, 0));
                 saq.setTotal(roundDoubleandFormat(setTotal, 2));
                 out.add(saq);
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -22952,23 +22956,23 @@ public class Db_Master {
         try {
             String sql = "SELECT * FROM ch_transaction where agency='1' and del_fg='0' ";
             String filwhere = "";
-            
+
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "filiale='" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             if (data1 != null) {
                 sql = sql + "AND data >= '" + data1 + " 00:00:00' ";
             }
-            
+
             if (data2 != null) {
                 sql = sql + "AND data <= '" + data2 + " 23:59:59' ";
             }
-            
+
             sql = sql + " order by agency_cod,filiale,data";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             ArrayList<String> agl = new ArrayList<>();
@@ -22984,7 +22988,7 @@ public class Db_Master {
             for (int i = 0; i < agl.size(); i++) {
                 String ag = agl.get(i);
                 Agency out = get_agency(ag);
-                
+
                 C_Agency_value cv = new C_Agency_value();
                 cv.setId_ag(ag);
                 cv.setDe_ag(out.getDe_agenzia());
@@ -22993,7 +22997,7 @@ public class Db_Master {
                     if (rs.getString("agency_cod").equals(ag)) {
                         ResultSet rs1 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery("SELECT * FROM ch_transaction_valori WHERE cod_tr = '" + rs.getString("cod") + "'");
                         while (rs1.next()) {
-                            
+
                             C_ChangeMovimentForAgency_value cmdfb = new C_ChangeMovimentForAgency_value();
                             cmdfb.setBranch(rs.getString("filiale"));
                             cmdfb.setTransaction(rs.getString("id"));
@@ -23017,7 +23021,7 @@ public class Db_Master {
                             } else {
                                 cmdfb.setSpread(rs1.getString("spread"));
                             }
-                            
+
                             cmdfb.setComFix(rs1.getString("fx_com"));
                             if (rs.getString("del_fg").equals("0")) {
                                 cmdfb.setDelete("");
@@ -23051,46 +23055,46 @@ public class Db_Master {
             String data1, String data2, ArrayList<String> branch) {
         ArrayList<C_TransactionRegisterDetail_value> out = new ArrayList<>();
         try {
-            
+
             ArrayList<String[]> nck = nc_kind();
-            
+
             String loc[] = get_local_currency();
-            
+
             branch.add("000");
-            
+
             String sql = "SELECT * FROM ch_transaction where del_fg='0' ";
-            
+
             String filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "filiale='" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             if (data1 != null) {
                 sql = sql + "AND data >= '" + data1 + " 00:00:00' ";
             }
-            
+
             if (data2 != null) {
                 sql = sql + "AND data <= '" + data2 + " 23:59:59' ";
             }
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
-                
+
                 String sql1 = "SELECT * FROM ch_transaction_valori WHERE cod_tr= '" + rs.getString("cod") + "' order by valuta,supporto";
                 ResultSet rs1 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql1);
                 while (rs1.next()) {
                     C_TransactionRegisterDetail_value ncmfb = new C_TransactionRegisterDetail_value();
-                    
+
                     String start = "";
-                    
+
                     if (rs.getString("tipotr").equals("B")) {
                         start = "-";
                     }
-                    
+
                     ncmfb.setFiliale(rs.getString("filiale"));
                     ncmfb.setTill(rs.getString("till"));
                     ncmfb.setUser(rs.getString("user"));
@@ -23108,30 +23112,30 @@ public class Db_Master {
                     out.add(ncmfb);
                 }
             }
-            
+
             sql = "SELECT * FROM nc_transaction where del_fg='0' ";
             filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "filiale='" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             if (data1 != null) {
                 sql = sql + "AND data >= '" + data1 + " 00:00:00' ";
             }
-            
+
             if (data2 != null) {
                 sql = sql + "AND data <= '" + data2 + " 23:59:59' ";
             }
-            
+
             ResultSet rs1 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             while (rs1.next()) {
                 C_TransactionRegisterDetail_value ncmfb = new C_TransactionRegisterDetail_value();
-                
+
                 if (rs1.getString("fg_tipo_transazione_nc").equals("1")) {
                     ncmfb.setTotal(rs1.getString("netto"));
                     ncmfb.setCommfee(rs1.getString("commissione"));
@@ -23141,13 +23145,13 @@ public class Db_Master {
                     ncmfb.setCommfee(rs1.getString("commissione"));
                     ncmfb.setPayinout(rs1.getString("total"));
                 }
-                
+
                 String start = "";
-                
+
                 if (ncmfb.getTotal().contains("-")) {
                     start = "-";
                 }
-                
+
                 ncmfb.setFiliale(rs1.getString("filiale"));
                 ncmfb.setTill(rs1.getString("till"));
                 ncmfb.setUser(rs1.getString("user"));
@@ -23155,26 +23159,26 @@ public class Db_Master {
                 ncmfb.setDt(parseStringDate(rs1.getString("data"), patternsqldate));
                 ncmfb.setCur(loc[0]);
                 ncmfb.setKind(formatAL(rs1.getString("fg_tipo_transazione_nc"), nck, 1));
-                
+
                 String q = rs1.getString("quantita");
                 if (q.equals("0") || q.equals("0.00")) {
                     q = "1.00";
                 }
-                
+
                 ncmfb.setAmountqty(start + q);
-                
+
                 ncmfb.setRate("-");
                 ncmfb.setPerc("-");
                 ncmfb.setRefundoff("-");
                 out.add(ncmfb);
             }
-            
+
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        
+
         sort(out);
-        
+
         return out;
     }
 
@@ -23190,7 +23194,7 @@ public class Db_Master {
     public ArrayList<C_AnalysisDetailsTransactionCertificationExtraCEEforBranchAndPeriod_value>
             list_C_AnalysisDetailsTransactionCertificationExtraCEEforBranchAndPeriod_new(String data1, String data2,
                     ArrayList<String> branch, String tipor, ArrayList<Branch> allbr) {
-        
+
         ArrayList<C_AnalysisDetailsTransactionCertificationExtraCEEforBranchAndPeriod_value> out = new ArrayList<>();
         try {
             String sql = "SELECT * FROM ch_transaction where del_fg='0' ";
@@ -23198,32 +23202,32 @@ public class Db_Master {
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "filiale='" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             if (data1 != null) {
                 sql = sql + "AND data >= '" + data1 + " 00:00:00' ";
             }
-            
+
             if (data2 != null) {
                 sql = sql + "AND data <= '" + data2 + " 23:59:59' ";
             }
-            
+
             sql = sql + " ORDER BY cl_cod,filiale,tipotr,data";
-            
+
             ArrayList<String> clientlist = new ArrayList<>();
             ArrayList<CustomerKind> listck = list_customerKind();
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             while (rs.next()) {
                 clientlist.add(rs.getString("cl_cod"));
             }
             rs.beforeFirst();
             ArrayList<Ch_transaction_value> total = new ArrayList<>();
-            
+
             removeDuplicatesAL(clientlist);
             for (int x = 0; x < clientlist.size(); x++) {
                 String clcod = clientlist.get(x);
@@ -23242,10 +23246,10 @@ public class Db_Master {
                         } else {
                             totcl += fd(rs.getString("total"));
                         }
-                        
+
                         boolean add = false;
                         ArrayList<Ch_transaction_value> trv = query_transaction_value(rs.getString("cod"));
-                        
+
                         if (rs.getString("tipotr").equals("S")) {
                             if (tipor.equals("01")) {
                                 add = true;
@@ -23275,11 +23279,11 @@ public class Db_Master {
                     total.addAll(temp);
                 }
             }
-            
+
             sort(total);
-            
+
             ArrayList<Figures> allfig = list_all_figures();
-            
+
             for (int i = 0; i < total.size(); i++) {
                 Client cl1 = query_Client_transaction(total.get(i).getTrorig().getCod(), total.get(i).getTrorig().getCl_cod());
                 C_AnalysisDetailsTransactionCertificationExtraCEEforBranchAndPeriod_value cva
@@ -23297,7 +23301,7 @@ public class Db_Master {
                 cva.setCommission(total.get(i).getTot_com());
                 out.add(cva);
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -23316,36 +23320,36 @@ public class Db_Master {
     public ArrayList<C_AnalysisDetailsTransactionCertificationExtraCEEforBranchAndPeriod_value>
             list_C_AnalysisDetailsTransactionCertificationExtraCEEforBranchAndPeriod(String data1, String data2,
                     ArrayList<String> branch, String tipor, ArrayList<Branch> allbr) {
-        
+
         ArrayList<C_AnalysisDetailsTransactionCertificationExtraCEEforBranchAndPeriod_value> out = new ArrayList<>();
         try {
-            
+
             String sql = "SELECT * FROM ch_transaction where del_fg='0' ";
             String filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "filiale='" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             if (data1 != null) {
                 sql = sql + "AND data >= '" + data1 + " 00:00:00' ";
             }
-            
+
             if (data2 != null) {
                 sql = sql + "AND data <= '" + data2 + " 23:59:59' ";
             }
-            
+
             sql = sql + " ORDER BY filiale,tipotr,data";
-            
+
             ArrayList<Ch_transaction_value> val1 = new ArrayList<>();
-            
+
             ArrayList<CustomerKind> listck = list_customerKind();
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             while (rs.next()) {
                 CustomerKind fi = Engine.get_customerKind(listck, rs.getString("tipocliente"));
                 double so = fd(fi.getIp_soglia_extraCEE_certification());
@@ -23356,10 +23360,10 @@ public class Db_Master {
                     sogliasuperata = fd(rs.getString("total")) >= so;
                 }
                 if (sogliasuperata) {
-                    
+
                     boolean add = false;
                     ArrayList<Ch_transaction_value> trv = query_transaction_value(rs.getString("cod"));
-                    
+
                     if (rs.getString("tipotr").equals("S")) {
                         if (tipor.equals("01")) {
                             add = true;
@@ -23370,11 +23374,11 @@ public class Db_Master {
                     } else {
                         add = true;
                     }
-                    
+
                     if (add) {
                         for (int i = 0; i < trv.size(); i++) {
                             Ch_transaction_value va  = trv.get(i);
-                            
+
                             if (tipor.equals("01")) {
                                 if (!va.getSupporto().equals("04")) {
 
@@ -23390,16 +23394,16 @@ public class Db_Master {
                         }
                     }
                 }
-                
+
             }
-            
+
             sort(val1);
-            
+
             ArrayList<Figures> allfig = list_all_figures();
-            
+
             for (int i = 0; i < val1.size(); i++) {
                 Client cl1 = query_Client_transaction(val1.get(i).getTrorig().getCod(), val1.get(i).getTrorig().getCl_cod());
-                
+
                 C_AnalysisDetailsTransactionCertificationExtraCEEforBranchAndPeriod_value cva
                         = new C_AnalysisDetailsTransactionCertificationExtraCEEforBranchAndPeriod_value();
                 cva.setBranch(formatBankBranch(val1.get(i).getTrorig().getFiliale(), "BR", null, allbr, null));
@@ -23414,14 +23418,14 @@ public class Db_Master {
                 cva.setClient(cl1.getNome() + " " + cl1.getCognome());
                 cva.setCommission(val1.get(i).getTot_com());
                 out.add(cva);
-                
+
             }
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
-            
+
         }
         return out;
-        
+
     }
 
     /**
@@ -23436,7 +23440,7 @@ public class Db_Master {
      */
     public ArrayList<C_Interbranch_value> list_C_Interbranch_value(String data1, String data2, ArrayList<String> branch, String curr,
             ArrayList<String> state, String diff) {
-        
+
         ArrayList<C_Interbranch_value> out = new ArrayList<>();
         String local = get_local_currency()[0];
         ArrayList<NC_category> nc_cat = query_nc_category_filial("000", null);
@@ -23446,21 +23450,21 @@ public class Db_Master {
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "(filiale='" + branch.get(i) + "' AND fg_tofrom='T') OR (cod_dest='" + branch.get(i) + "' AND fg_tofrom='F') OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             if (data1 != null) {
                 sql = sql + "AND dt_it >= '" + data1 + " 00:00:00' ";
             }
-            
+
             if (data2 != null) {
                 sql = sql + "AND dt_it <= '" + data2 + " 23:59:59' ";
             }
-            
+
             sql = sql + " order by fg_tofrom,dt_it";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             ArrayList<String[]> elenco = new ArrayList<>();
             ArrayList<String> fromgestiti = new ArrayList<>();
@@ -23470,7 +23474,7 @@ public class Db_Master {
                     rs.getString("id"), rs.getString("cod_dest")};
                 elenco.add(val);
             }
-            
+
             for (int i = 0; i < elenco.size(); i++) {
                 String[] val = elenco.get(i);
                 if (val[1].equals("T")) {
@@ -23502,7 +23506,7 @@ public class Db_Master {
                     }
                     for (int j = 0; j < elenco.size() && !found; j++) {
                         String[] oth = elenco.get(j);
-                        
+
                         if (val[0].equals(oth[2]) && oth[1].equals("F")) {
                             found = true;
                             codfrom = oth[0];
@@ -23526,11 +23530,11 @@ public class Db_Master {
                                     local_curr = true;
                                 }
                             }
-                            
+
                             break;
                         }
                     }
-                    
+
                     C_Interbranch_value inter = new C_Interbranch_value();
                     inter.setCode(val[0]);
                     inter.setType(val[1]);
@@ -23539,7 +23543,7 @@ public class Db_Master {
                     inter.setTotransfno(val[3] + val[5]);
                     inter.setTotTo(roundDoubleandFormat(am_to, 2) + "");
                     inter.setBranchFrom(val[6]);
-                    
+
                     if (found) {
                         String br_fr = "";
                         String dt_fr = "";
@@ -23553,7 +23557,7 @@ public class Db_Master {
                                 break;
                             }
                         }
-                        
+
                         inter.setDateFrom(formatStringtoStringDate(dt_fr, patternsqldate, patternnormdate));
                         inter.setFromtransno(br_fr + id_fr);
                         inter.setTotFrom(roundDoubleandFormat(am_fr, 2) + "");
@@ -23570,7 +23574,7 @@ public class Db_Master {
                     }
                     boolean addcurr = false;
                     boolean addstat = false;
-                    
+
                     if (curr.equals("...")) {
                         addcurr = true;
                     } else if (curr.equals("01")) {
@@ -23580,7 +23584,7 @@ public class Db_Master {
                     } else if (foreign_curr) {
                         addcurr = true;
                     }
-                    
+
                     if (state.contains("OK")) {
                         if (inter.getState().equals("OK")) {
                             addstat = true;
@@ -23596,17 +23600,17 @@ public class Db_Master {
                             addstat = true;
                         }
                     }
-                    
+
                     if (addcurr && addstat) {
                         out.add(inter);
                     }
-                    
+
                 } else if (!fromgestiti.contains(val[0])) {
-                    
+
                     double am_fr = 0.00;
                     boolean local_curr = false;
                     boolean foreign_curr = false;
-                    
+
                     C_Interbranch_value inter = new C_Interbranch_value();
                     inter.setCodefrom(val[0]);
                     inter.setCode("-");
@@ -23626,7 +23630,7 @@ public class Db_Master {
                             foreign_curr = true;
                         }
                     }
-                    
+
                     if (!ch2) {
                         rs2 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery("SELECT * FROM et_nochange_valori where cod = '" + val[0] + "'");
                         while (rs2.next()) {
@@ -23636,16 +23640,16 @@ public class Db_Master {
                             local_curr = true;
                         }
                     }
-                    
+
                     inter.setDateFrom(formatStringtoStringDate(val[4], patternsqldate, patternnormdate));
                     inter.setFromtransno(val[3] + val[5]);
                     inter.setBranchFrom(val[3]);
                     inter.setTotFrom(roundDoubleandFormat(am_fr, 2) + "");
                     inter.setState("KO TO");
-                    
+
                     boolean addcurr = false;
                     boolean addstat = false;
-                    
+
                     if (curr.equals("...")) {
                         addcurr = true;
                     } else if (curr.equals("01")) {
@@ -23655,7 +23659,7 @@ public class Db_Master {
                     } else if (foreign_curr) {
                         addcurr = true;
                     }
-                    
+
                     if (state.contains("OK")) {
                         if (inter.getState().equals("OK")) {
                             addstat = true;
@@ -23671,14 +23675,14 @@ public class Db_Master {
                             addstat = true;
                         }
                     }
-                    
+
                     if (addcurr && addstat) {
                         out.add(inter);
                     }
-                    
+
                 }
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -23795,26 +23799,26 @@ public class Db_Master {
         ArrayList<Ch_transaction_doc> out = new ArrayList<>();
         try {
             String sql = "SELECT * FROM ch_transaction_doc where tipodoc = '_macprofcl' and codtr in (select cod from ch_transaction WHERE del_fg='0') ";
-            
+
             if (data1 != null) {
                 sql = sql + "AND data_load >= '" + data1 + " 00:00:00' ";
             }
-            
+
             if (data2 != null) {
                 sql = sql + "AND data_load <= '" + data2 + " 23:59:59' ";
             }
-            
+
             if (cl_cog.trim().length() > 0) {
                 sql = sql + "AND client in (SELECT codcl FROM ch_transaction_client WHERE cognome = \"" + cl_cog + "\" ORDER BY timestamp DESC LIMIT 1) ";
             }
             if (cl_na.trim().length() > 0) {
                 sql = sql + "AND client in (SELECT codcl FROM ch_transaction_client WHERE nome = = \"" + cl_na + "\" ORDER BY timestamp DESC LIMIT 1) ";
             }
-            
+
             if (branch != null && !branch.equals("") && !branch.equals("...")) {
                 sql = sql + "AND codtr like '" + branch + "%'";
             }
-            
+
             sql = sql + "ORDER BY data_load DESC";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
@@ -23926,27 +23930,27 @@ public class Db_Master {
             String datad2, ArrayList<Branch> allbr, ArrayList<NC_causal> ftena) {
         ArrayList<C_freeTaxPivotTotale_value> out = new ArrayList<>();
         try {
-            
+
             String sql = "SELECT * FROM nc_transaction WHERE fg_tipo_transazione_nc='3' AND del_fg='0' ";
-            
+
             String filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "(filiale='" + branch.get(i) + "') OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 filwhere = " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             sql = sql + filwhere;
             sql = sql + "AND data >= '" + datad1 + " 00:00:00' ";
             sql = sql + "AND data <= '" + datad2 + " 23:59:59' ";
             sql = sql + " ORDER BY filiale";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             DateTimeFormatter formatter = forPattern(patternsql);
-            
+
             String dateyear1 = formatter.parseDateTime(datad1).minusYears(1).toString(patternsql);
             String dateyear2 = formatter.parseDateTime(datad2).minusYears(1).toString(patternsql);
 
@@ -23956,9 +23960,9 @@ public class Db_Master {
             sql2 = sql2 + "AND dt_nc >= '" + dateyear1 + " 00:00:00' ";
             sql2 = sql2 + "AND dt_nc <= '" + dateyear2 + " 23:59:59' ";
             sql2 = sql2 + " ORDER BY filiale";
-            
+
             ResultSet rs2 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql2);
-            
+
             for (int i = 0; i < branch.size(); i++) {
                 String fil = branch.get(i);
                 C_freeTaxPivotTotale_value res = new C_freeTaxPivotTotale_value();
@@ -23971,34 +23975,34 @@ public class Db_Master {
                     double setVolYear = 0.00;
                     double setVolPrevYear = 0.00;
                     double setQtyPrevYear = 0.00;
-                    
+
                     while (rs.next()) {
                         if (rs.getString("filiale").equals(fil) && rs.getString("causale_nc").equals(ca.getCausale_nc())) {
                             setQtyYear = setQtyYear + parseDoubleR(rs.getString("quantita"));
                             setVolYear = setVolYear + parseDoubleR(rs.getString("total"));
                         }
                     }
-                    
+
                     while (rs2.next()) {
                         if (rs2.getString("filiale").equals(fil) && rs2.getString("causale_nc").equals(ca.getCausale_nc())) {
                             setQtyPrevYear = setQtyPrevYear + parseDoubleR(rs2.getString("quantita"));
                             setVolPrevYear = setVolPrevYear + parseDoubleR(rs2.getString("totale"));
                         }
                     }
-                    
+
                     values.add(valueOf(roundDoubleandFormat(setVolYear, 2)));
                     values.add(valueOf(roundDoubleandFormat(setQtyYear, 0)));
                     values.add(valueOf(roundDoubleandFormat(setVolPrevYear, 2)));
                     values.add(valueOf(roundDoubleandFormat(setQtyPrevYear, 0)));
-                    
+
                     rs.beforeFirst();
                     rs2.beforeFirst();
                 }
-                
+
                 res.setValues(values);
                 out.add(res);
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -24020,19 +24024,19 @@ public class Db_Master {
             sql = sql + "AND data >= '" + datad1 + " 00:00:00' ";
             sql = sql + "AND data <= '" + datad2 + " 23:59:59' ";
             sql = sql + " ORDER BY causale_nc";
-            
+
             ArrayList<String> listcausale_nc = new ArrayList<>();
             ArrayList<String> list_changetr = new ArrayList<>();
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             while (rs.next()) {
                 listcausale_nc.add(rs.getString("causale_nc"));
                 list_changetr.add(rs.getString("ch_transaction"));
             }
             rs.beforeFirst();
-            
+
             DateTimeFormatter formatter = forPattern(patternsql);
-            
+
             String dateyear1 = formatter.parseDateTime(datad1).minusYears(1).toString(patternsql);
             String dateyear2 = formatter.parseDateTime(datad2).minusYears(1).toString(patternsql);
 
@@ -24041,7 +24045,7 @@ public class Db_Master {
             sql2 = sql2 + "AND dt_nc >= '" + dateyear1 + " 00:00:00' ";
             sql2 = sql2 + "AND dt_nc <= '" + dateyear2 + " 23:59:59' ";
             sql2 = sql2 + " ORDER BY causale_nc";
-            
+
             ResultSet rs2 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql2);
             while (rs2.next()) {
                 listcausale_nc.add(rs2.getString("causale_nc"));
@@ -24055,30 +24059,30 @@ public class Db_Master {
                 String causal = listcausale_nc.get(i);
                 NC_causal nc1 = getNC_causal(lica, causal, null);
                 if (nc1 != null) {
-                    
+
                     C_FreeTax_BranchCausal_value fta = new C_FreeTax_BranchCausal_value();
-                    
+
                     fta.setId_filiale(branch);
                     fta.setDe_filiale(formatBankBranchReport(branch, "BR", null, allbr));
-                    
+
                     fta.setDe_causal(nc1.getDe_causale_nc());
                     fta.setCausal(nc1.getCausale_nc() + " " + nc1.getDe_causale_nc());
                     fta.setValuta(nc1.getNc_de().equals("04"));
-                    
+
                     double setQtyYear = 0;
                     double setVolYear = 0.00;
                     double setGMVolYear = 0.00;
-                    
+
                     while (rs.next()) {
                         if (rs.getString("causale_nc").equals(causal)) {
                             setQtyYear = setQtyYear + parseDoubleR(rs.getString("ricevuta"));
                             setVolYear = setVolYear + parseDoubleR(rs.getString("total"));
-                            
+
                             if (!rs.getString("ch_transaction").trim().equals("-")) {
                                 Ch_transaction ct = Engine.query_transaction_ch(rs.getString("ch_transaction"));
                                 setGMVolYear = setGMVolYear + fd(ct.getCommission()) + parseDoubleR(ct.getRound()) + fd(ct.getSpread_total());
                             }
-                            
+
                         }
                     }
                     rs.beforeFirst();
@@ -24092,42 +24096,42 @@ public class Db_Master {
                         }
                     }
                     rs2.beforeFirst();
-                    
+
                     double setQtyVal = setQtyYear - setQtyPrevYear;
                     double setVolVal = setVolYear - setVolPrevYear;
-                    
+
                     double setVolPerc = 0.00;
                     if (setVolPrevYear > 0 && setVolVal > 0) {
                         setVolPerc = roundDouble(((setVolVal / setVolPrevYear) * 100), 2);
                     }
-                    
+
                     double setVolGMPerc = 0.00;
                     if (setVolGMPrevYear > 0 && setGMVolYear > 0) {
                         setVolGMPerc = roundDouble(((setGMVolYear / setVolGMPrevYear) * 100), 2);
                     }
-                    
+
                     double setQtyPerc = 0.00;
                     if (setQtyPrevYear > 0 && setQtyVal > 0) {
                         setQtyPerc = roundDouble(((setQtyVal / setQtyPrevYear) * 100), 2);
                     }
-                    
+
                     fta.setVolGMPrevYear(roundDoubleandFormat(setVolGMPrevYear, 2));
                     fta.setVolGMYear(roundDoubleandFormat(setGMVolYear, 2));
                     fta.setVolGMVal(roundDoubleandFormat(setGMVolYear - setVolGMPrevYear, 2));
                     fta.setVolGMPerc(roundDoubleandFormat(setVolGMPerc, 2));
-                    
+
                     fta.setVolPrevYear(roundDoubleandFormat(setVolPrevYear, 2));
                     fta.setVolYear(roundDoubleandFormat(setVolYear, 2));
                     fta.setVolVal(roundDoubleandFormat(setVolVal, 2));
                     fta.setVolPerc(roundDoubleandFormat(setVolPerc, 2));
-                    
+
                     fta.setQtyPrevYear(roundDoubleandFormat(setQtyPrevYear, 0));
                     fta.setQtyYear(roundDoubleandFormat(setQtyYear, 0));
                     fta.setQtyVal(roundDoubleandFormat(setQtyVal, 0));
                     fta.setQtyPerc(roundDoubleandFormat(setQtyPerc, 2));
-                    
+
                     out.add(fta);
-                    
+
                 }
             }
         } catch (SQLException ex) {
@@ -24153,21 +24157,21 @@ public class Db_Master {
             String sql = "SELECT * FROM nc_transaction WHERE fg_tipo_transazione_nc='3' AND del_fg='0' "
                     + "AND ch_transaction not in (SELECT cod_tr FROM ch_transaction_valori) AND data >= '" + datad1 + " 00:00:00' "
                     + "AND data <= '" + datad2 + " 23:59:59' ORDER BY cl_nazione";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             ArrayList<String[]> values_now = new ArrayList<>();
-            
+
             while (rs.next()) {
                 String[] v1 = {rs.getString("valuta"), rs.getString("quantita"), rs.getString("total"), "1.00", rs.getString("cl_nazione")};
                 values_now.add(v1);
                 String[] v2 = {rs.getString("valuta"), rs.getString("cl_nazione")};
                 valuteNAZ.add(v2);
             }
-            
+
             String sql2 = "SELECT * FROM nc_transaction nc1, ch_transaction_valori cv where nc1.ch_transaction=cv.cod_tr "
                     + "AND nc1.data >= '" + datad1 + " 00:00:00' AND nc1.data <= '" + datad2 + " 23:59:59'  ORDER BY nc1.cl_nazione";
-            
+
             ResultSet rs2 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql2);
             while (rs2.next()) {
                 String[] v1 = {rs2.getString("cv.valuta"), rs2.getString("nc1.quantita"), rs2.getString("cv.total"), "1.00", rs2.getString("nc1.cl_nazione")};
@@ -24175,9 +24179,9 @@ public class Db_Master {
                 String[] v2 = {rs2.getString("cv.valuta"), rs2.getString("nc1.cl_nazione")};
                 valuteNAZ.add(v2);
             }
-            
+
             DateTimeFormatter formatter = forPattern(patternsql);
-            
+
             String dateyear1 = formatter.parseDateTime(datad1).minusYears(1).toString(patternsql);
             String dateyear2 = formatter.parseDateTime(datad2).minusYears(1).toString(patternsql);
 
@@ -24185,54 +24189,54 @@ public class Db_Master {
             String sqlmod = "SELECT * FROM freetax_pregresso fp, freetax_pregresso_change pc, freetax_pregresso_rel pr "
                     + "WHERE pr.filiale=pc.filiale AND pc.filiale=fp.filiale and pr.changeid = pc.pg1 AND pr.nochange=fp.pc_nc_tr "
                     + "AND fp.dt_nc >= '" + dateyear1 + " 00:00:00' AND fp.dt_nc <= '" + dateyear2 + " 23:59:59' ORDER BY fp.codnaz";
-            
+
             ResultSet rsmod = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sqlmod);
-            
+
             String sqlmod_eu = "SELECT * FROM freetax_pregresso WHERE pc_nc_tr not in "
                     + "(SELECT nochange FROM freetax_pregresso_rel) "
                     + " AND dt_nc >= '" + dateyear1 + " 00:00:00' AND dt_nc <= '" + dateyear2 + " 23:59:59' ORDER BY codnaz";
-            
+
             ResultSet rsmod_eu = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sqlmod_eu);
-            
+
             ArrayList<String[]> values_prec = new ArrayList<>();
-            
+
             while (rsmod_eu.next()) {
                 String[] v1 = {rsmod_eu.getString("valuta"), rsmod_eu.getString("quantita"), rsmod_eu.getString("totale"), "1.00", rsmod_eu.getString("codnaz")};
                 values_prec.add(v1);
                 String[] v2 = {rsmod_eu.getString("valuta"), rsmod_eu.getString("codnaz")};
                 valuteNAZ.add(v2);
             }
-            
+
             while (rsmod.next()) {
-                
+
                 String[] v1 = {rsmod.getString("pc.valuta"), rsmod.getString("fp.quantita"), rsmod.getString("pc.quantita"), rsmod.getString("pc.rate"), rsmod.getString("fp.codnaz")};
                 values_prec.add(v1);
                 String[] v2 = {rsmod.getString("pc.valuta"), rsmod.getString("fp.codnaz")};
                 valuteNAZ.add(v2);
-                
+
             }
-            
+
             removeDuplicatesALAr(valuteNAZ);
-            
+
             for (int i = 0; i < valuteNAZ.size(); i++) {
                 String val1 = valuteNAZ.get(i)[0];
                 String naz1 = valuteNAZ.get(i)[1].trim();
-                
+
                 if (naz1.equals("") || naz1.equals("-")) {
                     continue;
                 }
-                
+
                 boolean valuta = false;
                 if (!local_currency.equals(val1)) {
                     valuta = true;
                 }
-                
+
                 C_FreeTax_NationAmount_value ftb = new C_FreeTax_NationAmount_value();
-                
+
                 ftb.setNation(naz1);
                 ftb.setCurrency(val1 + " - " + getALCurrency(val1, list_figures()).getDescrizione());
                 ftb.setValuta(valuta);
-                
+
                 double setVolPrevYear = 0.00;
                 double setVolYear = 0.00;
                 double setVolVal;
@@ -24241,7 +24245,7 @@ public class Db_Master {
                 double setQtyYear = 0.00;
                 double setQtyVal;
                 double setQtyPerc = 0.00;
-                
+
                 for (int j = 0; j < values_now.size(); j++) {
                     String valori[] = values_now.get(j);
                     if (valori[0].equals(val1) && valori[4].equals(naz1)) {
@@ -24253,7 +24257,7 @@ public class Db_Master {
                         }
                     }
                 }
-                
+
                 for (int j = 0; j < values_prec.size(); j++) {
                     String valori[] = values_prec.get(j);
                     if (valori[0].equals(val1) && valori[4].equals(naz1)) {
@@ -24263,21 +24267,21 @@ public class Db_Master {
                         } else {
                             setVolPrevYear = setVolPrevYear + roundDouble((parseDoubleR(valori[2]) / parseDoubleR(valori[3])), 2);
                         }
-                        
+
                     }
                 }
-                
+
                 setQtyVal = setQtyYear - setQtyPrevYear;
                 setVolVal = setVolYear - setVolPrevYear;
-                
+
                 if (setVolPrevYear > 0 && setVolVal > 0) {
                     setVolPerc = roundDouble(((setVolVal / setVolPrevYear) * 100), 2);
                 }
-                
+
                 if (setQtyPrevYear > 0 && setQtyVal > 0) {
                     setQtyPerc = roundDouble(((setQtyVal / setQtyPrevYear) * 100), 2);
                 }
-                
+
                 ftb.setVolPrevYear(roundDoubleandFormat(setVolPrevYear, 2));
                 ftb.setVolYear(roundDoubleandFormat(setVolYear, 2));
                 ftb.setVolVal(roundDoubleandFormat(setVolVal, 2));
@@ -24286,11 +24290,11 @@ public class Db_Master {
                 ftb.setQtyYear(roundDoubleandFormat(setQtyYear, 2));
                 ftb.setQtyVal(roundDoubleandFormat(setQtyVal, 2));
                 ftb.setQtyPerc(roundDoubleandFormat(setQtyPerc, 2));
-                
+
                 out.add(ftb);
-                
+
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -24310,39 +24314,39 @@ public class Db_Master {
         try {
             ArrayList<String[]> valuteNAZ = new ArrayList<>();
             String local_currency = get_local_currency()[0];
-            
+
             String oper = get_national_office().getChangetype();
             String sql = "SELECT * FROM nc_transaction WHERE fg_tipo_transazione_nc='3' AND del_fg='0' "
                     + "AND ch_transaction not in (SELECT cod_tr FROM ch_transaction_valori) AND data >= '" + datad1 + " 00:00:00' ";
-            
+
             String filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "filiale = '" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             sql = sql + "AND data <= '" + datad2 + " 23:59:59' ORDER BY cl_nazione";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             ArrayList<String[]> values_now = new ArrayList<>();
-            
+
             while (rs.next()) {
                 String[] v1 = {rs.getString("valuta"), rs.getString("quantita"), rs.getString("total"), "1.00", rs.getString("cl_nazione")};
                 values_now.add(v1);
                 String[] v2 = {rs.getString("valuta"), rs.getString("cl_nazione")};
                 valuteNAZ.add(v2);
             }
-            
+
             String sql2 = "SELECT * FROM nc_transaction nc1, ch_transaction_valori cv where nc1.ch_transaction=cv.cod_tr "
                     + "AND nc1.data >= '" + datad1 + " 00:00:00' AND nc1.data <= '" + datad2 + " 23:59:59' ";
-            
+
             sql2 = sql2 + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             sql2 = sql2 + " ORDER BY nc1.cl_nazione";
-            
+
             ResultSet rs2 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql2);
             while (rs2.next()) {
                 String[] v1 = {rs2.getString("cv.valuta"), rs2.getString("nc1.quantita"), rs2.getString("cv.total"), "1.00", rs2.getString("nc1.cl_nazione")};
@@ -24350,9 +24354,9 @@ public class Db_Master {
                 String[] v2 = {rs2.getString("cv.valuta"), rs2.getString("nc1.cl_nazione")};
                 valuteNAZ.add(v2);
             }
-            
+
             DateTimeFormatter formatter = forPattern(patternsql);
-            
+
             String dateyear1 = formatter.parseDateTime(datad1).minusYears(1).toString(patternsql);
             String dateyear2 = formatter.parseDateTime(datad2).minusYears(1).toString(patternsql);
 
@@ -24360,57 +24364,57 @@ public class Db_Master {
             String sqlmod = "SELECT * FROM freetax_pregresso fp, freetax_pregresso_change pc, freetax_pregresso_rel pr "
                     + "WHERE pr.filiale=pc.filiale AND pc.filiale=fp.filiale and pr.changeid = pc.pg1 AND pr.nochange=fp.pc_nc_tr "
                     + "AND fp.dt_nc >= '" + dateyear1 + " 00:00:00' AND fp.dt_nc <= '" + dateyear2 + " 23:59:59' ORDER BY fp.codnaz";
-            
+
             ResultSet rsmod = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sqlmod);
-            
+
             String sqlmod_eu = "SELECT * FROM freetax_pregresso WHERE pc_nc_tr not in "
                     + "(SELECT nochange FROM freetax_pregresso_rel) "
                     + " AND dt_nc >= '" + dateyear1 + " 00:00:00' AND dt_nc <= '" + dateyear2 + " 23:59:59' ";
-            
+
             sqlmod_eu = sqlmod_eu + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             sqlmod_eu = sqlmod_eu + " ORDER BY codnaz";
-            
+
             ResultSet rsmod_eu = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sqlmod_eu);
-            
+
             ArrayList<String[]> values_prec = new ArrayList<>();
-            
+
             while (rsmod_eu.next()) {
                 String[] v1 = {rsmod_eu.getString("valuta"), rsmod_eu.getString("quantita"), rsmod_eu.getString("totale"), "1.00", rsmod_eu.getString("codnaz")};
                 values_prec.add(v1);
                 String[] v2 = {rsmod_eu.getString("valuta"), rsmod_eu.getString("codnaz")};
                 valuteNAZ.add(v2);
             }
-            
+
             while (rsmod.next()) {
-                
+
                 String[] v1 = {rsmod.getString("pc.valuta"), rsmod.getString("fp.quantita"), rsmod.getString("pc.quantita"), rsmod.getString("pc.rate"), rsmod.getString("fp.codnaz")};
                 values_prec.add(v1);
                 String[] v2 = {rsmod.getString("pc.valuta"), rsmod.getString("fp.codnaz")};
                 valuteNAZ.add(v2);
-                
+
             }
-            
+
             removeDuplicatesALAr(valuteNAZ);
-            
+
             for (int i = 0; i < valuteNAZ.size(); i++) {
                 String val1 = valuteNAZ.get(i)[0];
                 String naz1 = valuteNAZ.get(i)[1].trim();
                 if (naz1.equals("") || naz1.equals("-")) {
                     continue;
                 }
-                
+
                 boolean valuta = false;
                 if (!local_currency.equals(val1)) {
                     valuta = true;
                 }
-                
+
                 C_FreeTax_AmountNation_value ftb = new C_FreeTax_AmountNation_value();
-                
+
                 ftb.setDe_nation(formatAL(naz1, allnaz, 1));
                 ftb.setNation(naz1 + " " + ftb.getDe_nation());
                 ftb.setCurrency(val1);
                 ftb.setValuta(valuta);
-                
+
                 double setVolPrevYear = 0.00;
                 double setVolYear = 0.00;
                 double setVolVal;
@@ -24419,7 +24423,7 @@ public class Db_Master {
                 double setQtyYear = 0.00;
                 double setQtyVal;
                 double setQtyPerc = 0.00;
-                
+
                 for (int j = 0; j < values_now.size(); j++) {
                     String valori[] = values_now.get(j);
                     if (valori[0].equals(val1) && valori[4].equals(naz1)) {
@@ -24431,7 +24435,7 @@ public class Db_Master {
                         }
                     }
                 }
-                
+
                 for (int j = 0; j < values_prec.size(); j++) {
                     String valori[] = values_prec.get(j);
                     if (valori[0].equals(val1) && valori[4].equals(naz1)) {
@@ -24441,21 +24445,21 @@ public class Db_Master {
                         } else {
                             setVolPrevYear = setVolPrevYear + roundDouble((parseDoubleR(valori[2]) / parseDoubleR(valori[3])), 2);
                         }
-                        
+
                     }
                 }
-                
+
                 setQtyVal = setQtyYear - setQtyPrevYear;
                 setVolVal = setVolYear - setVolPrevYear;
-                
+
                 if (setVolPrevYear > 0 && setVolVal > 0) {
                     setVolPerc = roundDouble(((setVolVal / setVolPrevYear) * 100), 2);
                 }
-                
+
                 if (setQtyPrevYear > 0 && setQtyVal > 0) {
                     setQtyPerc = roundDouble(((setQtyVal / setQtyPrevYear) * 100), 2);
                 }
-                
+
                 ftb.setVolPrevYear(roundDoubleandFormat(setVolPrevYear, 2));
                 ftb.setVolYear(roundDoubleandFormat(setVolYear, 2));
                 ftb.setVolVal(roundDoubleandFormat(setVolVal, 2));
@@ -24464,11 +24468,11 @@ public class Db_Master {
                 ftb.setQtyYear(roundDoubleandFormat(setQtyYear, 2));
                 ftb.setQtyVal(roundDoubleandFormat(setQtyVal, 2));
                 ftb.setQtyPerc(roundDoubleandFormat(setQtyPerc, 2));
-                
+
                 out.add(ftb);
-                
+
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -24490,36 +24494,36 @@ public class Db_Master {
         try {
             ArrayList<String[]> valuteFIL = new ArrayList<>();
             String local_currency = get_local_currency()[0];
-            
+
             String filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "(filiale='" + branch.get(i) + "') OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 filwhere = " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             String sql = "SELECT * FROM nc_transaction WHERE fg_tipo_transazione_nc='3' AND del_fg='0' "
                     + filwhere
                     + "AND ch_transaction not in (SELECT cod_tr FROM ch_transaction_valori) AND data >= '" + datad1 + " 00:00:00' "
                     + "AND data <= '" + datad2 + " 23:59:59' ";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             ArrayList<String[]> values_now = new ArrayList<>();
-            
+
             while (rs.next()) {
                 String[] v1 = {rs.getString("valuta"), rs.getString("quantita"), rs.getString("total"), "1.00", rs.getString("filiale")};
                 values_now.add(v1);
                 String[] v2 = {rs.getString("valuta"), rs.getString("filiale")};
                 valuteFIL.add(v2);
             }
-            
+
             String sql2 = "SELECT * FROM nc_transaction nc1, ch_transaction_valori cv where nc1.ch_transaction=cv.cod_tr "
                     + replace_SU(filwhere, "filiale", "nc1.filiale")
                     + "AND nc1.data >= '" + datad1 + " 00:00:00' AND nc1.data <= '" + datad2 + " 23:59:59' ";
-            
+
             ResultSet rs2 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql2);
             while (rs2.next()) {
                 String[] v1 = {rs2.getString("cv.valuta"), rs2.getString("nc1.quantita"), rs2.getString("cv.total"), "1.00", rs2.getString("nc1.filiale")};
@@ -24527,9 +24531,9 @@ public class Db_Master {
                 String[] v2 = {rs2.getString("cv.valuta"), rs2.getString("nc1.filiale")};
                 valuteFIL.add(v2);
             }
-            
+
             DateTimeFormatter formatter = forPattern(patternsql);
-            
+
             String dateyear1 = formatter.parseDateTime(datad1).minusYears(1).toString(patternsql);
             String dateyear2 = formatter.parseDateTime(datad2).minusYears(1).toString(patternsql);
 
@@ -24538,50 +24542,50 @@ public class Db_Master {
                     + "WHERE pr.filiale=pc.filiale AND pc.filiale=fp.filiale and pr.changeid = pc.pg1 AND pr.nochange=fp.pc_nc_tr "
                     + "AND fp.dt_nc >= '" + dateyear1 + " 00:00:00' AND fp.dt_nc <= '" + dateyear2 + " 23:59:59' "
                     + replace_SU(filwhere, "filiale", "fp.filiale");
-            
+
             ResultSet rsmod = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sqlmod);
-            
+
             String sqlmod_eu = "SELECT * FROM freetax_pregresso WHERE pc_nc_tr not in "
                     + "(SELECT nochange FROM freetax_pregresso_rel) "
                     + filwhere
                     + " AND dt_nc >= '" + dateyear1 + " 00:00:00' AND dt_nc <= '" + dateyear2 + " 23:59:59'";
-            
+
             ResultSet rsmod_eu = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sqlmod_eu);
-            
+
             ArrayList<String[]> values_prec = new ArrayList<>();
-            
+
             while (rsmod_eu.next()) {
                 String[] v1 = {rsmod_eu.getString("valuta"), rsmod_eu.getString("quantita"), rsmod_eu.getString("totale"), "1.00", rsmod_eu.getString("filiale")};
                 values_prec.add(v1);
                 String[] v2 = {rsmod_eu.getString("valuta"), rsmod_eu.getString("filiale")};
                 valuteFIL.add(v2);
             }
-            
+
             while (rsmod.next()) {
-                
+
                 String[] v1 = {rsmod.getString("pc.valuta"), rsmod.getString("fp.quantita"), rsmod.getString("pc.quantita"), rsmod.getString("pc.rate"), rsmod.getString("fp.filiale")};
                 values_prec.add(v1);
                 String[] v2 = {rsmod.getString("pc.valuta"), rsmod.getString("fp.filiale")};
                 valuteFIL.add(v2);
-                
+
             }
-            
+
             removeDuplicatesALAr(valuteFIL);
-            
+
             for (int i = 0; i < valuteFIL.size(); i++) {
                 String val1 = valuteFIL.get(i)[0];
                 String fil1 = valuteFIL.get(i)[1];
-                
+
                 boolean valuta = false;
                 if (!local_currency.equals(val1)) {
                     valuta = true;
                 }
-                
+
                 C_FreeTax_AmountBranch_value ftb = new C_FreeTax_AmountBranch_value();
                 ftb.setBranch(fil1 + " - " + formatBankBranchReport(fil1, "BR", null, allbr));
                 ftb.setCurrency(val1);
                 ftb.setValuta(valuta);
-                
+
                 double setVolPrevYear = 0.00;
                 double setVolYear = 0.00;
                 double setVolVal;
@@ -24590,7 +24594,7 @@ public class Db_Master {
                 double setQtyYear = 0.00;
                 double setQtyVal;
                 double setQtyPerc = 0.00;
-                
+
                 for (int j = 0; j < values_now.size(); j++) {
                     String valori[] = values_now.get(j);
                     if (valori[0].equals(val1) && valori[4].equals(fil1)) {
@@ -24602,7 +24606,7 @@ public class Db_Master {
                         }
                     }
                 }
-                
+
                 for (int j = 0; j < values_prec.size(); j++) {
                     String valori[] = values_prec.get(j);
                     if (valori[0].equals(val1) && valori[4].equals(fil1)) {
@@ -24612,21 +24616,21 @@ public class Db_Master {
                         } else {
                             setVolPrevYear = setVolPrevYear + roundDouble((parseDoubleR(valori[2]) / parseDoubleR(valori[3])), 2);
                         }
-                        
+
                     }
                 }
-                
+
                 setQtyVal = setQtyYear - setQtyPrevYear;
                 setVolVal = setVolYear - setVolPrevYear;
-                
+
                 if (setVolPrevYear > 0 && setVolVal > 0) {
                     setVolPerc = roundDouble(((setVolVal / setVolPrevYear) * 100), 2);
                 }
-                
+
                 if (setQtyPrevYear > 0 && setQtyVal > 0) {
                     setQtyPerc = roundDouble(((setQtyVal / setQtyPrevYear) * 100), 2);
                 }
-                
+
                 ftb.setVolPrevYear(roundDoubleandFormat(setVolPrevYear, 2));
                 ftb.setVolYear(roundDoubleandFormat(setVolYear, 2));
                 ftb.setVolVal(roundDoubleandFormat(setVolVal, 2));
@@ -24635,11 +24639,11 @@ public class Db_Master {
                 ftb.setQtyYear(roundDoubleandFormat(setQtyYear, 2));
                 ftb.setQtyVal(roundDoubleandFormat(setQtyVal, 2));
                 ftb.setQtyPerc(roundDoubleandFormat(setQtyPerc, 2));
-                
+
                 out.add(ftb);
-                
+
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -24660,34 +24664,34 @@ public class Db_Master {
         try {
             ArrayList<String> valute = new ArrayList<>();
             String local_currency = get_local_currency()[0];
-            
+
             String sql = "SELECT * FROM nc_transaction WHERE fg_tipo_transazione_nc='3' AND del_fg='0' AND filiale = '" + branch + "' "
                     + "AND ch_transaction not in (SELECT cod_tr FROM ch_transaction_valori) AND data >= '" + datad1 + " 00:00:00' "
                     + "AND data <= '" + datad2 + " 23:59:59'";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             ArrayList<String[]> values_now = new ArrayList<>();
-            
+
             while (rs.next()) {
                 String[] v1 = {rs.getString("valuta"), rs.getString("quantita"), rs.getString("totale"), "1.00"};
                 values_now.add(v1);
                 valute.add(rs.getString("valuta"));
             }
-            
+
             String sql2 = "SELECT * FROM nc_transaction nc1, ch_transaction_valori cv where nc1.ch_transaction=cv.cod_tr "
                     + "AND nc1.data >= '" + datad1 + " 00:00:00' AND nc1.data <= '" + datad2 + " 23:59:59' AND nc1.filiale = '" + branch + "' ";
-            
+
             ResultSet rs2 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql2);
             while (rs2.next()) {
-                
+
                 String[] v1 = {rs2.getString("cv.valuta"), rs2.getString("nc1.quantita"), rs2.getString("cv.total"), "1.00"};
                 values_now.add(v1);
                 valute.add(rs2.getString("cv.valuta"));
             }
-            
+
             DateTimeFormatter formatter = forPattern(patternsql);
-            
+
             String dateyear1 = formatter.parseDateTime(datad1).minusYears(1).toString(patternsql);
             String dateyear2 = formatter.parseDateTime(datad2).minusYears(1).toString(patternsql);
 
@@ -24695,44 +24699,44 @@ public class Db_Master {
             String sqlmod = "SELECT * FROM freetax_pregresso fp, freetax_pregresso_change pc, freetax_pregresso_rel pr "
                     + "WHERE pr.filiale=pc.filiale AND pc.filiale=fp.filiale and pr.changeid = pc.pg1 AND pr.nochange=fp.pc_nc_tr "
                     + "AND fp.dt_nc >= '" + dateyear1 + " 00:00:00' AND fp.dt_nc <= '" + dateyear2 + " 23:59:59' AND fp.filiale='" + branch + "'";
-            
+
             ResultSet rsmod = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sqlmod);
-            
+
             String sqlmod_eu = "SELECT * FROM freetax_pregresso WHERE pc_nc_tr not in "
                     + "(SELECT nochange FROM freetax_pregresso_rel WHERE filiale='" + branch + "') "
                     + "AND filiale='" + branch + "' AND dt_nc >= '" + dateyear1 + " 00:00:00' AND dt_nc <= '" + dateyear2 + " 23:59:59'";
-            
+
             ResultSet rsmod_eu = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sqlmod_eu);
-            
+
             ArrayList<String[]> values_prec = new ArrayList<>();
-            
+
             while (rsmod_eu.next()) {
                 String[] v1 = {rsmod_eu.getString("valuta"), rsmod_eu.getString("quantita"), rsmod_eu.getString("totale"), "1.00"};
                 values_prec.add(v1);
                 valute.add(rsmod_eu.getString("valuta"));
             }
-            
+
             while (rsmod.next()) {
-                
+
                 String[] v1 = {rsmod.getString("pc.valuta"), rsmod.getString("fp.quantita"), rsmod.getString("pc.quantita"), rsmod.getString("pc.rate")};
                 values_prec.add(v1);
                 valute.add(rsmod.getString("pc.valuta"));
-                
+
             }
-            
+
             removeDuplicatesAL_localcurr(valute, local_currency);
-            
+
             for (int i = 0; i < valute.size(); i++) {
                 String val1 = valute.get(i);
                 boolean valuta = false;
                 if (!local_currency.equals(val1)) {
                     valuta = true;
                 }
-                
+
                 C_FreeTax_BranchCurrency_value ftb = new C_FreeTax_BranchCurrency_value();
                 ftb.setCurrency(val1);
                 ftb.setValuta(valuta);
-                
+
                 double setVolPrevYear = 0.00;
                 double setVolYear = 0.00;
                 double setVolVal;
@@ -24741,7 +24745,7 @@ public class Db_Master {
                 double setQtyYear = 0.00;
                 double setQtyVal;
                 double setQtyPerc = 0.00;
-                
+
                 for (int j = 0; j < values_now.size(); j++) {
                     String valori[] = values_now.get(j);
                     if (valori[0].equals(val1)) {
@@ -24751,35 +24755,35 @@ public class Db_Master {
                         } else {
                             setVolYear = setVolYear + roundDouble((parseDoubleR(valori[2]) / parseDoubleR(valori[3])), 2);
                         }
-                        
+
                     }
                 }
-                
+
                 for (int j = 0; j < values_prec.size(); j++) {
                     String valori[] = values_prec.get(j);
                     if (valori[0].equals(val1)) {
                         setQtyPrevYear = setQtyPrevYear + parseDoubleR(valori[1]);
-                        
+
                         if (oper.equals("*")) {
                             setVolPrevYear = setVolPrevYear + roundDouble((parseDoubleR(valori[2]) * parseDoubleR(valori[3])), 2);
                         } else {
                             setVolPrevYear = setVolPrevYear + roundDouble((parseDoubleR(valori[2]) / parseDoubleR(valori[3])), 2);
                         }
-                        
+
                     }
                 }
-                
+
                 setQtyVal = setQtyYear - setQtyPrevYear;
                 setVolVal = setVolYear - setVolPrevYear;
-                
+
                 if (setVolPrevYear > 0 && setVolVal > 0) {
                     setVolPerc = roundDouble(((setVolVal / setVolPrevYear) * 100), 2);
                 }
-                
+
                 if (setQtyPrevYear > 0 && setQtyVal > 0) {
                     setQtyPerc = roundDouble(((setQtyVal / setQtyPrevYear) * 100), 2);
                 }
-                
+
                 ftb.setVolPrevYear(roundDoubleandFormat(setVolPrevYear, 2));
                 ftb.setVolYear(roundDoubleandFormat(setVolYear, 2));
                 ftb.setVolVal(roundDoubleandFormat(setVolVal, 2));
@@ -24788,11 +24792,11 @@ public class Db_Master {
                 ftb.setQtyYear(roundDoubleandFormat(setQtyYear, 2));
                 ftb.setQtyVal(roundDoubleandFormat(setQtyVal, 2));
                 ftb.setQtyPerc(roundDoubleandFormat(setQtyPerc, 2));
-                
+
                 out.add(ftb);
-                
+
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -24813,24 +24817,24 @@ public class Db_Master {
         ArrayList<C_FreeTax_CausalBranch_value> out = new ArrayList<>();
         try {
             String sql = "SELECT * FROM nc_transaction WHERE causale_nc='" + nccausalcode.getCausale_nc() + "' AND del_fg='0' ";
-            
+
             String filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "(filiale='" + branch.get(i) + "') OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             sql = sql + "AND data >= '" + datad1 + " 00:00:00' ";
             sql = sql + "AND data <= '" + datad2 + " 23:59:59' ";
             sql = sql + " ORDER BY filiale";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             DateTimeFormatter formatter = forPattern(patternsql);
-            
+
             String dateyear1 = formatter.parseDateTime(datad1).minusYears(1).toString(patternsql);
             String dateyear2 = formatter.parseDateTime(datad2).minusYears(1).toString(patternsql);
 
@@ -24839,12 +24843,12 @@ public class Db_Master {
             sql2 = sql2 + "AND dt_nc >= '" + dateyear1 + " 00:00:00' ";
             sql2 = sql2 + "AND dt_nc <= '" + dateyear2 + " 23:59:59' ";
             sql2 = sql2 + " ORDER BY filiale,dt_nc";
-            
+
             ResultSet rs2 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql2);
-            
+
             for (int i = 0; i < branch.size(); i++) {
                 String br1 = branch.get(i);
-                
+
                 double setVolPrevYear = 0.00;
                 double setVolYear = 0.00;
                 double setVolVal;
@@ -24855,35 +24859,35 @@ public class Db_Master {
                 double setQtyPerc = 0.00;
                 while (rs.next()) {
                     if (rs.getString("filiale").equals(br1)) {
-                        
+
                         setQtyYear = setQtyYear + parseDoubleR(rs.getString("quantita"));
                         setVolYear = setVolYear + parseDoubleR(rs.getString("total"));
-                        
+
                     }
-                    
+
                 }
                 rs.beforeFirst();
                 while (rs2.next()) {
                     if (rs2.getString("filiale").equals(br1)) {
-                        
+
                         setQtyPrevYear = setQtyPrevYear + parseDoubleR(rs2.getString("quantita"));
                         setVolPrevYear = setVolPrevYear + parseDoubleR(rs2.getString("totale"));
-                        
+
                     }
                 }
                 rs2.beforeFirst();
-                
+
                 setQtyVal = setQtyYear - setQtyPrevYear;
                 setVolVal = setVolYear - setVolPrevYear;
-                
+
                 if (setVolPrevYear > 0 && setVolVal > 0) {
                     setVolPerc = roundDouble(((setVolVal / setVolPrevYear) * 100), 2);
                 }
-                
+
                 if (setQtyPrevYear > 0 && setQtyVal > 0) {
                     setQtyPerc = roundDouble(((setQtyVal / setQtyPrevYear) * 100), 2);
                 }
-                
+
                 C_FreeTax_CausalBranch_value ftb2 = new C_FreeTax_CausalBranch_value();
                 ftb2.setBranch(formatBankBranch(br1, "BR", null, allbr, null));
                 ftb2.setValuta(nccausalcode.getNc_de().trim().equals("04"));
@@ -24896,9 +24900,9 @@ public class Db_Master {
                 ftb2.setQtyVal(roundDoubleandFormat(setQtyVal, 2));
                 ftb2.setQtyPerc(roundDoubleandFormat(setQtyPerc, 2));
                 out.add(ftb2);
-                
+
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -24917,24 +24921,24 @@ public class Db_Master {
         ArrayList<C_FreeTax_Branch_value> out = new ArrayList<>();
         try {
             String sql = "SELECT * FROM nc_transaction WHERE fg_tipo_transazione_nc='3' AND del_fg='0' ";
-            
+
             String filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "(filiale='" + branch.get(i) + "') OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             sql = sql + "AND data >= '" + datad1 + " 00:00:00' ";
             sql = sql + "AND data <= '" + datad2 + " 23:59:59' ";
             sql = sql + " ORDER BY filiale,data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             DateTimeFormatter formatter = forPattern(patternsql);
-            
+
             String dateyear1 = formatter.parseDateTime(datad1).minusYears(1).toString(patternsql);
             String dateyear2 = formatter.parseDateTime(datad2).minusYears(1).toString(patternsql);
 
@@ -24943,14 +24947,14 @@ public class Db_Master {
             sql2 = sql2 + "AND dt_nc >= '" + dateyear1 + " 00:00:00' ";
             sql2 = sql2 + "AND dt_nc <= '" + dateyear2 + " 23:59:59' ";
             sql2 = sql2 + " ORDER BY filiale,dt_nc";
-            
+
             ResultSet rs2 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql2);
-            
+
             ArrayList<NC_causal> lica = list_nc_causal_enabled();
-            
+
             for (int i = 0; i < branch.size(); i++) {
                 String br1 = branch.get(i);
-                
+
                 double setVolPrevYear = 0.00;
                 double setVolYear = 0.00;
                 double setVolVal;
@@ -24963,7 +24967,7 @@ public class Db_Master {
                 int setQtyTransYear = 0;
                 double setQtyTransVal;
                 double setQtyTransPerc = 0.00;
-                
+
                 double ValsetVolPrevYear = 0.00;
                 double ValsetVolYear = 0.00;
                 double ValsetVolVal;
@@ -24972,12 +24976,12 @@ public class Db_Master {
                 double ValsetQtyYear = 0.00;
                 double ValsetQtyVal;
                 double ValsetQtyPerc = 0.00;
-                
+
                 int ValsetQtyTransPrevYear = 0;
                 int ValsetQtyTransYear = 0;
                 double ValsetQtyTransVal;
                 double ValsetQtyTransPerc = 0.00;
-                
+
                 while (rs.next()) {
                     if (rs.getString("filiale").equals(br1)) {
                         NC_causal nc1 = getNC_causal(lica, rs.getString("causale_nc"), null);
@@ -24993,7 +24997,7 @@ public class Db_Master {
                             }
                         }
                     }
-                    
+
                 }
                 rs.beforeFirst();
                 while (rs2.next()) {
@@ -25013,38 +25017,38 @@ public class Db_Master {
                     }
                 }
                 rs2.beforeFirst();
-                
+
                 setQtyVal = setQtyYear - setQtyPrevYear;
                 setVolVal = setVolYear - setVolPrevYear;
                 setQtyTransVal = setQtyTransYear - setQtyTransPrevYear;
-                
+
                 if (setVolPrevYear > 0 && setVolVal > 0) {
                     setVolPerc = roundDouble(((setVolVal / setVolPrevYear) * 100), 2);
                 }
-                
+
                 if (setQtyPrevYear > 0 && setQtyVal > 0) {
                     setQtyPerc = roundDouble(((setQtyVal / setQtyPrevYear) * 100), 2);
                 }
-                
+
                 if (setQtyTransPrevYear > 0 && setQtyTransYear > 0) {
                     setQtyTransPerc = roundDouble((((double) setQtyTransYear / (double) setQtyTransPrevYear) * 100), 2);
                 }
-                
+
                 ValsetQtyVal = ValsetQtyYear - ValsetQtyPrevYear;
                 ValsetVolVal = ValsetVolYear - ValsetVolPrevYear;
                 ValsetQtyTransVal = ValsetQtyTransYear - ValsetQtyTransPrevYear;
-                
+
                 if (ValsetVolPrevYear > 0 && ValsetVolVal > 0) {
                     ValsetVolPerc = roundDouble(((ValsetVolVal / ValsetVolPrevYear) * 100), 2);
                 }
-                
+
                 if (ValsetQtyPrevYear > 0 && ValsetQtyVal > 0) {
                     ValsetQtyPerc = roundDouble(((ValsetQtyVal / ValsetQtyPrevYear) * 100), 2);
                 }
                 if (ValsetQtyTransPrevYear > 0 && ValsetQtyTransYear > 0) {
                     ValsetQtyTransPerc = roundDouble((((double) ValsetQtyTransYear / (double) ValsetQtyTransPrevYear) * 100), 2);
                 }
-                
+
                 C_FreeTax_Branch_value ftb1 = new C_FreeTax_Branch_value();
                 ftb1.setBranch(formatBankBranch(br1, "BR", null, allbr, null));
                 ftb1.setValuta(true);
@@ -25061,7 +25065,7 @@ public class Db_Master {
                 ftb1.setQtyTransVal(roundDoubleandFormat(ValsetQtyTransVal, 0));
                 ftb1.setQtyTransPerc(roundDoubleandFormat(ValsetQtyTransPerc, 2));
                 out.add(ftb1);
-                
+
                 C_FreeTax_Branch_value ftb2 = new C_FreeTax_Branch_value();
                 ftb2.setBranch(formatBankBranch(br1, "BR", null, allbr, null));
                 ftb2.setValuta(false);
@@ -25078,14 +25082,14 @@ public class Db_Master {
                 ftb2.setQtyTransVal(roundDoubleandFormat(setQtyTransVal, 0));
                 ftb2.setQtyTransPerc(roundDoubleandFormat(setQtyTransPerc, 2));
                 out.add(ftb2);
-                
+
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return out;
-        
+
     }
 
     /**
@@ -25098,34 +25102,34 @@ public class Db_Master {
     public ArrayList<C_FreeTax_Analisys_value> list_C_FreeTax_Analisys_value(ArrayList<String> branch, String datad1, String datad2) {
         ArrayList<C_FreeTax_Analisys_value> out = new ArrayList<>();
         try {
-            
+
             String sql = "SELECT * FROM nc_transaction WHERE fg_tipo_transazione_nc='3' AND del_fg='0' ";
-            
+
             String filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "(filiale='" + branch.get(i) + "') OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             sql = sql + "AND data >= '" + datad1 + " 00:00:00' ";
             sql = sql + "AND data <= '" + datad2 + " 23:59:59' ";
-            
+
             sql = sql + " ORDER BY filiale,data";
-            
+
             ArrayList<String> listcausale_nc = new ArrayList<>();
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
                 listcausale_nc.add(rs.getString("causale_nc"));
             }
             rs.beforeFirst();
             removeDuplicatesAL(listcausale_nc);
-            
+
             DateTimeFormatter formatter = forPattern(patternsql);
-            
+
             String dateyear1 = formatter.parseDateTime(datad1).minusYears(1).toString(patternsql);
             String dateyear2 = formatter.parseDateTime(datad2).minusYears(1).toString(patternsql);
 
@@ -25134,42 +25138,42 @@ public class Db_Master {
             sql2 = sql2 + "AND dt_nc >= '" + dateyear1 + " 00:00:00' ";
             sql2 = sql2 + "AND dt_nc <= '" + dateyear2 + " 23:59:59' ";
             sql2 = sql2 + " ORDER BY filiale,dt_nc";
-            
+
             ResultSet rs2 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql2);
-            
+
             ArrayList<NC_causal> lica = list_nc_causal_enabled();
-            
+
             for (int i = 0; i < listcausale_nc.size(); i++) {
                 String causal = listcausale_nc.get(i);
                 NC_causal nc1 = getNC_causal(lica, causal, null);
                 if (nc1 != null) {
-                    
+
                     C_FreeTax_Analisys_value fta = new C_FreeTax_Analisys_value();
                     fta.setDe_causal(nc1.getDe_causale_nc());
                     fta.setCausal(nc1.getCausale_nc() + " " + nc1.getDe_causale_nc());
                     fta.setValuta(nc1.getNc_de().equals("04"));
-                    
+
                     double setQtyYear = 0;
                     double setVolYear = 0.00;
                     double setGMVolYear = 0.00;
-                    
+
                     while (rs.next()) {
                         if (rs.getString("causale_nc").equals(causal)) {
                             setQtyYear = setQtyYear + parseDoubleR(rs.getString("ricevuta"));
                             setVolYear = setVolYear + parseDoubleR(rs.getString("total"));
-                            
+
                             if (!rs.getString("ch_transaction").trim().equals("-")) {
                                 Ch_transaction ct = Engine.query_transaction_ch(rs.getString("ch_transaction"));
                                 setGMVolYear = setGMVolYear + fd(ct.getCommission()) + parseDoubleR(ct.getRound()) + fd(ct.getSpread_total());
                             }
-                            
+
                         }
                     }
                     rs.beforeFirst();
                     double setVolPrevYear = 0.00;
                     double setQtyPrevYear = 0.00;
                     double setVolGMPrevYear = 0.00;
-                    
+
                     while (rs2.next()) {
                         if (rs2.getString("causale_nc").equals(causal)) {
                             setQtyPrevYear = setQtyPrevYear + parseDoubleR(rs2.getString("ricevuta"));
@@ -25177,30 +25181,30 @@ public class Db_Master {
                         }
                     }
                     rs2.beforeFirst();
-                    
+
                     double setQtyVal = setQtyYear - setQtyPrevYear;
                     double setVolVal = setVolYear - setVolPrevYear;
-                    
+
                     double setVolPerc = 0.00;
                     if (setVolPrevYear > 0 && setVolVal > 0) {
                         setVolPerc = roundDouble(((setVolVal / setVolPrevYear) * 100), 2);
                     }
-                    
+
                     double setQtyPerc = 0.00;
                     if (setQtyPrevYear > 0 && setQtyVal > 0) {
                         setQtyPerc = roundDouble(((setQtyVal / setQtyPrevYear) * 100), 2);
                     }
-                    
+
                     double setVolGMPerc = 0.00;
                     if (setVolGMPrevYear > 0 && setGMVolYear > 0) {
                         setVolGMPerc = roundDouble(((setGMVolYear / setVolGMPrevYear) * 100), 2);
                     }
-                    
+
                     fta.setVolGMPrevYear(roundDoubleandFormat(setVolGMPrevYear, 2));
                     fta.setVolGMYear(roundDoubleandFormat(setGMVolYear, 2));
                     fta.setVolGMVal(roundDoubleandFormat(setGMVolYear - setVolGMPrevYear, 2));
                     fta.setVolGMPerc(roundDoubleandFormat(setVolGMPerc, 2));
-                    
+
                     fta.setVolPrevYear(roundDoubleandFormat(setVolPrevYear, 2) + "");
                     fta.setVolYear(roundDoubleandFormat(setVolYear, 2) + "");
                     fta.setVolVal(roundDoubleandFormat(setVolVal, 2) + "");
@@ -25210,14 +25214,14 @@ public class Db_Master {
                     fta.setQtyVal(roundDoubleandFormat(setQtyVal, 2) + "");
                     fta.setQtyPerc(roundDoubleandFormat(setQtyPerc, 2) + "");
                     out.add(fta);
-                    
+
                 }
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
-        
+
         sort(out);
         return out;
     }
@@ -25233,16 +25237,16 @@ public class Db_Master {
         ArrayList<Openclose> out = new ArrayList<>();
         try {
             String sql = "SELECT * FROM oc_lista where errors ='Y' ";
-            
+
             String filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "(filiale='" + branch.get(i) + "') OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             if (datad1 != null) {
                 sql = sql + "AND data >= '" + datad1 + " 00:00:00' ";
             }
@@ -25250,7 +25254,7 @@ public class Db_Master {
                 sql = sql + "AND data <= '" + datad2 + " 23:59:59' ";
             }
             sql = sql + " ORDER BY data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
                 Openclose oc = new Openclose(rs.getString(1), rs.getString(2), leftPad(rs.getString(3), 15, "0"),
@@ -25388,22 +25392,22 @@ public class Db_Master {
             String sql = "SELECT * FROM nc_transaction where del_fg ='0' ";
             sql = sql + "AND data >= '" + data + " 00:00:00' ";
             sql = sql + "AND data <= '" + data + " 23:59:59' ";
-            
+
             if (branching == null) {
                 String filwhere = "";
                 for (int i = 0; i < branch.size(); i++) {
                     filwhere = filwhere + "(filiale='" + branch.get(i).getCod() + "') OR ";
                 }
-                
+
                 if (filwhere.length() > 3) {
                     sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
                 }
             } else {
                 sql = sql + " AND filiale='" + branching + "'";
             }
-            
+
             sql = sql + " ORDER BY data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
                 NC_transaction nc = new NC_transaction(
@@ -25434,7 +25438,7 @@ public class Db_Master {
      */
     public ArrayList<Ch_transaction_refund> list_esolver_refund(String data, ArrayList<Branch> branch, String branching) {
         ArrayList<Ch_transaction_refund> out = new ArrayList<>();
-        
+
         try {
             String sql = "SELECT * FROM ch_transaction_refund WHERE status='1' AND method='BR' ";
             sql = sql + "AND dt_refund >= '" + data + " 00:00:00' ";
@@ -25444,7 +25448,7 @@ public class Db_Master {
                 for (int i = 0; i < branch.size(); i++) {
                     filwhere = filwhere + "(branch_cod='" + branch.get(i).getCod() + "') OR ";
                 }
-                
+
                 if (filwhere.length() > 3) {
                     sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
                 }
@@ -25489,22 +25493,22 @@ public class Db_Master {
             String sql = "SELECT * FROM ch_transaction where del_fg ='0' AND cod NOT IN (SELECT transaction FROM inv_list) ";
             sql = sql + "AND data >= '" + data + " 00:00:00' ";
             sql = sql + "AND data <= '" + data + " 23:59:59' ";
-            
+
             if (branching == null) {
                 String filwhere = "";
                 for (int i = 0; i < branch.size(); i++) {
                     filwhere = filwhere + "(filiale='" + branch.get(i).getCod() + "') OR ";
                 }
-                
+
                 if (filwhere.length() > 3) {
                     sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
                 }
             } else {
                 sql = sql + " AND filiale = '" + branching + "'";
             }
-            
+
             sql = sql + " ORDER BY data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
                 Ch_transaction ch = new Ch_transaction();
@@ -25567,13 +25571,13 @@ public class Db_Master {
      * @return
      */
     public ArrayList<ET_change> list_esolver_et(String data, ArrayList<Branch> branch, String branching) {
-        
+
         ArrayList<ET_change> out = new ArrayList<>();
         try {
             String sql3 = "SELECT * FROM et_change where fg_annullato='0' ";
             sql3 = sql3 + "AND dt_it >= '" + data + " 00:00:00' ";
             sql3 = sql3 + "AND dt_it <= '" + data + " 23:59:59' ";
-            
+
             if (branching == null) {
                 String filwhere = "";
                 for (int i = 0; i < branch.size(); i++) {
@@ -25587,7 +25591,7 @@ public class Db_Master {
             }
             sql3 = sql3 + " AND cod_dest NOT IN (SELECT cod FROM bank WHERE fg_annullato = '0' AND (bank_account = 'Y' OR cod in (select distinct(carta_credito) from carte_credito))) ";
             sql3 = sql3 + " ORDER BY dt_it";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql3);
             while (rs.next()) {
                 ET_change et = new ET_change();
@@ -25626,14 +25630,14 @@ public class Db_Master {
      * @return
      */
     public ArrayList<Openclose> list_esolver_ocerr(String data, ArrayList<Branch> branch, String branching) {
-        
+
         ArrayList<Openclose> out = new ArrayList<>();
         try {
-            
+
             String sql = "SELECT * FROM oc_lista WHERE errors = 'Y' ";
             sql = sql + "AND data >= '" + data + " 00:00:00' ";
             sql = sql + "AND data <= '" + data + " 23:59:59' ";
-            
+
             if (branching == null) {
                 String filwhere = "";
                 for (int i = 0; i < branch.size(); i++) {
@@ -25646,7 +25650,7 @@ public class Db_Master {
                 sql = sql + " AND filiale ='" + branching + "'";
             }
             sql = sql + " ORDER BY data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
                 Openclose oc = new Openclose(rs.getString(1), rs.getString(2), leftPad(rs.getString(3), 15, "0"),
@@ -25677,7 +25681,7 @@ public class Db_Master {
             PreparedStatement ps = this.c.prepareStatement(query, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, codCliente);
             ResultSet rs = ps.executeQuery();
-            
+
             if (rs.next()) {
                 String cliente[] = new String[15];
                 cliente[0] = rs.getString("codfisc").replaceAll("---", "");
@@ -25744,7 +25748,7 @@ public class Db_Master {
             if (f1 != null && f2 != null) {
                 query = query + "AND cl_cod NOT IN (SELECT cl_cod FROM ch_transaction c where del_fg='0' AND data >= '" + f1 + " 00:00:00' and data <= '" + f2 + " 23:59:59')";
             }
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(query);
             while (rs.next()) {
                 Client c0 = query_Client_transaction(rs.getString("cod"), rs.getString("cl_cod"));
@@ -25768,9 +25772,9 @@ public class Db_Master {
                             break;
                         }
                     }
-                    
+
                 }
-                
+
                 if (add) {
                     cl.add(c0);
                     c0.setDatatr(formatStringtoStringDate(rs.getString("data"), patternsqldate, patternnormdate_filter));
@@ -25791,15 +25795,15 @@ public class Db_Master {
     public ArrayList<String[]> getValuteForMonitor(String filiale) {
         ArrayList<String[]> al = new ArrayList<>();
         try {
-            
+
             String query = "SELECT valuta, de_valuta, cambio_bce, buy_std_type, buy_std_value, buy_std, sell_std_value, sell_std_type, sell_std, filiale, enable_buy, enable_sell "
                     + "FROM valute where fg_valuta_corrente='0' AND filiale ='" + filiale + "' ";
-            
+
             if (filiale.equals("---")) {
                 query = "SELECT valuta, de_valuta, cambio_bce, buy_std_type, buy_std_value, buy_std, sell_std_value, sell_std_type, sell_std, filiale, enable_buy, enable_sell "
                         + "FROM valute where fg_valuta_corrente='0' AND filiale <>'000' ";
             }
-            
+
             query = query + "ORDER BY filiale,valuta";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(query);
             while (rs.next()) {
@@ -25902,7 +25906,7 @@ public class Db_Master {
     public String contabilita(String cod) {
         try {
             String sql = "SELECT conto FROM contabilita WHERE id = '" + cod + "'";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             if (rs.next()) {
                 return rs.getString(1);
@@ -25924,24 +25928,24 @@ public class Db_Master {
         ArrayList<Currency> licur = list_figures_query_edit("000");
         ArrayList<Figures> lifg = list_figures("000");
         String valutalocale = get_local_currency()[0];
-        
+
         try {
-            
+
             String sql = "SELECT cod_value,filiale,total,kind,controval FROM stock WHERE tipostock = 'CH' AND (kind ='01' or kind ='02') ";
             boolean dividi = get_national_office().getChangetype().equals("/");
             String filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "filiale = '" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             sql = sql + " AND total <>'0.00' ORDER BY cod_value,kind,filiale";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             ArrayList<String> listval = new ArrayList<>();
-            
+
             ArrayList<String[]> listval_new = new ArrayList<>();
 
             //cod_value,filiale,total,kind,controval
@@ -25951,7 +25955,7 @@ public class Db_Master {
                 listval.add(rs.getString("cod_value"));
             }
             removeDuplicatesAL(listval);
-            
+
             listval.forEach(val -> {
 //            for (int i = 0; i < listval.size(); i++) {
 //                String val = listval.get(i);
@@ -25959,21 +25963,21 @@ public class Db_Master {
                 osp01.setCurrency(val);
                 osp01.setDecurrency(formatALCurrency(val, licur));
                 osp01.setSupporto("01 " + Engine.get_figures(lifg, "01").getDe_supporto());
-                
+
                 OfficeStockPriceBranch_value osp02 = new OfficeStockPriceBranch_value();
                 osp02.setCurrency(val);
                 osp02.setDecurrency(formatALCurrency(val, licur));
                 osp02.setSupporto("02 " + Engine.get_figures(lifg, "02").getDe_supporto());
-                
+
                 OfficeStockPriceBranch_value osp03 = new OfficeStockPriceBranch_value();
                 osp03.setCurrency(val);
                 osp03.setDecurrency(formatALCurrency(val, licur));
                 osp03.setSupporto("03 " + Engine.get_figures(lifg, "03").getDe_supporto());
-                
+
                 ArrayList<String[]> valorifiliali01 = new ArrayList<>();
                 ArrayList<String[]> valorifiliali02 = new ArrayList<>();
                 ArrayList<String[]> valorifiliali03 = new ArrayList<>();
-                
+
                 branch.forEach(filiale0 -> {
 
 //                for (int x = 0; x < branch.size(); x++) {
@@ -26018,23 +26022,23 @@ public class Db_Master {
                         }
 //                    }
                     });
-                    
+
                     setQtaosp01.set(roundDouble(setQtaosp01.get(), 2));
                     controv01.set(roundDouble(controv01.get(), 2));
-                    
+
                     setQtaosp02.set(roundDouble(setQtaosp02.get(), 2));
                     controv02.set(roundDouble(controv02.get(), 2));
-                    
+
                     setQtaosp03.set(roundDouble(setQtaosp03.get(), 2));
                     controv03.set(roundDouble(controv03.get(), 2));
-                    
+
                     if (setQtaosp01.get() > 0) {
                         double mediarate = getControvaloreOFFSET(setQtaosp01.get(), controv01.get(), dividi);
                         String[] va  = {formatBankBranch(filiale0, "BR", null, brlist, null),
                             roundDoubleandFormat(setQtaosp01.get(), 2),
                             roundDoubleandFormat(mediarate, 8),
                             roundDoubleandFormat(controv01.get(), 2)};
-                        
+
                         if (newpread) {
                             if (licur.stream().filter(c1 -> c1.getCode().equals(val)).findAny().get() != null) {
                                 mediarate = fd(licur.stream().filter(c1 -> c1.getCode().equals(val)).findAny().get().getCambio_bce());
@@ -26042,17 +26046,17 @@ public class Db_Master {
                                 va[3] = roundDoubleandFormat(getControvalore(setQtaosp01.get(), mediarate, dividi), 2);
                             }
                         }
-                        
+
                         valorifiliali01.add(va);
                     }
-                    
+
                     if (setQtaosp02.get() > 0) {
                         double mediarate = getControvaloreOFFSET(setQtaosp02.get(), controv02.get(), dividi);
                         String[] va  = {formatBankBranch(filiale0, "BR", null, brlist, null),
                             ((roundDoubleandFormat(setQtaosp02.get(), 2))),
                             (roundDoubleandFormat(mediarate, 8)),
                             (roundDoubleandFormat(controv02.get(), 2))};
-                        
+
                         if (newpread) {
                             if (licur.stream().filter(c1 -> c1.getCode().equals(val)).findAny().get() != null) {
                                 mediarate = fd(licur.stream().filter(c1 -> c1.getCode().equals(val)).findAny().get().getCambio_bce());
@@ -26060,16 +26064,16 @@ public class Db_Master {
                                 va[3] = roundDoubleandFormat(getControvalore(controv02.get(), mediarate, dividi), 2);
                             }
                         }
-                        
+
                         valorifiliali02.add(va);
                     }
-                    
+
                     if (setQtaosp03.get() > 0) {
                         double mediarate = getControvaloreOFFSET(setQtaosp03.get(), controv03.get(), dividi);
                         String[] va  = {formatBankBranch(filiale0, "BR", null, brlist, null),
                             roundDoubleandFormat(setQtaosp03.get(), 2), roundDoubleandFormat(mediarate, 8),
                             roundDoubleandFormat(controv03.get(), 2)};
-                        
+
                         if (newpread) {
                             if (licur.stream().filter(c1 -> c1.getCode().equals(val)).findAny().get() != null) {
                                 mediarate = fd(licur.stream().filter(c1 -> c1.getCode().equals(val)).findAny().get().getCambio_bce());
@@ -26077,7 +26081,7 @@ public class Db_Master {
                                 va[3] = roundDoubleandFormat(getControvalore(setQtaosp03.get(), mediarate, dividi), 2);
                             }
                         }
-                        
+
                         valorifiliali03.add(va);
                     }
                 });
@@ -26109,33 +26113,33 @@ public class Db_Master {
      * @return
      */
     public ArrayList<C_TrimestraleCZK_value> getC_TrimestraleCZK(String data1, String data2, String filiale) {
-        
+
         String loc = get_local_currency()[0];
-        
+
         ArrayList<C_TrimestraleCZK_value> out = new ArrayList<>();
         try {
             String sql = "SELECT cod,tipotr FROM ch_transaction WHERE del_fg = '0' AND filiale = '" + filiale + "' ";
-            
+
             if (data1 != null) {
                 sql = sql + "AND data >= '" + data1 + " 00:00:00' ";
             }
             if (data2 != null) {
                 sql = sql + "AND data <= '" + data2 + " 23:59:59' ";
             }
-            
+
             sql = sql + "AND cod NOT IN (SELECT cod_tr FROM ch_transaction_refund WHERE type = 'CO' AND status = '1') ORDER BY data";
-            
+
             ArrayList<Currency> licur = list_figures_query_edit(filiale);
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             ArrayList<String> vallist = new ArrayList<>();
             ArrayList<String[]> valori = new ArrayList<>();
             while (rs.next()) {
                 ArrayList<Ch_transaction_value> list = query_transaction_value(rs.getString("cod"));
                 for (int j = 0; j < list.size(); j++) {
                     vallist.add(list.get(j).getValuta());
-                    
+
                     String[] v1 = {list.get(j).getValuta(),
                         list.get(j).getSupporto(),
                         list.get(j).getQuantita(),
@@ -26145,15 +26149,15 @@ public class Db_Master {
             }
             rs.beforeFirst();
             removeDuplicatesAL(vallist);
-            
+
             for (int i = 0; i < vallist.size(); i++) {
                 String valuta = vallist.get(i);
                 C_TrimestraleCZK_value tczk = new C_TrimestraleCZK_value();
                 tczk.setValuta(valuta + " - " + formatALCurrency(valuta, licur));
-                
+
                 double acq = 0.00;
                 double vend = 0.00;
-                
+
                 for (int x = 0; x < valori.size(); x++) {
                     String[] v1 = valori.get(x);
                     if (valuta.equals(v1[0])) {
@@ -26175,9 +26179,9 @@ public class Db_Master {
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
-        
+
         return out;
-        
+
     }
 
     /**
@@ -26190,14 +26194,14 @@ public class Db_Master {
     public ArrayList<String[]> get_fatt_note(String data, ArrayList<Branch> branch, String branching) {
         ArrayList<String[]> out = new ArrayList<>();
         try {
-            
+
             String sql = "SELECT * FROM inv_list i, ch_transaction c WHERE i.stato='1' AND i.transaction = c.cod ";
-            
+
             sql = sql + "AND i.dt >= '" + data + " 00:00:00' ";
             sql = sql + "AND i.dt <= '" + data + " 23:59:59' ";
-            
+
             if (branching == null) {
-                
+
                 String filwhere = "";
                 for (int i = 0; i < branch.size(); i++) {
                     filwhere = filwhere + "(c.filiale='" + branch.get(i).getCod() + "') OR ";
@@ -26208,7 +26212,7 @@ public class Db_Master {
             } else {
                 sql = sql + " AND c.filiale ='" + branching + "'";
             }
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
                 String valori[] = {
@@ -26296,7 +26300,7 @@ public class Db_Master {
      */
     public ArrayList<CustomerTransactionList_value> list_CustomerTransactionList_NEW(
             ArrayList<String> branch, String datad1, String datad2, ArrayList<Branch> allbr, String frequency) {
-        
+
         ArrayList<CustomerTransactionList_value> out = new ArrayList<>();
         try {
             String sql = "(SELECT codtr FROM ch_transaction_doc where tipodoc = '_macprofcl' "
@@ -26334,24 +26338,24 @@ public class Db_Master {
                     transaction.add(rs0.getString("tr1.cod"));
                 }
             }
-            
+
             cl = cl.stream()
                     .distinct()
                     .collect(toList());
-            
+
             DateTimeFormatter formatter = forPattern(patternsql);
             ArrayList<Figures> fig = list_all_figures();
             ArrayList<CustomerKind> list_customerKind = list_customerKind();
-            
+
             cl.forEach(cliente -> {
                 Client cli = query_Client(cliente);
                 if (cli != null) {
-                    
+
                     CustomerTransactionList_value c1 = new CustomerTransactionList_value();
                     ArrayList<CustomerTransactionList_value> dati = new ArrayList<>();
                     c1.setCustomer(cli.getCognome() + " " + cli.getNome());
                     AtomicDouble totalCUS = new AtomicDouble(0.0);
-                    
+
                     String sql1 = "SELECT tr1.*,tr2.*,cl.nome,cl.cognome FROM ch_transaction tr1, ch_transaction_valori tr2,ch_transaction_client cl"
                             + " WHERE tr1.cod=tr2.cod_tr AND tr1.cod = cl.codtr AND tr1.cl_cod = '" + cliente + "' ORDER BY tr1.data DESC";
                     try {
@@ -26388,17 +26392,17 @@ public class Db_Master {
                                 rm.setResidentnonresident("Non Resident");
                             }
                             rm.setInternetbooking(rs.getString("tr1.intbook"));
-                            
+
                             double t1 = fd(rm.getPayinpayout());
                             if (rs.getString("tr1.tipotr").equals("B")) {
                                 t1 = fd(rm.getTotal());
                             }
-                            
+
                             DateTime datatr = formatter.parseDateTime(rs.getString("tr1.data").substring(0, 10));
                             if (datarif == null) {
                                 datarif = formatter.parseDateTime(rs.getString("tr1.data").substring(0, 10));
                             }
-                            
+
                             switch (frequency) {
                                 case "D":
                                     if (datatr.isEqual(datarif)) {
@@ -26437,7 +26441,7 @@ public class Db_Master {
                                     break;
                             }
                         }
-                        
+
                         if (!dati.isEmpty()) {
                             c1.setTotal(roundDoubleandFormat(totalCUS.get(), 2));
                             c1.setDati(dati);
@@ -26449,7 +26453,7 @@ public class Db_Master {
                     }
                 }
             });
-            
+
         } catch (SQLException ex) {
             ex.printStackTrace();
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -26488,19 +26492,19 @@ public class Db_Master {
                 sql = sql + "AND tr1.data <= '" + datad2 + " 23:59:59' ";
             }
             sql = sql + " ORDER BY tr1.cl_cod,tr1.filiale,tr1.data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             ArrayList<String> cl = new ArrayList<>();
-            
+
             while (rs.next()) {
                 cl.add(rs.getString("tr1.cl_cod"));
             }
             removeDuplicatesAL(cl);
-            
+
             ArrayList<Figures> fig = list_all_figures();
             ArrayList<CustomerKind> list_customerKind = list_customerKind();
-            
+
             for (int i = 0; i < cl.size(); i++) {
                 String client = cl.get(i);
                 Client cli = query_Client(client);
@@ -26514,9 +26518,9 @@ public class Db_Master {
                         c1.setTreshold("");
                     }
                     ArrayList<String> cl_numtr = new ArrayList<>();
-                    
+
                     double tot = 0.00;
-                    
+
                     while (rs.next()) {
                         if (rs.getString("tr1.cl_cod").equals(client)) {
                             cl_numtr.add(rs.getString("tr1.cod"));
@@ -26550,14 +26554,14 @@ public class Db_Master {
                                 rm.setResidentnonresident("Non Resident");
                             }
                             rm.setInternetbooking(rs.getString("tr1.intbook"));
-                            
+
                             tot = tot + fd(rm.getTotal());
                             dati.add(rm);
                         }
                     }
-                    
+
                     c1.setDati(dati);
-                    
+
                     removeDuplicatesAL(cl_numtr);
                     if (numtrans != null) {
                         if (cl_numtr.size() >= parseInt(numtrans)) {
@@ -26571,7 +26575,7 @@ public class Db_Master {
                 }
                 rs.beforeFirst();
             }
-            
+
         } catch (SQLException | NumberFormatException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -26662,7 +26666,7 @@ public class Db_Master {
             ps.setString(1, id_oper);
             ps.setString(2, kind);
             ps.setString(3, valuta);
-            
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String[] v = {
@@ -26727,7 +26731,7 @@ public class Db_Master {
             String dtoper = getNow();
             String dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
             String oper = get_national_office().getChangetype();
-            
+
             for (int i = 0; i < damod.size(); i++) {
                 String[] v = damod.get(i);
                 switch (v[6]) {
@@ -27110,9 +27114,9 @@ public class Db_Master {
                 } else {
                     cu.setSell_std_value("-");
                 }
-                
+
                 cu.setInternal_cur(rs.getString("fg_valuta_corrente"));
-                
+
                 out.add(cu);
             }
         } catch (SQLException ex) {
@@ -27292,7 +27296,7 @@ public class Db_Master {
             String sql = "SELECT * FROM office_sp where filiale = '" + filiale + "' AND data <= '" + data + " 23:59:59' ORDER BY data DESC";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
-                
+
                 out.add(new Office_sp(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4),
                         rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10)));
             }
@@ -27352,22 +27356,22 @@ public class Db_Master {
      */
     public boolean generateandinsertStockPrice(Openclose oc, String dtoper) {
         try {
-            
+
             String oper = get_national_office().getChangetype();
             boolean dividi = oper.equals("/");
-            
+
             String valutalocale = get_local_currency()[0];
             ArrayList<OfficeStockPrice_value> out = new ArrayList<>();
             ArrayList<Currency> licur = list_figures_query_edit(oc.getFiliale());
             ArrayList<Figures> lifg = list_figures(oc.getFiliale());
             String sql = "SELECT * FROM stock WHERE filiale = '" + oc.getFiliale()
                     + "' AND tipostock = 'CH' AND (kind ='01' or kind ='02') ORDER BY cod_value,kind,date";
-            
+
             if (is_CZ) {
                 sql = "SELECT * FROM stock WHERE filiale = '" + oc.getFiliale()
                         + "' AND tipostock = 'CH' AND kind IN ('01','02','03') ORDER BY cod_value,kind,date";
             }
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             ArrayList<String> listval = new ArrayList<>();
             while (rs.next()) {
@@ -27383,7 +27387,7 @@ public class Db_Master {
             }
             String dt_val = formatStringtoStringDate(dtoper, patternsqldate, patternnormdate);
             if (listval.isEmpty()) {
-                
+
                 String val = get_local_currency()[0];
                 OfficeStockPrice_value osp01 = new OfficeStockPrice_value();
                 osp01.setCurrency(val);
@@ -27393,7 +27397,7 @@ public class Db_Master {
                 osp01.setMedioacq("1.0000000");
                 osp01.setControvalore("0.00");
                 out.add(osp01);
-                
+
             } else {
                 for (int i = 0; i < listval.size(); i++) {
                     String val = listval.get(i);
@@ -27401,26 +27405,26 @@ public class Db_Master {
                     osp01.setCurrency(val);
                     osp01.setDecurrency(formatALCurrency(val, licur));
                     osp01.setSupporto("01 " + Engine.get_figures(lifg, "01").getDe_supporto());
-                    
+
                     OfficeStockPrice_value osp02 = new OfficeStockPrice_value();
                     osp02.setCurrency(val);
                     osp02.setDecurrency(formatALCurrency(val, licur));
                     osp02.setSupporto("02 " + Engine.get_figures(lifg, "02").getDe_supporto());
-                    
+
                     OfficeStockPrice_value osp03 = new OfficeStockPrice_value();
                     osp03.setCurrency(val);
                     osp03.setDecurrency(formatALCurrency(val, licur));
                     osp03.setSupporto("03 " + Engine.get_figures(lifg, "03").getDe_supporto());
-                    
+
                     double setQtaosp01 = 0.00;
                     double controv01 = 0.00;
-                    
+
                     double setQtaosp02 = 0.00;
                     double controv02 = 0.00;
-                    
+
                     double setQtaosp03 = 0.00;
                     double controv03 = 0.00;
-                    
+
                     while (rs.next()) {
                         if (rs.getString("cod_value").equals(val)) {
                             switch (rs.getString("kind")) {
@@ -27446,11 +27450,11 @@ public class Db_Master {
                         }
                     }
                     setQtaosp01 = roundDouble(setQtaosp01, 2);
-                    
+
                     setQtaosp02 = roundDouble(setQtaosp02, 2);
-                    
+
                     setQtaosp03 = roundDouble(setQtaosp03, 2);
-                    
+
                     if (setQtaosp01 > 0) {
                         osp01.setQta(roundDoubleandFormat(setQtaosp01, 2));
                         double mediarate = getControvaloreOFFSET(setQtaosp01, controv01, dividi);
@@ -27474,16 +27478,16 @@ public class Db_Master {
                     if (setQtaosp02 > 0) {
                         osp02.setQta(roundDoubleandFormat(setQtaosp02, 2));
                         double mediarate = getControvaloreOFFSET(setQtaosp02, controv02, dividi);
-                        
+
                         if (newpread) {
                             if (licur.stream().filter(c1 -> c1.getCode().equals(val)).findAny().get() != null) {
                                 mediarate = fd(licur.stream().filter(c1 -> c1.getCode().equals(val)).findAny().get().getCambio_bce());
                                 controv02 = getControvalore(setQtaosp02, mediarate, dividi);
                             }
                         }
-                        
+
                         controv02 = roundDouble(controv02, 2);
-                        
+
                         osp02.setMedioacq(roundDoubleandFormat(mediarate, 8));
                         totalefx += controv02;
                         totalegenerale += controv02;
@@ -27499,10 +27503,10 @@ public class Db_Master {
                                 controv03 = getControvalore(setQtaosp03, mediarate, dividi);
                             }
                         }
-                        
+
                         osp03.setMedioacq(roundDoubleandFormat(mediarate, 8));
                         controv03 = roundDouble(controv03, 2);
-                        
+
                         totalefx += controv03;
                         totalegenerale += controv03;
                         osp03.setControvalore(roundDoubleandFormat(controv03, 2));
@@ -27526,7 +27530,7 @@ public class Db_Master {
                 ps.setString(9, roundDoubleandFormat(totalegenerale, 2));
                 ps.setString(10, dtoper);
                 ps.execute();
-                
+
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
                         generaId(50), "000", dt_val, "0",
                         "PS", ps.toString(), "service", dtoper));
@@ -27565,13 +27569,13 @@ public class Db_Master {
                 ps.setString(9, "0.00");
                 ps.setString(10, dtoper);
                 ps.execute();
-                
+
                 insert_aggiornamenti_mod(new Aggiornamenti_mod(
                         generaId(50), "000", dt_val, "0",
                         "PS", ps.toString(), "service", dtoper));
-                
+
             }
-            
+
             return true;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -27653,20 +27657,20 @@ public class Db_Master {
             while (rs.next()) {
                 if (!rs.getString("kind").equals("04")) {
                     String codicevaluta = rs.getString("cod_value");
-                    
+
                     content.add(new Stock(codicevaluta, rs.getString("kind"), rs.getString("total"), rs.getString("controval")));
                     listval.add(codicevaluta);
-                    
+
                 }
             }
 
 //            rs.beforeFirst();
 //            removeDuplicatesAL(listval);
             listval = listval.stream().distinct().collect(toList());
-            
+
             for (int i = 0; i < listval.size(); i++) {
                 String val = listval.get(i);
-                
+
                 OfficeStockPrice_value osp01 = new OfficeStockPrice_value();
                 osp01.setCurrency(val);
                 osp01.setDecurrency(formatALCurrency(val, licur));
@@ -27675,7 +27679,7 @@ public class Db_Master {
                 osp02.setCurrency(val);
                 osp02.setDecurrency(formatALCurrency(val, licur));
                 osp02.setSupporto("02 " + Engine.get_figures(lifg, "02").getDe_supporto());
-                
+
                 OfficeStockPrice_value osp03 = new OfficeStockPrice_value();
                 osp03.setCurrency(val);
                 osp03.setDecurrency(formatALCurrency(val, licur));
@@ -27695,7 +27699,7 @@ public class Db_Master {
                 AtomicDouble ad_controv02 = new AtomicDouble(0.0);
                 AtomicDouble ad_setQtaosp03 = new AtomicDouble(0.0);
                 AtomicDouble ad_controv03 = new AtomicDouble(0.0);
-                
+
                 List<Stock> content_def = content.stream().filter(result2 -> result2.getCod_value().equalsIgnoreCase(val)).collect(toList());
                 content_def.forEach(c1 -> {
                     switch (c1.getKind()) {
@@ -27741,17 +27745,17 @@ public class Db_Master {
 //                }
                 double setQtaosp01 = roundDouble(ad_setQtaosp01.get(), 2);
                 double controv01 = roundDouble(ad_controv01.get(), 2);
-                
+
                 double setQtaosp02 = roundDouble(ad_setQtaosp02.get(), 2);
                 double controv02 = roundDouble(ad_controv02.get(), 2);
-                
+
                 double setQtaosp03 = roundDouble(ad_setQtaosp03.get(), 2);
                 double controv03 = roundDouble(ad_controv03.get(), 2);
-                
+
                 if (setQtaosp01 > 0) {
                     osp01.setQta(roundDoubleandFormat(setQtaosp01, 2));
                     if (newpread) {
-                        
+
                         if (licur.stream().filter(c1 -> c1.getCode().equals(val)).findAny().get() != null) {
                             double mediarate = fd(licur.stream().filter(c1 -> c1.getCode().equals(val)).findAny().get().getCambio_bce());
                             osp01.setMedioacq(roundDoubleandFormat(mediarate, 8));
@@ -27762,7 +27766,7 @@ public class Db_Master {
                         osp01.setMedioacq(roundDoubleandFormat(mediarate, 8));
                         osp01.setControvalore(roundDoubleandFormat(controv01, 2));
                     }
-                    
+
                     out.add(osp01);
                 }
                 if (setQtaosp02 > 0) {
@@ -27951,9 +27955,9 @@ public class Db_Master {
             } else if ((surname != null && !surname.equals("") && !surname.equals("..."))
                     || (name != null && !name.equals("") && !name.equals("..."))
                     || (taxcode != null && !taxcode.equals("") && !taxcode.equals("---"))) {
-                
+
                 String newsql = "SELECT codcl FROM ch_transaction_client WHERE codtr in (SELECT codtr FROM loyalty_ch) ";
-                
+
                 if ((surname != null && !surname.equals("") && !surname.equals("..."))) {
                     newsql = newsql + " AND cognome = \"" + surname.trim() + "\"";
                 }
@@ -27963,15 +27967,15 @@ public class Db_Master {
                 if ((taxcode != null && !taxcode.equals("") && !taxcode.equals("---"))) {
                     newsql = newsql + " AND codfisc = \"" + taxcode.trim() + "\"";
                 }
-                
+
                 ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(newsql);
                 while (rs.next()) {
                     q1.add(rs.getString(1));
                 }
             }
-            
+
             removeDuplicatesAL(q1);
-            
+
             for (int x = 0; x < q1.size(); x++) {
                 String codcl = q1.get(x);
                 Client c0 = query_Client_transaction(null, codcl);
@@ -28126,7 +28130,7 @@ public class Db_Master {
         try {
             String sql = "SELECT * FROM nc_transaction where filiale='" + tra.getFiliale() + "' AND id_open_till='" + tra.getId_open_till() + "' "
                     + "AND note LIKE '%" + tra.getFiliale() + tra.getId() + "'";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
                 NC_transaction nc = new NC_transaction(
@@ -28145,7 +28149,7 @@ public class Db_Master {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return out;
-        
+
     }
 
     /**
@@ -28225,24 +28229,24 @@ public class Db_Master {
     public ArrayList<String[]> query_cs(String cod, String stato) {
         ArrayList<String[]> out = new ArrayList<>();
         try {
-            
+
             ArrayList<Codici_sblocco_file> files = list_codici_sblocco_file();
-            
+
             String sql = "SELECT * FROM codici_sblocco WHERE fg_stato <>'' ";
             if (!cod.equals("")) {
                 sql = sql + " AND codice like'%" + cod + "%'";
             }
-            
+
             if (!stato.equals("...")) {
                 sql = sql + " AND fg_stato = '" + stato + "'";
             }
-            
+
             sql = sql + " ORDER BY dt_gen";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             while (rs.next()) {
-                
+
                 for (int x = 0; x < files.size(); x++) {
                     if (files.get(x).getListcod().toUpperCase().contains(rs.getString(1).toUpperCase())) {
                         String[] v1 = {
@@ -28253,9 +28257,9 @@ public class Db_Master {
                         out.add(v1);
                     }
                 }
-                
+
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -28327,7 +28331,7 @@ public class Db_Master {
             ps.setString(4, et_new);
             ps.setString(5, et_old);
             ps.execute();
-            
+
             insertValue_agg(ps, null, "000", null, user);
             insertValue_agg(ps, null, cod_dest, null, user);
             return true;
@@ -28394,7 +28398,7 @@ public class Db_Master {
      * @return
      */
     public boolean update_status_bb_transaction(String filiale, String idtr, String statodest, String user) {
-        
+
         try {
             String upd = "UPDATE ch_transaction set bb = ? WHERE filiale = ? AND id = ?";
             PreparedStatement ps = this.c.prepareStatement(upd, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
@@ -28410,7 +28414,7 @@ public class Db_Master {
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
-        
+
         return false;
     }
 
@@ -28602,7 +28606,7 @@ public class Db_Master {
             }
             sql = sql + "ORDER BY cod";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             while (rs.next()) {
                 br.add(rs.getString(1));
             }
@@ -28610,7 +28614,7 @@ public class Db_Master {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return br;
-        
+
     }
 
     /**
@@ -28713,7 +28717,7 @@ public class Db_Master {
                 }
                 return out;
             }
-            
+
             String sql2 = "SELECT SUBSTRING(MAX(dt_mod),1,10) FROM rate_history WHERE filiale ='" + filiale
                     + "' AND modify LIKE '%bce value%' AND dt_mod < '" + giorno.toString(patternsql) + "' ";
             ResultSet rs2 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql2);
@@ -28750,12 +28754,12 @@ public class Db_Master {
      * @return
      */
     public List<Currency> get_BCE(DateTime giorno) {
-        
+
         try {
             if (giorno.withMillisOfDay(0).isEqual(new DateTime().withMillisOfDay(0))) {
                 return list_currency(filiale);
             }
-            
+
             String sql1 = "SELECT valuta,rif_bce FROM rate where filiale = '000' AND data = '" + giorno.toString(patternsql) + "'";
             ResultSet rs0 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql1);
             if (rs0.next()) {
@@ -28769,7 +28773,7 @@ public class Db_Master {
                 }
                 return out;
             }
-            
+
             String sql00 = "SELECT MAX(DATA) FROM rate where filiale = '000' AND data < '" + giorno.toString(patternsql) + "'";
             ResultSet rs00 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql00);
             if (rs00.next()) {
@@ -28790,10 +28794,10 @@ public class Db_Master {
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
-        
+
         return null;
     }
-    
+
     public String get_BCE(DateTime giorno, String valuta) {
         try {
             String sql1 = "SELECT rif_bce FROM rate where filiale = '000' AND valuta = '" + valuta + "' AND data = '" + giorno.toString(patternsql) + "'";
@@ -28811,7 +28815,7 @@ public class Db_Master {
         }
         return get_BCE(filiale, giorno, valuta);
     }
-    
+
     public String get_BCE(
             String filiale,
             DateTime giorno,
@@ -28823,7 +28827,7 @@ public class Db_Master {
                     + "AND valuta = '" + valuta + "' "
                     + "AND modify LIKE '%bce value%%" + giorno.toString(patternnormdate_filter) + "%%' "
                     + "ORDER BY dt_mod DESC LIMIT 1";
-            
+
             ResultSet rs0 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql1);
             if (rs0.next()) {
                 String modify = rs0.getString(1);
@@ -28833,14 +28837,14 @@ public class Db_Master {
                 }
                 return bce;
             }
-            
+
             String gg2 = giorno.minusDays(1).toString(patternsql);
-            
+
             String sql2 = "SELECT modify FROM rate_history WHERE filiale = '" + filiale + "' "
                     + "AND valuta = '" + valuta + "' AND modify like '%bce value%' "
                     + "AND dt_mod < '" + gg2 + " 23:59:59' ORDER BY dt_mod DESC";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql2);
-            
+
             while (rs.next()) {
                 String modify = rs.getString(1);
                 String datainizio = modify.split("Date validity: ")[1].trim().split(" ")[0];
@@ -28864,14 +28868,14 @@ public class Db_Master {
         }
         return "0";
     }
-    
+
     public String get_BCE_central(DateTime giorno, String valuta) {
         try {
             DateTimeFormatter sqldate = forPattern(patternsql);
             String sql1 = "SELECT modify FROM rate_history where filiale = '000' "
                     + "AND valuta = '" + valuta + "' AND modify LIKE '%bce value%' "
                     + "AND modify LIKE '%%" + giorno.toString(patternnormdate_filter) + "%%' ORDER BY dt_mod DESC LIMIT 1";
-            
+
             ResultSet rs0 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql1);
             if (rs0.next()) {
                 String modify = rs0.getString(1);
@@ -28881,15 +28885,15 @@ public class Db_Master {
                 }
                 return bce;
             }
-            
+
             String gg2 = giorno.minusDays(1).toString(patternsql);
-            
+
             String sql2 = "SELECT modify FROM rate_history WHERE filiale = '000' "
                     + "AND valuta = '" + valuta + "' AND modify like '%bce value%' "
                     + "AND dt_mod < '" + gg2 + " 23:59:59' ORDER BY dt_mod DESC";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql2);
-            
+
             while (rs.next()) {
                 String modify = rs.getString(1);
                 String datainizio = modify.split("Date validity: ")[1].trim().split(" ")[0];
@@ -29008,7 +29012,7 @@ public class Db_Master {
             if (!s.isEmpty()) {
                 out[1] = roundDoubleandFormat(s.get(0), 2);
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -29022,7 +29026,7 @@ public class Db_Master {
      */
     public int getAggdaScaricare(String filiale) {
         try {
-            
+
             String sql = "SELECT count(*) FROM aggiornamenti_mod WHERE filiale = '" + filiale + "' AND fg_stato='0'";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             if (rs.next()) {
@@ -29041,7 +29045,7 @@ public class Db_Master {
      */
     public int getAggdaScaricare_SUFILIALE(String filiale) {
         try {
-            
+
             String sql = "SELECT count(*) FROM aggiornamenti_mod WHERE filiale <> '" + filiale + "' AND fg_stato='0'";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             if (rs.next()) {
@@ -29090,22 +29094,22 @@ public class Db_Master {
             String surname, String name, String taxcode) {
         ArrayList<Ch_transaction> out = new ArrayList<>();
         try {
-            
+
             if (d1 == null || d1.equals("...")) {
                 d1 = "";
             }
             d1 = d1.trim() + " 00:00:00";
-            
+
             if (d2 == null || d2.equals("...")) {
                 d2 = "";
             }
             d2 = d2.trim() + " 23:59:59";
-            
+
             d1 = formatStringtoStringDate(d1, patternnormdate, patternsqldate);
             d2 = formatStringtoStringDate(d2, patternnormdate, patternsqldate);
-            
+
             String sql = "SELECT * FROM ch_transaction ch WHERE data >= '" + d1 + "' AND data <= '" + d2 + "' ";
-            
+
             if (filiale != null && !filiale.equals("") && !filiale.equals("...")) {
                 sql = sql + "AND filiale = '" + filiale + "'";
             }
@@ -29113,7 +29117,7 @@ public class Db_Master {
             //cliente
             if ((surname != null && !surname.equals("") && !surname.equals("...")) || (name != null && !name.equals("") && !name.equals("...")) || (taxcode != null && !taxcode.equals("") && !taxcode.equals("---"))) {
                 String newsql = "SELECT codtr FROM ch_transaction_client WHERE codtr <> '' ";
-                
+
                 if ((surname != null && !surname.equals("") && !surname.equals("..."))) {
                     newsql = newsql + "AND cognome = \"" + surname.trim() + "\"";
                 }
@@ -29123,13 +29127,13 @@ public class Db_Master {
                 if ((taxcode != null && !taxcode.equals("") && !taxcode.equals("---"))) {
                     newsql = newsql + "AND codfisc = \"" + taxcode.trim() + "\"";
                 }
-                
+
                 sql = sql + "AND cod in (" + newsql + ")";
-                
+
             }
-            
+
             sql = sql + " ORDER BY data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
 //            ResultSet rs = ps.executeQuery();
 
@@ -29198,28 +29202,28 @@ public class Db_Master {
     public ArrayList<Ch_transaction> query_transaction_ch_new(String d1, String d2, ArrayList<String> branch) {
         ArrayList<Ch_transaction> out = new ArrayList<>();
         try {
-            
+
             if (d1 == null || d1.equals("...")) {
                 d1 = "";
             }
             d1 = d1.trim() + " 00:00:00";
-            
+
             if (d2 == null || d2.equals("...")) {
                 d2 = "";
             }
             d2 = d2.trim() + " 23:59:59";
-            
+
             String sql = "SELECT * FROM ch_transaction ch WHERE data >= '" + d1 + "' AND data <= '" + d2 + "' ";
-            
+
             String filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "filiale = '" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
 //            ResultSet rs = ps.executeQuery();
 
@@ -29335,23 +29339,23 @@ public class Db_Master {
                 d1 = "";
             }
             d1 = d1.trim() + " 00:00:00";
-            
+
             if (d2 == null || d2.equals("...")) {
                 d2 = "";
             }
             d2 = d2.trim() + " 23:59:59";
-            
+
             String sql = "SELECT cod,id,filiale,gruppo_nc,causale_nc,valuta,supporto,pos,user,till,data,total,commissione,netto,prezzo,quantita,fg_inout,ricevuta,mtcn,del_fg,del_dt,del_user,del_motiv,fg_tipo_transazione_nc,fg_dogana,ass_idcode,ass_startdate,ass_enddate,cl_cognome,cl_nome,cl_indirizzo,cl_citta,cl_nazione,cl_cap,cl_provincia,cl_email,cl_telefono,note,ti_diritti,ti_ticket_fee,id_open_till,posnum,percentiva,bonus,ch_transaction FROM nc_transaction WHERE data >= '" + d1 + "' AND data <= '" + d2 + "' ";
-            
+
             String filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "filiale = '" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             if (vatref.equals("SI")) {
                 //sql = sql + " AND ch_transaction<>'-'";
                 String nccatwhere = "";
@@ -29364,11 +29368,11 @@ public class Db_Master {
                 if (nccatwhere.length() > 3) {
                     sql = sql + " AND (" + nccatwhere.substring(0, nccatwhere.length() - 3).trim() + ")";
                 }
-                
+
             }
-            
+
             sql = sql + " ORDER BY filiale,data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
                 NC_transaction nc = new NC_transaction(
@@ -29404,23 +29408,23 @@ public class Db_Master {
                 d1 = "";
             }
             d1 = d1.trim() + " 00:00:00";
-            
+
             if (d2 == null || d2.equals("...")) {
                 d2 = "";
             }
             d2 = d2.trim() + " 23:59:59";
-            
+
             String sql = "SELECT cod,id,filiale,gruppo_nc,causale_nc,valuta,supporto,pos,user,till,data,total,commissione,netto,prezzo,quantita,fg_inout,ricevuta,mtcn,del_fg,del_dt,del_user,del_motiv,fg_tipo_transazione_nc,fg_dogana,ass_idcode,ass_startdate,ass_enddate,cl_cognome,cl_nome,cl_indirizzo,cl_citta,cl_nazione,cl_cap,cl_provincia,cl_email,cl_telefono,note,ti_diritti,ti_ticket_fee,id_open_till,posnum,percentiva,bonus,ch_transaction FROM nc_transaction WHERE data >= '" + d1 + "' AND data <= '" + d2 + "' ";
-            
+
             String filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "filiale = '" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             sql = sql + " ORDER BY filiale,data";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
@@ -29490,7 +29494,7 @@ public class Db_Master {
     public String getCORA(String annomese, String tipo) {
         try {
             String sql = "SELECT content FROM cora WHERE data like '" + annomese + "%' AND tipo='" + tipo + "' ORDER by data desc LIMIT 1";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             if (rs.next()) {
                 return rs.getString(1);
@@ -29622,7 +29626,7 @@ public class Db_Master {
      * @return
      */
     public Client kyc_modified_cod(String cod) {
-        
+
         try {
             String sqlORI = "SELECT * FROM kyc_modify_client WHERE codicemodifica = '" + cod + "' AND tipomodifica = 'O'";
             String sqlMOD = "SELECT * FROM kyc_modify_client WHERE codicemodifica = '" + cod + "' AND tipomodifica = 'M'";
@@ -29953,42 +29957,42 @@ public class Db_Master {
      */
     public TillTransactionList_value list_newreport_value_pos(ArrayList<String> branch, String datad1,
             String datad2, String posquery, ArrayList<Branch> allenabledbr) {
-        
+
         try {
-            
+
             String sql = "SELECT * FROM ch_transaction tr1, ch_transaction_valori tr2 WHERE tr1.cod= tr2.cod_tr "
                     + "AND tr1.data >= '" + datad1 + " 00:00:00' AND tr1.data <= '" + datad2 + " 23:59:59' AND tr1.del_fg='0' ";
-            
+
             String filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "tr1.filiale = '" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             String posq = " AND ((tr2.pos<>'-' AND tr2.pos<>'N') OR tr1.pos<>'-') ";
-            
+
             if (!posquery.equals("---")) {
                 posq = " AND (tr2.pos = '" + posquery + "' OR tr1.pos = '" + posquery + "') ";
             }
-            
+
             sql = sql + posq;
-            
+
             sql = sql + " ORDER BY tr1.filiale,tr1.data";
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             ArrayList<Figures> fig = list_all_figures();
             ArrayList<CustomerKind> list_customerKind = list_customerKind();
             ArrayList<TillTransactionList_value> dati = new ArrayList<>();
             List<String> listmodify = list_transaction_modify_ch();
             while (rs.next()) {
                 TillTransactionList_value rm = new TillTransactionList_value();
-                
+
                 rm.setId_filiale(rs.getString("tr1.filiale"));
                 rm.setDe_filiale(formatBankBranchReport(rs.getString("tr1.filiale"), "BR", null, allenabledbr));
-                
+
                 rm.setType(formatTilltr(rs.getString("tr1.del_fg"),
                         rs.getString("tr1.bb"),
                         rs.getString("tr1.fa_number"),
@@ -29997,7 +30001,7 @@ public class Db_Master {
                         this,
                         rs.getString("tr1.refund"), rs.getString("tr1.cod"))
                 );
-                
+
                 rm.setTill(rs.getString("tr1.till"));
                 rm.setUser(rs.getString("tr1.user"));
                 rm.setNotr(rs.getString("tr1.id"));
@@ -30017,13 +30021,13 @@ public class Db_Master {
                     lfig = "01";
                 }
                 rm.setFig(lfig);
-                
+
                 if (rs.getString("tr2.supporto").equals("04")) {
                     rm.setPos(rs.getString("tr2.pos"));
                 } else {
                     rm.setPos(rs.getString("tr1.pos"));
                 }
-                
+
                 rm.setRound(rs.getString("tr2.roundvalue").replaceAll("-", ""));
                 if (is_CZ) {
                     rm.setRound(rs.getString("tr2.roundvalue"));
@@ -30034,42 +30038,42 @@ public class Db_Master {
                     rm.setResidentnonresident("Non Resident");
                 }
                 rm.setInternetbooking(rs.getString("tr1.intbook"));
-                
+
                 dati.add(rm);
-                
+
             }
-            
+
             String sql1 = "SELECT cod,id,filiale,gruppo_nc,causale_nc,valuta,supporto,pos,user,till,data,total,"
                     + "commissione,netto,prezzo,quantita,fg_inout,ricevuta,mtcn,del_fg,del_dt,del_user,del_motiv,"
                     + "fg_tipo_transazione_nc,fg_dogana,ass_idcode,ass_startdate,ass_enddate,cl_cognome,cl_nome,cl_indirizzo,"
                     + "cl_citta,cl_nazione,cl_cap,cl_provincia,cl_email,cl_telefono,note,ti_diritti,ti_ticket_fee,id_open_till,"
                     + "posnum,percentiva,bonus,ch_transaction FROM nc_transaction tr1 WHERE data >= '" + datad1 + " 00:00:00' "
                     + "AND data <= '" + datad2 + " 23:59:59' AND del_fg='0' ";
-            
+
             if (filwhere.length() > 3) {
                 sql1 = sql1 + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             String posqnc = " AND pos<>''";
-            
+
             if (!posquery.equals("---")) {
                 posqnc = " AND pos = '" + posquery + "'";
             }
-            
+
             sql1 = sql1 + posqnc + " ORDER BY filiale,data";
-            
+
             ArrayList<NC_category> array_nc_cat = list_nc_category_enabled();
             ArrayList<NC_causal> array_nc_caus = list_nc_causal_enabled();
             String valutalocale = get_local_currency()[0];
             ResultSet rs1 = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql1);
-            
+
             while (rs1.next()) {
-                
+
                 String q1 = (roundDoubleandFormat(fd(rs1.getString("quantita")), 0));
                 String p1 = rs1.getString("prezzo");
                 String f1 = ("0.00");
                 String pos = rs1.getString("pos");
-                
+
                 switch (rs1.getString("fg_tipo_transazione_nc")) {
                     case "1":
                         q1 = "1";
@@ -30090,9 +30094,9 @@ public class Db_Master {
                     default:
                         break;
                 }
-                
+
                 TillTransactionList_value rm = new TillTransactionList_value();
-                
+
                 rm.setId_filiale(rs1.getString("tr1.filiale"));
                 rm.setDe_filiale(rs1.getString("tr1.filiale"));
                 rm.setType("NO CH");
@@ -30139,7 +30143,7 @@ public class Db_Master {
      * @return
      */
     public ArrayList<Booking> query_prenot_list_new(String[] filiali, String status, String d1, String d2) {
-        
+
         ArrayList<Booking> out = new ArrayList<>();
         try {
             String sql = "SELECT * FROM sito_prenotazioni WHERE stato = '" + status + "'";
@@ -30157,7 +30161,7 @@ public class Db_Master {
                 }
                 sql = sql + add;
             }
-            
+
             if (d1 == null || d1.equals("...")) {
                 d1 = "";
             }
@@ -30195,7 +30199,7 @@ public class Db_Master {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return out;
-        
+
     }
 
     /**
@@ -30204,12 +30208,12 @@ public class Db_Master {
      * @return
      */
     public Booking get_prenot(String cod) {
-        
+
         ArrayList<String[]> district = district();
-        
+
         try {
             String sql = "SELECT * FROM sito_prenotazioni WHERE cod = '" + cod + "'";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             if (rs.next()) {
                 Booking bo = new Booking();
@@ -30221,25 +30225,25 @@ public class Db_Master {
                 bo.setFiliale(rs.getString(7));
                 bo.setDt_ritiro(rs.getString(8));
                 bo.setDt(rs.getString(21));
-                
+
                 bo.setNote(formatperOAM(rs.getString(9)));
                 bo.setCl_nome(formatperOAM(rs.getString(11)));
                 bo.setCl_cognome(formatperOAM(rs.getString(12)));
                 bo.setCl_email(rs.getString(10));
                 bo.setCl_telefono(rs.getString(13));
                 bo.setCanale(rs.getString(15));
-                
+
                 bo.setStato(rs.getString(18));
                 bo.setEuro(roundDoubleandFormat(fd(rs.getString(6)), 2));
                 bo.setSconti(rs.getString(16));
                 bo.setProdotti(rs.getString(17));
-                
+
                 bo.setCod_tr(rs.getString(19));
                 bo.setDt_tr(rs.getString(20));
-                
+
                 bo.setCrm_note(rs.getString(30));
                 bo.setPan(rs.getString(36));
-                
+
                 bo.setCl_sesso(rs.getString(24));
                 bo.setCl_dtnascita(rs.getString(25));
                 bo.setCl_nazione(rs.getString(26));
@@ -30417,7 +30421,7 @@ public class Db_Master {
      * @return
      */
     public boolean edit_stato_prenotazione_dafiliale(String codice, String statodest) {
-        
+
         try {
             String edit = "UPDATE sito_prenotazioni SET stato = ? , stato_crm = ? WHERE cod = ?";
             PreparedStatement ps = this.c.prepareStatement(edit, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
@@ -30480,11 +30484,11 @@ public class Db_Master {
      */
     public boolean update_site_spread(String[] valori, String dt_val, String datenow, String username) {
         try {
-            
+
             String upd = "UPDATE sito_spread SET buy_std = ?,buy_l1 = ?,buy_l2 = ?,buy_l3 = ?,buy_best = ?,"
                     + "sell_std = ?,sell_l1 = ?,sell_l2 = ?,sell_l3 = ?,sell_best = ?, codice_uic_divisa = ? WHERE valuta = ?";
             PreparedStatement ps = this.c.prepareStatement(upd, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-            
+
             ps.setString(1, valori[1]);
             ps.setString(2, valori[2]);
             ps.setString(3, valori[3]);
@@ -30497,11 +30501,11 @@ public class Db_Master {
             ps.setString(10, valori[10]);
             ps.setString(11, valori[11]);
             ps.setString(12, valori[0]);
-            
+
             insertValue_agg(ps, null, null, dt_val, username);
-            
+
             return true;
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -30619,7 +30623,7 @@ public class Db_Master {
         try {
             String ins = "UPDATE sito_commissione_fissa SET minimo = ?, massimo = ?, commissione_sell = ?, fg_blocco = ? "
                     + "WHERE supporto = ? AND minimo = ?";
-            
+
             PreparedStatement ps = this.c.prepareStatement(ins, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, min);
             ps.setString(2, max);
@@ -30627,9 +30631,9 @@ public class Db_Master {
             ps.setString(4, status);
             ps.setString(5, kind);
             ps.setString(6, min_old);
-            
+
             insertValue_agg(ps, null, null, dtval, username);
-            
+
             return true;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -30693,11 +30697,11 @@ public class Db_Master {
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, value);
             ps.setString(2, cod);
-            
+
             insertValue_agg(ps, null, null, dtval, username);
-            
+
             return true;
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -31230,9 +31234,9 @@ public class Db_Master {
                     + "ass_startdate,ass_enddate,cl_cognome,cl_nome,cl_indirizzo,cl_citta,cl_nazione,cl_cap,cl_provincia,cl_email,cl_telefono,"
                     + "note,ti_diritti,ti_ticket_fee,id_open_till,posnum,percentiva,bonus,ch_transaction "
                     + "FROM nc_transaction WHERE del_fg = '0' AND cod in (SELECT codtr FROM loyalty_ch WHERE codcl = '" + codcl + "') ORDER BY data";
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
-            
+
             while (rs.next()) {
                 NC_transaction nc = new NC_transaction(
                         rs.getString(1), leftPad(rs.getString(2), 15, "0"),
@@ -31264,21 +31268,21 @@ public class Db_Master {
     public TillTransactionListBB_value list_SBTransactionList(ArrayList<String> branch, String datad1, String datad2, ArrayList<Branch> allb) {
         String sqlSell_incassati = "SELECT * FROM ch_transaction tr1, ch_transaction_valori tr2 WHERE tr1.del_fg='0' AND tr1.cod=tr2.cod_tr"
                 + " AND tr1.tipotr = 'S' AND LENGTH(tr2.bb_fidcode) = '18' ";
-        
+
         try {
             String sql = "SELECT * FROM ch_transaction tr1, ch_transaction_valori tr2 "
                     + " WHERE tr1.del_fg='0' AND tr1.cod=tr2.cod_tr AND tr1.tipotr"
                     + " AND (tr1.bb = '3' OR tr1.bb = '4') ";
-            
+
             String filwhere = "";
             for (int i = 0; i < branch.size(); i++) {
                 filwhere = filwhere + "tr1.filiale = '" + branch.get(i) + "' OR ";
             }
-            
+
             if (filwhere.length() > 3) {
                 sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
             }
-            
+
             if (datad1 != null) {
                 sql = sql + "AND tr1.data >= '" + datad1 + " 00:00:00' ";
             }
@@ -31286,16 +31290,16 @@ public class Db_Master {
                 sql = sql + "AND tr1.data <= '" + datad2 + " 23:59:59' ";
             }
             sql = sql + " ORDER BY tr1.tipotr ASC,tr1.data ASC";
-            
+
             ArrayList<String> giàinseriti = new ArrayList<>();
-            
+
             ArrayList<TillTransactionListBB_value> dati = new ArrayList<>();
             ArrayList<CustomerKind> list_customerKind = list_customerKind();
             ArrayList<Figures> fig = list_all_figures();
-            
+
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             ResultSet rsALL = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sqlSell_incassati);
-            
+
             LinkedList<String> fidcode = new LinkedList<>();
             LinkedList<Ch_transaction> codSe = new LinkedList<>();
             while (rsALL.next()) {
@@ -31346,7 +31350,7 @@ public class Db_Master {
                 ch.setCn_number(rsALL.getString("tr1.cn_number"));
                 codSe.add(ch);
             }
-            
+
             while (rs.next()) {
                 String cod = rs.getString("tr1.cod");
                 if (giàinseriti.contains(cod)) {
@@ -31406,9 +31410,9 @@ public class Db_Master {
                         dati.add(rm);
                     }
                 }
-                
+
                 if (havesell) {
-                    
+
                     if (codsell != null) {
                         ArrayList<Ch_transaction_value> sell_value = query_transaction_value(codsell.getCod());
                         for (int y = 0; y < sell_value.size(); y++) {
@@ -31452,7 +31456,7 @@ public class Db_Master {
                         }
                     }
                 }
-                
+
                 TillTransactionListBB_value rm = new TillTransactionListBB_value();
                 rm.setId_filiale("");
                 rm.setDe_filiale("");
@@ -31477,9 +31481,9 @@ public class Db_Master {
                 rm.setResidentnonresident("");
                 rm.setFig("");
                 dati.add(rm);
-                
+
             }
-            
+
             if (dati.size() > 0) {
                 TillTransactionListBB_value pdf = new TillTransactionListBB_value();
                 pdf.setId_filiale(branch.get(0));
@@ -31519,7 +31523,7 @@ public class Db_Master {
                         setCommisionvaluenonresidentbuy = setCommisionvaluenonresidentbuy + fd(rm.getComfree());
                         setTransactionnumbernonresidentbuy++;
                     }
-                    
+
                     if (rm.getResidentnonresident().equals("Resident") && rm.getKind().toUpperCase().startsWith("SELL")) {
                         setTransvalueresidentsell = setTransvalueresidentsell + fd(rm.getAmount());
                         setCommisionvaluetresidentsell = setCommisionvaluetresidentsell + fd(rm.getComfree());
@@ -31647,7 +31651,7 @@ public class Db_Master {
      */
     public ArrayList<String[]> rate_currency_best_SB(ArrayList<Currency> list) {
         ArrayList<String[]> out = new ArrayList<>();
-        
+
         for (int i = 0; i < list.size(); i++) {
             Currency cu = list.get(i);
             String cur = cu.getCode();
@@ -31658,7 +31662,7 @@ public class Db_Master {
             String[] out5 = {roundDoubleandFormat(tot_best, 8), "Best: " + formatMysqltoDisplay(roundDoubleandFormat(tot_best, 8)), cur, uic};
             out.add(out5);
         }
-        
+
         return out;
     }
 
@@ -31793,9 +31797,9 @@ public class Db_Master {
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, loya);
             ps.execute();
-            
+
             insertValue_agg(ps, null, "000", null, username);
-            
+
             return true;
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
@@ -31951,12 +31955,12 @@ public class Db_Master {
                 chv.setDel_dt(rs.getString(25));
                 chv.setPosnum(rs.getString(26));
                 chv.setRoundvalue(rs.getString(27));
-                
+
                 chv.setBranch(rs.getString("c1.filiale"));
                 chv.setType(rs.getString("c1.tipotr"));
                 chv.setOperator(rs.getString("c1.user"));
                 chv.setNote(rs.getString("c1.note"));
-                
+
                 li.add(chv);
             }
         } catch (SQLException ex) {
@@ -32131,7 +32135,7 @@ public class Db_Master {
             if (ps0.executeQuery().next()) {
                 return true;
             }
-            
+
             String ins = "INSERT INTO ch_transaction_file (cod_tr,directory,filename) VALUES (?,?,?)";
             PreparedStatement ps = this.c.prepareStatement(ins, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, transaction_cod);
@@ -32145,7 +32149,7 @@ public class Db_Master {
         }
         return false;
     }
-    
+
     public void delete_marketing(String transaction_cod, String username) {
         try {
             String del = "DELETE FROM ch_transaction_file WHERE cod_tr = ? AND directory = ?";
@@ -32168,7 +32172,7 @@ public class Db_Master {
      */
     public boolean insert_valuekyc_Module(String transaction_cod, String username, String d1) {
         try {
-            
+
             String sql = "SELECT id FROM ch_transaction_file WHERE cod_tr = ? AND directory = ?";
             PreparedStatement ps0 = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps0.setString(1, transaction_cod);
@@ -32176,7 +32180,7 @@ public class Db_Master {
             if (ps0.executeQuery().next()) {
                 return true;
             }
-            
+
             String ins = "INSERT INTO ch_transaction_file (cod_tr,directory,data) VALUES (?,?,?)";
             PreparedStatement ps = this.c.prepareStatement(ins, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, transaction_cod);
@@ -32348,7 +32352,7 @@ public class Db_Master {
             ps0.setString(2, "MODPAY#%");
             ResultSet rs = ps0.executeQuery();
             while (rs.next()) {
-                
+
                 Ch_transaction_file chf = new Ch_transaction_file(cod,
                         replace(rs.getString(1), "MODPAY#%", ""),
                         rs.getString(2).split(";")[0], rs.getString(2).split(";")[1],
@@ -32417,38 +32421,38 @@ public class Db_Master {
      * @return
      */
     public ArrayList<String[]> list_pending(String d1, String d2, ArrayList<String> branch, List<String> operatori) {
-        
+
         ArrayList<String[]> out = new ArrayList<>();
-        
+
         String sql = "SELECT * FROM tr_sblocco WHERE descr LIKE '%SBLOCCO OPERAZIONI PENDING%' ";
-        
+
         if (d1 != null && !d1.equals("")) {
             sql = sql + "AND timestamp >= '" + d1 + " 00:00:00' ";
         }
         if (d2 != null && !d2.equals("")) {
             sql = sql + "AND timestamp <= '" + d2 + " 23:59:59' ";
         }
-        
+
         String filwhere = "";
         for (int i = 0; i < branch.size(); i++) {
             filwhere = filwhere + "filiale = '" + branch.get(i) + "' OR ";
         }
-        
+
         if (filwhere.length() > 3) {
             sql = sql + " AND (" + filwhere.substring(0, filwhere.length() - 3).trim() + ") ";
         }
-        
+
         String opwhere = "";
         for (int i = 0; i < operatori.size(); i++) {
             opwhere = opwhere + "user = '" + operatori.get(i) + "' OR ";
         }
-        
+
         if (opwhere.length() > 3) {
             sql = sql + " AND (" + opwhere.substring(0, opwhere.length() - 3).trim() + ") ";
         }
-        
+
         sql = sql + " ORDER BY filiale,user,timestamp";
-        
+
         try {
             ResultSet rs = this.c.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE).executeQuery(sql);
             while (rs.next()) {
@@ -32468,22 +32472,22 @@ public class Db_Master {
      */
     public double quarterly_transaction(List<String> cod_cl) {
         double tot = 0.0;
-        
+
         if (cod_cl == null) {
             return tot;
         }
         try {
             String sql = "SELECT * FROM ch_transaction WHERE data > date_sub(curdate(), interval 90 day) AND del_fg='0'";
-            
+
             String opwhere = "";
             for (int i = 0; i < cod_cl.size(); i++) {
                 opwhere = opwhere + "cl_cod = '" + cod_cl.get(i) + "' OR ";
             }
-            
+
             if (opwhere.length() > 3) {
                 sql = sql + " AND (" + opwhere.substring(0, opwhere.length() - 3).trim() + ") ";
             }
-            
+
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -32493,7 +32497,7 @@ public class Db_Master {
                     tot = tot + fd(rs.getString("pay"));
                 }
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -32513,7 +32517,7 @@ public class Db_Master {
         }
         try {
             String sql = "SELECT * FROM ch_transaction WHERE data > date_sub(curdate(), interval 90 day) AND del_fg = '0' AND filiale <> '" + filiale + "'";
-            
+
             String opwhere = "";
             for (int i = 0; i < cod_cl.size(); i++) {
                 opwhere = opwhere + "cl_cod = '" + cod_cl.get(i) + "' OR ";
@@ -32522,7 +32526,7 @@ public class Db_Master {
                 sql = sql + " AND (" + opwhere.substring(0, opwhere.length() - 3).trim() + ") ";
             }
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-            
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 if (rs.getString("tipotr").equals("B")) {
@@ -32531,7 +32535,7 @@ public class Db_Master {
                     tot = tot + fd(rs.getString("pay"));
                 }
             }
-            
+
         } catch (SQLException ex) {
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
@@ -32546,7 +32550,7 @@ public class Db_Master {
     public List<String> get_WK_TI(Ch_transaction tr) {
         List<String> out = new ArrayList<>();
         try {
-            
+
             String sqldel = "SELECT cod FROM nc_transaction WHERE del_fg = ? AND (note = ? OR note = ?)";
             PreparedStatement ps = this.c.prepareStatement(sqldel, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
             ps.setString(1, "0");
@@ -32570,7 +32574,7 @@ public class Db_Master {
      */
     public String getLink_last(String codtr) {
         String out = "transaction_ok_mod_new.jsp";
-        
+
         try {
             String sql = "SELECT link FROM link WHERE codtr = ? ORDER BY data DESC LIMIT 1";
             PreparedStatement ps = this.c.prepareStatement(sql, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
@@ -32762,7 +32766,7 @@ public class Db_Master {
         }
         return false;
     }
-    
+
     public List<Marketing> list_consensi_attivi() {
         List<Marketing> out = new ArrayList<>();
         try {
@@ -32776,7 +32780,7 @@ public class Db_Master {
                     ma.setCodcl(rs.getString("cl.codcl"));
                     ma.setFiliale(rs.getString("filiale"));
                     ma.setData(df_ita.format(rs.getDate("c.data")));
-                    ma.setDt( parseStringDate(rs.getString("c.data"), patternsqldate));
+                    ma.setDt(parseStringDate(rs.getString("c.data"), patternsqldate));
                     ma.setCodtr(rs.getString("c.cod_tr"));
                     Client bl = new Client();
                     bl.setCode(rs.getString("cl.codcl"));
@@ -32806,19 +32810,19 @@ public class Db_Master {
                     bl.setTimestamp(rs.getString("cl.timestamp"));
                     bl.setPep(rs.getString("cl.pep"));
                     ma.setCl(bl);
-                    
+
                     out.add(ma);
-                    
+
                 }
             }
-            
+
         } catch (Exception ex) {
             ex.printStackTrace();
             insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
         }
         return out;
     }
-    
+
     public boolean edit_selectlevelrate(String id, String percent, String username) {
         try {
             String upd = "UPDATE selectlevelrate SET percent = ? WHERE id = ?";
@@ -32835,7 +32839,7 @@ public class Db_Master {
         }
         return false;
     }
-    
+
     public double getPercent_levelrate(int id) {
         double out = 0.00;
         try {
@@ -32853,5 +32857,5 @@ public class Db_Master {
         }
         return out;
     }
-    
+
 }

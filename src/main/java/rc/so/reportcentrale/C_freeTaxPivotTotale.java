@@ -37,6 +37,7 @@ import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import static org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -176,7 +177,7 @@ public class C_freeTaxPivotTotale {
             ArrayList<String> colonneetich) {
 
         try {
-            File pdffile = new File(path + generaId(50) + "C_VatRefundPivotTotale.xls");
+            File pdffile = new File(normalize(path + generaId(50) + "C_VatRefundPivotTotale.xls"));
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = workbook.createSheet("C_VatRefundPivotTotale");
             XSSFFont font = workbook.createFont();

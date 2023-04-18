@@ -98,6 +98,7 @@ import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import static org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -203,7 +204,7 @@ public class Excel {
     public String print_code_unlock(String pathout, String listcod, String date, String user) {
         try {
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_code_unlock.xlsx";
-            File out = new File(pathout + outputfile);
+            File out = new File(normalize(pathout + outputfile));
             try ( Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("code_unlock");
                 byte[] bytes = decodeBase64(getConf("path.logocl"));
@@ -272,8 +273,7 @@ public class Excel {
 
             db1.closeDB();
 
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try ( Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("users_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -418,7 +418,7 @@ public class Excel {
             ArrayList<String[]> elencokind = db.list_selectkind();
             db.closeDB();
 
-            try ( //File out = new File(pathout + outputfile);
+            try (
                      Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("figures_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
@@ -602,11 +602,7 @@ public class Excel {
     public static String excel_currency_list(File outputfile, ArrayList<Currency> result) {
         try {
 
-            try (//            Db_Master db = new Db_Master();
-                    //            ArrayList<String[]> elencokind = db.list_selectkind();
-                    //            db.closeDB();
-                    //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("currency_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -729,8 +725,7 @@ public class Excel {
         try {
             ArrayList<String[]> array_type_till = list_type_till();
 
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("safetill_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -817,8 +812,7 @@ public class Excel {
      */
     public static String excel_bank_list(File outputfile, ArrayList<String[]> result) {
         try {
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("Bank_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -912,8 +906,7 @@ public class Excel {
     public static String excel_fixcomm_list(File outputfile, ArrayList<String[]> result) {
         try {
             ArrayList<String[]> array_kind = list_all_kind(filiale);
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("Fixcomm_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -1014,8 +1007,7 @@ public class Excel {
     public static String excel_kindfixcomm_list(File outputfile, ArrayList<String[]> result) {
         try {
             ArrayList<String[]> array_kind = list_all_kind(filiale);
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("KindFixcomm_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -1103,8 +1095,7 @@ public class Excel {
     public static String excel_raterange_list(File outputfile, ArrayList<String[]> result, String filiale) {
         try {
             ArrayList<String[]> array_kind = list_all_kind(filiale);
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("LevelRate_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -1335,9 +1326,7 @@ public class Excel {
      */
     public static String excel_transaction_listEVO(File outputfile, ArrayList<Ch_transaction> result, List<Marketing> list_consensi_attivi) {
         try {
-            try ( //File out = new File(pathout + outputfile);
-
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("Transaction_list_E");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -1618,7 +1607,7 @@ public class Excel {
                             DateTime tr = parseStringDate(res.getData(), patternsqldate);
 
                             if (cons1.isBefore(tr)) {
-                               consenso = "";
+                                consenso = "";
 //                               consenso = "SI (DATA CONSENSO CLIENTE "+cons1.toString(patternnormdate)+")";
                             }
 
@@ -1696,10 +1685,7 @@ public class Excel {
      */
     public static String excel_transaction_list(File outputfile, ArrayList<Ch_transaction> result) {
         try {
-            String fil = getFil()[0];
-
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("Transaction_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -1937,8 +1923,7 @@ public class Excel {
      */
     public static String excel_kycList(File outputfile, ArrayList<Ch_transaction_doc> result) {
         try {
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("KYC_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -2146,9 +2131,7 @@ public class Excel {
 
             db.closeDB();
 
-            try ( //ArrayList<String[]> array_kind = Engine.list_all_kind(filiale);
-                    //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("TransactionNC_list");
                 XSSFCellStyle cellStylenum = (XSSFCellStyle) wb.createCellStyle();
                 XSSFDataFormat hssfDataFormat = (XSSFDataFormat) wb.createDataFormat();
@@ -2481,8 +2464,7 @@ public class Excel {
         try {
             ArrayList<String[]> array_nc_kind = nc_kind();
 
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("NoChangeCategoryList");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -2639,9 +2621,7 @@ public class Excel {
      */
     public static String nc_viewbranch(File outputfile, ArrayList<String[]> result) {
         try {
-
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("NoChangeviewbranchList");
                 XSSFFont font3 = (XSSFFont) wb.createFont();
                 font3.setFontName(FONT_ARIAL);
@@ -2788,8 +2768,7 @@ public class Excel {
     public static String es_paymat(File outputfile, ArrayList<Taglio> result) {
         try {
 
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("ExternalServicesPaymatList");
                 XSSFFont font3 = (XSSFFont) wb.createFont();
                 font3.setFontName(FONT_ARIAL);
@@ -2886,8 +2865,7 @@ public class Excel {
 
             ArrayList<String[]> array_nc_kind = nc_kind();
 
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("NoChangeCausalist");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -3041,8 +3019,7 @@ public class Excel {
     public static String excel_it_list(File outputfile, ArrayList<IT_change> result) {
         try {
 
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("InternalTransfer_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -3188,9 +3165,7 @@ public class Excel {
      */
     public static String excel_et_list(File outputfile, ArrayList<ET_change> result, String typeop, ArrayList<NC_category> nc_cat) {
         try {
-
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("ExternalTransfer_list");
                 XSSFCellStyle cellStylenum = (XSSFCellStyle) wb.createCellStyle();
                 XSSFDataFormat hssfDataFormat = (XSSFDataFormat) wb.createDataFormat();
@@ -3343,8 +3318,7 @@ public class Excel {
     public static String excel_webtrans_list(File outputfile, ArrayList<Booking> result, ArrayList<Branch> br, ArrayList<Currency> cu) {
         try {
 
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("ExternalServices_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -3464,8 +3438,7 @@ public class Excel {
     public static String excel_nl_view(File outputfile, ArrayList<Newsletters> result) {
         try {
 
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("Newsletter_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -3556,9 +3529,7 @@ public class Excel {
      */
     public static String excel_oc_list(File outputfile, ArrayList<Openclose> result, ArrayList<Till> listTill) {
         try {
-            ArrayList<String[]> array_kind = list_all_kind(filiale);
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try ( Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("OpenClose_List");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -3664,8 +3635,7 @@ public class Excel {
      */
     public static String excel_lowcomm_list(File outputfile, ArrayList<String[]> result) {
         try {
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("LowCommissionJustify_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -3744,8 +3714,7 @@ public class Excel {
      */
     public static String excel_doctype_list(File outputfile, ArrayList<String[]> result) {
         try {
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("IdentityDocument_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -3826,8 +3795,7 @@ public class Excel {
     public static String excel_nations_list(File outputfile, ArrayList<String[]> result) {
         try {
             ArrayList<String[]> array_category_nations = category_nations();
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("Country_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -3914,8 +3882,7 @@ public class Excel {
     public static String excel_district_list(File outputfile, ArrayList<String[]> result) {
         try {
 
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("Districtlist");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -3988,8 +3955,7 @@ public class Excel {
     public static String excel_city_list(File outputfile, ArrayList<String[]> result) {
         try {
 
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("Citylist");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -4062,8 +4028,7 @@ public class Excel {
     public static String excel_intbook_list(File outputfile, ArrayList<String[]> result) {
         try {
 
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("InternetBooking_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -4136,8 +4101,7 @@ public class Excel {
     public static String excel_vatcode_list(File outputfile, ArrayList<VATcode> result) {
         try {
 
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("VATCode_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -4225,8 +4189,7 @@ public class Excel {
     public static String excel_company_list(File outputfile, ArrayList<Company> result, ArrayList<Company> resultagent) {
         try {
             ArrayList<String[]> country = country();
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try ( Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("Company_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -4500,8 +4463,7 @@ public class Excel {
     public static String excel_agency_list(File outputfile, ArrayList<Agency> result) {
         try {
 
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try ( Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("Agency_ist");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -4623,8 +4585,7 @@ public class Excel {
     public static String excel_blackm_list(File outputfile, ArrayList<BlacklistM> result) {
         try {
 
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("Black_ist");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -4830,8 +4791,7 @@ public class Excel {
     public static String excel_groupbr_list(File outputfile, ArrayList<String[]> result) {
         try {
             ArrayList<String[]> typegroup = selectgroupbranch();
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try ( Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("BranchGroup_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -4914,8 +4874,7 @@ public class Excel {
     public static String excel_creditcard_list(File outputfile, ArrayList<String[]> result, String filiale) {
         try {
             ArrayList<String[]> typegroup = selectgroupbranch();
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("CreditCard_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -4994,8 +4953,7 @@ public class Excel {
      */
     public static String excel_branch_list(File outputfile, ArrayList<Branch> result) {
         try {
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("Branch_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -5168,8 +5126,7 @@ public class Excel {
             ArrayList<String[]> list_type_customer = list_type_customer();
             ArrayList<String[]> list_type_kind = list_type_kind();
             ArrayList<String[]> list_category_nations = category_nations();
-            try ( //File out = new File(pathout + outputfile);
-                     Workbook wb = new XSSFWorkbook()) {
+            try (Workbook wb = new XSSFWorkbook()) {
                 Sheet sheet = wb.createSheet("KindOfTransaction_list");
                 XSSFCellStyle style = (XSSFCellStyle) wb.createCellStyle();
                 style.setBorderBottom(THIN);
@@ -5365,7 +5322,7 @@ public class Excel {
     public String print_excel_historyrate(String pathout, ArrayList<Rate_history> li, String date, ArrayList<Branch> libr, ArrayList<Users> lius, Currency cu) {
         try {
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_excel_historyrate.xlsx";
-            File out = new File(pathout + outputfile);
+            File out = new File(normalize(pathout + outputfile));
             try ( XSSFWorkbook wb = new XSSFWorkbook()) {
                 XSSFCellStyle bold = wb.createCellStyle();
                 XSSFFont font = wb.createFont();

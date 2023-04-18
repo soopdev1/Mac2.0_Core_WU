@@ -164,6 +164,7 @@ import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import static org.apache.commons.lang3.StringUtils.replace;
@@ -325,7 +326,7 @@ public class Receipt {
         try {
 
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_receipt_commze.pdf";
-            File pdf = new File(pathout + outputfile);
+            File pdf = new File(normalize(pathout + outputfile));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -773,7 +774,7 @@ public class Receipt {
 
         try {
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_receipt_see.pdf";
-            File pdf = new File(pathout + outputfile);
+            File pdf = new File(normalize(pathout + outputfile));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -1260,7 +1261,7 @@ public class Receipt {
 
         try {
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_cnote.pdf";
-            File pdf = new File(pathout + outputfile);
+            File pdf = new File(normalize(pathout + outputfile));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -1762,7 +1763,7 @@ public class Receipt {
 
         try {
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_receipt_see.pdf";
-            File pdf = new File(pathout + outputfile);
+            File pdf = new File(normalize(pathout + outputfile));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -2221,7 +2222,7 @@ public class Receipt {
     public String print_pdf_nodigital(String pathout, String tipodoc, String codoper, String dt) {
         try {
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + tipodoc + ".pdf";
-            File pdf = new File(pathout + outputfile);
+            File pdf = new File(normalize(pathout + outputfile));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -2261,7 +2262,7 @@ public class Receipt {
     public String print_pdf_noresult(String pathout) {
         try {
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + ".pdf";
-            File pdf = new File(pathout + outputfile);
+            File pdf = new File(normalize(pathout + outputfile));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -2326,7 +2327,7 @@ public class Receipt {
                 inout = "In";
             }
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + ".pdf";
-            File pdf = new File(pathout + outputfile);
+            File pdf = new File(normalize(pathout + outputfile));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -3786,7 +3787,7 @@ public class Receipt {
         try {
             cellempty.setBorder(NO_BORDER);
             String outputfile = new DateTime().toString("yyMMddhhmmssSSS") + "_code_unlock.pdf";
-            File pdf = new File(pathout + outputfile);
+            File pdf = new File(normalize(pathout + outputfile));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);

@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import static org.apache.commons.lang3.builder.ToStringStyle.JSON_STYLE;
 import static org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL;
@@ -106,7 +107,7 @@ public class Marketing {
             ArrayList<String[]> array_identificationCard = db.identificationCard();
             db.closeDB();
 
-            File xlsx = new File(path + generaId(50) + "MarketingConsent.xls");
+            File xlsx = new File(normalize(path + generaId(50) + "MarketingConsent.xls"));
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = workbook.createSheet("Marketing Consent");
 
@@ -390,13 +391,12 @@ public class Marketing {
                 }
 
             }
-            
-            
+
             for (int i = 0; i < 24; i++) {
                 sheet.autoSizeColumn(i);
             }
 
-            try (FileOutputStream out = new FileOutputStream(xlsx)) {
+            try ( FileOutputStream out = new FileOutputStream(xlsx)) {
                 workbook.write(out);
             }
             String base64 = new String(encodeBase64(readFileToByteArray(xlsx)));

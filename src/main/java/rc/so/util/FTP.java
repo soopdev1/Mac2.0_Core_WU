@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import static java.lang.Thread.currentThread;
 import java.util.ArrayList;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.commons.lang3.StringUtils;
 import static org.apache.commons.lang3.StringUtils.deleteWhitespace;
 import org.apache.commons.net.ftp.FTPClient;
@@ -92,7 +93,7 @@ public class FTP {
                         }
                     }
                     if (check) {
-                        File fileout = new File(outdir.getPath() + separator + filename);
+                        File fileout = new File(normalize(outdir.getPath() + separator + filename));
                         try (OutputStream os = new FileOutputStream(fileout)) {
                             boolean es = ftpClient.retrieveFile(filename, os);
                             if (es) {

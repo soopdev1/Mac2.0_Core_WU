@@ -121,7 +121,6 @@ import javax.management.ObjectName;
 import static javax.management.Query.attr;
 import static javax.management.Query.match;
 import static javax.management.Query.value;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -143,6 +142,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import static org.apache.commons.fileupload.servlet.ServletFileUpload.isMultipartContent;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import static org.apache.commons.io.IOUtils.copy;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
@@ -177,27 +177,6 @@ import org.xml.sax.InputSource;
  * @author rcosco
  */
 public class Utility {
-
-    /**
-     *
-     * @param psw
-     * @return
-     */
-    public static String convMd5(String psw) {
-        try {
-            MessageDigest md = getInstance("MD5");
-            md.update(psw.getBytes());
-            byte[] byteData = md.digest();
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < byteData.length; i++) {
-                sb.append(Integer.toString((byteData[i] & 0xFF) + 256, 16).substring(1));
-            }
-            return sb.toString().trim();
-        } catch (NoSuchAlgorithmException ex) {
-            insertTR("E", "System", currentThread().getStackTrace()[1].getMethodName() + ": " + ex.getMessage());
-        }
-        return "-";
-    }
 
     /**
      *
@@ -985,6 +964,10 @@ public class Utility {
     public static boolean checkXml(File xml) {
         try {
             DocumentBuilderFactory factory = newInstance();
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);            
+            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            factory.setXIncludeAware(false);
             factory.setValidating(false);
             factory.setNamespaceAware(true);
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -1113,10 +1096,8 @@ public class Utility {
             try {
                 FileItemFactory factory = new DiskFileItemFactory();
                 ServletFileUpload upload = new ServletFileUpload(factory);
-                List items = upload.parseRequest(request);
-                Iterator iterator = items.iterator();
-                while (iterator.hasNext()) {
-                    FileItem item = (FileItem) iterator.next();
+                List<FileItem> items = upload.parseRequest(request);
+                for (FileItem item : items) {
                     if (item.isFormField()) {
                         String fieldName = item.getFieldName();
                         String value = new String(item.getString().getBytes(ISO_8859_1), UTF_8);
@@ -1399,14 +1380,14 @@ public class Utility {
 
         String start = ing.substring(0, 1);
         if (start.equals("-") || start.equals("+")) {
-            ing = ing.replaceAll(start, "");
+            ing = StringUtils.replace(ing, start, "");
         } else {
             start = "";
         }
 
         String out = "";
         if (ing.contains(",")) {
-            ing = ing.replaceAll(",", "");
+            ing = StringUtils.replace(ing, ",", "");
         }
         if (ing.contains(".")) {
             String[] inter1 = splitStringEvery(ing.split("\\.")[0], 3);
@@ -2042,7 +2023,7 @@ public class Utility {
             if (tra.getDel_fg().equals("0")) {
                 if (base64ing.startsWith("FILE[")) {
                     String pa1 = replace(base64ing, "FILE[", "");
-                    File f = new File(pa1);
+                    File f = new File(normalize(pa1));
                     return encodeBase64String(readFileToByteArray(f));
                 }
                 return base64ing;
@@ -2050,7 +2031,7 @@ public class Utility {
                 byte pdfing[];
                 if (base64ing.startsWith("FILE[")) {
                     String pa1 = replace(base64ing, "FILE[", "");
-                    File f = new File(pa1);
+                    File f = new File(normalize(pa1));
                     pdfing = readFileToByteArray(f);
                 } else {
                     pdfing = decodeBase64(base64ing);
@@ -2153,12 +2134,12 @@ public class Utility {
      * @throws IOException
      */
     public static void redirect(HttpServletRequest request, HttpServletResponse response, String destination) throws ServletException, IOException {
-        if (response.isCommitted()) {
-            RequestDispatcher dispatcher = request.getRequestDispatcher(destination);
-            dispatcher.forward(request, response);
-        } else {
-            response.sendRedirect(destination);
-        }
+//        if (response.isCommitted()) {
+//            RequestDispatcher dispatcher = request.getRequestDispatcher(destination);
+//            dispatcher.forward(request, response);
+//        } else {
+        response.sendRedirect(destination);
+//        }
     }
 
     /**
@@ -3278,18 +3259,18 @@ public class Utility {
      */
     public static void createCERT_EET() {
 
-        String file1 = "C:\\Maccorp\\eet\\keys\\rca15_rsa.der";
-        String file2 = "C:\\Maccorp\\eet\\keys\\2qca16_rsa.der";
-        try {
-            String base641 = encodeBase64String(readFileToByteArray(new File(file1)));
-            String base642 = encodeBase64String(readFileToByteArray(new File(file2)));
-            out.println("rca15_rsa () " + base641);
-            out.println("2qca16_rsa () " + base642);
-//                Database db1 = new Database();
-//                System.out.println("rc.so.exe.Create_CERT.main() " + db1.updateCERT(filiale, base64));
-//                db1.closeDB();
-        } catch (IOException ex) {
-        }
+//        String file1 = "C:\\Maccorp\\eet\\keys\\rca15_rsa.der";
+//        String file2 = "C:\\Maccorp\\eet\\keys\\2qca16_rsa.der";
+//        try {
+//            String base641 = encodeBase64String(readFileToByteArray(new File(file1)));
+//            String base642 = encodeBase64String(readFileToByteArray(new File(file2)));
+//            out.println("rca15_rsa () " + base641);
+//            out.println("2qca16_rsa () " + base642);
+////                Database db1 = new Database();
+////                System.out.println("rc.so.exe.Create_CERT.main() " + db1.updateCERT(filiale, base64));
+////                db1.closeDB();
+//        } catch (IOException ex) {
+//        }
     }
 
     public static boolean send_Mail_CONFERMA_TRX(Booking bo) {
@@ -3303,9 +3284,9 @@ public class Utility {
         mo.setNVERDE("Per richiedere assistenza contatta il nostro Numero Verde 800 30 53 57");
         mo.setCHIUSURA("Buonviaggio dal team di Forexchange &#38; Travel, i tuoi assistenti di viaggio.");
         try {
-            String pathTemp = "/mnt/temp/";
+            String pathTemp = "/mnt/mac/temp/";
             String mail = get_ValueSettings("TM1");
-            File temp = new File(pathTemp + generaId(75) + "_temp.html");
+            File temp = new File(normalize(pathTemp + generaId(75) + "_temp.html"));
             writeByteArrayToFile(temp, decodeBase64(mail));
             String content = asCharSource(temp, UTF_8).read();
             content = replace(content, "{{DESC_PRENOTAZIONE}}", "Prenotazione n.");

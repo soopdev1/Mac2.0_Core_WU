@@ -103,6 +103,7 @@ import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import static org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL;
@@ -212,7 +213,7 @@ public class NewETReceipt {
 
         try {
 
-            File pdf = new File(path + generaId(50) + "FromBranchingSheet.pdf");
+            File pdf = new File(normalize(path + generaId(50) + "FromBranchingSheet.pdf"));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -492,7 +493,7 @@ public class NewETReceipt {
     public static String TOBRANCH_CHANGE_xls(String path, ToBranchingSheet_value siq, String datereport) {
         try {
             String intestazionePdf = "To Branching Sheet";
-            File pdf = new File(path + generaId(50) + "_ToBranchingSheet.xlsx");
+            File pdf = new File(normalize(path + generaId(50) + "_ToBranchingSheet.xlsx"));
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = workbook.createSheet("ToBranchingSheet");
             //CREAZIONE FONT
@@ -764,7 +765,7 @@ public class NewETReceipt {
         PdfPCell cellavuota = new PdfPCell(vuoto1);
         cellavuota.setBorder(NO_BORDER);
         try {
-            File pdf = new File(path + generaId(50) + "_ToBranchingSheet.pdf");
+            File pdf = new File(normalize(path + generaId(50) + "_ToBranchingSheet.pdf"));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -982,7 +983,7 @@ public class NewETReceipt {
             ArrayList<NoChangeToBranchingSheet_value> dati2) {
         try {
             String intestazionePdf = "To Branching Sheet";
-            File pdf = new File(path + generaId(50) + "_ToBranchingSheet.xlsx");
+            File pdf = new File(normalize(path + generaId(50) + "_ToBranchingSheet.xlsx"));
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = workbook.createSheet("ToBranchingSheet");
             //CREAZIONE FONT
@@ -1247,7 +1248,7 @@ public class NewETReceipt {
         Phrase vuoto = new Phrase("\n");
 
         try {
-            File pdf = new File(path + generaId(50) + "_FromBranchingSheet.pdf");
+            File pdf = new File(normalize(path + generaId(50) + "_FromBranchingSheet.pdf"));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -1484,7 +1485,7 @@ public class NewETReceipt {
 
             int cntriga = 12;
             String intestazionePdf = "From Branching Sheet";
-            File pdf = new File(path + generaId(50) + "_FromBranchingSheet.xlsx");
+            File pdf = new File(normalize(path + generaId(50) + "_FromBranchingSheet.xlsx"));
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = workbook.createSheet(intestazionePdf);
             //CREAZIONE FONT
@@ -1743,7 +1744,7 @@ public class NewETReceipt {
 
         try {
 
-            File pdf = new File(path + generaId(50) + "FromBranchingSheet.pdf");
+            File pdf = new File(normalize(path + generaId(50) + "FromBranchingSheet.pdf"));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -2042,7 +2043,7 @@ public class NewETReceipt {
         try {
             String intestazionePdf = "From Branching Sheet";
             int cntriga = 12;
-            File pdf = new File(path + generaId(50) + "FromBranchingSheet.xlsx");
+            File pdf = new File(normalize(path + generaId(50) + "FromBranchingSheet.xlsx"));
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = workbook.createSheet("FromBranchingSheet");
             //CREAZIONE FONT
@@ -2311,7 +2312,7 @@ public class NewETReceipt {
     public static String TOBANK_xls(String path, ToBankingSheet_value siq, String datereport) {
         try {
             String intestazionePdf = "To Banking Sheet";
-            File xls = new File(path + generaId(50) + "_ToBankingSheet.xlsx");
+            File xls = new File(normalize(path + generaId(50) + "_ToBankingSheet.xlsx"));
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = workbook.createSheet("ToBankingSheet");
             //CREAZIONE FONT
@@ -2603,7 +2604,7 @@ public class NewETReceipt {
 
         try {
 
-            File pdf = new File(path + generaId(50) + "_ToBankingSheet.pdf");
+            File pdf = new File(normalize(path + generaId(50) + "_ToBankingSheet.pdf"));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -2893,7 +2894,7 @@ public class NewETReceipt {
 
         try {
 
-            File pdf = new File(path + generaId(50) + "ToPosBankAccountSheet.pdf");
+            File pdf = new File(normalize(path + generaId(50) + "ToPosBankAccountSheet.pdf"));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -3150,7 +3151,7 @@ public class NewETReceipt {
      */
     public static String TOBANK_POS_xls(String path, ToBankingSheet_value siq, String datereport) {
         try {
-            File xls = new File(path + generaId(50) + "_ToPosBankAccountSheet.xlsx");
+            File xls = new File(normalize(path + generaId(50) + "_ToPosBankAccountSheet.xlsx"));
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = workbook.createSheet("ToPosBankAccountSheet");
             //CREAZIONE FONT
@@ -3407,7 +3408,7 @@ public class NewETReceipt {
 
         try {
 
-            File pdf = new File(path + generaId(50) + "_FromBankingSheet.pdf");
+            File pdf = new File(normalize(path + generaId(50) + "_FromBankingSheet.pdf"));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -3683,7 +3684,7 @@ public class NewETReceipt {
         try {
 
             String intestazionePdf = "From Banking Sheet";
-            File xls = new File(path + generaId(50) + "_FromBankingSheet.xlsx");
+            File xls = new File(normalize(path + generaId(50) + "_FromBankingSheet.xlsx"));
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = workbook.createSheet("FromBankingSheet");
             XSSFFont font = workbook.createFont();
@@ -4201,7 +4202,7 @@ public class NewETReceipt {
 
                 if (!listr.isEmpty()) {
                     Document document = new Document();
-                    File pdffile = new File(path + generaId(50) + "_Central_ET_Report.pdf");
+                    File pdffile = new File(normalize(path + generaId(50) + "_Central_ET_Report.pdf"));
                     FileOutputStream outputStream = new FileOutputStream(pdffile);
                     PdfWriter writer = getInstance(document, outputStream);
                     document.open();
@@ -4224,7 +4225,7 @@ public class NewETReceipt {
 
                 if (!listx.isEmpty()) {
 
-                    File xlsx = new File(path + generaId(50) + "_Central_ET_Report.xlsx");
+                    File xlsx = new File(normalize(path + generaId(50) + "_Central_ET_Report.xlsx"));
                     XSSFWorkbook workbook = new XSSFWorkbook();
                     XSSFSheet dstSheet_ = workbook.createSheet("Central_ET_Report");
                     int startrow = 1;

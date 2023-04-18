@@ -1,3 +1,9 @@
+function htmlEncode(str){
+    return String(str).replace(/[^\w. ]/gi, function(c){
+        return '&#'+c.charCodeAt(0)+';';
+    });
+}
+
 var UIExtendedModals = function () {
 
     
@@ -46,7 +52,7 @@ var UIExtendedModals = function () {
               var el = $(this);
 
               setTimeout(function(){
-                  $modal.load(el.attr('data-url'), '', function(){
+                  $modal.load(htmlEncode(el.attr('data-url')), '', function(){
                   $modal.modal();
                 });
               }, 1000);

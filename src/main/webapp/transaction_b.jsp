@@ -3648,7 +3648,7 @@
 
                                 function checkEmail(email) {
                                     if (email !== "") {
-                                        var emailFilter = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
+                                        var emailFilter = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
                                         //var v1 = validate.single(email, {presence: true, email: true});
                                         //if (undefined !== v1) {
                                         if (!emailFilter.test(email)) {

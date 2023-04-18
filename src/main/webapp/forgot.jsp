@@ -1,9 +1,3 @@
-<%-- 
-    Document   : login
-    Created on : 7-giu-2016, 15.46.28
-    Author     : raffaele
---%>
-
 <%@page import="rc.so.entity.Branch"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="rc.so.util.Utility"%>
@@ -38,7 +32,7 @@
         <!-- END GLOBAL MANDATORY STYLES -->
         <!-- BEGIN PAGE LEVEL PLUGINS -->
         <link href="assets/soop/select2-4.0.13/css/select2.min.css" rel="stylesheet" type="text/css" />
-        
+
         <!-- END PAGE LEVEL PLUGINS -->
         <!-- BEGIN THEME GLOBAL STYLES -->
         <link href="assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
@@ -74,7 +68,7 @@
                             document.getElementById('showres').click();
                             return false;
                         } else {
-                            
+
                             document.getElementById("errorlargetext").innerHTML = htmlEncode(data);
                             document.getElementById('showerror').click();
                             return false;
@@ -135,6 +129,8 @@
             <!-- /.modal-dialog -->
         </div>
         <%
+            response.setHeader("X-Frame-Options", "SAMEORIGIN");
+            response.setHeader("Content-Security-Policy", " frame-ancestors 'self'");
             String lan_index = (String) session.getAttribute("language");
             lan_index = "IT";
             Etichette et_index = new Etichette(lan_index);
@@ -155,8 +151,8 @@
             <!-- BEGIN LOGIN FORM -->
             <form role="form" class="login-form" action="Login?type=resnew" method="post" onsubmit="return checklogin();">
                 <input type="hidden"
-                                           name="_csrf"
-                                           value="4bfd1575-3ad1-4d21-96c7-4ef2d9f86721"/>
+                       name="_csrf"
+                       value="4bfd1575-3ad1-4d21-96c7-4ef2d9f86721"/>
                 <h3 class="form-title font-grey-cascade">Forgot your password?</h3>
                 <div class="form-group">
                     <ul class="list-group">
@@ -210,7 +206,7 @@
         <!-- BEGIN THEME GLOBAL SCRIPTS -->
         <script src="assets/global/scripts/app.min.js" type="text/javascript"></script>
 
-        
+
         <script src="assets/soop/bootstrap-select-1.13.14/js/bootstrap-select.min.js" type="text/javascript"></script>
 
         <!-- END THEME GLOBAL SCRIPTS -->

@@ -63,6 +63,7 @@ import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import static org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL;
@@ -167,7 +168,7 @@ public class C_TrimestraleCZK {
 
         // String outputfile = "C_TrimestraleCZK.pdf";
         try {
-            File pdffile = new File(path + generaId(50) + "C_TrimestraleCZK.pdf");
+            File pdffile = new File(normalize(path + generaId(50) + "C_TrimestraleCZK.pdf"));
             try (OutputStream ou = new FileOutputStream(pdffile)) {
                 Document document = new Document(A4, 20, 20, 20, 20);
                 PdfWriter wr = getInstance(document, ou);
@@ -351,7 +352,7 @@ PdfPCell[] list = new PdfPCell[colonne.size()];
 
         // String outputfile = "C_TrimestraleCZK.pdf";
         try {
-            File pdf = new File(path + generaId(50) + "QuarterlyCZK.xls");
+            File pdf = new File(normalize(path + generaId(50) + "QuarterlyCZK.xls"));
             HSSFWorkbook workbook = new HSSFWorkbook();
             HSSFSheet sheet = workbook.createSheet("QuarterlyCZK");
             //CREAZIONE FONT
@@ -553,12 +554,11 @@ PdfPCell[] list = new PdfPCell[colonne.size()];
     public static File ExtractPages(String filename, ArrayList<Integer> pages) {
 
         if (filename.contains("temporaneo")) {
-            return new File(filename);
+            return new File(normalize(filename));
         } else if (pages.isEmpty()) {
-            return new File(filename);
+            return new File(normalize(filename));
         } else {
-
-            File out = new File("C_page" + filename);
+            File out = new File(normalize("C_page" + filename));
             try {
 
                 PdfReader reader = new PdfReader(filename);

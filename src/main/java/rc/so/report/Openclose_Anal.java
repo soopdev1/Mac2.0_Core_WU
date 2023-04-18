@@ -61,6 +61,7 @@ import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import static org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL;
@@ -161,7 +162,7 @@ public class Openclose_Anal {
             ArrayList<Openclose_Anal_value_stock> ocsabank, ArrayList<String> colonne) {
 
         try {
-            File pdf = new File(path + generaId(50) + "OpenCloseAnal.pdf");
+            File pdf = new File(normalize(path + generaId(50) + "OpenCloseAnal.pdf"));
             Document document = new Document(A4, 20, 20, 20, 20);
             OutputStream ou = new FileOutputStream(pdf);
             PdfWriter wr = getInstance(document, ou);
@@ -938,7 +939,7 @@ public class Openclose_Anal {
             sheet.autoSizeColumn(4);
             sheet.autoSizeColumn(5);
             sheet.autoSizeColumn(6);
-            File f = new File(path + generaId(50) + "OpenCloseAnal.xls");
+            File f = new File(normalize(path + generaId(50) + "OpenCloseAnal.xls"));
             try (FileOutputStream out = new FileOutputStream(f)) {
                 workbook.write(out);
             }

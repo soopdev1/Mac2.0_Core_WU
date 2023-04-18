@@ -97,6 +97,7 @@ import org.apache.commons.codec.binary.Base64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import static org.apache.poi.hssf.usermodel.HSSFFont.FONT_ARIAL;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -1352,7 +1353,7 @@ public class C_BankBranch {
         try {
             C_BankBranch nctl = new C_BankBranch();
 
-            File pdffile = new File(path + generaId(50) + "C_BankBranch.pdf");
+            File pdffile = new File(normalize(path + generaId(50) + "C_BankBranch.pdf"));
             OutputStream ou = new FileOutputStream(pdffile);
             Document document = new Document(A4.rotate(), 20, 20, 20, 20);
             PdfWriter wr = getInstance(document, ou);
@@ -2656,7 +2657,7 @@ public class C_BankBranch {
      */
     public String mainexcel(String path, ArrayList<ET_change> codlist, ArrayList<Branch> br, ArrayList<String[]> array_bank, ArrayList<String[]> array_creditcard) {
         try {
-            File pdffile = new File(path + generaId(50) + "C_BankBranch.xlsx");
+            File pdffile = new File(normalize(path + generaId(50) + "C_BankBranch.xlsx"));
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = workbook.createSheet("C_BankBranch");
             //CREAZIONE FONT

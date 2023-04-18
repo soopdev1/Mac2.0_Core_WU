@@ -65,6 +65,7 @@ import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import org.joda.time.DateTime;
 import static org.joda.time.format.DateTimeFormat.forPattern;
 import org.joda.time.format.DateTimeFormatter;
+import rc.so.util.Utility;
 import static rc.so.util.Utility.safeRequest;
 import static rc.so.util.Utility.safeRequestMultiple;
 
@@ -89,13 +90,15 @@ public class Gestione extends HttpServlet {
         String deleted = safeRequest(request, "deleted");
         if (null == deleted) {
             deleted = "0";
-        } else switch (deleted) {
-            case "on":
-                deleted = "1";
-                break;
-            default:
-                deleted = "0";
-                break;
+        } else {
+            switch (deleted) {
+                case "on":
+                    deleted = "1";
+                    break;
+                default:
+                    deleted = "0";
+                    break;
+            }
         }
 
 //        String branch = safeRequest(request, "branch");
@@ -103,7 +106,7 @@ public class Gestione extends HttpServlet {
 
         String[] branch2 = safeRequestMultiple(request, "branch");
 
-        if (!branch2[0].equals("")&& !branch2[0].equals("null")) {
+        if (!branch2[0].equals("") && !branch2[0].equals("null")) {
             brList = formatArrayValues(branch2);
         }
 
@@ -143,13 +146,13 @@ public class Gestione extends HttpServlet {
         String pathtemp = db.getPath("temp");
         db.closeDB();
 
-        String base64 = create_cdc(pathtemp, output,array_unlockrate);
+        String base64 = create_cdc(pathtemp, output, array_unlockrate);
 
         if (base64 != null) {
             String headerKey = "Content-Disposition";
             String headerValue = format("attachment; filename=\"%s\"", new Object[]{"ControlloDiGestione_Report1_" + mese + ".xlsx"});
             response.setHeader(headerKey, headerValue);
-            try (OutputStream outStream = response.getOutputStream()) {
+            try ( OutputStream outStream = response.getOutputStream()) {
                 outStream.write(decodeBase64(base64.getBytes()));
             }
         } else {
@@ -169,7 +172,6 @@ public class Gestione extends HttpServlet {
 
 //        Utility.printRequest(request);
 //        String branch = safeRequest(request, "branch");
-
         ArrayList<String> brList = new ArrayList<>();
 
         String[] branch2 = safeRequestMultiple(request, "branch");
@@ -253,24 +255,20 @@ public class Gestione extends HttpServlet {
                         dc1.setCOMMTC("");//verificare
                         dc1.setTRANSAC((dv.getNoTransPurch()));
                         dc1.setTRANSCA((dv.getNoTransCC()));
-                        
-                        
+
                         dv.getPurchSpread();
                         dv.getCashAdSpread();
-                        
+
                         //OLD
                         //dc1.setCOMMAC((dv.getPurchProfit()));
                         //dc1.setCOMMCA((dv.getCashAdProfit()));
-                        
                         //NEW
                         dc1.setCOMMAC(dv.getPurchComm());
                         dc1.setSPREADAC(dv.getPurchSpread());
-                        
+
                         dc1.setCOMMCA(dv.getCashAdComm());
                         dc1.setSPREADCA(dv.getCashAdSpread());
-                        
-                        
-                        
+
                         dc1.setSPREADBR((dv.getBraSalesSpread()));
                         dc1.setSPREADBA((dv.getBaSalesSpread()));
                         dc1.setTOTTRANSACQ((roundDoubleandFormat(fd(dv.getNoTransPurch()) + fd(dv.getNoTransCC()), 0)));
@@ -352,7 +350,7 @@ public class Gestione extends HttpServlet {
             String headerKey = "Content-Disposition";
             String headerValue = format("attachment; filename=\"%s\"", new Object[]{"Contabilità_Report1_" + mese + ".xlsx"});
             response.setHeader(headerKey, headerValue);
-            try (OutputStream outStream = response.getOutputStream()) {
+            try ( OutputStream outStream = response.getOutputStream()) {
                 outStream.write(decodeBase64(base64.getBytes()));
             }
         } else {
@@ -372,10 +370,9 @@ public class Gestione extends HttpServlet {
 
 //        String branch = safeRequest(request, "branch");
         ArrayList<String> brList = new ArrayList<>();
+        String[] branch2 = safeRequestMultiple(request, "branch");
 
-        String[] branch2 = request.getParameterValues("branch");
-
-        if (branch2 != null && !branch2[0].equals("null")) {
+        if (!branch2[0].equals("") && !branch2[0].equals("null")) {
             brList = formatArrayValues(branch2);
         }
 
@@ -384,10 +381,10 @@ public class Gestione extends HttpServlet {
         String gr1 = safeRequest(request, "gr1");
         //String gr2 = safeRequest(request, "gr2");
 
-        String[] gr2 = request.getParameterValues("gr2");
+        String[] gr2 = safeRequestMultiple(request, "gr2");
         ArrayList<String> gr02list = new ArrayList<>();
 
-        if (gr2 != null) {
+        if (!gr2[0].equals("")) {
             gr02list = formatArrayValues(gr2);
         }
 
@@ -432,12 +429,12 @@ public class Gestione extends HttpServlet {
                 LimitInsur l = new LimitInsur(filiale1,
                         giornidacontrollare.get(v), giornidacontrollarestring.get(v),
                         dv.getCashOnPrem(), dv.getFx(), roundDoubleandFormat(totalgtot, 2), roundDoubleandFormat(delta, 2));
-                out.println("rc.so.servlets.Gestione.massimale() "+l.toString());
+                out.println("rc.so.servlets.Gestione.massimale() " + l.toString());
                 li.add(l);
             }
-            
+
         }
-        
+
         String pathtemp = db.getPath("temp");
         db.closeDB();
 
@@ -489,7 +486,7 @@ public class Gestione extends HttpServlet {
             String headerKey = "Content-Disposition";
             String headerValue = format("attachment; filename=\"%s\"", new Object[]{"Controllodigestione_Massimali_" + mese + ".xlsx"});
             response.setHeader(headerKey, headerValue);
-            try (OutputStream outStream = response.getOutputStream()) {
+            try ( OutputStream outStream = response.getOutputStream()) {
                 outStream.write(decodeBase64(base64.getBytes()));
             }
         } else {
@@ -510,9 +507,9 @@ public class Gestione extends HttpServlet {
 
         ArrayList<String> brList = new ArrayList<>();
 
-        String[] branch2 = request.getParameterValues("branch");
+        String[] branch2 = safeRequestMultiple(request, "branch");
 
-        if (branch2 != null && !branch2[0].equals("null")) {
+        if (!branch2[0].equals("") && !branch2[0].equals("null")) {
             brList = formatArrayValues(branch2);
         }
 
@@ -521,10 +518,10 @@ public class Gestione extends HttpServlet {
         String gr1 = safeRequest(request, "gr1");
         //String gr2 = safeRequest(request, "gr2");
 
-        String[] gr2 = request.getParameterValues("gr2");
+        String[] gr2 = safeRequestMultiple(request, "gr2");
         ArrayList<String> gr02list = new ArrayList<>();
 
-        if (gr2 != null) {
+        if (!gr2[0].equals("")) {
             gr02list = formatArrayValues(gr2);
         }
 
@@ -651,7 +648,7 @@ public class Gestione extends HttpServlet {
             String headerKey = "Content-Disposition";
             String headerValue = format("attachment; filename=\"%s\"", new Object[]{"Controllodigestione_BudgetDiCassa_" + mese + ".xlsx"});
             response.setHeader(headerKey, headerValue);
-            try (OutputStream outStream = response.getOutputStream()) {
+            try ( OutputStream outStream = response.getOutputStream()) {
                 outStream.write(decodeBase64(base64.getBytes()));
             }
         } else {
@@ -932,7 +929,7 @@ public class Gestione extends HttpServlet {
         String gr1 = safeRequest(request, "gr1");
         //String gr2 = safeRequest(request, "gr2");
 
-        String[] gr2 =safeRequestMultiple(request, "gr2");
+        String[] gr2 = safeRequestMultiple(request, "gr2");
         ArrayList<String> gr02list = new ArrayList<>();
 
         if (!gr2[0].equals("")) {
@@ -951,7 +948,7 @@ public class Gestione extends HttpServlet {
             String headerKey = "Content-Disposition";
             String headerValue = format("attachment; filename=\"%s\"", new Object[]{"Controllodigestione_Giornaliero_" + mese + ".xlsx"});
             response.setHeader(headerKey, headerValue);
-            try (OutputStream outStream = response.getOutputStream()) {
+            try ( OutputStream outStream = response.getOutputStream()) {
                 outStream.write(decodeBase64(base64.getBytes()));
             }
         } else {
@@ -1019,7 +1016,7 @@ public class Gestione extends HttpServlet {
             String headerKey = "Content-Disposition";
             String headerValue = format("attachment; filename=\"%s\"", new Object[]{"UK_Report_Change_Accounting_" + mese + ".xlsx"});
             response.setHeader(headerKey, headerValue);
-            try (OutputStream outStream = response.getOutputStream()) {
+            try ( OutputStream outStream = response.getOutputStream()) {
                 outStream.write(decodeBase64(base64.getBytes()));
             }
         } else {
@@ -1684,8 +1681,6 @@ public class Gestione extends HttpServlet {
                         double t = fd(nc.getTotal().replaceAll("-", ""));
                         NC_val ncv = new NC_val(nc.getGruppo_nc(), yearstring, filiale1, q, t);
                         NC_val ncv1 = new NC_val(nc.getGruppo_nc(), yearstring, filiale1, q, t);
-
-                        
 
                         if (d1o.isAfter(dtstart) || d1o.isEqual(dtstart)) {
 
@@ -2769,7 +2764,7 @@ public class Gestione extends HttpServlet {
             String headerKey = "Content-Disposition";
             String headerValue = format("attachment; filename=\"%s\"", new Object[]{"Controllodigestione_Giornaliero_" + mese + ".xlsx"});
             response.setHeader(headerKey, headerValue);
-            try (OutputStream outStream = response.getOutputStream()) {
+            try ( OutputStream outStream = response.getOutputStream()) {
                 outStream.write(decodeBase64(base64.getBytes()));
             }
         } else {

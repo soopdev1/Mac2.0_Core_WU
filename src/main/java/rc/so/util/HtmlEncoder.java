@@ -22,6 +22,7 @@ import static org.apache.commons.codec.binary.Base64.decodeBase64;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 import org.apache.commons.io.FileUtils;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
+import static org.apache.commons.io.FilenameUtils.normalize;
 
 /**
  *
@@ -100,7 +101,6 @@ public final class HtmlEncoder {
         byte[] b = ing.getBytes(forName("UTF-8"));
         byte[] base64 = encodeBase64(b);
         return new String(base64);
-//        return getStringBase64(new File("C:\\Maccorp\\pri.html"));
     }
 
     /**
@@ -124,7 +124,6 @@ public final class HtmlEncoder {
             byte[] b = p1.getBytes(forName("UTF-8"));
             byte[] base64 = encodeBase64(b);
             return new String(base64);
-//            return getStringBase64(new File("C:\\Maccorp\\pep.html"));
         } else {
             String p2 = "<!doctype html>"
                     + "<html>"
@@ -140,7 +139,6 @@ public final class HtmlEncoder {
             byte[] b = p2.getBytes(forName("UTF-8"));
             byte[] base64 = encodeBase64(b);
             return new String(base64);
-//            return getStringBase64(new File("C:\\Maccorp\\nopep.html"));
         }
     }
 
@@ -180,13 +178,9 @@ public final class HtmlEncoder {
             return "-";
         }
         try {
-            File f1 = new File(path + generaId(150) + ".html");
-            try (FileOutputStream is = new FileOutputStream(f1)) {
-                OutputStreamWriter osw = new OutputStreamWriter(is);
-                BufferedWriter w = new BufferedWriter(osw);
+            File f1 = new File(normalize(path + generaId(150) + ".html"));
+            try (FileOutputStream is = new FileOutputStream(f1); OutputStreamWriter osw = new OutputStreamWriter(is); BufferedWriter w = new BufferedWriter(osw)) {
                 w.write(ing);
-                w.close();
-                osw.close();
             }
             String base64 = new String(encodeBase64(readFileToByteArray(f1)));
             f1.delete();
