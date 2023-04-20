@@ -1383,7 +1383,7 @@
 
 
                                                 var comperc = document.getElementById("comperc" + index);
-                                                comperc.value = comperc.value.replace(/-/g, '');
+                                                formatValueDecimal_1(comperc, separatorthousand, separatordecimal);
 
                                                 if (document.getElementById('newintbook0').checked) {
                                                     document.getElementById("comperc" + index).value = "0" + separatordecimal + "00";

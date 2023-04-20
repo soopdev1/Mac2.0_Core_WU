@@ -1652,8 +1652,7 @@
             //verifica percentuale commissione
             function f_comperc(index) {
                 var comperc = document.getElementById("comperc" + index);
-
-                comperc.value = comperc.value.replace(/-/g, '');
+                formatValueDecimal_1(comperc, separatorthousand, separatordecimal);
 
                 var kind = "kind" + index;
                 var justify = "lowcommjus" + index;
