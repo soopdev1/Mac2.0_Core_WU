@@ -247,42 +247,82 @@ public class StockPrice_value {
     //valori
     String HistoricalBCE,HistoricalBCEEquivalent,DeltaEquivalent;
 
+    /**
+     *
+     * @return
+     */
     public String getDateactual() {
         return dateactual;
     }
 
+    /**
+     *
+     * @param dateactual
+     */
     public void setDateactual(String dateactual) {
         this.dateactual = dateactual;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getBceactual() {
         return bceactual;
     }
 
+    /**
+     *
+     * @param bceactual
+     */
     public void setBceactual(String bceactual) {
         this.bceactual = bceactual;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getHistoricalBCE() {
         return HistoricalBCE;
     }
 
+    /**
+     *
+     * @param HistoricalBCE
+     */
     public void setHistoricalBCE(String HistoricalBCE) {
         this.HistoricalBCE = HistoricalBCE;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getHistoricalBCEEquivalent() {
         return HistoricalBCEEquivalent;
     }
 
+    /**
+     *
+     * @param HistoricalBCEEquivalent
+     */
     public void setHistoricalBCEEquivalent(String HistoricalBCEEquivalent) {
         this.HistoricalBCEEquivalent = HistoricalBCEEquivalent;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDeltaEquivalent() {
         return DeltaEquivalent;
     }
 
+    /**
+     *
+     * @param DeltaEquivalent
+     */
     public void setDeltaEquivalent(String DeltaEquivalent) {
         this.DeltaEquivalent = DeltaEquivalent;
     }

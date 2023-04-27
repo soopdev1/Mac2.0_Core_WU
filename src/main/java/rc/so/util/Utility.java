@@ -272,6 +272,12 @@ public class Utility {
         return false;
     }
 
+    /**
+     *
+     * @param dat
+     * @param pattern1
+     * @return
+     */
     public static DateTime parseStringDate(String dat, String pattern1) {
         try {
             if (dat.length() == 21) {
@@ -578,6 +584,11 @@ public class Utility {
         return d1;
     }
 
+    /**
+     *
+     * @param value
+     * @return
+     */
     public static double parseDoubleR(String value) {
         if (containsInfinity(value)) {
             return 0.0D;
@@ -595,6 +606,11 @@ public class Utility {
 
     }
 
+    /**
+     *
+     * @param ing
+     * @return
+     */
     public static boolean containsInfinity(String ing) {
         String infinitySymbol;
         try {
@@ -1828,6 +1844,11 @@ public class Utility {
         }
     }
 
+    /**
+     *
+     * @param d1
+     * @return
+     */
     public static String formatRa1(double d1) {
         if (d1 >= 0) {
             NumberFormat nf = NumberFormat.getNumberInstance(Locale.ITALY);
@@ -1929,6 +1950,12 @@ public class Utility {
         return replace(BigDecimal.valueOf(BigDecimal.valueOf(d).setScale(scale + 1, ROUND_HALF_DOWN).doubleValue()).setScale(scale, ROUND_HALF_DOWN).toPlainString(), ",", ".");
     }
 
+    /**
+     *
+     * @param d
+     * @param scale
+     * @return
+     */
     public static String roundDoubleandFormat_ES(double d, int scale) {
         return replace(format("%." + scale + "f", d), ",", ".");
     }
@@ -3222,6 +3249,12 @@ public class Utility {
         return "";
     }
 
+    /**
+     *
+     * @param request
+     * @param name
+     * @return
+     */
     public static boolean getValue_request(HttpServletRequest request, String name) {
         if (request.getParameter(name) == null) {
             return false;
@@ -3230,6 +3263,14 @@ public class Utility {
         }
     }
 
+    /**
+     *
+     * @param request
+     * @param name
+     * @param checkbox
+     * @param defaultvalue
+     * @return
+     */
     public static String getValue_request(HttpServletRequest request, String name, boolean checkbox, String defaultvalue) {
         if (checkbox) {
             String out = request.getParameter(name);
@@ -3273,6 +3314,11 @@ public class Utility {
 //        }
     }
 
+    /**
+     *
+     * @param bo
+     * @return
+     */
     public static boolean send_Mail_CONFERMA_TRX(Booking bo) {
         MailObject mo = new MailObject();
         mo.setOGGETTO("Ritiro Prenotazione");
@@ -3311,6 +3357,18 @@ public class Utility {
         return false;
     }
 
+    /**
+     *
+     * @param filiale
+     * @param buysell
+     * @param typeop
+     * @param tofrom
+     * @param figures
+     * @param kind
+     * @param quantity
+     * @param rate
+     * @return
+     */
     public static List<String> calcolaspread2021(
             String filiale,
             String buysell,
@@ -3425,6 +3483,11 @@ public class Utility {
 
     }
 
+    /**
+     *
+     * @param ec1
+     * @return
+     */
     public static String estraiEccezione(Exception ec1) {
         try {
             return ec1.getStackTrace()[0].getMethodName() + " - " + getStackTrace(ec1);
@@ -3434,6 +3497,13 @@ public class Utility {
         return ec1.getMessage();
     }
 
+    /**
+     *
+     * @param request
+     * @param n1
+     * @param decodeoutput
+     * @return
+     */
     public static String safeRequest(HttpServletRequest request, String n1, boolean decodeoutput) {
         try {
             String res1 = request.getParameter(n1);
@@ -3446,6 +3516,12 @@ public class Utility {
         return "";
     }
 
+    /**
+     *
+     * @param request
+     * @param n1
+     * @return
+     */
     public static String safeRequest(HttpServletRequest request, String n1) {
         try {
             String res1 = request.getParameter(n1);
@@ -3457,6 +3533,12 @@ public class Utility {
         return "";
     }
 
+    /**
+     *
+     * @param request
+     * @param n1
+     * @return
+     */
     public static String[] safeRequestMultiple(HttpServletRequest request, String n1) {
         try {
             String[] values = request.getParameterValues(n1);

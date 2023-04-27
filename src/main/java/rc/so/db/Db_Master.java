@@ -285,8 +285,8 @@ public class Db_Master {
 
                 String drivername = rb.getString("db.driver");
                 String typedb = rb.getString("db.tipo");
-                String user = "maccorp";
-                String pwd = "M4cc0Rp";
+                String user = "ssssss";
+                String pwd = "ssssssss";
 
                 String host = getHostCentrale();
                 forName(drivername).newInstance();
@@ -315,17 +315,9 @@ public class Db_Master {
 
             String drivername = rb.getString("db.driver");
             String typedb = rb.getString("db.tipo");
-//////////////////DATI CONNESSIONE//////////////////////////////////////
-//////////////////FILIALE///////////////////////////////////////////////
-//            String user = "root";
-//            String pwd = "root";
-//            String host = "//localhost:3306/maccorp";
-////            String host = "//192.168.1.36:3306/maccorp"; //  MAC TEST
-//            String host = "//192.168.9.40:3306/maccorp"; //  MAC CZ TEST
-//            String host = "//192.168.65.2:3306/maccorp"; //  
 //////////////////CENTRALE///////////////////////////////////////////////
-            String user = "maccorp";
-            String pwd = "M4cc0Rp";
+            String user = "sssssssss";
+            String pwd = "ssssssss";
             String host = getHostCentrale();
 ////////////
             try {
@@ -776,6 +768,10 @@ public class Db_Master {
         return out;
     }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<String[]> unlockratejustify() {
         ArrayList<String[]> out = new ArrayList<>();
         try {
@@ -6351,6 +6347,13 @@ public class Db_Master {
         return false;
     }
 
+    /**
+     *
+     * @param filiale
+     * @param descr
+     * @param username
+     * @return
+     */
     public boolean insert_new_unlockratejust(String filiale, String descr, String username) {
         try {
             String id = "01";
@@ -6408,6 +6411,15 @@ public class Db_Master {
         return false;
     }
 
+    /**
+     *
+     * @param filiale
+     * @param id
+     * @param descr
+     * @param status
+     * @param username
+     * @return
+     */
     public boolean update_unrate(String filiale, String id, String descr, String status, String username) {
         try {
             String ins = "UPDATE unlockrate_justify SET de_unlockrate_justify = ?, fg_blocco = ? WHERE filiale = ? AND id_unlockrate_justify = ?";
@@ -11213,6 +11225,11 @@ public class Db_Master {
         }
     }
 
+    /**
+     *
+     * @param id
+     * @param value
+     */
     public void updateConf(String id, String value) {
         try {
             String ins = "UPDATE conf SET des = ? WHERE id = ?";
@@ -12808,6 +12825,7 @@ public class Db_Master {
      * @param ty_util
      * @param user
      * @param cod_tr
+     * @param motivazione
      * @return
      */
     public boolean use_codice_sblocco_NEW(String dt_utilizzo, String ty_util, String user, String cod_tr, String motivazione) {
@@ -20083,6 +20101,11 @@ public class Db_Master {
         return out;
     }
 
+    /**
+     *
+     * @param cod
+     * @return
+     */
     public boolean is_ET_FROMBRANCH(String cod) {
         try {
             String sql = "SELECT cod FROM et_change WHERE cod='" + cod + "' AND fg_tofrom = 'F' AND fg_brba = 'BR'";
@@ -23048,7 +23071,7 @@ public class Db_Master {
      *
      * @param data1
      * @param data2
-     * @param allbr
+     * @param branch
      * @return
      */
     public ArrayList<C_TransactionRegisterDetail_value> list_C_TransactionRegisterDetail_value(
@@ -28798,6 +28821,12 @@ public class Db_Master {
         return null;
     }
 
+    /**
+     *
+     * @param giorno
+     * @param valuta
+     * @return
+     */
     public String get_BCE(DateTime giorno, String valuta) {
         try {
             String sql1 = "SELECT rif_bce FROM rate where filiale = '000' AND valuta = '" + valuta + "' AND data = '" + giorno.toString(patternsql) + "'";
@@ -28816,6 +28845,13 @@ public class Db_Master {
         return get_BCE(filiale, giorno, valuta);
     }
 
+    /**
+     *
+     * @param filiale
+     * @param giorno
+     * @param valuta
+     * @return
+     */
     public String get_BCE(
             String filiale,
             DateTime giorno,
@@ -28869,6 +28905,12 @@ public class Db_Master {
         return "0";
     }
 
+    /**
+     *
+     * @param giorno
+     * @param valuta
+     * @return
+     */
     public String get_BCE_central(DateTime giorno, String valuta) {
         try {
             DateTimeFormatter sqldate = forPattern(patternsql);
@@ -32150,6 +32192,11 @@ public class Db_Master {
         return false;
     }
 
+    /**
+     *
+     * @param transaction_cod
+     * @param username
+     */
     public void delete_marketing(String transaction_cod, String username) {
         try {
             String del = "DELETE FROM ch_transaction_file WHERE cod_tr = ? AND directory = ?";
@@ -32767,6 +32814,10 @@ public class Db_Master {
         return false;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Marketing> list_consensi_attivi() {
         List<Marketing> out = new ArrayList<>();
         try {
@@ -32823,6 +32874,13 @@ public class Db_Master {
         return out;
     }
 
+    /**
+     *
+     * @param id
+     * @param percent
+     * @param username
+     * @return
+     */
     public boolean edit_selectlevelrate(String id, String percent, String username) {
         try {
             String upd = "UPDATE selectlevelrate SET percent = ? WHERE id = ?";
@@ -32840,6 +32898,11 @@ public class Db_Master {
         return false;
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     public double getPercent_levelrate(int id) {
         double out = 0.00;
         try {

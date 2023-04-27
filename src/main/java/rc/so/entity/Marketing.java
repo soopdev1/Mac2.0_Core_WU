@@ -49,54 +49,108 @@ public class Marketing {
     Client cl;
     DateTime dt;
 
+    /**
+     *
+     * @return
+     */
     public DateTime getDt() {
         return dt;
     }
 
+    /**
+     *
+     * @param dt
+     */
     public void setDt(DateTime dt) {
         this.dt = dt;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCodtr() {
         return codtr;
     }
 
+    /**
+     *
+     * @param codtr
+     */
     public void setCodtr(String codtr) {
         this.codtr = codtr;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCodcl() {
         return codcl;
     }
 
+    /**
+     *
+     * @param codcl
+     */
     public void setCodcl(String codcl) {
         this.codcl = codcl;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getFiliale() {
         return filiale;
     }
 
+    /**
+     *
+     * @param filiale
+     */
     public void setFiliale(String filiale) {
         this.filiale = filiale;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getData() {
         return data;
     }
 
+    /**
+     *
+     * @param data
+     */
     public void setData(String data) {
         this.data = data;
     }
 
+    /**
+     *
+     * @return
+     */
     public Client getCl() {
         return cl;
     }
 
+    /**
+     *
+     * @param cl
+     */
     public void setCl(Client cl) {
         this.cl = cl;
     }
 
+    /**
+     *
+     * @param path
+     * @param complete
+     * @return
+     */
     public static String receiptexcel(String path, List<Marketing> complete) {
 
         try {
@@ -408,6 +462,10 @@ public class Marketing {
         return null;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this, JSON_STYLE);

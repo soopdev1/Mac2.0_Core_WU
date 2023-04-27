@@ -401,6 +401,13 @@ public class Edit
         }
     }
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void insert_new_Lowcom(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String user = (String) request.getSession().getAttribute("us_cod");
         if (user == null) {
@@ -452,6 +459,13 @@ public class Edit
         }
     }
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void edit_unrate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String user = (String) request.getSession().getAttribute("us_cod");
         if (user == null) {
@@ -5592,6 +5606,13 @@ public class Edit
 
     }
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void editpaymode(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 //        Utility.printRequest(request);

@@ -346,6 +346,14 @@ public class BranchStockInquiry {
 
     }
 
+    /**
+     *
+     * @param path
+     * @param siq
+     * @param colonne
+     * @param datereport
+     * @return
+     */
     public String receipt_new(String path, BranchStockInquiry_value siq, ArrayList<String> colonne, String datereport) {
         columnWidths2 = new float[colonne.size()];
         for (int c = 0; c < colonne.size(); c++) {
@@ -483,6 +491,14 @@ public class BranchStockInquiry {
         return null;
     }
 
+    /**
+     *
+     * @param path
+     * @param siq
+     * @param colonne
+     * @param datereport
+     * @return
+     */
     public String receipt(String path, BranchStockInquiry_value siq, ArrayList<String> colonne, String datereport) {
 
         columnWidths2 = new float[colonne.size()];
@@ -817,6 +833,14 @@ public class BranchStockInquiry {
 
     }
 
+    /**
+     *
+     * @param path
+     * @param siq
+     * @param colonne
+     * @param datereport
+     * @return
+     */
     public String receiptexcel(String path, BranchStockInquiry_value siq, ArrayList<String> colonne, String datereport) {
 
         try {

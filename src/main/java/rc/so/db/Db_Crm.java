@@ -30,8 +30,8 @@ public class Db_Crm {
         try {
             String drivername = rb.getString("db.driver");
             String typedb = rb.getString("db.tipo");
-            String user = "maccorp";
-            String pwd = "M4cc0Rp";
+            String user = "xxxxxx";
+            String pwd = "xxxxxxx";
 
             String host = rb.getString("db.ip") + "/mac_crm_prod";
             if (test) {
@@ -53,7 +53,6 @@ public class Db_Crm {
             this.c = getConnection("jdbc:" + typedb + ":" + host, p);
         } catch (Exception ex) {
             this.c = null;
-            ex.printStackTrace();
         }
     }
 
@@ -81,11 +80,16 @@ public class Db_Crm {
             if (this.c != null) {
                 this.c.close();
             }
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     public String get_ValueSettings(String id) {
         try {
             String sql = "SELECT value FROM settings WHERE id = ?";

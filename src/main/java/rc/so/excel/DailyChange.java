@@ -794,18 +794,34 @@ public class DailyChange {
         this.OCERRFX = OCERRFX;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getSPREADAC() {
         return SPREADAC;
     }
 
+    /**
+     *
+     * @param SPREADAC
+     */
     public void setSPREADAC(String SPREADAC) {
         this.SPREADAC = SPREADAC;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getSPREADCA() {
         return SPREADCA;
     }
 
+    /**
+     *
+     * @param SPREADCA
+     */
     public void setSPREADCA(String SPREADCA) {
         this.SPREADCA = SPREADCA;
     }

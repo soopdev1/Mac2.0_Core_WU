@@ -34,6 +34,12 @@ public class Tangerine {
     private static final Conf_Tangerine confTG = new Gson().fromJson(getConfCentral("client.tangerine"), new TypeToken<Conf_Tangerine>() {
     }.getType());
 
+    /**
+     *
+     * @param username
+     * @param filiale
+     * @return
+     */
     public static String login_TA(String username, String filiale) {
         try {
             String token = get_token();

@@ -212,7 +212,10 @@ public class BranchStockInquiry_value {
         this.dati = dati;
     }
     
-    
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this, JSON_STYLE);

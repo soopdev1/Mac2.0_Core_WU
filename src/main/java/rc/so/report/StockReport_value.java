@@ -295,6 +295,11 @@ public class StockReport_value implements Comparable{
         this.dati = dati;
     }
 
+    /**
+     *
+     * @param o
+     * @return
+     */
     @Override
     public int compareTo(Object o) {
         DateTimeFormatter formatter = forPattern(patternnormdate);

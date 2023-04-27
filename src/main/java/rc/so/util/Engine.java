@@ -324,6 +324,10 @@ public class Engine {
         return out;
     }
 
+    /**
+     *
+     * @return
+     */
     public static ArrayList<String[]> unlockratejustify() {
         Db_Master db = new Db_Master();
         ArrayList<String[]> out = db.unlockratejustify();
@@ -2984,6 +2988,11 @@ public class Engine {
         db.closeDB();
     }
 
+    /**
+     *
+     * @param id
+     * @param base64
+     */
     public static void updateConf(String id, String base64) {
         Db_Master db = new Db_Master(true);
         db.updateConf(id, base64);
@@ -3002,6 +3011,11 @@ public class Engine {
         return out;
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     public static String getConfCentral(String id) {
         Db_Master db = new Db_Master(true);
         String out = db.getConf(id);
@@ -5488,6 +5502,10 @@ public class Engine {
         return result;
     }
 
+    /**
+     *
+     * @return
+     */
     public static DateTime getNowDT() {
         Db_Master db = new Db_Master();
         DateTime result = db.getNowDT();
@@ -5786,6 +5804,12 @@ public class Engine {
         return dep;
     }
 
+    /**
+     *
+     * @param cod
+     * @param dbl
+     * @return
+     */
     public static String get_department_NC(String cod, Db_Master dbl) {
         String dep = dbl.get_department_NC(cod);
         return dep;
@@ -6238,6 +6262,12 @@ public class Engine {
         return out;
     }
 
+    /**
+     *
+     * @param date
+     * @param value
+     * @return
+     */
     public static String get_BCE(DateTime date, String value) {
         Db_Master db1 = new Db_Master();
         String out = db1.get_BCE(date, value);
@@ -6250,6 +6280,12 @@ public class Engine {
         return out;
     }
 
+    /**
+     *
+     * @param date
+     * @param value
+     * @return
+     */
     public static String get_BCE_central(DateTime date, String value) {
         Db_Master db1 = new Db_Master(true);
         if (db1.getC() == null) {
@@ -7132,6 +7168,11 @@ public class Engine {
         return sr;
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     public static String get_ValueSettings(String id) {
         Db_Crm db8 = new Db_Crm();
         String sr = db8.get_ValueSettings(id);
@@ -7139,6 +7180,11 @@ public class Engine {
         return sr;
     }
 
+    /**
+     *
+     * @param codtr
+     * @return
+     */
     public static String checkDeleteTR(String codtr) {
         String ok = "OK";
         try {
@@ -7221,6 +7267,10 @@ public class Engine {
         return ok;
     }
 
+    /**
+     *
+     * @return
+     */
     public static List<String> lista_anni_SP() {
         List<String> out = new ArrayList<>();
         out.add("2021");

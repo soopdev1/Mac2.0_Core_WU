@@ -3396,6 +3396,13 @@ public class Query extends HttpServlet {
 
     }
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void getbcevalue(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String valuecurrency = getRequestValue(request, "q");
 

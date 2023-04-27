@@ -597,11 +597,18 @@ public class DailyChange_CG {
         this.CODICEINTERNETBOOKING = CODICEINTERNETBOOKING;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getVENDITASELLBACK() {
         return VENDITASELLBACK;
     }
 
-   
+    /**
+     *
+     * @param VENDITASELLBACK
+     */
     public void setVENDITASELLBACK(String VENDITASELLBACK) {    
         this.VENDITASELLBACK = VENDITASELLBACK;
     }

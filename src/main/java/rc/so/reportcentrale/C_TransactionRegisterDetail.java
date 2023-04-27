@@ -108,6 +108,9 @@ public class C_TransactionRegisterDetail {
      */
     public static float[] columnWidths6 = new float[]{30f, 20f, 15f, 15f, 10f, 15f};
 
+    /**
+     *
+     */
     public static final String intestazionePdf = "Maccorp Italiana S.p.A. P.I. 12951210157 - Registro Transazioni";
     Phrase vuoto = new Phrase("\n");
 
@@ -661,6 +664,15 @@ public class C_TransactionRegisterDetail {
 
     }
 
+    /**
+     *
+     * @param path
+     * @param cmfb
+     * @param colonne
+     * @param progressivostart
+     * @param pagestart
+     * @return
+     */
     public String receipt_2022(String path, C_TransactionRegisterDetail_value cmfb, ArrayList<String> colonne, int progressivostart, int pagestart) {
         try {
             File pdffile = new File(normalize(path + generaId() + "C_TransactionRegisterDetail.pdf"));

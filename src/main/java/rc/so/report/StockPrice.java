@@ -106,6 +106,10 @@ public class StockPrice {
      *
      */
     public static final float[] columnWidths2 = new float[]{20f, 25f, 25f, 20f, 20f, 20f};
+
+    /**
+     *
+     */
     public static final float[] columnWidths3 = new float[]{20f, 25f, 25f, 20f, 20f, 25f, 20f};
     final String intestazionePdf = "Stock Price Report";
     Phrase vuoto = new Phrase("");
@@ -152,6 +156,7 @@ public class StockPrice {
      * @param qty
      * @param controvalore
      * @param delta
+     * @param rate
      * @param actual
      * @param document
      */
@@ -265,6 +270,7 @@ public class StockPrice {
      * @param qty
      * @param controvalore
      * @param delta
+     * @param rate
      * @param actual
      * @param document
      */

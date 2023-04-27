@@ -108,6 +108,11 @@ public class NC_category {
         this.fg_registratore = fg_registratore;
     }
 
+    /**
+     *
+     * @param fg_registratore
+     * @param dbm
+     */
     public void setFg_registratore(String fg_registratore, Db_Master dbm) {
         if (fg_registratore.equals("1")) {
             this.department = get_department_NC(this.gruppo_nc, dbm);

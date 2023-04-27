@@ -226,6 +226,11 @@ public class BudgetTill implements Comparable<BudgetTill>{
         this.budget = budget;
     }
 
+    /**
+     *
+     * @param o
+     * @return
+     */
     @Override
     public int compareTo(BudgetTill o) {
         return this.gruppo.compareTo(o.getGruppo());

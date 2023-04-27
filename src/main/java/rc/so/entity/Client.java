@@ -608,7 +608,10 @@ public class Client {
         this.modifiche = modifiche;
     }
 
-    
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this, JSON_STYLE);

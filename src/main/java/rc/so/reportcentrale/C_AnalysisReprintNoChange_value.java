@@ -325,8 +325,11 @@ public class C_AnalysisReprintNoChange_value implements Comparable{
         this.dati = dati;
     }
 
-   
-
+    /**
+     *
+     * @param o
+     * @return
+     */
     @Override
     public int compareTo(Object o) {
         C_AnalysisReprintNoChange_value ca = (C_AnalysisReprintNoChange_value)o;

@@ -557,7 +557,11 @@ public class Ch_transaction_value implements Comparable<Ch_transaction_value>{
         this.del_dt = del_dt;
     }
     
-    
+    /**
+     *
+     * @param o
+     * @return
+     */
     @Override
     public int compareTo(Ch_transaction_value o) {
         if (this.getValuta().compareTo(o.getValuta()) > 0) {

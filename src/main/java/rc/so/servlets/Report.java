@@ -3313,6 +3313,13 @@ public class Report extends HttpServlet {
 
     }
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void BranchStockInquiry(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String d3 = safeRequest(request, "d3");
         String d4 = getTimepicker(safeRequest(request, "d4"));

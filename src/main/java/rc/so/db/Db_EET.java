@@ -51,8 +51,8 @@ public class Db_EET {
         try {
             String drivername = rb.getString("db.driver");
             String typedb = rb.getString("db.tipo");
-            String user = "maccorp";
-            String pwd = "M4cc0Rp";
+            String user = "sssssss";
+            String pwd = "ssssssss";
             String host = rb.getString("db.ip") + "/maccorpeet";
             forName(drivername).newInstance();
             Properties p = new Properties();

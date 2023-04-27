@@ -40,6 +40,14 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  */
 public class Dailyerror {
 
+    /**
+     *
+     * @param path
+     * @param branch
+     * @param datad1
+     * @param datad2
+     * @return
+     */
     public String create(String path, ArrayList<String> branch, String datad1, String datad2) {
         List<Rep> out = new ArrayList<>();
         try {

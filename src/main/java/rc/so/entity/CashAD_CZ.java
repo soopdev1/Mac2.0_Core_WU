@@ -33,10 +33,18 @@ public class CashAD_CZ {
         this.total = total;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getRatebce() {
         return ratebce;
     }
 
+    /**
+     *
+     * @param ratebce
+     */
     public void setRatebce(String ratebce) {
         this.ratebce = ratebce;
     }

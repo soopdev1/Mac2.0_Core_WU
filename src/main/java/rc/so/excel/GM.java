@@ -241,6 +241,11 @@ public class GM implements Comparable<GM>{
         this.riga3 = riga3;
     }
 
+    /**
+     *
+     * @param o
+     * @return
+     */
     @Override
     public int compareTo(GM o) {
         return this.area.compareTo(o.getArea());

@@ -243,6 +243,11 @@ public class StockInquiry_value implements Comparable {
         this.bancomatCOP = bancomatCOP;
     }
 
+    /**
+     *
+     * @param o
+     * @return
+     */
     @Override
     public int compareTo(Object o) {
         StockInquiry_value v = (StockInquiry_value) o;

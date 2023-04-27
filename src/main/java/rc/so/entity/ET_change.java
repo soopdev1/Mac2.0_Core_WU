@@ -735,6 +735,11 @@ public class ET_change implements Comparable<ET_change> {
         this.id_in = id_in;
     }
 
+    /**
+     *
+     * @param o
+     * @return
+     */
     @Override
     public int compareTo(ET_change o) {
         return this.filiale.compareTo(o.getFiliale());

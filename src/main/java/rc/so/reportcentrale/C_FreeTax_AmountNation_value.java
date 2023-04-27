@@ -296,6 +296,11 @@ public class C_FreeTax_AmountNation_value implements Comparable<C_FreeTax_Amount
         this.dati = dati;
     }
 
+    /**
+     *
+     * @param o
+     * @return
+     */
     @Override
     public int compareTo(C_FreeTax_AmountNation_value o) {
         return this.getDe_nation().compareTo(o.getDe_nation());

@@ -157,6 +157,11 @@ public class Taglio implements Comparable<Taglio> {
         this.tipologia = tipologia;
     }
 
+    /**
+     *
+     * @param o
+     * @return
+     */
     @Override
     public int compareTo(Taglio o) {
         if (this.getBrand().compareTo(o.getBrand()) > 0) {

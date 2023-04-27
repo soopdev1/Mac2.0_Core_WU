@@ -366,6 +366,11 @@ public class C_FreeTax_BranchCausal_value  implements Comparable<C_FreeTax_Branc
         this.dati = dati;
     }
     
+    /**
+     *
+     * @param o
+     * @return
+     */
     @Override
     public int compareTo(C_FreeTax_BranchCausal_value o) {
         return this.getDe_causal().compareTo(o.getDe_causal());

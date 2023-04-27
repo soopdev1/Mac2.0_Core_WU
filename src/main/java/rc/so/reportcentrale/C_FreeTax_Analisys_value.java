@@ -346,6 +346,11 @@ public class C_FreeTax_Analisys_value implements Comparable<C_FreeTax_Analisys_v
         this.dati = dati;
     }
 
+    /**
+     *
+     * @param o
+     * @return
+     */
     @Override
     public int compareTo(C_FreeTax_Analisys_value o) {
         return this.getDe_causal().compareTo(o.getDe_causal());

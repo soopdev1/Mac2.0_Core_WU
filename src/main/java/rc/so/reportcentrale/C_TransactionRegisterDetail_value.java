@@ -347,14 +347,27 @@ public class C_TransactionRegisterDetail_value implements Comparable<C_Transacti
         this.payinout = payinout;
     }
 
+    /**
+     *
+     * @return
+     */
     public DateTime getDt() {
         return dt;
     }
 
+    /**
+     *
+     * @param dt
+     */
     public void setDt(DateTime dt) {
         this.dt = dt;
     }
 
+    /**
+     *
+     * @param u
+     * @return
+     */
     @Override
     public int compareTo(C_TransactionRegisterDetail_value u) {
         if (getDt() == null || u.getDt() == null) {

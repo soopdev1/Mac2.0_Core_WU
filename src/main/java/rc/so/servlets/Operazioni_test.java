@@ -5005,6 +5005,13 @@ public class Operazioni_test extends HttpServlet {
         }
     }
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void verificaBLM(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String cod = safeRequest(request, "cod");
         Db_Master db = new Db_Master();

@@ -604,6 +604,20 @@ public class Client_es {
         return null;
     }
 
+    /**
+     *
+     * @param path
+     * @param data
+     * @param anno
+     * @param fatt_note
+     * @param filiale
+     * @param contabilita_codici
+     * @param bank
+     * @param country
+     * @param valuta_locale
+     * @param branch
+     * @return
+     */
     public File FILEP5(String path, String data, String anno,
             ArrayList<String[]> fatt_note,
             Branch filiale,
@@ -679,6 +693,20 @@ public class Client_es {
         return null;
     }
 
+    /**
+     *
+     * @param path
+     * @param data
+     * @param anno
+     * @param fatt_note
+     * @param filiale
+     * @param contabilita_codici
+     * @param bank
+     * @param country
+     * @param valuta_locale
+     * @param branch
+     * @return
+     */
     public File FILEP4(String path, String data, String anno,
             ArrayList<String[]> fatt_note,
             Branch filiale,
@@ -883,6 +911,20 @@ public class Client_es {
         return null;
     }
 
+    /**
+     *
+     * @param path
+     * @param data
+     * @param anno
+     * @param fatt_note
+     * @param filiale
+     * @param contabilita_codici
+     * @param bank
+     * @param country
+     * @param valuta_locale
+     * @param branch
+     * @return
+     */
     public File FILEP3(String path, String data, String anno,
             ArrayList<String[]> fatt_note,
             Branch filiale,
@@ -970,6 +1012,24 @@ public class Client_es {
         return null;
     }
 
+    /**
+     *
+     * @param path
+     * @param data
+     * @param anno
+     * @param ch_list
+     * @param nc_list
+     * @param listcategory
+     * @param listcausal
+     * @param filiale
+     * @param contabilita_codici
+     * @param bank
+     * @param valuta_locale
+     * @param branch
+     * @param vat
+     * @param ck
+     * @return
+     */
     public File FILEP2(String path, String data, String anno,
             ArrayList<Ch_transaction> ch_list,
             ArrayList<NC_transaction> nc_list,
@@ -1460,6 +1520,28 @@ NC_category nc0 = getNC_category(listcategory, valori[0]);
         return null;
     }
 
+    /**
+     *
+     * @param path
+     * @param data
+     * @param anno
+     * @param ch_list
+     * @param nc_list
+     * @param list_esolver_refund
+     * @param et_list
+     * @param oc_list
+     * @param listcategory
+     * @param listcausal
+     * @param listusers
+     * @param filiale
+     * @param contabilita_codici
+     * @param bank
+     * @param valuta_locale
+     * @param branch
+     * @param dividi
+     * @param ck
+     * @return
+     */
     public File FILEP1(String path, String data, String anno,
             ArrayList<Ch_transaction> ch_list,
             ArrayList<NC_transaction> nc_list,

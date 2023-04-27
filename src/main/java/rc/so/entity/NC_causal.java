@@ -383,6 +383,11 @@ public class NC_causal implements Comparable<NC_causal>{
         this.max_ticket = max_ticket;
     }
     
+    /**
+     *
+     * @param o
+     * @return
+     */
     @Override
     public int compareTo(NC_causal o) {
         return this.getDe_causale_nc().compareTo(o.getDe_causale_nc());

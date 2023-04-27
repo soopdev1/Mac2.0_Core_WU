@@ -7698,6 +7698,13 @@ public class Operazioni extends HttpServlet {
         }
     }
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void upload_doc_tra_ref(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String base64 = null;
         String codtr = "";

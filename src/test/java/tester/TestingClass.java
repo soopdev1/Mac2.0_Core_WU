@@ -9,6 +9,11 @@ package tester;
  * @author rcosco
  */
 public class TestingClass {
+
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         
 ////        

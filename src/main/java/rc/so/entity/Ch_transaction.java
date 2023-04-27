@@ -153,6 +153,9 @@ public class Ch_transaction {
      * @param supporto
      * @param bb_riga
      * @param modify
+     * @param dbconn
+     * @param statusref
+     * @param codtr
      * @return
      */
     public static String formatTilltr(String del, String bb_testata, String fatnum, String supporto, String bb_riga, boolean modify, Db_Master dbconn,

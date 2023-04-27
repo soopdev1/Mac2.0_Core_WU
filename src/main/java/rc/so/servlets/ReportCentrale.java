@@ -2842,6 +2842,13 @@ public class ReportCentrale extends HttpServlet {
 //        System.out.println("rc.so.servlets.ReportCentrale.Marketing() "+complete.size());
     }
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void HistoricalStockPrice(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //        Utility.printRequest(request);
 
@@ -2895,6 +2902,13 @@ public class ReportCentrale extends HttpServlet {
 //        redirect(request, response, "page_404.html");
     }
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void BranchStockInquiryA(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String d3 = safeRequest(request, "d3");
@@ -2989,6 +3003,13 @@ public class ReportCentrale extends HttpServlet {
 
     }
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void DailyError(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String d3 = safeRequest(request, "d3");
         String d4 = safeRequest(request, "d4");
@@ -3021,6 +3042,13 @@ public class ReportCentrale extends HttpServlet {
 
     }
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void C_FreeTax_Branch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String d3 = safeRequest(request, "d3");

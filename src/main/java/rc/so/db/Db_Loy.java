@@ -50,8 +50,8 @@ public class Db_Loy {
         try {
             String drivername = rb.getString("db.driver");
             String typedb = rb.getString("db.tipo");
-            String user = "loyalty";
-            String pwd = "loyalty";
+            String user = "ssssssss";
+            String pwd = "ssssssss";
             String host = rb.getString("db.ip") + "/loyalty";
             forName(drivername).newInstance();
             Properties p = new Properties();

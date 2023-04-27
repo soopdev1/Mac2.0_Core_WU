@@ -10,30 +10,81 @@ import static java.util.ResourceBundle.getBundle;
  */
 public class Constant {
     
+    /**
+     *
+     */
     public static final String eithcettaOS = "Tangerine";
     
     ////////////////////////////////////////////
     //CZ - MODIFICA EET
+
+    /**
+     *
+     */
     public static final boolean czeet = false;
     ////////////////////////////////////////////
     //SPREAD
+
+    /**
+     *
+     */
     public static final boolean newpread = true;
     ////////////////////////////////////////////
     //PAD
+
+    /**
+     *
+     */
     public static final boolean newpad = false;
+
+    /**
+     *
+     */
     public static final boolean aggiungifirma = true;
     
     ////////////////////////////////////////////////////////
     //UK - MODIFICA
+
+    /**
+     *
+     */
     public static final boolean newuk = false;
     //  PAYMAT NASCONDI
+
+    /**
+     *
+     */
     public static final boolean mostrapaymat = false;    
     //EVOLUTIVE TREXLER//
+
+    /**
+     *
+     */
     public static final boolean tr_1302 = false;
+
+    /**
+     *
+     */
     public static final boolean tr_1303 = false;
+
+    /**
+     *
+     */
     public static final boolean tr_1309 = false;
+
+    /**
+     *
+     */
     public static final boolean tr_1310 = false;
+
+    /**
+     *
+     */
     public static final boolean tr_1325 = false;
+
+    /**
+     *
+     */
     public static final boolean tr_1331 = false;
     ////////////////////////////////////////////    
 
@@ -326,8 +377,8 @@ public class Constant {
      */
     public static final String charset = "UTF-8";
 
-    
-    
-    
+    /**
+     *
+     */
     public static final SimpleDateFormat df_ita = new SimpleDateFormat(patternnormdate);
 }
